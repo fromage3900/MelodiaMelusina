@@ -9,11 +9,12 @@ import json
 from pathlib import Path
 
 import material_lib as lib
+from universal_instance_presets import EXTRA_INSTANCES
 
 MASTER = f"{lib.MASTER_DIR}/M_Master_Toon_Universal.M_Master_Toon_Universal"
 REPORT = Path(__file__).resolve().parents[2] / "Saved" / "Audit" / "universal_instances.json"
 
-INSTANCES: list[dict] = [
+CORE_INSTANCES: list[dict] = [
     {
         "name": "MI_Universal_Default",
         "profile": "TP_Default",
@@ -200,6 +201,15 @@ INSTANCES: list[dict] = [
     },
 ]
 
+INSTANCES: list[dict] = CORE_INSTANCES + EXTRA_INSTANCES
+
+
+def _instance_folder(spec: dict) -> str:
+    subdir = spec.get("subdir")
+    if subdir:
+        return f"{lib.ENV_INST_DIR}/{subdir}"
+    return lib.ENV_INST_DIR
+
 
 def build_instances() -> list[dict]:
     import unreal
@@ -207,20 +217,31 @@ def build_instances() -> list[dict]:
     if not unreal.EditorAssetLibrary.does_asset_exist(MASTER):
         raise RuntimeError(f"Missing master: {MASTER} — run setup_master_universal.py first")
 
-    profiles = lib.create_toon_profiles(["TP_Default", "TP_Gold"])
+    profile_names = sorted({spec.get("profile", "TP_Default") for spec in INSTANCES})
+    profiles = lib.create_toon_profiles(profile_names)
     results: list[dict] = []
+    seen: set[str] = set()
 
     for spec in INSTANCES:
-        inst = lib.create_material_instance(spec["name"], lib.ENV_INST_DIR, MASTER)
+        name = spec["name"]
+        if name in seen:
+            unreal.log_warning(f"[UniversalMI] duplicate spec skipped: {name}")
+            continue
+        seen.add(name)
+
+        folder = _instance_folder(spec)
+        inst = lib.create_material_instance(name, folder, MASTER)
         profile = profiles.get(spec.get("profile", "TP_Default"))
         if profile:
             lib.set_instance_toon_profile(inst, profile)
-        for name, rgba in spec.get("vectors", {}).items():
-            lib.set_instance_vector(inst, name, rgba)
-        for name, value in spec.get("scalars", {}).items():
-            lib.set_instance_scalar(inst, name, value)
+        for pname, rgba in spec.get("vectors", {}).items():
+            lib.set_instance_vector(inst, pname, rgba)
+        for pname, value in spec.get("scalars", {}).items():
+            lib.set_instance_scalar(inst, pname, value)
+        for pname, value in spec.get("switches", {}).items():
+            lib.set_instance_static_switch(inst, pname, bool(value))
         lib.save_package(inst)
-        results.append({"instance": spec["name"], "status": "created_or_updated"})
+        results.append({"instance": name, "folder": folder, "status": "created_or_updated"})
 
     return results
 

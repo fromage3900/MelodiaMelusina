@@ -43,8 +43,32 @@ REPLACEMENTS: list[tuple[str, str]] = [
         "/Game/EnvSandbox/Materials/SDF/Textures/Voronoi/Voronoi_2_-_512x512",
     ),
     (
-        "/Game/_PROJECT/04_Materials/Textures/Voronoi/Voronoi_11_-_512x512",
-        "/Game/EnvSandbox/Materials/SDF/Textures/Voronoi/Voronoi_11_-_512x512",
+        "/Game/_PROJECT/04_Materials/Textures/Marble/Marble_2_-_512x512",
+        "/Game/EnvSandbox/Materials/SDF/Textures/Marble/Marble_2_-_512x512",
+    ),
+    (
+        "/Game/_PROJECT/04_Materials/Textures/Marble/Marble_4_-_512x512",
+        "/Game/EnvSandbox/Materials/SDF/Textures/Marble/Marble_4_-_512x512",
+    ),
+    (
+        "/Game/_PROJECT/04_Materials/Textures/Marble/Marble_10_-_512x512",
+        "/Game/EnvSandbox/Materials/SDF/Textures/Marble/Marble_10_-_512x512",
+    ),
+    (
+        "/Game/_PROJECT/04_Materials/Textures/Marble/Marble_11_-_512x512",
+        "/Game/EnvSandbox/Materials/SDF/Textures/Marble/Marble_11_-_512x512",
+    ),
+    (
+        "/Game/_PROJECT/04_Materials/Textures/Marble/Marble_12_-_512x512",
+        "/Game/EnvSandbox/Materials/SDF/Textures/Marble/Marble_12_-_512x512",
+    ),
+    (
+        "/Game/_PROJECT/04_Materials/Textures/Marble/Marble_13_-_512x512",
+        "/Game/EnvSandbox/Materials/SDF/Textures/Marble/Marble_13_-_512x512",
+    ),
+    (
+        "/Game/_PROJECT/04_Materials/Textures/Marble/Marble_14_-_512x512",
+        "/Game/EnvSandbox/Materials/SDF/Textures/Marble/Marble_14_-_512x512",
     ),
 ]
 

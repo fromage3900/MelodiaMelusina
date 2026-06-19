@@ -141,6 +141,15 @@ def set_instance_scalar(instance, name: str, value: float) -> None:
         instance.set_scalar_parameter_value_editor_only(name, value)
 
 
+def set_instance_static_switch(instance, name: str, value: bool) -> None:
+    if hasattr(unreal.MaterialEditingLibrary, "set_material_instance_static_switch_parameter_value"):
+        unreal.MaterialEditingLibrary.set_material_instance_static_switch_parameter_value(
+            instance, name, value
+        )
+    else:
+        try_set_editor_property(instance, name, value)
+
+
 def set_instance_toon_profile(instance, profile: unreal.ToonProfile) -> None:
     try_set_editor_property(instance, "toon_profile", profile)
     try_set_editor_property(instance, "override_toon_profile", True)
