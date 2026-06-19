@@ -31,6 +31,9 @@ def _run_in_ue() -> int:
     mb.main()
     tex.main()
 
+    import setup_master_universal as universal
+    universal.build()
+
     import convert_masters_to_substrate_toon as conv
 
     sys.argv = ["convert", "--batch", "all", "--fix-params", "--assign-profiles"]
@@ -58,6 +61,12 @@ def main() -> int:
         return 1
 
     LOG_DIR.mkdir(parents=True, exist_ok=True)
+    for script in (
+        "patch_portfolio_texture_paths.py",
+        "patch_meshblend_uasset_paths.py",
+    ):
+        subprocess.run([sys.executable, str(PYTHON_DIR / script)], cwd=str(PROJECT_ROOT), check=False)
+
     log_path = LOG_DIR / "phase_a_fixup.log"
     cmd = [
         str(UE_CMD),

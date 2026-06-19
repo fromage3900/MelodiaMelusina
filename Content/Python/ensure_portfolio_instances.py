@@ -119,6 +119,27 @@ MASTER_INSTANCES: list[dict] = [
         "vectors": {"BaseTint": (0.55, 0.48, 0.42, 1.0), "AccentTint": (0.72, 0.62, 0.52, 1.0)},
         "scalars": {"UVScale": 1.0, "DryRoughness": 0.78},
     },
+    {
+        "master": "M_Master_Toon_Universal",
+        "instance": "MI_Master_Toon_Universal_Default",
+        "profile": "TP_Default",
+        "folder": f"{MATERIALS_ROOT}/Instances/Environment",
+        "vectors": {
+            "BaseTint": (0.62, 0.58, 0.55, 1.0),
+            "DreamTint": (1.0, 0.88, 0.94, 1.0),
+            "RimColor": (0.70, 0.85, 1.0, 1.0),
+            "GlowColor": (1.0, 0.92, 0.98, 1.0),
+        },
+        "scalars": {
+            "TextureWeight": 1.0,
+            "UVScale": 1.0,
+            "Roughness": 0.65,
+            "RimIntensity": 0.0,
+            "GlowIntensity": 0.0,
+            "PastelLift": 0.0,
+            "BloomBoost": 0.0,
+        },
+    },
 ]
 
 # Extend INSTANCE_PROFILE_BY_STEM in convert_masters_to_substrate_toon.py

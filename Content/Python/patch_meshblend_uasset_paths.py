@@ -15,11 +15,11 @@ REPORT_PATH = PROJECT_ROOT / "Saved" / "Audit" / "meshblend_activator_fix.json"
 
 REPLACEMENTS: list[tuple[str, str]] = [
     (
-        "/Game/Art/Materials/Master/Materials/MF_MeshBlend_Activator_Index",
+        "/Game/EnvSandbox/Materials/Functions/MF_MeshBlend_Activator_Index",
         "/Game/EnvSandbox/Materials/Functions/MF_MeshBlend_Activator_Index_0",
     ),
     (
-        "/Game/EnvSandbox/Materials/Functions/MF_MeshBlend_Activator_Index",
+        "/Game/Art/Materials/Master/Materials/MF_MeshBlend_Activator_Index",
         "/Game/EnvSandbox/Materials/Functions/MF_MeshBlend_Activator_Index_0",
     ),
     (

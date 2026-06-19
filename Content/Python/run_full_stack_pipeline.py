@@ -102,7 +102,8 @@ def main() -> int:
     textures = PYTHON_DIR / "restore_portfolio_textures.py"
     subprocess.run([sys.executable, str(restore)], cwd=str(PROJECT_ROOT), check=False)
     subprocess.run([sys.executable, str(textures)], cwd=str(PROJECT_ROOT), check=False)
-    # Binary patch disabled — corrupts uassets when FString lengths differ.
+    subprocess.run([sys.executable, str(PYTHON_DIR / "patch_portfolio_texture_paths.py")], cwd=str(PROJECT_ROOT), check=False)
+    subprocess.run([sys.executable, str(PYTHON_DIR / "patch_meshblend_uasset_paths.py")], cwd=str(PROJECT_ROOT), check=False)
 
     if not UE_CMD.exists():
         print(f"ERROR: UnrealEditor-Cmd not found: {UE_CMD}")

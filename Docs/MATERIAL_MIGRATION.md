@@ -239,9 +239,48 @@ Safe to re-run: rebuilds master/instances; reuses existing Toon Profiles.
 
 ---
 
-## Generic environment materials (deferred)
+## Generic environment materials
 
-Non-SDF MooaToon masters (`M_Stone_*_Toon`, `M_Wood_Toon`, `M_Fabric_Toon`, `M_Universal_Enhanced_*`) → future `M_Master_Toon` under `Masters/` with instances in `Instances/Environment/`.
+**`M_Master_Toon_Universal`** (`Content/Python/setup_master_universal.py`) — the reach-for-every-scene master:
+
+| Group | Parameters | Notes |
+|-------|------------|-------|
+| Palette | `BaseTint` | Flat procedural tint when `TextureWeight` = 0 |
+| Hybrid | `TextureWeight`, `Albedo`, `NormalMap`, `ORM` | 0 = blockout flat toon, 1 = fully textured |
+| UV | `UVScale` | Scalar UV multiplier |
+| Triplanar | `bTriplanar`, `TriplanarTiling` | World-aligned projection for greybox / kitbash |
+| Surface | `Roughness` | Procedural roughness; ORM.G when textured |
+| **Nikki** | `RimColor`, `RimPower`, `RimIntensity`, `RimSoftness` | Fresnel rim (defaults 0 = neutral) |
+| **Nikki** | `DreamTint`, `PastelLift` | Pastel color lift on base |
+| **Nikki** | `Iridescence`, `IridescenceTint` | Secondary fresnel tint |
+| **Nikki** | `SparkleMask`, `SparkleScale`, `SparkleIntensity`, `SparkleColor` | Twinkle overlay (assign `T_Spark_Twinkle8` or similar) |
+| **Nikki** | `GlowColor`, `GlowIntensity` | Soft omnidirectional glow |
+| **Nikki** | `InnerGlowColor`, `InnerGlowIntensity` | Center-weighted fill (1 − fresnel) |
+| **Nikki** | `FabricSheen`, `SheenTint`, `SheenPower` | Second fresnel lobe for satin / fabric |
+| **Nikki** | `BloomBoost` | Emissive multiplier for post bloom |
+
+Build: `py "G:/EnvironmentPortfolio/BS_GodFile/Content/Python/setup_master_universal.py"` (close material tabs first).
+
+**`M_Master_Toon_Unified`** — feature-stack master (oil/temporal/ink/audio/gilding scalars, default 0). Environment instances under `Instances/Environment/MI_Env_*`.
+
+Non-SDF MooaToon masters (`M_Stone_*_Toon`, `M_Wood_Toon`, etc.) → duplicate `MI_Master_Toon_Universal_Default` or `MI_Env_*` and tune — no per-asset graph forks.
+
+---
+
+## Full-stack pipeline (2026-06-19)
+
+| Script | Role |
+|--------|------|
+| `run_phase_a_fixup.py` | MeshBlend rewire + texture rewire + toon convert + ensure instances |
+| `run_full_stack_pipeline.py` | Restore copies + Phase A + MF library + masters + audit |
+| `setup_master_universal.py` | Build `M_Master_Toon_Universal` with Nikki glow layer |
+| `rewire_portfolio_texture_refs.py` | Editor-safe `_PROJECT` → `SDF/Textures` on material graphs |
+| `patch_portfolio_texture_paths.py` | Texture uasset self-ref patch (run with editor **closed**) |
+| `patch_meshblend_uasset_paths.py` | MeshBlend FString patch (editor closed) |
+
+**Never run** `patch_portfolio_uasset_paths.py` on materials — FString length mismatches corrupt packages.
+
+**Repurposing workflow:** duplicate any `MI_*` → tune instance params → assign to mesh. Masters stay shared.
 
 ---
 
@@ -256,4 +295,4 @@ Non-SDF MooaToon masters (`M_Stone_*_Toon`, `M_Wood_Toon`, `M_Fabric_Toon`, `M_U
 
 ---
 
-*Last updated: 2026-06-19 — runbook + inventory scan added*
+*Last updated: 2026-06-19 — universal master + full-stack pipeline*
