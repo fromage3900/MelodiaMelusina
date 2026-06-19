@@ -1,0 +1,22 @@
+{
+	"FileVersion": 3,
+	"EngineAssociation": "{A09DB5AA-4FF1-486D-8801-F99A97B901A3}",
+	"Category": "",
+	"Description": "",
+	"Modules": [
+		{
+			"Name": "BS_GodFile",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	],
+	"Plugins": [
+		{
+			"Name": "ModelingToolsEditorMode",
+			"Enabled": true,
+			"TargetAllowList": [
+				"Editor"
+			]
+		}
+	]
+}
