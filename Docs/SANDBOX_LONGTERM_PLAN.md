@@ -20,8 +20,9 @@ Single root, shallow (3–4 levels). Organize by *what it is in the world*, not 
 Content/
   EnvSandbox/
     _Template/            # the reusable showcase level + its rig (see §4)
+    Materials/            # shared masters, SDF, instances, functions, toon profiles (see MATERIAL_MIGRATION.md)
+      Masters/  SDF/  Instances/  Functions/  ToonProfiles/  PostProcess/
     Shared/
-      Materials/          # master materials, material functions, toon profiles
       Decals/  HDRIs/  Skies/
     Environments/
       <StyleName>/        # one folder per environment iteration
@@ -45,7 +46,7 @@ One polished, reusable level you **duplicate per style** — this is what makes 
 
 ## 5. Material architecture (Substrate toon)
 Keep it to a **small set of master materials**, not hundreds:
-- `M_Master_Toon` (Substrate Toon BSDF + Toon Profile), `M_Master_PBR`, `M_Master_Foliage`, `M_Master_Glass`.
+- `M_Toon_SDF` (SDF batch 1 — Substrate Toon + world-band proxy), then `M_Master_Toon`, `M_Master_PBR`, `M_Master_Foliage`, `M_Master_Glass`. See `Docs/MATERIAL_MIGRATION.md`.
 - Reusable logic in **Material Functions** (`MF_`); per-surface variation via **Material Instances** (`MI_`) — never new master materials per asset.
 - **Outline** = shared post-process material (not per-mesh).
 - ⚠️ **Limit static switches.** 10 chained switches = 1024 shader permutations → brutal compile times. Use switches only for high-impact toggles; use scalar params for the rest.
@@ -83,7 +84,7 @@ Keep it to a **small set of master materials**, not hundreds:
 2. Set `r.MegaLights.EnableForProject=1`.
 3. Verify Substrate Toon (Toon BSDF + Toon Profile) in-editor → build `M_Master_Toon`.
 4. Build the `_Template` level (§4).
-5. Evaluate the migrated test materials; decide on the full material migration.
+5. Follow [`TOON_MIGRATION_RUNBOOK.md`](TOON_MIGRATION_RUNBOOK.md) — Batch 3: convert copied SDF masters to Substrate Toon.
 
 ---
 *Sources: Epic naming conventions; UE5 project-structure guides (Auke Huys, StraySpark, Hyperdense); UE 5.8 release notes / Substrate Toon docs. Links provided in chat.*
