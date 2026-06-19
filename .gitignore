@@ -12,3 +12,7 @@ Build/
 Thumbs.db
 Desktop.ini
 .DS_Store
+
+# Python cache
+Content/Python/__pycache__/
+*.pyc
