@@ -87,7 +87,16 @@ def tex_object(m, name, x, y, group: str = "Textures"):
     e = lib.create_expression(m, unreal.MaterialExpressionTextureObjectParameter, x, y)
     e.set_editor_property("parameter_name", name)
     e.set_editor_property("group", group)
+    _wire_catalog_texture(e, name)
     return e
+
+
+def _wire_catalog_texture(expr, param_name: str) -> None:
+    import portfolio_texture_catalog as catalog
+
+    candidates = catalog.MASTER_TEXTURE_DEFAULTS.get(param_name)
+    if candidates:
+        lib.set_expression_texture(expr, candidates)
 
 
 def mf_call(m, path, x, y):
@@ -495,6 +504,7 @@ def build():
         m, "SparkleMask", "Nikki", -2100, 1740,
         desc="Alpha sparkles / bokeh (T_Spark_*)",
     )
+    _wire_catalog_texture(spark_mask, "SparkleMask")
     spark_scale = lib.scalar_param(m, "SparkleScale", "Nikki", 8.0, -2100, 1840)
     spark_int = lib.scalar_param(m, "SparkleIntensity", "Nikki", 0.0, -2100, 1940)
     spark_color = lib.vector_param(m, "SparkleColor", "Nikki", (1.00, 0.95, 0.80, 1.0), -2100, 2040)
@@ -561,6 +571,7 @@ def build():
     fairy_color = lib.vector_param(m, "FairyDustColor", "FairyDust", (1.0, 0.92, 0.98, 1.0), -2100, 5840)
     fairy_thresh = lib.scalar_param(m, "FairyHighlightThreshold", "FairyDust", 0.35, -2100, 5940)
     fairy_glyph = lib.texture_param(m, "FairyGlyphMask", "FairyDust", -2100, 6040)
+    _wire_catalog_texture(fairy_glyph, "FairyGlyphMask")
 
     color_nikki = lib.create_expression(m, unreal.MaterialExpressionLinearInterpolate, 220, 120)
     wire("nikki_base_A", color, color_nikki, "A")
@@ -1476,16 +1487,26 @@ def build():
     unreal.MaterialEditingLibrary.recompile_material(m)
     lib.save_package(m)
 
+    import portfolio_texture_catalog as catalog
+
+    wired_tex = catalog.apply_master_defaults(m, path, force=True)
+    violations = catalog.scan_master_texture_violations(m)
+    unreal.log(f"[Universal] compositing defaults wired: {len(wired_tex)} -> {list(wired_tex.keys())}")
+    if violations["banned"] or violations["unwired"]:
+        unreal.log_error(f"[Universal] texture violations (must fix): {violations}")
+
     failed = sorted(k for k, v in WIRES.items() if not v)
     unreal.log(f"[Universal] built {path}")
     unreal.log(f"[Universal] wires ok={sum(WIRES.values())}/{len(WIRES)} | failed={failed}")
     print(f"UNIVERSAL_RESULT path={path} ok={sum(WIRES.values())}/{len(WIRES)} failed={failed}")
 
-    try:
-        import setup_universal_instances as inst
-        inst.build_instances()
-    except Exception as exc:
-        unreal.log_warning(f"[Universal] instances: {exc}")
+    if not force:
+        try:
+            import setup_universal_instances as inst
+
+            inst.build_instances()
+        except Exception as exc:
+            unreal.log_warning(f"[Universal] instances: {exc}")
 
     return path
 

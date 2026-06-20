@@ -15,6 +15,7 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 REPORT = PROJECT_ROOT / "Saved" / "Audit" / "master_review.json"
+LOOP_REPORT = PROJECT_ROOT / "Saved" / "Audit" / "master_texture_loop.json"
 UE_CMD = Path(r"C:\Program Files\Epic Games\UE_5.8\Engine\Binaries\Win64\UnrealEditor-Cmd.exe")
 UPROJECT = PROJECT_ROOT / "BS_GodFile.uproject"
 
@@ -92,7 +93,7 @@ def _unwired_texture_slots(material, path: str) -> list[str]:
                     tex = me.get_material_default_texture_parameter_value(material, raw)
                 except Exception:
                     pass
-            if lib.is_placeholder_texture(tex):
+            if lib.is_placeholder_texture(tex) or lib.is_banned_texture(tex):
                 missing.append(pname)
         return missing
 
@@ -108,7 +109,7 @@ def _unwired_texture_slots(material, path: str) -> list[str]:
                     break
             except Exception:
                 continue
-        if not tex:
+        if not tex or lib.is_placeholder_texture(tex) or lib.is_banned_texture(tex):
             missing.append(pname)
     return missing
 
@@ -136,9 +137,11 @@ def _review_master(path: str) -> dict:
     entry["unwired_textures_before"] = _unwired_texture_slots(mat, path)
     entry["texture_parameter_names"] = lib.texture_parameter_names(mat)
 
-    wired = catalog.apply_master_defaults(mat, path)
+    wired = catalog.apply_master_defaults(mat, path, force=True)
     entry["master_textures_wired"] = wired
+    entry["texture_violations"] = catalog.scan_master_texture_violations(mat)
     entry["unwired_textures_after"] = _unwired_texture_slots(mat, path)
+    entry["banned_textures_after"] = entry["texture_violations"].get("banned", [])
 
     try:
         unreal.MaterialEditingLibrary.recompile_material(mat)
@@ -168,6 +171,8 @@ def _run_in_ue() -> int:
 
     dead_total = sum(len(m.get("dead_functions", [])) for m in masters.values())
     unwired_after = sum(len(m.get("unwired_textures_after", [])) for m in masters.values())
+    banned_after = sum(len(m.get("banned_textures_after", [])) for m in masters.values())
+    wrong_role = sum(len(m.get("texture_violations", {}).get("wrong_role", [])) for m in masters.values())
 
     report = {
         "timestamp": datetime.now(timezone.utc).isoformat(),
@@ -175,9 +180,15 @@ def _run_in_ue() -> int:
         "summary": {
             "dead_function_calls": dead_total,
             "unwired_texture_slots": unwired_after,
+            "banned_texture_slots": banned_after,
+            "wrong_role_orm_slots": wrong_role,
             "all_substrate_toon": all(m.get("substrate_toon") for m in masters.values() if m.get("exists")),
+            "clean": banned_after == 0 and unwired_after == 0 and dead_total == 0,
         },
     }
+
+    LOOP_REPORT.parent.mkdir(parents=True, exist_ok=True)
+    LOOP_REPORT.write_text(json.dumps(report, indent=2), encoding="utf-8")
 
     # Dead-node audit: safe masters + Functions only (skip bulk SDF copies)
     dead_functions: list[dict] = []
@@ -238,9 +249,9 @@ def _run_in_ue() -> int:
     REPORT.parent.mkdir(parents=True, exist_ok=True)
     REPORT.write_text(json.dumps(report, indent=2), encoding="utf-8")
     unreal.log(
-        f"[MasterReview] dead_mf={dead_total} unwired_tex={unwired_after} -> {REPORT}"
+        f"[MasterReview] dead_mf={dead_total} banned_tex={banned_after} unwired_tex={unwired_after} -> {REPORT}"
     )
-    return 0 if dead_total == 0 else 1
+    return 0 if dead_total == 0 and banned_after == 0 and unwired_after == 0 else 1
 
 
 def main() -> int:

@@ -46,7 +46,7 @@ def _run_in_ue() -> int:
         mat = unreal.load_asset(path)
         if not mat:
             continue
-        wired_masters[base] = catalog.apply_master_defaults(mat, base)
+        wired_masters[base] = catalog.apply_master_defaults(mat, base, force=True)
         lib.save_package(mat)
 
     results = inst.build_instances()

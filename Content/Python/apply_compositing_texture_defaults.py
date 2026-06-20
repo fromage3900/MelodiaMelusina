@@ -56,7 +56,7 @@ def _run_in_ue() -> int:
         mat = unreal.load_asset(path)
         if not mat:
             continue
-        wired = catalog.apply_master_defaults(mat, base)
+        wired = catalog.apply_master_defaults(mat, base, force=True)
         lib.save_package(mat)
         report["masters"][base] = wired
         unreal.log(f"[CompositingDefaults] master {base}: {len(wired)} textures")

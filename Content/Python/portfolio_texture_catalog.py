@@ -52,26 +52,26 @@ def _chain(*paths: str) -> list[str]:
     return list(paths)
 
 
+# Normal-ish fallbacks without /Engine/ — compositing noise + SDF masks only
+def _normal_chain() -> list[str]:
+    return _chain(COMPOSITING["noise_fine"], HEIGHT["perlin"], MASK["voronoi_swirl"], MARBLE["light"])
+
+
 MASTER_TEXTURE_DEFAULTS: dict[str, list[str]] = {
-    "Albedo": _chain(MARBLE["warm_stone"], MARBLE["light"], COMPOSITING["abstract_a"]),
-    "NormalMap": _chain(
-        "/Engine/EngineMaterials/DefaultNormal.DefaultNormal",
-        HEIGHT["perlin"],
-        HEIGHT["perlin_sdf"],
+    "Albedo": _chain(
+        COMPOSITING["abstract_a"],
+        COMPOSITING["gradient_warm"],
+        MARBLE["warm_stone"],
+        MARBLE["light"],
     ),
-    "ORM": _chain(MARBLE["worn"], COMPOSITING["noise_fine"]),
-    "HeightMap": _chain(HEIGHT["perlin"], HEIGHT["perlin_sdf"], COMPOSITING["noise_fine"]),
-    "LayerB_Albedo": _chain(MASK["voronoi_crack"], COMPOSITING["crack_overlay"]),
-    "LayerB_NormalMap": _chain(
-        "/Engine/EngineMaterials/DefaultNormal.DefaultNormal",
-        COMPOSITING["noise_fine"],
-    ),
-    "LayerB_ORM": _chain(COMPOSITING["crack_heavy"], MARBLE["dark"]),
+    "NormalMap": _normal_chain(),
+    "ORM": _chain(MARBLE["worn"], MARBLE["dark"], COMPOSITING["abstract_a"]),
+    "HeightMap": _chain(HEIGHT["perlin"], COMPOSITING["noise_fine"], HEIGHT["perlin_sdf"]),
+    "LayerB_Albedo": _chain(COMPOSITING["crack_overlay"], MASK["voronoi_crack"]),
+    "LayerB_NormalMap": _normal_chain(),
+    "LayerB_ORM": _chain(MARBLE["dark"], MARBLE["worn"], COMPOSITING["crack_heavy"]),
     "LayerB_HeightMap": _chain(COMPOSITING["crack_heavy"], HEIGHT["perlin"], MASK["voronoi_crack"]),
-    "DetailNormal": _chain(
-        "/Engine/EngineMaterials/DefaultNormal.DefaultNormal",
-        COMPOSITING["noise_fine"],
-    ),
+    "DetailNormal": _chain(COMPOSITING["noise_fine"], HEIGHT["perlin"], MASK["voronoi_swirl"]),
     "SparkleMask": _chain(
         "/Game/Alphas_Sparkles/T_Spark_Twinkle8.T_Spark_Twinkle8",
         "/Game/Alphas_Sparkles/T_Spark_Sparkle4.T_Spark_Sparkle4",
@@ -92,12 +92,8 @@ MASTER_TEXTURE_DEFAULTS: dict[str, list[str]] = {
 
 # M_Master_Toon_Unified / M_Master_SDF_Toon (TextureSampleParameter2D, no Albedo slot)
 UNIFIED_SDF_TEXTURE_DEFAULTS: dict[str, list[str]] = {
-    "NormalMap": _chain(
-        "/Engine/EngineMaterials/DefaultNormal.DefaultNormal",
-        HEIGHT["perlin"],
-        HEIGHT["perlin_sdf"],
-    ),
-    "RoughnessMap": _chain(MARBLE["worn"], COMPOSITING["noise_fine"], HEIGHT["perlin"]),
+    "NormalMap": _normal_chain(),
+    "RoughnessMap": _chain(MARBLE["worn"], MARBLE["dark"], COMPOSITING["abstract_a"]),
     "HeightMap": _chain(HEIGHT["perlin"], HEIGHT["perlin_sdf"], COMPOSITING["crack_overlay"]),
 }
 
@@ -140,7 +136,7 @@ INSTANCE_TEXTURE_DEFAULTS: dict[str, dict[str, list[str]]] = {
     "MI_Show_Default": {
         "Albedo": _chain(MARBLE["warm_stone"]),
         "HeightMap": _chain(HEIGHT["perlin"]),
-        "NormalMap": _chain("/Engine/EngineMaterials/DefaultNormal.DefaultNormal"),
+        "NormalMap": _normal_chain(),
     },
     "MI_Show_StoneCliff": {
         "Albedo": _chain(MARBLE["warm_stone"]),
@@ -312,7 +308,7 @@ INSTANCE_TEXTURE_RULES: list[tuple[tuple[str, ...], dict[str, list[str]]]] = [
         {
             "Albedo": _chain(MARBLE["cool_stone"], MARBLE["dark"]),
             "HeightMap": _chain(HEIGHT["perlin"], COMPOSITING["noise_fine"]),
-            "DetailNormal": _chain("/Engine/EngineMaterials/DefaultNormal.DefaultNormal"),
+            "DetailNormal": _chain(COMPOSITING["noise_fine"], HEIGHT["perlin"]),
         },
     ),
     (
@@ -441,8 +437,43 @@ def resolve_instance_texture_map(instance_name: str) -> dict[str, list[str]]:
     return merged
 
 
-def apply_master_defaults(material, material_path: str | None = None) -> dict[str, str]:
-    """Set default textures on master parameter nodes (editor only)."""
+def scan_master_texture_violations(material) -> dict[str, list[str]]:
+    """Return banned (/Engine/) and unwired texture param names on a master."""
+    import material_lib as lib
+
+    banned: list[str] = []
+    unwired: list[str] = []
+    wrong_role: list[str] = []
+    height_noise_markers = ("Perlin", "Cracks", "Voronoi", "noise_texture_pack")
+
+    for expr, _owner in lib.iter_texture_parameter_expressions(material):
+        pname = _param_name(expr)
+        if not pname:
+            continue
+        tex = None
+        for prop in ("texture", "Texture"):
+            try:
+                tex = expr.get_editor_property(prop)
+                if tex:
+                    break
+            except Exception:
+                continue
+        if not tex or lib.is_placeholder_texture(tex):
+            unwired.append(pname)
+            continue
+        path = lib.texture_asset_path(tex) or ""
+        if lib.is_banned_texture(tex):
+            banned.append(pname)
+        if pname in ("ORM", "LayerB_ORM", "RoughnessMap") and any(m in path for m in height_noise_markers):
+            wrong_role.append(pname)
+
+    return {"banned": banned, "unwired": unwired, "wrong_role": wrong_role}
+
+
+def apply_master_defaults(
+    material, material_path: str | None = None, *, force: bool = False
+) -> dict[str, str]:
+    """Set default textures on master parameter nodes from /Game/Textures compositing catalog."""
     import unreal
     import material_lib as lib
 
@@ -480,8 +511,12 @@ def apply_master_defaults(material, material_path: str | None = None) -> dict[st
                 current = me.get_material_default_texture_parameter_value(material, pname)
             except Exception:
                 current = None
-        if current and not lib.is_placeholder_texture(current):
+        if not force and current and not lib.is_banned_texture(current):
             wired[pname] = lib.texture_asset_path(current) or ""
+            continue
+        candidates = lib.sanitize_candidates(candidates)
+        if not candidates:
+            unreal.log_warning(f"[texture_catalog] no valid candidates for master {pname}")
             continue
         path = lib.set_expression_texture(expr, candidates)
         if path:

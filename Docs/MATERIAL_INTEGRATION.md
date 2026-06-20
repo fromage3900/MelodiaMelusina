@@ -92,7 +92,7 @@ Editor one-shot: `py ".../run_editor_integration.py"`
 
 ## Audit reports (local, gitignored)
 
-`Saved/Audit/`: `master_review.json`, `compositing_integration.json`, `compositing_texture_defaults.json`, `starter_instances.json`, `dead_material_nodes.json`, `ensure_portfolio_instances.json`, `substrate_toon_conversion.json`, `storybook_outline_build.json`
+`Saved/Audit/`: `master_review.json`, `master_texture_loop.json`, `compositing_integration.json`, `compositing_texture_defaults.json`, `starter_instances.json`, `dead_material_nodes.json`, `ensure_portfolio_instances.json`, `substrate_toon_conversion.json`, `storybook_outline_build.json`
 
 ## Not in git
 
@@ -132,3 +132,33 @@ If a future headless run fails with **Error 32** (file lock), close the editor a
 | Headless `--force` via argv | Fixed — UE-Cmd does not pass `-force` to `sys.argv`; use `BS_MASTER_FORCE=1` env |
 
 **Next tick:** editor `setup_template_showcase.py` (10-sphere row) + `review_portfolio_masters.py` viewport check on nebula/cherry blossom starters.
+
+## Master texture loop (no `/Engine/` textures)
+
+**Hard rule:** Never assign `DefaultTexture`, `WhiteSquareTexture`, or any `/Engine/` path on master texture parameters. All defaults come from `/Game/Textures` compositing catalog via [`portfolio_texture_catalog.py`](Content/Python/portfolio_texture_catalog.py).
+
+| Mechanism | Purpose |
+|-----------|---------|
+| `material_lib.BANNED_TEXTURE_PATHS` + `sanitize_candidates()` | Block `/Engine/` at assign time |
+| `apply_master_defaults(..., force=True)` | Force rewire from compositing catalog |
+| `scan_master_texture_violations()` | Audit banned / unwired / wrong-role ORM |
+| `run_master_material_loop_tick.py` | One idempotent loop pass (60s cadence) |
+
+**Run (headless, editor closed):**
+
+```text
+set BS_MASTER_FORCE=1
+py Content/Python/run_master_material_loop_tick.py
+```
+
+**Audit:** `Saved/Audit/master_texture_loop.json` — success when `summary.clean` is true (0 banned, 0 unwired).
+
+### Texture loop tick #0 (2026-06-20)
+
+| Master | Result |
+|--------|--------|
+| `M_Master_Toon_Universal` | 12/12 slots on `/Game/Textures` + alphas; 0 banned; compile OK |
+| `M_Master_SDF_Toon` | 3/3 on compositing + SDF marble; 0 banned |
+| `M_Master_Toon_Unified` | 3/3 on compositing + SDF marble; 0 banned |
+
+ORM slots use SDF marble packs (not Perlin height noise). Normal slots use compositing `Perlin_10` (no `DefaultNormal`).

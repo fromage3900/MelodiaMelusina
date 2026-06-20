@@ -85,7 +85,7 @@ def _wire_masters_and_instances(report: dict) -> None:
         mat = unreal.load_asset(mp)
         if not mat:
             continue
-        wired = catalog.apply_master_defaults(mat, mp.split(".", 1)[0])
+        wired = catalog.apply_master_defaults(mat, mp.split(".", 1)[0], force=True)
         lib.save_package(mat)
         master_wired[mp] = wired
 

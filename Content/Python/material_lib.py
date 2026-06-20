@@ -461,9 +461,15 @@ def texture_param(owner, name: str, group: str, x: int, y: int, *, desc: str | N
 
 PLACEHOLDER_TEXTURE_PATHS = {
     "/Engine/EngineResources/DefaultTexture",
+    "/Engine/EngineResources/WhiteSquareTexture",
+    "/Engine/EngineMaterials/DefaultNormal",
     "/Engine/EngineMaterials/DefaultDiffuse",
     "/Engine/EngineMaterials/DefaultWhiteGrid",
+    "/Engine/EngineMaterials/DefaultWhiteTexture",
 }
+
+# Never assign these (or any /Engine/ path) on portfolio master/instance texture params.
+BANNED_TEXTURE_PATHS = frozenset(PLACEHOLDER_TEXTURE_PATHS)
 
 
 def texture_asset_path(tex) -> str | None:
@@ -475,17 +481,36 @@ def texture_asset_path(tex) -> str | None:
         return None
 
 
+def is_banned_texture_path(path: str | None) -> bool:
+    if not path:
+        return True
+    base = path.split(".", 1)[0]
+    return base in BANNED_TEXTURE_PATHS or base.startswith("/Engine/")
+
+
+def is_banned_texture(tex) -> bool:
+    return is_banned_texture_path(texture_asset_path(tex))
+
+
+def sanitize_candidates(candidates: list[str] | str) -> list[str]:
+    if isinstance(candidates, str):
+        candidates = [candidates]
+    clean = [p for p in candidates if p and not is_banned_texture_path(p.split(".", 1)[0])]
+    if len(clean) < len(candidates):
+        dropped = [p for p in candidates if p not in clean]
+        unreal.log_warning(f"[material_lib] dropped banned/Engine texture candidates: {dropped[:4]}")
+    return clean
+
+
 def is_placeholder_texture(tex) -> bool:
-    path = texture_asset_path(tex)
-    return not path or path in PLACEHOLDER_TEXTURE_PATHS
+    return is_banned_texture(tex) or not texture_asset_path(tex)
 
 
 def resolve_texture_path(candidates: list[str] | str) -> str | None:
-    if isinstance(candidates, str):
-        candidates = [candidates]
-    for path in candidates:
-        if unreal.EditorAssetLibrary.does_asset_exist(path):
-            return path
+    for path in sanitize_candidates(candidates):
+        pkg = path.split(".", 1)[0]
+        if unreal.EditorAssetLibrary.does_asset_exist(path) or unreal.EditorAssetLibrary.does_asset_exist(pkg):
+            return path if unreal.EditorAssetLibrary.does_asset_exist(path) else pkg
     return None
 
 
@@ -495,10 +520,17 @@ def load_texture(candidates: list[str] | str):
 
 
 def set_expression_texture(expr, candidates: list[str] | str) -> str | None:
+    candidates = sanitize_candidates(candidates)
+    if not candidates:
+        unreal.log_error("[material_lib] set_expression_texture: no valid /Game candidates after ban filter")
+        return None
     tex = load_texture(candidates)
     if not tex or not expr:
         return None
     path = resolve_texture_path(candidates)
+    if path and is_banned_texture_path(path):
+        unreal.log_error(f"[material_lib] refused banned texture assignment: {path}")
+        return None
     for prop in ("texture", "Texture"):
         try:
             expr.set_editor_property(prop, tex)
@@ -510,6 +542,9 @@ def set_expression_texture(expr, candidates: list[str] | str) -> str | None:
 
 
 def set_instance_texture(instance, param_name: str, candidates: list[str] | str) -> str | None:
+    candidates = sanitize_candidates(candidates)
+    if not candidates:
+        return None
     tex = load_texture(candidates)
     if not tex or not instance:
         return None
