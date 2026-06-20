@@ -29,6 +29,8 @@ WAT = "/Engine/Functions/Engine_MaterialFunctions02/Texturing/WorldAlignedTextur
 WAN = "/Engine/Functions/Engine_MaterialFunctions02/Texturing/WorldAlignedNormal"
 MF_SKIN_WRAP = f"{lib.FUNCTION_DIR}/MF_AnimeSkinWrap"
 MF_SPACE_PARALLAX = f"{lib.FUNCTION_DIR}/MF_SpaceParallax"
+MF_PARALLAX_CORE = f"{lib.FUNCTION_DIR}/MF_ParallaxCore"
+MF_NORMAL_ADJUST = f"{lib.FUNCTION_DIR}/MF_NormalAdjust"
 
 # Material Instance editor parameter groups (keep in sync with starter_instances key_params)
 GROUP_PALETTE = "Palette"
@@ -202,48 +204,35 @@ def apply_temporal_uv(m, uv, temporal_str, wind, noise_scale, smear, boil, tag: 
     return out
 
 
-def parallax_uv_offset(m, uv, height_tex, scale, strength, tag: str):
-    """Height-map POM proxy: offset UV before map samples (scalar→float2 append avoids float3 mix)."""
-    h_s = lib.create_expression(m, unreal.MaterialExpressionTextureSample, -2400, 6600)
-    wire(f"{tag}_h_obj", height_tex, h_s, "Tex", "TextureObject")
-    wire(f"{tag}_h_uv", uv, h_s, "UVs", "Coordinates")
-    h_r = lib.create_expression(m, unreal.MaterialExpressionComponentMask, -2240, 6600)
-    h_r.set_editor_property("r", True)
-    h_r.set_editor_property("g", False)
-    h_r.set_editor_property("b", False)
-    h_r.set_editor_property("a", False)
-    wire(f"{tag}_h_r", h_s, h_r, "")
-    view = lib.create_expression(m, unreal.MaterialExpressionCameraVectorWS, -2400, 6720)
-    view_r = lib.create_expression(m, unreal.MaterialExpressionComponentMask, -2240, 6720)
-    view_r.set_editor_property("r", True)
-    view_r.set_editor_property("g", False)
-    view_r.set_editor_property("b", False)
-    view_r.set_editor_property("a", False)
-    WIRES[f"{tag}_vr"] = lib.connect_unary(view, view_r)
-    view_g = lib.create_expression(m, unreal.MaterialExpressionComponentMask, -2240, 6840)
-    view_g.set_editor_property("r", False)
-    view_g.set_editor_property("g", True)
-    view_g.set_editor_property("b", False)
-    view_g.set_editor_property("a", False)
-    WIRES[f"{tag}_vg"] = lib.connect_unary(view, view_g)
-    pom_s = lib.create_expression(m, unreal.MaterialExpressionMultiply, -2080, 6660)
-    wire(f"{tag}_psA", h_r, pom_s, "A")
-    wire(f"{tag}_psB", scale, pom_s, "B")
-    pom_s2 = lib.create_expression(m, unreal.MaterialExpressionMultiply, -1920, 6660)
-    wire(f"{tag}_ps2A", pom_s, pom_s2, "A")
-    wire(f"{tag}_ps2B", strength, pom_s2, "B")
-    off_u = lib.create_expression(m, unreal.MaterialExpressionMultiply, -1760, 6620)
-    wire(f"{tag}_ouA", pom_s2, off_u, "A")
-    wire(f"{tag}_ouB", view_r, off_u, "B")
-    off_v = lib.create_expression(m, unreal.MaterialExpressionMultiply, -1760, 6740)
-    wire(f"{tag}_ovA", pom_s2, off_v, "A")
-    wire(f"{tag}_ovB", view_g, off_v, "B")
-    off = lib.create_expression(m, unreal.MaterialExpressionAppendVector, -1600, 6680)
-    WIRES[f"{tag}_offA"] = lib.connect_append2(off_u, off_v, off)
-    out = lib.create_expression(m, unreal.MaterialExpressionAdd, -1440, 6620)
-    wire(f"{tag}_pA", uv, out, "A")
-    wire(f"{tag}_pB", off, out, "B")
-    return out
+def parallax_uv_offset(
+    m, uv, height_tex, scale, layer_scale, strength, steps, mode, height_mul, tag: str, y_base: int = 6600,
+):
+    """MF_ParallaxCore — height parallax UV offset (modes 0/1/2)."""
+    call = mf_call(m, MF_PARALLAX_CORE, -2400, y_base)
+    if not call:
+        unreal.log_warning(f"[Universal] MF_ParallaxCore missing — {tag} passthrough UV")
+        return uv
+    wire(f"{tag}_px_uv", uv, call, "UV")
+    wire(f"{tag}_px_ht", height_tex, call, "HeightTexture", "Height")
+    wire(f"{tag}_px_sc", scale, call, "ParallaxScale")
+    wire(f"{tag}_px_lsc", layer_scale, call, "LayerParallaxScale")
+    wire(f"{tag}_px_str", strength, call, "ParallaxStrength")
+    wire(f"{tag}_px_h", height_mul, call, "ParallaxHeight")
+    wire(f"{tag}_px_st", steps, call, "ParallaxSteps")
+    wire(f"{tag}_px_md", mode, call, "ParallaxMode")
+    return call
+
+
+def adjust_normal_map(m, nrm_sample, n_str, n_pow, layer_str, tag: str, y: int):
+    """MF_NormalAdjust — strength, power, per-layer scale on sampled normal."""
+    call = mf_call(m, MF_NORMAL_ADJUST, -1280, y)
+    if not call:
+        return nrm_sample
+    wire(f"{tag}_n_in", nrm_sample, call, "Normal")
+    wire(f"{tag}_n_str", n_str, call, "NormalStrength")
+    wire(f"{tag}_n_pow", n_pow, call, "NormalPower")
+    wire(f"{tag}_n_lay", layer_str, call, "LayerNormalStrength")
+    return call
 
 
 def sample_maps_uv(
@@ -367,6 +356,16 @@ def build():
             mf_setup.build_all(force=False)
         except Exception as exc:
             unreal.log_warning(f"[Universal] MF library: {exc}")
+    for _mf in ("MF_ParallaxCore", "MF_NormalAdjust"):
+        if not unreal.EditorAssetLibrary.does_asset_exist(f"{lib.FUNCTION_DIR}/{_mf}"):
+            try:
+                import setup_material_functions as mf_setup
+
+                mf_setup.build_all(force=False)
+                break
+            except Exception as exc:
+                unreal.log_warning(f"[Universal] MF parallax/normal: {exc}")
+                break
 
     m.set_editor_property("material_domain", unreal.MaterialDomain.MD_SURFACE)
     m.set_editor_property("blend_mode", unreal.BlendMode.BLEND_OPAQUE)
@@ -387,6 +386,7 @@ def build():
     height_a = tex_object(m, "HeightMap", -2100, 960, "LayerA")
     layer_a_weight = lib.scalar_param(m, "LayerA_TextureWeight", "LayerA", 1.0, -2100, 1080)
     layer_a_parallax = lib.scalar_param(m, "LayerA_ParallaxScale", "LayerA", 1.0, -2100, 1180)
+    layer_a_nrm_str = lib.scalar_param(m, "LayerA_NormalStrength", "LayerA", 1.0, -2100, 1230)
 
     # ---- Layer B (overlay) texture set ----
     alb_b = tex_object(m, "LayerB_Albedo", -2100, 1280, "LayerB")
@@ -395,12 +395,32 @@ def build():
     height_b = tex_object(m, "LayerB_HeightMap", -2100, 1760, "LayerB")
     layer_b_weight = lib.scalar_param(m, "LayerB_TextureWeight", "LayerB", 1.0, -2100, 1880)
     layer_b_parallax = lib.scalar_param(m, "LayerB_ParallaxScale", "LayerB", 1.0, -2100, 1980)
+    layer_b_nrm_str = lib.scalar_param(m, "LayerB_NormalStrength", "LayerB", 1.0, -2100, 2030)
     layer_blend = lib.scalar_param(m, "LayerBlend", "Layers", 0.0, -2100, 2100)
 
     # ---- Parallax (shared + per-layer) ----
     parallax_scale = lib.scalar_param(m, "ParallaxScale", "Parallax", 0.04, -2100, 2320)
     parallax_str = lib.scalar_param(m, "ParallaxStrength", "Parallax", 0.0, -2100, 2420)
-    parallax_steps = lib.scalar_param(m, "ParallaxSteps", "Parallax", 8.0, -2100, 2520)
+    parallax_steps = lib.scalar_param(
+        m, "ParallaxSteps", "Parallax", 8.0, -2100, 2520,
+        desc="POM step count (mode 2; MF_ParallaxCore)",
+    )
+    parallax_mode = lib.scalar_param(
+        m, "ParallaxMode", "Parallax", 0.0, -2100, 2550,
+        desc="0=simple offset 1=steep 2=stepped POM (MF_ParallaxCore)",
+    )
+    parallax_height = lib.scalar_param(
+        m, "ParallaxHeight", "Parallax", 1.0, -2100, 2580,
+        desc="Height multiplier — MI compat alias for depth scale",
+    )
+    normal_strength = lib.scalar_param(
+        m, "NormalStrength", "Parallax", 1.0, -2100, 2610,
+        desc="Global normal map XY amplitude (MF_NormalAdjust)",
+    )
+    normal_power = lib.scalar_param(
+        m, "NormalPower", "Parallax", 1.0, -2100, 2640,
+        desc="Normal Z flatten/power before renormalize (MF_NormalAdjust)",
+    )
 
     # ---- Temporal stylization ----
     temporal_str = lib.scalar_param(m, "TemporalStrength", "Temporal", 0.0, -2100, 2740)
@@ -418,14 +438,22 @@ def build():
         m, uv, temporal_str, wind_speed, temporal_noise, smear_str, boil_int, "temporal"
     )
 
-    # Parallax per layer (strength gated)
-    pom_a = parallax_uv_offset(m, uv_time, height_a, parallax_scale, layer_a_parallax, "pomA")
-    pom_b = parallax_uv_offset(m, uv_time, height_b, parallax_scale, layer_b_parallax, "pomB")
+    # Parallax per layer (MF_ParallaxCore + strength gate)
+    pom_a = parallax_uv_offset(
+        m, uv_time, height_a, parallax_scale, layer_a_parallax, parallax_str,
+        parallax_steps, parallax_mode, parallax_height, "pomA", 6600,
+    )
+    pom_b = parallax_uv_offset(
+        m, uv_time, height_b, parallax_scale, layer_b_parallax, parallax_str,
+        parallax_steps, parallax_mode, parallax_height, "pomB", 7000,
+    )
     uv_a = lerp3(m, uv_time, pom_a, parallax_str, "uv_pomA", -1480, 480)
     uv_b = lerp3(m, uv_time, pom_b, parallax_str, "uv_pomB", -1480, 1280)
 
     alb_a, nrm_a, orm_a = sample_maps_uv(m, uv_a, albedo, normal, orm, tri_tiling, "layA", 480)
     alb_b_s, nrm_b_s, orm_b_s = sample_maps_uv(m, uv_b, alb_b, nrm_b, orm_b, tri_tiling, "layB", 1280)
+    nrm_a = adjust_normal_map(m, nrm_a, normal_strength, normal_power, layer_a_nrm_str, "nrmAdjA", 480)
+    nrm_b_s = adjust_normal_map(m, nrm_b_s, normal_strength, normal_power, layer_b_nrm_str, "nrmAdjB", 1280)
 
     alb_blend = lerp3(m, alb_a, alb_b_s, layer_blend, "alb_lerp", -680, 520)
     nrm_blend = lerp3(m, nrm_a, nrm_b_s, layer_blend, "nrm_lerp", -680, 680)

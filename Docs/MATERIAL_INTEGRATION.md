@@ -23,6 +23,7 @@ Groups in the Material Editor (rebuild master with `--force` after group renames
 |-------|---------|
 | **Textures / LayerA / LayerB** | Albedo, normal, ORM, height, detail |
 | **Triplanar / Temporal** | World-aligned UVs, ink boil/smear |
+| **Parallax** | **`MF_ParallaxCore`** — modes 0/1/2 height UV offset; **`MF_NormalAdjust`** — `NormalStrength`, `NormalPower`, per-layer strengths; `ParallaxSteps` wired |
 | **Nikki** | Pastel lift, rim, sparkle, iridescence, bloom, fabric sheen |
 | **Celestial** | **`MF_SpaceParallax`** — parallax stars/nebula/galaxy with toon-banded nebula; `StarMap` texture + `CelestialToonSteps`; legacy `ConstellationPhase` / `CelestialTwinkle` / `CelestialGalaxyArms` kept for MI compat (no graph wiring) |
 | **Gilding** | Curvature gold leaf |
@@ -42,7 +43,7 @@ Canonical set on `M_Master_Toon_Universal` — one isolated capability each. Fol
 | Instance | Theme | Purpose | Key params (editor group) |
 |----------|-------|---------|---------------------------|
 | `MI_Show_Default` | Default showcase | Neutral tint, full texture weight, zero stylization | `BaseTint`, `TextureWeight`, `Roughness` |
-| `MI_Show_StoneCliff` | Stone | Triplanar cliff + macro/detail layering | `TriplanarTiling`, `MacroVariationStrength`, `DetailTiling` |
+| `MI_Show_StoneCliff` | Stone | Triplanar cliff + **MF_ParallaxCore** POM + normal power | `ParallaxStrength`, `ParallaxSteps`, `NormalStrength` (Parallax) |
 | `MI_Show_CherryBlossom` | Flower shadow | Projected petal shadows + sparkle on soft pink | `ShadowFlowerStrength`, `ShadowFlowerScale` (FlowerShadow) |
 | `MI_Show_CelestialNebula` | Nebula | **MF_SpaceParallax** constellation ramp + parallax nebula + galaxy | `CelestialNebulaStrength`, `ConstellationRamp*`, `StarMap`, `CelestialToonSteps` (Celestial) |
 | `MI_Show_FairyHearts` | Magic / fairy | Heart motif, fairy dust, partial henshin wipe | `MagicalTransform`, `MotifColor`, `FairyDustIntensity` (Magical + FairyDust) |
@@ -79,14 +80,14 @@ Headless:
 set BS_STARTERS_ONLY=1
 UnrealEditor-Cmd.exe BS_GodFile.uproject ^
   -ExecutePythonScript="G:/EnvironmentPortfolio/BS_GodFile/Content/Python/apply_starter_instances.py" ^
-  -DisablePlugins=Monolith -unattended -nullrhi
+  -unattended -nullrhi
 ```
 
 Editor one-shot: `py ".../run_editor_integration.py"`
 
 ## Headless notes
 
-- Pass `-DisablePlugins=Monolith` (or disable in `.uproject`) — missing `MonolithBABridge` aborts UE-Cmd.
+- **Monolith** (optional, currently **disabled** in `BS_GodFile.uproject`): requires **GameplayStateTree** and a source rebuild of `Plugins/Monolith` for UE 5.8. Prebuilt DLLs crash at `UMonolithSettings::Get()` / `FMonolithConfigModule::StartupModule()` (null deref) — no `Plugins/Monolith/Source` in this repo. Re-enable only after rebuilding Monolith locally. Until then use **UnrealMCP :55557** or headless Python (`run_sakura_niagara_plan.py`).
 - **Never run** `patch_portfolio_texture_paths.py` / `patch_portfolio_uasset_paths.py` (corrupts uassets).
 - Close material tabs before batch saves to avoid Error 32 file locks.
 
