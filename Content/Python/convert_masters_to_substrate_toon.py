@@ -69,6 +69,52 @@ BATCH_2 = [
     f"{MATERIALS_ROOT}/Masters/M_SDF_ParallaxPulse",
 ]
 
+# Batch 3 — aquatic / underwater SDF (_PROJECT/SDF/Underwater)
+BATCH_3_AQUATIC = [
+    f"{MATERIALS_ROOT}/Masters/M_SDF_AbyssalVent",
+    f"{MATERIALS_ROOT}/Masters/M_SDF_Anemone",
+    f"{MATERIALS_ROOT}/Masters/M_SDF_Bioluminescence",
+    f"{MATERIALS_ROOT}/Masters/M_SDF_BubbleColumn",
+    f"{MATERIALS_ROOT}/Masters/M_SDF_Caustics_Underwater",
+    f"{MATERIALS_ROOT}/Masters/M_SDF_CoralBranching",
+    f"{MATERIALS_ROOT}/Masters/M_SDF_FishSchool_Caustics",
+    f"{MATERIALS_ROOT}/Masters/M_SDF_KelpCurtain",
+    f"{MATERIALS_ROOT}/Masters/M_SDF_ThermalGlow",
+]
+
+# Batch 4 — math-art, musical, cathedral expansion (ported via port_sdf_expansion.py)
+BATCH_4_EXPANSION = [
+    f"{MATERIALS_ROOT}/Masters/M_SDF_BaroqueColumn",
+    f"{MATERIALS_ROOT}/Masters/M_SDF_CathedralVault",
+    f"{MATERIALS_ROOT}/Masters/M_SDF_CosmicPortal",
+    f"{MATERIALS_ROOT}/Masters/M_SDF_CrystallineSpire",
+    f"{MATERIALS_ROOT}/Masters/M_SDF_EscherGeometry_Enhanced",
+    f"{MATERIALS_ROOT}/Masters/M_SDF_FloatingNotes",
+    f"{MATERIALS_ROOT}/Masters/M_SDF_FloralMagic",
+    f"{MATERIALS_ROOT}/Masters/M_SDF_FlyingButtress",
+    f"{MATERIALS_ROOT}/Masters/M_SDF_FractalOrnament",
+    f"{MATERIALS_ROOT}/Masters/M_SDF_GildedAltar",
+    f"{MATERIALS_ROOT}/Masters/M_SDF_GothicRoseWindow",
+    f"{MATERIALS_ROOT}/Masters/M_SDF_GrandStaff_CrossSection",
+    f"{MATERIALS_ROOT}/Masters/M_SDF_Grass_Field",
+    f"{MATERIALS_ROOT}/Masters/M_SDF_InfinityMirror",
+    f"{MATERIALS_ROOT}/Masters/M_SDF_JuliaSet_Quaternion",
+    f"{MATERIALS_ROOT}/Masters/M_SDF_Klein_Bottle",
+    f"{MATERIALS_ROOT}/Masters/M_SDF_MagicOrb",
+    f"{MATERIALS_ROOT}/Masters/M_SDF_Mandelbulb_Master",
+    f"{MATERIALS_ROOT}/Masters/M_SDF_MandelbulbSlice",
+    f"{MATERIALS_ROOT}/Masters/M_SDF_MengerSponge",
+    f"{MATERIALS_ROOT}/Masters/M_SDF_MetalShards",
+    f"{MATERIALS_ROOT}/Masters/M_SDF_Mobius_Strip",
+    f"{MATERIALS_ROOT}/Masters/M_SDF_Musical",
+    f"{MATERIALS_ROOT}/Masters/M_SDF_Penrose_Staircase",
+    f"{MATERIALS_ROOT}/Masters/M_SDF_SheetMusic_Score",
+    f"{MATERIALS_ROOT}/Masters/M_SDF_SierpinskiTetrahedron",
+    f"{MATERIALS_ROOT}/Masters/M_SDF_StarburstGem",
+    f"{MATERIALS_ROOT}/Masters/M_SDF_TrebleClef_Ornament",
+    f"{MATERIALS_ROOT}/Masters/M_SDF_VinylRecord",
+]
+
 # MCP batch-2 placeholder -> canonical renames (cohesion)
 MCP_PARAM_RENAMES: dict[str, tuple[str, str]] = {
     "M_SDF_ReliefPanel": {
@@ -171,6 +217,19 @@ PROFILE_BY_STEM: dict[str, str] = {
     "M_SDF_GothicTracery": "TP_Gold",
     "M_SDF_HybridStone": "TP_Default",
     "M_SDF_ParallaxPulse": "TP_Ornamental",
+    "M_SDF_AbyssalVent": "TP_Default",
+    "M_SDF_Anemone": "TP_Ornamental",
+    "M_SDF_Bioluminescence": "TP_Ornamental",
+    "M_SDF_BubbleColumn": "TP_Default",
+    "M_SDF_Caustics_Underwater": "TP_Default",
+    "M_SDF_CoralBranching": "TP_Ornamental",
+    "M_SDF_FishSchool_Caustics": "TP_Default",
+    "M_SDF_KelpCurtain": "TP_Foliage",
+    "M_SDF_ThermalGlow": "TP_Ornamental",
+    "M_SDF_CosmicPortal": "TP_Ornamental",
+    "M_SDF_Mandelbulb_Master": "TP_Ornamental",
+    "M_SDF_Musical": "TP_Gold",
+    "M_SDF_Grass_Field": "TP_Foliage",
 }
 
 
@@ -229,7 +288,11 @@ def _stem_from_path(material_path: str) -> str:
 def _load_material(material_path: str) -> tuple[object | None, str]:
     stem = _stem_from_path(material_path)
     for candidate in (material_path, f"{material_path}.{stem}"):
-        asset = unreal.load_asset(candidate)
+        try:
+            asset = unreal.load_asset(candidate)
+        except Exception as exc:
+            unreal.log_warning(f"[Toon] load failed {candidate}: {exc}")
+            asset = None
         if asset:
             return asset, candidate
     return None, material_path
@@ -446,17 +509,20 @@ def _rename_mcp_parameters(material: unreal.Material, stem: str) -> list[str]:
         if "Parameter" not in tname:
             continue
         old = expr.get_editor_property("parameter_name")
-        if old in mapping:
-            new_name, group = mapping[old]
+        old_str = str(old) if old is not None else ""
+        if not old_str:
+            continue
+        if old_str in mapping:
+            new_name, group = mapping[old_str]
             expr.set_editor_property("parameter_name", new_name)
             expr.set_editor_property("group", group)
-            renamed.append(f"{old}->{new_name}")
-        elif re.match(r"^MCP_\d+$", old):
-            suffix = old.split("_", 1)[1]
+            renamed.append(f"{old_str}->{new_name}")
+        elif re.match(r"^MCP_\d+$", old_str):
+            suffix = old_str.split("_", 1)[1]
             new_name = f"SDF_AuxParam_{suffix}"
             expr.set_editor_property("parameter_name", new_name)
             expr.set_editor_property("group", "SDF")
-            renamed.append(f"{old}->{new_name}")
+            renamed.append(f"{old_str}->{new_name}")
     return renamed
 
 
@@ -710,8 +776,12 @@ def _parse_args(argv: list[str]) -> tuple[list[str], str, bool, bool, bool, bool
             paths = list(BATCH_1)
         elif batch == "2":
             paths = list(BATCH_2)
+        elif batch == "3":
+            paths = list(BATCH_3_AQUATIC)
+        elif batch == "4":
+            paths = list(BATCH_4_EXPANSION)
         else:
-            paths = list(BATCH_1) + list(BATCH_2)
+            paths = list(BATCH_1) + list(BATCH_2) + list(BATCH_3_AQUATIC) + list(BATCH_4_EXPANSION)
     return paths, batch, dry_run, finish, fix_params, assign_profiles
 
 
@@ -729,7 +799,14 @@ def _inventory_all_masters() -> list[dict]:
             ad = unreal.EditorAssetLibrary.find_asset_data(path)
             if str(ad.asset_class) not in ("Material", "MaterialInstanceConstant"):
                 continue
-            asset = unreal.load_asset(path)
+            try:
+                asset = unreal.load_asset(path)
+            except Exception:
+                rows.append({"path": path, "kind": "master", "load_failed": True})
+                continue
+            if not asset:
+                rows.append({"path": path, "kind": "master", "load_failed": True})
+                continue
             if isinstance(asset, unreal.MaterialInstanceConstant):
                 rows.append({"path": path, "kind": "instance", "has_toon": False})
                 continue
@@ -756,7 +833,7 @@ def main() -> int:
         f"fix_params={fix_params} | assign_profiles={assign_profiles} | count={len(paths)}"
     )
 
-    inventory = _inventory_all_masters()
+    inventory = _inventory_all_masters() if finish else []
     incomplete_count = sum(1 for r in inventory if r.get("incomplete"))
 
     if paths and not dry_run:
@@ -803,7 +880,7 @@ def main() -> int:
             "instances_profiled": len(profile_results),
         },
         "next_queue": [
-            p for p in (list(BATCH_1) + list(BATCH_2))
+            p for p in (list(BATCH_1) + list(BATCH_2) + list(BATCH_3_AQUATIC) + list(BATCH_4_EXPANSION))
             if p not in ALREADY_TOON
         ],
         "monolith_installed": False,

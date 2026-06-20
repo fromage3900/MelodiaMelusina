@@ -12,6 +12,11 @@ import material_lib as lib
 from universal_instance_presets import EXTRA_INSTANCES
 
 try:
+    import portfolio_texture_catalog as tex_catalog
+except ImportError:
+    tex_catalog = None
+
+try:
     import portfolio_alpha_paths as alphas
 except ImportError:
     alphas = None
@@ -257,6 +262,9 @@ def build_instances() -> list[dict]:
             wired = lib.set_instance_texture(inst, pname, tex_candidates)
             if wired:
                 wired_textures[pname] = wired
+        if tex_catalog:
+            extra = tex_catalog.apply_instance_texture_defaults(inst, name, wired_textures)
+            wired_textures.update(extra)
         lib.save_package(inst)
         results.append({
             "instance": name,

@@ -76,6 +76,83 @@ def _owner_material(expr):
         return None
 
 
+def _modify_expression_owner(expr) -> None:
+    try:
+        outer = expr.get_outer()
+        while outer:
+            if isinstance(outer, (unreal.Material, unreal.MaterialFunction)):
+                outer.modify()
+                return
+            outer = outer.get_outer() if hasattr(outer, "get_outer") else None
+    except Exception:
+        pass
+
+
+def iter_texture_parameter_expressions(root):
+    """Yield (expression, owner) for texture parameter nodes under a material graph."""
+    visited: set[str] = set()
+    pending = [root]
+
+    while pending:
+        owner = pending.pop()
+        if isinstance(owner, unreal.Material):
+            exprs = list(unreal.MaterialEditingLibrary.get_material_expressions(owner) or [])
+        elif isinstance(owner, unreal.MaterialFunction):
+            key = owner.get_path_name().split(".", 1)[0]
+            if key in visited:
+                continue
+            visited.add(key)
+            try:
+                exprs = list(unreal.MaterialEditingLibrary.get_material_function_expressions(owner) or [])
+            except Exception:
+                exprs = []
+        else:
+            continue
+
+        for expr in exprs:
+            if not expr:
+                continue
+            tname = type(expr).__name__
+            if "Texture" in tname and "Parameter" in tname:
+                yield expr, owner
+            elif tname == "MaterialExpressionMaterialFunctionCall":
+                mf = None
+                try:
+                    mf = expr.get_editor_property("material_function")
+                except Exception:
+                    pass
+                if mf:
+                    pending.append(mf)
+
+
+def texture_parameter_names(material) -> list[str]:
+    """Texture parameter names exposed by a material (graph + layers)."""
+    names: list[str] = []
+    me = unreal.MaterialEditingLibrary
+    if hasattr(me, "get_texture_parameter_names"):
+        try:
+            for raw in me.get_texture_parameter_names(material) or []:
+                names.append(str(raw))
+        except Exception:
+            pass
+    if names:
+        return names
+    seen: set[str] = set()
+    for expr, _owner in iter_texture_parameter_expressions(material):
+        pname = None
+        for prop in ("parameter_name", "ParameterName"):
+            try:
+                raw = expr.get_editor_property(prop)
+                if raw is not None:
+                    pname = str(raw)
+                    break
+            except Exception:
+                continue
+        if pname:
+            seen.add(pname)
+    return sorted(seen)
+
+
 def connect(from_expr, from_output: str, to_expr, to_input: str) -> bool:
     try:
         result = unreal.MaterialEditingLibrary.connect_material_expressions(
@@ -265,6 +342,27 @@ def texture_param(owner, name: str, group: str, x: int, y: int):
     return expr
 
 
+PLACEHOLDER_TEXTURE_PATHS = {
+    "/Engine/EngineResources/DefaultTexture",
+    "/Engine/EngineMaterials/DefaultDiffuse",
+    "/Engine/EngineMaterials/DefaultWhiteGrid",
+}
+
+
+def texture_asset_path(tex) -> str | None:
+    if not tex:
+        return None
+    try:
+        return tex.get_path_name().split(".", 1)[0]
+    except Exception:
+        return None
+
+
+def is_placeholder_texture(tex) -> bool:
+    path = texture_asset_path(tex)
+    return not path or path in PLACEHOLDER_TEXTURE_PATHS
+
+
 def resolve_texture_path(candidates: list[str] | str) -> str | None:
     if isinstance(candidates, str):
         candidates = [candidates]
@@ -283,13 +381,14 @@ def set_expression_texture(expr, candidates: list[str] | str) -> str | None:
     tex = load_texture(candidates)
     if not tex or not expr:
         return None
+    path = resolve_texture_path(candidates)
     for prop in ("texture", "Texture"):
         try:
-            if hasattr(expr, "has_editor_property") and expr.has_editor_property(prop):
-                expr.set_editor_property(prop, tex)
-                return resolve_texture_path(candidates)
-        except Exception:
-            pass
+            expr.set_editor_property(prop, tex)
+            _modify_expression_owner(expr)
+            return path
+        except Exception as exc:
+            unreal.log_warning(f"[material_lib] set_expression_texture {prop}: {exc}")
     return None
 
 
@@ -313,15 +412,10 @@ def set_instance_texture(instance, param_name: str, candidates: list[str] | str)
 
 def post_process_blendable_location():
     """Match M_PP_ToonOutline stack point for UE 5.8 blendable ordering."""
-    for loc in (
-        unreal.BlendableLocation.BL_REPLACING_TONEMAPPER,
-        unreal.BlendableLocation.BL_SCENE_COLOR_AFTER_TONEMAP,
-    ):
-        try:
-            _ = loc  # noqa: F841 — probe enum exists
+    for name in ("BL_REPLACING_TONEMAPPER", "BL_SCENE_COLOR_AFTER_TONEMAP"):
+        loc = getattr(unreal.BlendableLocation, name, None)
+        if loc is not None:
             return loc
-        except AttributeError:
-            continue
     return unreal.BlendableLocation.BL_REPLACING_TONEMAPPER
 
 

@@ -97,6 +97,11 @@ def patch_file(path: Path, report: dict) -> int:
 
 
 def main() -> int:
+    print(
+        "ERROR: patch_portfolio_texture_paths.py is disabled — FString length changes corrupt texture uassets. "
+        "Use rewire_portfolio_texture_refs.py inside the editor instead."
+    )
+    return 1
     report: dict = {"patched_refs": 0, "files_touched": 0, "changes": [], "errors": []}
     if not TEXTURES.exists():
         report["errors"].append(f"missing: {TEXTURES}")

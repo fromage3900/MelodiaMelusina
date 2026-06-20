@@ -284,6 +284,10 @@
 		{
 			"Name": "PythonScriptPlugin",
 			"Enabled": true
+		},
+		{
+			"Name": "Monolith",
+			"Enabled": false
 		}
 	]
 }

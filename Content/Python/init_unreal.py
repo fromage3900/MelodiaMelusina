@@ -12,9 +12,19 @@ _OWNER = "BSGodFile_LiveLink"
 def _py_path_prefix():
     project_python = _SCRIPT_DIR.replace("\\", "/")
     return (
-        f"import sys; p=r'{project_python}'; "
+        f"import sys; import unreal; p=r'{project_python}'; "
         f"sys.path.insert(0,p) if p not in sys.path else None; "
         f"import livelink_unreal; "
+    )
+
+
+def _menu_command(py_body: str) -> str:
+    return (
+        _py_path_prefix()
+        + "try:\n "
+        + py_body
+        + "\nexcept Exception as _ll_exc:\n "
+        + " unreal.log_error('[LiveLink] Menu action failed: ' + str(_ll_exc))"
     )
 
 
@@ -34,67 +44,94 @@ def register_livelink_menus():
 
     main.add_sub_menu(_OWNER, "LiveLink", "LiveLink", "LiveLink", "Live Link")
     live = menus.extend_menu("LevelEditor.MainMenu.LiveLink")
-    live.add_sub_menu(
-        _OWNER, "BlenderLiveLink", "BlenderLiveLink", "LiveLink", "Blender Live Link"
-    )
-    bl = menus.extend_menu("LevelEditor.MainMenu.LiveLink.BlenderLiveLink")
+    live.add_section("Connection", "Connection", 0)
+    live.add_section("Help", "Help", 1)
 
-    prefix = _py_path_prefix()
-
-    def add_entry(section, name, label, py_suffix):
+    def add_entry(menu, section, name, label, py_body):
         entry = unreal.ToolMenuEntry(name=name, type=unreal.MultiBlockType.MENU_ENTRY)
         entry.set_label(label)
         entry.set_string_command(
             type=unreal.ToolMenuStringCommandType.PYTHON,
             custom_type_name="",
-            string=prefix + py_suffix,
+            string=_menu_command(py_body),
         )
-        bl.add_menu_entry(section, entry)
+        menu.add_menu_entry(section, entry)
 
-    add_entry("Connection", "StartLL", "Start Live Link", "livelink_unreal.start_connection()")
-    add_entry("Connection", "StopLL", "Stop Live Link", "livelink_unreal.stop_connection()")
+    # Primary actions on LiveLink (one click fewer than nested submenu)
     add_entry(
+        live,
+        "Connection",
+        "StartLL",
+        "Start Live Link (connect to Blender)",
+        "livelink_unreal.start_connection(); "
+        "unreal.log('[LiveLink] Start requested — check Output Log for Connected/Error')",
+    )
+    add_entry(live, "Connection", "StopLL", "Stop Live Link", "livelink_unreal.stop_connection()")
+    add_entry(
+        live,
         "Connection",
         "StatusLL",
         "Show Status",
         "unreal.log('[LiveLink] ' + livelink_unreal.get_status())",
     )
-
-    dev = unreal.ToolMenuEntry(name="DeveloperLL", type=unreal.MultiBlockType.MENU_ENTRY)
-    dev.set_label("Developer: Milad Kambari (3DRedbox Studio)")
-    dev.set_string_command(
-        type=unreal.ToolMenuStringCommandType.PYTHON,
-        custom_type_name="",
-        string="import webbrowser; webbrowser.open('https://www.artstation.com/milad_kambari')",
+    add_entry(
+        live,
+        "Help",
+        "HelpLL",
+        "How to use (no UE panel)",
+        "unreal.log_warning("
+        "'[LiveLink] No UE window opens. Order: Blender N-panel > Start Live Link, "
+        "then UE LiveLink > Start Live Link, then Blender > Send Full Scene. "
+        "Imports: /Game/LiveLink/')",
     )
-    bl.add_menu_entry("Info", dev)
 
     menus.refresh_all_widgets()
-    unreal.log("[LiveLink] Menu registered — LiveLink > Blender Live Link")
+    unreal.log(
+        "[LiveLink] Menu ready — LiveLink > Start Live Link "
+        "(dropdown only; no floating panel)"
+    )
 
 
 if _SCRIPT_DIR not in sys.path:
     sys.path.insert(0, _SCRIPT_DIR)
 
-_pyc = os.path.join(_SCRIPT_DIR, "livelink_unreal.pyc")
-_spec = importlib.util.spec_from_file_location("livelink_unreal", _pyc)
-m = importlib.util.module_from_spec(_spec)
-sys.modules["livelink_unreal"] = m
-_spec.loader.exec_module(m)
-m.register_menus = register_livelink_menus
+
+def _load_livelink_module():
+    for name in ("livelink_unreal.py", "livelink_unreal.pyc"):
+        path = os.path.join(_SCRIPT_DIR, name)
+        if not os.path.isfile(path):
+            continue
+        spec = importlib.util.spec_from_file_location("livelink_unreal", path)
+        if not spec or not spec.loader:
+            continue
+        mod = importlib.util.module_from_spec(spec)
+        sys.modules["livelink_unreal"] = mod
+        spec.loader.exec_module(mod)
+        mod.register_menus = register_livelink_menus
+        return mod
+    unreal.log_error(
+        "[LiveLink] Missing Content/Python/livelink_unreal.py or .pyc — "
+        "copy from your 3DRedbox purchase, restart UE"
+    )
+    return None
+
+
+m = _load_livelink_module()
 
 
 def startup():
+    if m is None:
+        return
     if hasattr(m, "startup"):
         m.startup()
-    else:
-        register_livelink_menus()
+    # Always re-register with sections + flattened entries (pyc menu can render empty)
+    register_livelink_menus()
     unreal.log(
-        "[LiveLink] v3.1 loaded — no floating window; use "
-        "LiveLink > Blender Live Link > Start Live Link (Blender server must run first)"
+        "[LiveLink] v3.1 loaded — LiveLink menu has Start/Stop/Status "
+        "(no floating panel; start Blender server first)"
     )
 
 
 def shutdown():
-    if hasattr(m, "shutdown"):
+    if m is not None and hasattr(m, "shutdown"):
         m.shutdown()

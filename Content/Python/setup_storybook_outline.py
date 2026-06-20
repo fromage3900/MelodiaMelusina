@@ -8,19 +8,29 @@ Default VineBranchMask: /Game/Stylization/T_Flow_Swirl (fallback Voronoi_11).
 
 Run:
   py "G:/EnvironmentPortfolio/BS_GodFile/Content/Python/setup_storybook_outline.py"
+  py "G:/EnvironmentPortfolio/BS_GodFile/Content/Python/setup_storybook_outline.py" --rebuild
+
+Shell:
+  python Content/Python/setup_storybook_outline.py --rebuild
 """
 from __future__ import annotations
 
 import json
+import subprocess
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
+
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+UE_CMD = Path(r"C:\Program Files\Epic Games\UE_5.8\Engine\Binaries\Win64\UnrealEditor-Cmd.exe")
+UPROJECT = PROJECT_ROOT / "BS_GodFile.uproject"
 
 import unreal
 
 import material_lib as lib
 import portfolio_alpha_paths as alphas
 
-REPORT_PATH = Path(__file__).resolve().parents[2] / "Saved" / "Audit" / "storybook_outline_build.json"
+REPORT_PATH = PROJECT_ROOT / "Saved" / "Audit" / "storybook_outline_build.json"
 PP_NAME = "M_PP_StorybookVines"
 PP_INST_NAME = "M_PP_StorybookVines_Inst"
 
@@ -268,8 +278,44 @@ def build_all(force: bool = False) -> int:
     return 0
 
 
-if __name__ == "__main__":
-    import sys
+def _in_ue() -> bool:
+    try:
+        import unreal as _u  # noqa: F401
+        return True
+    except ImportError:
+        return False
 
+
+def main() -> int:
     rebuild = "--rebuild" in sys.argv or "--force" in sys.argv
-    raise SystemExit(build_all(force=rebuild))
+    if _in_ue():
+        return build_all(force=rebuild)
+    if not UE_CMD.exists():
+        print(f"ERROR: {UE_CMD}")
+        return 1
+    log = PROJECT_ROOT / "Saved" / "Logs" / "storybook_rebuild.log"
+    script = (
+        PROJECT_ROOT / "Content/Python/setup_storybook_outline_rebuild.py"
+        if rebuild
+        else PROJECT_ROOT / "Content/Python/setup_storybook_outline.py"
+    )
+    cmd = [
+        str(UE_CMD),
+        str(UPROJECT),
+        f"-ExecutePythonScript={script.as_posix()}",
+        "-stdout",
+        "-unattended",
+        "-nosplash",
+        "-DisablePlugins=Monolith",
+        f"-log={log}",
+    ]
+    print(f"Storybook -> {log}")
+    return subprocess.run(cmd, cwd=str(PROJECT_ROOT)).returncode
+
+
+if __name__ == "__main__":
+    try:
+        import unreal  # noqa: F401
+    except ImportError:
+        raise SystemExit(main())
+    raise SystemExit(main())

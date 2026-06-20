@@ -46,7 +46,11 @@ def _iter_material_assets():
         for path in unreal.EditorAssetLibrary.list_assets(folder, recursive=True, include_folder=False):
             if not path.endswith((".M_", ".MI_", ".MF_")) and "/M_" not in path and "/MI_" not in path:
                 continue
-            asset = unreal.load_asset(path)
+            try:
+                asset = unreal.load_asset(path)
+            except Exception:
+                yield path, None
+                continue
             if isinstance(asset, (unreal.Material, unreal.MaterialInstanceConstant, unreal.MaterialFunction)):
                 yield path, asset
 
@@ -122,9 +126,16 @@ def main() -> int:
     report: dict = {"changes": [], "errors": [], "assets_touched": 0, "textures_rewired": 0}
 
     for path, asset in _iter_material_assets():
+        if asset is None:
+            report["errors"].append(f"Failed to load: {path}")
+            continue
         if isinstance(asset, unreal.MaterialInstanceConstant):
             continue
-        count = _rewire_owner(asset, path, report)
+        try:
+            count = _rewire_owner(asset, path, report)
+        except Exception as exc:
+            report["errors"].append(f"{path}: {exc}")
+            continue
         if count:
             _save_owner(asset, path)
             report["assets_touched"] += 1

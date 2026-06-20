@@ -140,6 +140,79 @@ MASTER_INSTANCES: list[dict] = [
             "BloomBoost": 0.0,
         },
     },
+    # Aquatic / underwater SDF
+    {
+        "master": "M_SDF_AbyssalVent",
+        "instance": "MI_SDF_AbyssalVent_Deep",
+        "profile": "TP_Default",
+        "folder": SDF_INST_DIR,
+        "vectors": {"BaseTint": (0.08, 0.18, 0.32, 1.0), "AccentTint": (0.95, 0.42, 0.12, 1.0)},
+        "scalars": {"BandScale": 0.05, "BandStrength": 0.45},
+    },
+    {
+        "master": "M_SDF_Anemone",
+        "instance": "MI_SDF_Anemone_Coral",
+        "profile": "TP_Ornamental",
+        "folder": SDF_INST_DIR,
+        "vectors": {"BaseTint": (0.92, 0.38, 0.52, 1.0), "AccentTint": (0.98, 0.72, 0.78, 1.0)},
+        "scalars": {"BandScale": 0.07, "BandStrength": 0.38},
+    },
+    {
+        "master": "M_SDF_Bioluminescence",
+        "instance": "MI_SDF_Bioluminescence_Glow",
+        "profile": "TP_Ornamental",
+        "folder": SDF_INST_DIR,
+        "vectors": {"BaseTint": (0.05, 0.35, 0.48, 1.0), "AccentTint": (0.22, 0.95, 0.88, 1.0)},
+        "scalars": {"BandScale": 0.04, "BandStrength": 0.62},
+    },
+    {
+        "master": "M_SDF_BubbleColumn",
+        "instance": "MI_SDF_BubbleColumn_Foam",
+        "profile": "TP_Default",
+        "folder": SDF_INST_DIR,
+        "vectors": {"BaseTint": (0.55, 0.78, 0.92, 1.0), "AccentTint": (0.88, 0.95, 1.0, 1.0)},
+        "scalars": {"BandScale": 0.03, "BandStrength": 0.28},
+    },
+    {
+        "master": "M_SDF_Caustics_Underwater",
+        "instance": "MI_SDF_Caustics_Underwater_Shallow",
+        "profile": "TP_Default",
+        "folder": SDF_INST_DIR,
+        "vectors": {"BaseTint": (0.32, 0.58, 0.72, 1.0), "AccentTint": (0.78, 0.92, 0.98, 1.0)},
+        "scalars": {"BandScale": 0.045, "BandStrength": 0.35},
+    },
+    {
+        "master": "M_SDF_CoralBranching",
+        "instance": "MI_SDF_CoralBranching_Reef",
+        "profile": "TP_Ornamental",
+        "folder": SDF_INST_DIR,
+        "vectors": {"BaseTint": (0.88, 0.42, 0.28, 1.0), "AccentTint": (0.98, 0.62, 0.35, 1.0)},
+        "scalars": {"BandScale": 0.06, "BandStrength": 0.42},
+    },
+    {
+        "master": "M_SDF_FishSchool_Caustics",
+        "instance": "MI_SDF_FishSchool_Caustics_Open",
+        "profile": "TP_Default",
+        "folder": SDF_INST_DIR,
+        "vectors": {"BaseTint": (0.18, 0.38, 0.55, 1.0), "AccentTint": (0.72, 0.85, 0.95, 1.0)},
+        "scalars": {"BandScale": 0.05, "BandStrength": 0.32},
+    },
+    {
+        "master": "M_SDF_KelpCurtain",
+        "instance": "MI_SDF_KelpCurtain_Forest",
+        "profile": "TP_Foliage",
+        "folder": SDF_INST_DIR,
+        "vectors": {"BaseTint": (0.12, 0.28, 0.18, 1.0), "AccentTint": (0.35, 0.55, 0.28, 1.0)},
+        "scalars": {"BandScale": 0.055, "BandStrength": 0.38},
+    },
+    {
+        "master": "M_SDF_ThermalGlow",
+        "instance": "MI_SDF_ThermalGlow_Vent",
+        "profile": "TP_Ornamental",
+        "folder": SDF_INST_DIR,
+        "vectors": {"BaseTint": (0.15, 0.08, 0.12, 1.0), "AccentTint": (1.0, 0.45, 0.08, 1.0)},
+        "scalars": {"BandScale": 0.05, "BandStrength": 0.55},
+    },
 ]
 
 # Extend INSTANCE_PROFILE_BY_STEM in convert_masters_to_substrate_toon.py
@@ -153,6 +226,15 @@ NEW_PROFILE_STEMS = {
     "MI_SDF_RayMarch_Gothic_Deep": "TP_Stucco",
     "MI_HybridStone_SDF_Moss": "TP_Default",
     "MI_SDF_TrueParallax": "TP_Stucco",
+    "MI_SDF_AbyssalVent_Deep": "TP_Default",
+    "MI_SDF_Anemone_Coral": "TP_Ornamental",
+    "MI_SDF_Bioluminescence_Glow": "TP_Ornamental",
+    "MI_SDF_BubbleColumn_Foam": "TP_Default",
+    "MI_SDF_Caustics_Underwater_Shallow": "TP_Default",
+    "MI_SDF_CoralBranching_Reef": "TP_Ornamental",
+    "MI_SDF_FishSchool_Caustics_Open": "TP_Default",
+    "MI_SDF_KelpCurtain_Forest": "TP_Foliage",
+    "MI_SDF_ThermalGlow_Vent": "TP_Ornamental",
 }
 
 
@@ -310,9 +392,28 @@ def audit_coverage() -> dict:
     return {"masters": masters, "uncovered": uncovered}
 
 
+def _default_instance_spec(master_stem: str) -> dict:
+    """Fallback MI for any uncovered M_SDF_* master."""
+    suffix = master_stem.replace("M_SDF_", "")
+    return {
+        "master": master_stem,
+        "instance": f"MI_SDF_{suffix}_Default",
+        "profile": "TP_Default",
+        "folder": SDF_INST_DIR,
+        "vectors": {"BaseTint": (0.45, 0.48, 0.52, 1.0), "AccentTint": (0.62, 0.65, 0.72, 1.0)},
+        "scalars": {"BandScale": 0.05, "BandStrength": 0.3},
+    }
+
+
 def main() -> int:
     unreal.log("=== Ensure portfolio material instances ===")
     results = [ensure_instance(spec) for spec in MASTER_INSTANCES]
+    coverage = audit_coverage()
+    for entry in coverage["uncovered"]:
+        stem = entry["stem"]
+        if not stem.startswith("M_SDF_"):
+            continue
+        results.append(ensure_instance(_default_instance_spec(stem)))
     coverage = audit_coverage()
 
     report = {
