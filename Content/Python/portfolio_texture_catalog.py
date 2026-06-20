@@ -120,6 +120,12 @@ MASTER_TEXTURE_DEFAULTS: dict[str, list[str]] = {
         "/Game/Magical/T_Magic_Bow.T_Magic_Bow",
         COMPOSITING["abstract_a"],
     ),
+    "StarMap": _chain(
+        "/Game/Alphas_Sparkles/T_Spark_Twinkle8.T_Spark_Twinkle8",
+        "/Game/Alphas_Sparkles/T_Spark_Sparkle4.T_Spark_Sparkle4",
+        COMPOSITING["noise_fine"],
+        COMPOSITING["space_nebula"],
+    ),
 }
 
 # M_Master_Toon_Unified / M_Master_SDF_Toon (TextureSampleParameter2D, no Albedo slot)
@@ -189,6 +195,11 @@ INSTANCE_TEXTURE_DEFAULTS: dict[str, dict[str, list[str]]] = {
     },
     "MI_Show_CelestialNebula": {
         "Albedo": _chain(COMPOSITING["space_nebula"]),
+        "StarMap": _chain(
+            "/Game/Alphas_Sparkles/T_Spark_Twinkle8.T_Spark_Twinkle8",
+            "/Game/Alphas_Sparkles/T_Spark_Sparkle4.T_Spark_Sparkle4",
+            COMPOSITING["noise_fine"],
+        ),
         "SparkleMask": _chain(
             "/Game/Alphas_Sparkles/T_Spark_Twinkle8.T_Spark_Twinkle8",
             COMPOSITING["noise_fine"],
@@ -297,6 +308,11 @@ INSTANCE_TEXTURE_RULES: list[tuple[tuple[str, ...], dict[str, list[str]]]] = [
         ("deepspace", "nebula", "constellation", "celestial", "galaxy", "cosmic", "starfield"),
         {
             "Albedo": _chain(COMPOSITING["space_nebula"], MARBLE["dark"]),
+            "StarMap": _chain(
+                "/Game/Alphas_Sparkles/T_Spark_Twinkle8.T_Spark_Twinkle8",
+                "/Game/Alphas_Sparkles/T_Spark_Sparkle4.T_Spark_Sparkle4",
+                COMPOSITING["noise_fine"],
+            ),
             "HeightMap": _chain(HEIGHT["perlin"], COMPOSITING["noise_fine"]),
         },
     ),

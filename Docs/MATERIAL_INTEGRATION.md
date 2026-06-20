@@ -24,7 +24,7 @@ Groups in the Material Editor (rebuild master with `--force` after group renames
 | **Textures / LayerA / LayerB** | Albedo, normal, ORM, height, detail |
 | **Triplanar / Temporal** | World-aligned UVs, ink boil/smear |
 | **Nikki** | Pastel lift, rim, sparkle, iridescence, bloom, fabric sheen |
-| **Celestial** | Constellation stars, **nebula wash**, galaxy core (procedural) |
+| **Celestial** | **`MF_SpaceParallax`** — parallax stars/nebula/galaxy with toon-banded nebula; `StarMap` texture + `CelestialToonSteps`; legacy `ConstellationPhase` / `CelestialTwinkle` / `CelestialGalaxyArms` kept for MI compat (no graph wiring) |
 | **Gilding** | Curvature gold leaf |
 | **ShadowDream** | Soft N·L shadow color tint |
 | **FlowerShadow** | Projected petal silhouettes in shadow (was `ShadowGarden`) |
@@ -44,7 +44,7 @@ Canonical set on `M_Master_Toon_Universal` — one isolated capability each. Fol
 | `MI_Show_Default` | Default showcase | Neutral tint, full texture weight, zero stylization | `BaseTint`, `TextureWeight`, `Roughness` |
 | `MI_Show_StoneCliff` | Stone | Triplanar cliff + macro/detail layering | `TriplanarTiling`, `MacroVariationStrength`, `DetailTiling` |
 | `MI_Show_CherryBlossom` | Flower shadow | Projected petal shadows + sparkle on soft pink | `ShadowFlowerStrength`, `ShadowFlowerScale` (FlowerShadow) |
-| `MI_Show_CelestialNebula` | Nebula | Constellation ramp + procedural nebula + galaxy emissive | `CelestialNebulaStrength`, `ConstellationRamp*` (Celestial) |
+| `MI_Show_CelestialNebula` | Nebula | **MF_SpaceParallax** constellation ramp + parallax nebula + galaxy | `CelestialNebulaStrength`, `ConstellationRamp*`, `StarMap`, `CelestialToonSteps` (Celestial) |
 | `MI_Show_FairyHearts` | Magic / fairy | Heart motif, fairy dust, partial henshin wipe | `MagicalTransform`, `MotifColor`, `FairyDustIntensity` (Magical + FairyDust) |
 | `MI_Show_SkinSoft` | Nikki character | Skin wrap, cheek warmth, soft pastel base | `SkinWrapStrength`, `PastelLift`, `CheekWarmthStrength` (Character + Nikki) |
 | `MI_Show_ForestFoliage` | Foliage | Mossy forest floor with dreamy shadow tint | `ShadowDreamStrength`, `MossConcavityStrength` (World + ShadowDream) |

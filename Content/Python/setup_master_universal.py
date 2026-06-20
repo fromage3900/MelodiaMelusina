@@ -28,6 +28,7 @@ MASTER_NAME = "M_Master_Toon_Universal"
 WAT = "/Engine/Functions/Engine_MaterialFunctions02/Texturing/WorldAlignedTexture"
 WAN = "/Engine/Functions/Engine_MaterialFunctions02/Texturing/WorldAlignedNormal"
 MF_SKIN_WRAP = f"{lib.FUNCTION_DIR}/MF_AnimeSkinWrap"
+MF_SPACE_PARALLAX = f"{lib.FUNCTION_DIR}/MF_SpaceParallax"
 
 # Material Instance editor parameter groups (keep in sync with starter_instances key_params)
 GROUP_PALETTE = "Palette"
@@ -359,12 +360,13 @@ def build():
     if not m:
         raise RuntimeError("create_asset failed — close material tabs and retry")
 
-    try:
-        import setup_material_functions as mf_setup
+    if not unreal.EditorAssetLibrary.does_asset_exist(f"{lib.FUNCTION_DIR}/MF_SpaceParallax"):
+        try:
+            import setup_material_functions as mf_setup
 
-        mf_setup.build_all(force=force)
-    except Exception as exc:
-        unreal.log_warning(f"[Universal] MF library: {exc}")
+            mf_setup.build_all(force=False)
+        except Exception as exc:
+            unreal.log_warning(f"[Universal] MF library: {exc}")
 
     m.set_editor_property("material_domain", unreal.MaterialDomain.MD_SURFACE)
     m.set_editor_property("blend_mode", unreal.BlendMode.BLEND_OPAQUE)
@@ -518,26 +520,44 @@ def build():
     sheen_tint = lib.vector_param(m, "SheenTint", "Nikki", (1.00, 1.00, 1.00, 1.0), -2100, 2840)
     sheen_power = lib.scalar_param(m, "SheenPower", "Nikki", 6.0, -2100, 2940)
 
-    # ---- Celestial / nebula (procedural stars + nebula wash + galaxy core) ----
+    # ---- Celestial / nebula (MF_SpaceParallax: parallax stars + toon-banded nebula + galaxy) ----
     const_low = lib.vector_param(m, "ConstellationRampLow", "Celestial", (0.02, 0.03, 0.10, 1.0), -2100, 3060)
     const_mid = lib.vector_param(m, "ConstellationRampMid", "Celestial", (0.45, 0.22, 0.55, 1.0), -2100, 3160)
     const_high = lib.vector_param(m, "ConstellationRampHigh", "Celestial", (0.85, 0.72, 1.00, 1.0), -2100, 3260)
     const_str = lib.scalar_param(m, "ConstellationStrength", "Celestial", 0.0, -2100, 3360)
     const_scale = lib.scalar_param(m, "ConstellationScale", "Celestial", 1.8, -2100, 3460)
-    const_phase = lib.scalar_param(m, "ConstellationPhase", "Celestial", 0.0, -2100, 3560)
+    const_phase = lib.scalar_param(
+        m, "ConstellationPhase", "Celestial", 0.0, -2100, 3560,
+        desc="Legacy — replaced by MF_SpaceParallax (no graph wiring)",
+    )
     star_int = lib.scalar_param(m, "CelestialStarIntensity", "Celestial", 1.0, -2100, 3660)
-    star_twinkle = lib.scalar_param(m, "CelestialTwinkle", "Celestial", 0.0, -2100, 3760)
+    star_twinkle = lib.scalar_param(
+        m, "CelestialTwinkle", "Celestial", 0.0, -2100, 3760,
+        desc="Legacy — replaced by MF_SpaceParallax (no graph wiring)",
+    )
     nebula_str = lib.scalar_param(
         m, "CelestialNebulaStrength", "Celestial", 0.65, -2100, 3860,
         desc="Soft nebula cloud wash strength",
     )
     nebula_scale = lib.scalar_param(
         m, "CelestialNebulaScale", "Celestial", 0.35, -2100, 3960,
-        desc="Nebula noise scale (world XY)",
+        desc="Nebula parallax depth (MF_SpaceParallax NebulaDepth)",
     )
     galaxy_str = lib.scalar_param(m, "CelestialGalaxyStrength", "Celestial", 0.45, -2100, 4060)
-    galaxy_scale = lib.scalar_param(m, "CelestialGalaxyScale", "Celestial", 0.12, -2100, 4160)
-    galaxy_arms = lib.scalar_param(m, "CelestialGalaxyArms", "Celestial", 3.0, -2100, 4260)
+    galaxy_scale = lib.scalar_param(
+        m, "CelestialGalaxyScale", "Celestial", 0.12, -2100, 4160,
+        desc="Galaxy parallax depth (MF_SpaceParallax GalaxyDepth)",
+    )
+    galaxy_arms = lib.scalar_param(
+        m, "CelestialGalaxyArms", "Celestial", 3.0, -2100, 4260,
+        desc="Legacy — replaced by MF_SpaceParallax (no graph wiring)",
+    )
+    star_map = tex_object(m, "StarMap", -2100, 4310, "Celestial")
+    _wire_catalog_texture(star_map, "StarMap")
+    toon_steps = lib.scalar_param(
+        m, "CelestialToonSteps", "Celestial", 4.0, -2100, 4410,
+        desc="Nebula toon cel-band count (MF_SpaceParallax ToonSteps)",
+    )
 
     # ---- Gold leaf on curvature ----
     gild_str = lib.scalar_param(m, "GildingStrength", "Gilding", 0.0, -2100, 4380)
@@ -578,114 +598,27 @@ def build():
     wire("nikki_base_B", dream_tint, color_nikki, "B")
     wire("nikki_base_alpha", pastel, color_nikki, "Alpha")
 
-    # ---- celestial: tier 1 stars on dark void, tier 2 nebula wash, tier 3 galaxy core ----
-    wxy = world_xy(m, 220, 300)
-    const_mul = lib.create_expression(m, unreal.MaterialExpressionMultiply, 400, 300)
-    wire("const_mulA", wxy, const_mul, "A")
-    wire("const_mulB", const_scale, const_mul, "B")
-    phase_add = lib.create_expression(m, unreal.MaterialExpressionAdd, 560, 300)
-    wire("phase_A", const_mul, phase_add, "A")
-    wire("phase_B", const_phase, phase_add, "B")
-    frac_n = lib.create_expression(m, unreal.MaterialExpressionFrac, 720, 300)
-    wire("frac_in", phase_add, frac_n, "Input")
-    star_dist = lib.create_expression(m, unreal.MaterialExpressionDistance, 900, 300)
-    star_ctr = lib.create_expression(m, unreal.MaterialExpressionConstant2Vector, 720, 420)
-    star_ctr.set_editor_property("r", 0.5)
-    star_ctr.set_editor_property("g", 0.5)
-    wire("dist_A", frac_n, star_dist, "A")
-    wire("dist_B", star_ctr, star_dist, "B")
-    star_inv = lib.create_expression(m, unreal.MaterialExpressionOneMinus, 1080, 300)
-    wire("star_inv", star_dist, star_inv, "Input")
-    star_pow = lib.create_expression(m, unreal.MaterialExpressionPower, 1240, 300)
-    wire("star_powA", star_inv, star_pow, "Base")
-    three = const1(m, 1080, 420, 3.5)
-    wire("star_powB", three, star_pow, "Exp")
-    time_n = lib.create_expression(m, unreal.MaterialExpressionTime, 720, 520)
-    twinkle_ph = lib.create_expression(m, unreal.MaterialExpressionMultiply, 880, 520)
-    wire("twinkle_t", time_n, twinkle_ph, "A")
-    wire("twinkle_s", star_twinkle, twinkle_ph, "B")
-    twinkle_sin = lib.create_expression(m, unreal.MaterialExpressionSine, 1040, 520)
-    twinkle_sin.set_editor_property("period", 1.0)
-    wire("twinkle_sin", twinkle_ph, twinkle_sin, "Input")
-    twinkle = lib.create_expression(m, unreal.MaterialExpressionMultiply, 1200, 400)
-    wire("twinkleA", star_pow, twinkle, "A")
-    twinkle_mod = lib.create_expression(m, unreal.MaterialExpressionAdd, 1040, 620)
-    wire("tw_modA", twinkle_sin, twinkle_mod, "A")
-    wire("tw_modB", const1(m, 880, 620, 0.65), twinkle_mod, "B")
-    wire("twinkleB", twinkle_mod, twinkle, "B")
-    star_pts = lib.create_expression(m, unreal.MaterialExpressionMultiply, 1360, 360)
-    wire("star_ptsA", twinkle, star_pts, "A")
-    wire("star_ptsB", star_int, star_pts, "B")
-    star_col = lib.create_expression(m, unreal.MaterialExpressionLinearInterpolate, 1540, 280)
-    wire("star_cA", const_low, star_col, "A")
-    wire("star_cB", const_high, star_col, "B")
-    wire("star_c_alpha", star_pts, star_col, "Alpha")
-
-    # nebula: soft multi-frequency sine clouds in world XY (scalar path for SM6)
-    neb_mul = lib.create_expression(m, unreal.MaterialExpressionMultiply, 400, 680)
-    wire("neb_mulA", wxy, neb_mul, "A")
-    wire("neb_mulB", nebula_scale, neb_mul, "B")
-    neb_x = mask_channel(m, neb_mul, "r", "neb_x", 560, 640)
-    neb_y = mask_channel(m, neb_mul, "g", "neb_y", 560, 760)
-    neb_sx = lib.create_expression(m, unreal.MaterialExpressionSine, 720, 640)
-    neb_sx.set_editor_property("period", 1.0)
-    wire("neb_sx", neb_x, neb_sx, "Input")
-    neb_sy = lib.create_expression(m, unreal.MaterialExpressionSine, 720, 760)
-    neb_sy.set_editor_property("period", 1.0)
-    neb_y_s = lib.create_expression(m, unreal.MaterialExpressionMultiply, 560, 820)
-    wire("neb_yA", neb_y, neb_y_s, "A")
-    wire("neb_yB", const1(m, 400, 900, 1.73), neb_y_s, "B")
-    wire("neb_sy", neb_y_s, neb_sy, "Input")
-    neb_prod = lib.create_expression(m, unreal.MaterialExpressionMultiply, 720, 700)
-    wire("neb_pA", neb_sx, neb_prod, "A")
-    wire("neb_pB", neb_sy, neb_prod, "B")
-    neb_abs = lib.create_expression(m, unreal.MaterialExpressionAbs, 880, 700)
-    wire("neb_abs", neb_prod, neb_abs, "Input")
-    neb_soft = lib.create_expression(m, unreal.MaterialExpressionPower, 1040, 700)
-    wire("neb_softA", neb_abs, neb_soft, "Base")
-    wire("neb_softB", const1(m, 880, 800, 0.55), neb_soft, "Exp")
-    neb_w = lib.create_expression(m, unreal.MaterialExpressionMultiply, 1200, 700)
-    wire("neb_wA", neb_soft, neb_w, "A")
-    wire("neb_wB", nebula_str, neb_w, "B")
-    nebula_col = lib.create_expression(m, unreal.MaterialExpressionLinearInterpolate, 1380, 520)
-    wire("neb_cA", star_col, nebula_col, "A")
-    wire("neb_cB", const_mid, nebula_col, "B")
-    wire("neb_c_alpha", neb_w, nebula_col, "Alpha")
-
-    # galaxy: radial core + spiral arm proxy
-    gal_mul = lib.create_expression(m, unreal.MaterialExpressionMultiply, 400, 980)
-    wire("gal_mulA", wxy, gal_mul, "A")
-    wire("gal_mulB", galaxy_scale, gal_mul, "B")
-    gal_len = lib.create_expression(m, unreal.MaterialExpressionLength, 560, 980)
-    wire("gal_len", gal_mul, gal_len, "Input")
-    gal_fall = lib.create_expression(m, unreal.MaterialExpressionOneMinus, 720, 980)
-    wire("gal_fall_in", gal_len, gal_fall, "Input")
-    gal_rad = lib.create_expression(m, unreal.MaterialExpressionPower, 880, 980)
-    wire("gal_radA", gal_fall, gal_rad, "Base")
-    wire("gal_radB", const1(m, 720, 1080, 1.8), gal_rad, "Exp")
-    gal_x = mask_channel(m, gal_mul, "r", "gal_x", 560, 1100)
-    gal_y = mask_channel(m, gal_mul, "g", "gal_y", 560, 1180)
-    gal_spiral = lib.create_expression(m, unreal.MaterialExpressionSine, 720, 1140)
-    gal_spiral.set_editor_property("period", 1.0)
-    gal_ang = lib.create_expression(m, unreal.MaterialExpressionMultiply, 560, 1260)
-    wire("gal_angA", gal_x, gal_ang, "A")
-    wire("gal_angB", galaxy_arms, gal_ang, "B")
-    gal_phase = lib.create_expression(m, unreal.MaterialExpressionAdd, 720, 1220)
-    wire("gal_phA", gal_ang, gal_phase, "A")
-    wire("gal_phB", gal_len, gal_phase, "B")
-    wire("gal_spiral_in", gal_phase, gal_spiral, "Input")
-    gal_arm = lib.create_expression(m, unreal.MaterialExpressionAbs, 880, 1140)
-    wire("gal_arm", gal_spiral, gal_arm, "Input")
-    gal_core = lib.create_expression(m, unreal.MaterialExpressionMultiply, 1040, 1060)
-    wire("gal_cA", gal_rad, gal_core, "A")
-    wire("gal_cB", gal_arm, gal_core, "B")
-    gal_w = lib.create_expression(m, unreal.MaterialExpressionMultiply, 1200, 1060)
-    wire("gal_wA", gal_core, gal_w, "A")
-    wire("gal_wB", galaxy_str, gal_w, "B")
-    celestial = lib.create_expression(m, unreal.MaterialExpressionLinearInterpolate, 1380, 900)
-    wire("cel_A", nebula_col, celestial, "A")
-    wire("cel_B", const_high, celestial, "B")
-    wire("cel_alpha", gal_w, celestial, "Alpha")
+    # ---- celestial: MF_SpaceParallax ----
+    space_px = mf_call(m, MF_SPACE_PARALLAX, 400, 300)
+    if not space_px:
+        unreal.log_error("[Universal] MF_SpaceParallax missing — celestial stack skipped")
+        celestial = color_nikki
+    else:
+        wire("spx_galaxy_tint", const_low, space_px, "GalaxyTint")
+        wire("spx_nebula_tint", const_mid, space_px, "NebulaTint")
+        wire("spx_star_tint", const_high, space_px, "StarTint")
+        wire("spx_nebula_str", nebula_str, space_px, "NebulaStrength")
+        wire("spx_galaxy_str", galaxy_str, space_px, "GalaxyStrength")
+        wire("spx_nebula_depth", nebula_scale, space_px, "NebulaDepth")
+        wire("spx_galaxy_depth", galaxy_scale, space_px, "GalaxyDepth")
+        wire("spx_star_depth", const_scale, space_px, "StarDepth")
+        wire("spx_toon_steps", toon_steps, space_px, "ToonSteps")
+        wire("spx_star_map", star_map, space_px, "StarMap", "Texture")
+        star_str_mul = lib.create_expression(m, unreal.MaterialExpressionMultiply, 200, 420)
+        wire("spx_star_strA", star_int, star_str_mul, "A")
+        wire("spx_star_strB", const_str, star_str_mul, "B")
+        wire("spx_star_str", star_str_mul, space_px, "StarStrength")
+        celestial = space_px
     color_stars = lib.create_expression(m, unreal.MaterialExpressionLinearInterpolate, 1780, 120)
     wire("stars_A", color_nikki, color_stars, "A")
     wire("stars_B", celestial, color_stars, "B")
@@ -747,6 +680,9 @@ def build():
     wire("dream_A", color_gold, final_color, "A")
     wire("dream_B", shadow_tint, final_color, "B")
     wire("dream_alpha", shadow_amt, final_color, "Alpha")
+
+    # shared world-XY coords for shadow garden + fairy dust motifs
+    wxy = world_xy(m, 220, 300)
 
     # shadow garden flowers (world clover in shadow)
     flower_uv = lib.create_expression(m, unreal.MaterialExpressionMultiply, 1220, 900)

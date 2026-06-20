@@ -46,7 +46,7 @@ GROUPS: list[tuple[str, list[str]]] = [
                                  "CelestialStarIntensity", "CelestialTwinkle",
                                  "CelestialNebulaStrength", "CelestialNebulaScale",
                                  "CelestialGalaxyStrength", "CelestialGalaxyScale",
-                                 "CelestialGalaxyArms"]),
+                                 "CelestialGalaxyArms", "StarMap", "CelestialToonSteps"]),
     ("15 | Fairy Dust", ["FairyMotifStyle", "FairyDustIntensity", "FairyDustScale",
                          "FairyDustColor", "FairyHighlightThreshold", "FairyGlyphMask"]),
     ("16 | Magical (Henshin)", ["MagicalTransform", "MotifMask", "MotifScale",

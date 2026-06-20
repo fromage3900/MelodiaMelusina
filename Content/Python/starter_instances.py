@@ -70,7 +70,7 @@ STARTER_INSTANCES: list[dict] = [
     },
     {
         "name": "MI_Show_CelestialNebula",
-        "purpose": "Nebula shading — constellation ramp + procedural nebula + galaxy emissive",
+        "purpose": "Nebula shading — MF_SpaceParallax constellation ramp + parallax nebula + galaxy",
         "profile": "TP_Default",
         "vectors": {
             "BaseTint": (0.05, 0.06, 0.12, 1.0),
@@ -88,10 +88,11 @@ STARTER_INSTANCES: list[dict] = [
             "CelestialNebulaScale": 0.42,
             "CelestialGalaxyStrength": 0.5,
             "CelestialStarIntensity": 1.4,
-            "CelestialTwinkle": 0.5,
+            "CelestialToonSteps": 4.0,
             "GlowIntensity": 0.35,
         },
-        "key_params": "CelestialNebulaStrength, ConstellationRamp* (Celestial)",
+        "textures": {"StarMap": "twinkle", "SparkleMask": "twinkle"},
+        "key_params": "CelestialNebulaStrength, ConstellationRamp*, StarMap (Celestial)",
     },
     {
         "name": "MI_Show_FairyHearts",

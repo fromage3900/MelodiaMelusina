@@ -102,7 +102,10 @@ INSTANCE_TEXTURE_WIRES: dict[str, dict[str, list[str] | str]] = {
         "SparkleMask": SPARKLE_MASKS["twinkle"],
         "FairyGlyphMask": FAIRY_GLYPH_MASKS["flower"],
     },
-    "MI_Show_CelestialNebula": {"SparkleMask": SPARKLE_MASKS["twinkle"]},
+    "MI_Show_CelestialNebula": {
+        "StarMap": SPARKLE_MASKS["twinkle"],
+        "SparkleMask": SPARKLE_MASKS["twinkle"],
+    },
     "MI_Show_FairyHearts": {
         "FairyGlyphMask": FAIRY_GLYPH_MASKS["heart"],
         "MotifMask": MOTIF_MASKS["heart"],

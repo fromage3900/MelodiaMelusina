@@ -44,6 +44,8 @@ def _resolve_texture_keys(spec: dict, alphas) -> dict[str, list[str]]:
     for pname, key in tex_keys.items():
         if pname == "SparkleMask" and key in sparkle:
             wires[pname] = [sparkle[key]] if isinstance(sparkle[key], str) else list(sparkle[key])
+        elif pname == "StarMap" and key in sparkle:
+            wires[pname] = [sparkle[key]] if isinstance(sparkle[key], str) else list(sparkle[key])
         elif pname == "FairyGlyphMask" and key in fairy:
             wires[pname] = list(fairy[key])
         elif pname == "MotifMask" and key in motif:
