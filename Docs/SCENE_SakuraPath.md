@@ -48,9 +48,22 @@ dreaminess: pastel pink/cream, gentle glow, drifting petals that catch the light
 - Warm point lights inside lanterns (MegaLights).
 - PostProcess: manual exposure, AgX, **Bloom up** (the Nikki glow), gentle vignette.
 
-## PCG scatter
-- Fallen petals on path + ground (density falloff near trees).
-- Grass + tiny flowers. (Later: drifting-petal Niagara.)
+## PCG scatter (phased — see professional review)
+
+**Phase 1 (implemented):** one stock graph — `PCG_Sakura_GroundCover` under `/Game/EnvSandbox/PCG/Sakura/`.
+
+| Graph | Status | Notes |
+|-------|--------|-------|
+| `PCG_Sakura_GroundCover` | ✅ Phase 1 | VolumeSampler → Transform → StaticMeshSpawner; greybox grass proxy |
+| `PCG_Sakura_FallenPetals` | ⏳ Phase 2 | Defer until ground cover validates; avoid overlap with `NS_SakuraGroundPetals` |
+| `PCG_Sakura_PathFlowers` | ⏳ Phase 3 | Spline/corridor scatter — highest risk |
+
+- **Build:** `py Content/Python/setup_pcg_sakura.py` (also in `run_editor_session.py`, optional step)
+- **Audit:** `Saved/Audit/sakura_pcg_build.json` — expected ISM band 400–2500 on `PCG_Sakura_GroundCover`
+- **Swap workflow:** replace grass proxy in `pcg_sakura_standards.py` → `SCATTER_MESHES["grass"]` when CC0 kit lands
+- **Exclusion guides:** invisible `PCG_Exclude_*` box actors (path, pond, torii) — wire into graph in Phase 2
+
+Legacy note: fallen petals on path + grass were originally one bullet; Niagara handles drift/shimmer, PCG handles static ground cover first.
 
 ## Shots (Movie Render Graph)
 1. **Hero:** low path-to-torii, canopy framing — 2560×1440.
@@ -68,9 +81,20 @@ dreaminess: pastel pink/cream, gentle glow, drifting petals that catch the light
 
 ## Nanite + Niagara plan
 - **Nanite:** enable on the imported high-poly kit (rocks, lantern, torii, tree trunks) — no manual LODs under Lumen. Blossom canopy → Nanite if dense geo, else masked alpha cards.
-- **Niagara:**
-  - `NS_SakuraPetals` — GPU petal drift: spawn from canopy bounds, gentle wind + flutter, soft pink, light-catching (emissive tint).
-  - `NS_MagicalBurst` — sparkle/heart burst for the magical-girl beat (synced to `MagicalTransform`): radial pop of `T_Magic`/`T_Spark` sprites + pastel glow, triggered via Sequencer/BP.
+- **Niagara (Sakura Dream kit — `/Game/EnvSandbox/VFX/Systems/Sakura/`):**
+
+| System | Role | Sprite material |
+|--------|------|-----------------|
+| `NS_SakuraPetals` | Continuous canopy petal drift | `MI_Niagara_Petal` |
+| `NS_SakuraGroundPetals` | Fallen petals on path / moss | `MI_Niagara_Petal` |
+| `NS_SakuraDreamSparkle` | Nikki air shimmer under canopy | `MI_Niagara_Sparkle` (JRO zen07 + T_Spark_*) |
+| `NS_SakuraLanternMotes` | Warm motes at stone lantern | `MI_Niagara_Mote` (JRO zen03 + bokeh) |
+| `NS_SakuraPondShimmer` | Sparkle sheet over koi pond | `MI_Niagara_Pond` (JRO zen35/zen30 sand/stone) |
+| `NS_SakuraPetalGust` | One-shot wind gust burst | `MI_Niagara_Gust` (petal + JRO zen23 bamboo) |
+
+- **MPC:** `MPC_SakuraDream` — `WindStrength`, `GustTrigger`, `SparklePulse`, `PetalDensity`
+- **Build:** `py Content/Python/setup_sakura_niagara.py` (MCP preferred for Fountain/Burst templates)
+- **Magical burst (henshin):** `NS_MagicalHenshinBurst` — separate from sakura kit; sync via `MPC_Magical`
 - **PCG:** fallen petals (density falloff near trunks) + grass / tiny flowers on the ground.
 
 ## Prep progress (autonomous loop)
@@ -79,7 +103,8 @@ dreaminess: pastel pink/cream, gentle glow, drifting petals that catch the light
 - ✅ Scene — `setup_sakura_scene.py` (`L_SakuraPath`: dusk rig + toon/bloom post + greybox torii/path/trunks + CineCamera)
 - ✅ Motif alphas — `_AssetLibrary/Magical/` (heart/star/ribbon)
 - ⏳ CC0 kit assets (tree/torii/lantern/rocks/bridge) — sourcing pending (license-checked)
-- ⏳ Niagara petals/burst + PCG scatter graphs — pending
+- ✅ Niagara Sakura Dream kit — `setup_sakura_niagara.py` (6 systems + sprite material + MPC + L_SakuraPath spawn)
+- ⏳ PCG scatter graphs — Phase 1 ground cover via `setup_pcg_sakura.py`; petals/path deferred
 - ⏸️ Master ③ MF-refactor — deferred until rebuild verified
 
 **Run order when live:** `setup_master_universal.py` → `setup_sakura_instances.py` → `setup_sakura_scene.py` → import CC0 kit → swap greybox → PCG/Niagara → light + render.

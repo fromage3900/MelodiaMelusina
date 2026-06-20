@@ -17,7 +17,7 @@ LIBRARY LAYOUT
 /Game/EnvSandbox/VFX/
   MPC/                 MPC_Magical (henshin driver for materials + BP/Sequencer sync)
   Systems/Ambient/     NS_FairyDust, NS_ConstellationTwinkle, NS_EmberMotes
-  Systems/Sakura/      NS_SakuraPetals
+  Systems/Sakura/      NS_SakuraPetals (+ setup_sakura_niagara.py for full 6-system kit)
   Systems/Magical/     NS_MagicalHenshinBurst, NS_MagicTrail
   _Showcase/           optional L_VFX_Showcase (spawn grid when --showcase)
 
@@ -28,6 +28,11 @@ THEME ALIGNMENT (material work plan)
 | NS_ConstellationTwinkle | MI_Universal_Constellation    | slow twinkle field |
 | NS_EmberMotes           | MI_Universal_Warm* / campfire | warm floating dust |
 | NS_SakuraPetals         | MI_Sakura_Blossom             | canopy drift for L_SakuraPath |
+| NS_SakuraGroundPetals   | MI_Sakura_Petals              | fallen petals — see setup_sakura_niagara.py |
+| NS_SakuraDreamSparkle   | MI_Sakura_Blossom             | Nikki air shimmer under canopy |
+| NS_SakuraLanternMotes   | MI_Sakura_Lantern             | warm motes at stone lantern |
+| NS_SakuraPondShimmer    | MI_Sakura_Water               | pond surface sparkle |
+| NS_SakuraPetalGust      | MI_Sakura_Petals              | wind gust burst (one-shot) |
 | NS_MagicalHenshinBurst  | MagicalTransform on Universal | one-shot burst; drive User.Burst via Sequencer |
 | NS_MagicTrail           | M_PP_ToonOutline / storybook  | ribbon trail; tune in Niagara after spawn |
 

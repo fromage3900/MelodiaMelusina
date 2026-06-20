@@ -45,7 +45,8 @@ def register_livelink_menus():
     main.add_sub_menu(_OWNER, "LiveLink", "LiveLink", "LiveLink", "Live Link")
     live = menus.extend_menu("LevelEditor.MainMenu.LiveLink")
     live.add_section("Connection", "Connection", 0)
-    live.add_section("Help", "Help", 1)
+    live.add_section("Portfolio", "Portfolio", 1)
+    live.add_section("Help", "Help", 2)
 
     def add_entry(menu, section, name, label, py_body):
         entry = unreal.ToolMenuEntry(name=name, type=unreal.MultiBlockType.MENU_ENTRY)
@@ -73,6 +74,16 @@ def register_livelink_menus():
         "StatusLL",
         "Show Status",
         "unreal.log('[LiveLink] ' + livelink_unreal.get_status())",
+    )
+    add_entry(
+        live,
+        "Portfolio",
+        "RunSakuraPCG",
+        "Run Sakura PCG (Phase 1)",
+        "import setup_pcg_sakura; "
+        "report = setup_pcg_sakura.build_all(rebuild=True, spawn=True); "
+        "unreal.log('[Portfolio] Sakura PCG passed=' + str(report.get('passed')) + "
+        "' ism=' + str(report.get('level_spawn', {}).get('ism_count')))",
     )
     add_entry(
         live,

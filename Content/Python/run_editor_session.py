@@ -117,6 +117,18 @@ def _run_session() -> int:
         lambda: __import__("setup_niagara_library").build_all(showcase=showcase),
     )
 
+    step(
+        "sakura dream niagara",
+        lambda: __import__("setup_sakura_niagara").build_all(rebuild=False, spawn=True),
+        optional=True,
+    )
+
+    step(
+        "sakura pcg ground cover (phase 1)",
+        lambda: __import__("setup_pcg_sakura").build_all(rebuild=False, spawn=True),
+        optional=True,
+    )
+
     if showcase:
         step("template showcase level", lambda: __import__("setup_template_showcase").build_all())
 
@@ -145,6 +157,7 @@ def _run_session() -> int:
             "Saved/Audit/uds_time_of_day_sync.json",
             "Saved/Audit/storybook_outline_build.json",
             "Saved/Audit/niagara_library_build.json",
+            "Saved/Audit/sakura_pcg_build.json",
         ],
     }
     if showcase:
