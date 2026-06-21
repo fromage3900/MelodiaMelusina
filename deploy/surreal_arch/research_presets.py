@@ -97,6 +97,53 @@ RESEARCH_PRESETS = {
             unit_size=3.5,
         ),
     },
+    "zen_roji_step": {
+        "label": "Zen Roji Dew Path",
+        "description": "Flat slab + raised edge stones — roji approach segment with path snaps",
+        "research_ref": "Roji dew-path typology — stepping stones flanking central slab (tea garden entry)",
+        "props": dict(
+            arch_type="GB_ZEN_ROJI_STEP",
+            gb_length=4.5,
+            gb_width=1.8,
+            gb_wall_thick=0.12,
+            gb_trim_mode="RECESS",
+            gb_trim_recess=0.04,
+            material_choice="STONE",
+            unit_size=2.0,
+        ),
+    },
+    "zen_torii_gate_modular": {
+        "label": "Zen Torii Gate (Greybox)",
+        "description": "Hashira posts, nuki tie beam, kasagi lintel — MUST_CONNECT path snaps",
+        "research_ref": "Shinto torii typology — hashira / nuki / kasagi modular kit for shrine entry",
+        "props": dict(
+            arch_type="GB_ZEN_TORII_GATE",
+            torii_width=3.6,
+            torii_height=4.2,
+            torii_post_radius=0.18,
+            gb_wall_thick=0.2,
+            gb_trim_mode="RECESS",
+            gb_trim_recess=0.05,
+            material_choice="STONE",
+            unit_size=3.6,
+        ),
+    },
+    "zen_tsukubai_basin": {
+        "label": "Zen Tsukubai Basin",
+        "description": "Stone pad with recess bowl + surround flagstones — ritual hand-wash station",
+        "research_ref": "Tsukubai chōzubachi typology — basin recess + flagstone surround for roji tea path",
+        "props": dict(
+            arch_type="GB_ZEN_TSUKUBAI",
+            gb_width=1.6,
+            gb_depth=1.6,
+            gb_height=0.45,
+            gb_wall_thick=0.14,
+            gb_trim_mode="RECESS",
+            gb_trim_recess=0.06,
+            material_choice="STONE",
+            unit_size=2.0,
+        ),
+    },
 }
 
 

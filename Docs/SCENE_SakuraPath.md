@@ -26,7 +26,7 @@ dreaminess: pastel pink/cream, gentle glow, drifting petals that catch the light
 | Stone lantern (tōrō) | Sketchfab CC0 / Megascans |
 | Stepping stones / rocks | Megascans (CC0 via Fab) |
 | Wooden arched bridge | Sketchfab CC0 |
-| Koi pond (water plane) | toon water material |
+| Koi pond (water plane) | `MI_GrandWater_SakuraPond` on `M_Water_Master_Grand_v6` (`MI_Sakura_Water` = Universal fallback only) |
 | Grass / moss / small flowers | Megascans / PCG scatter |
 
 ## Materials (all MI on `M_Master_Toon_Universal`)
@@ -36,7 +36,8 @@ dreaminess: pastel pink/cream, gentle glow, drifting petals that catch the light
 | `MI_Sakura_Bark` | bark texture, low `TextureWeight` stylization |
 | `MI_Sakura_StonePath` | stone tex, triplanar, moss in cavities (curvature) |
 | `MI_Sakura_Moss` | soft green |
-| `MI_Sakura_Water` | toon water — pastel reflection, gentle ripple |
+| `MI_GrandWater_SakuraPond` | grand water — caustics, gentle Gerstner, Nikki `MagicalIntensity` (see `setup_sakura_scene.py`) |
+| `MI_Sakura_Water` | Universal glass fallback for props — not the koi pond plane |
 | `MI_Sakura_ToriiRed` | muted vermilion lacquer, slight gloss |
 | `MI_Sakura_Lantern` | weathered stone + warm emissive glow |
 | `MI_Sakura_Grass` | two-sided, soft green, gentle wind |

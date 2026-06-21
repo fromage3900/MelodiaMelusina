@@ -8,13 +8,26 @@ Headless:
 """
 from __future__ import annotations
 
+import json
 import os
 import sys
+from datetime import datetime, timezone
+from pathlib import Path
 
 MASTER_NAME = "M_Master_Toon_Landscape_HeightBlend"
 INST_DIR = "/Game/EnvSandbox/Materials/Instances/Landscape"
+REPORT = Path(__file__).resolve().parents[2] / "Saved" / "Audit" / "landscape_height_blend.json"
 WAT = "/Engine/Functions/Engine_MaterialFunctions02/Texturing/WorldAlignedTexture"
 WAN = "/Engine/Functions/Engine_MaterialFunctions02/Texturing/WorldAlignedNormal"
+
+MF_HEIGHT_COMPETE = "/Game/EnvSandbox/Materials/Functions/MF_LandscapeHeightCompete.MF_LandscapeHeightCompete"
+MF_NORMAL_ADJUST = "/Game/EnvSandbox/Materials/Functions/MF_NormalAdjust.MF_NormalAdjust"
+MF_NIKKI_DREAM = "/Game/EnvSandbox/Materials/Functions/MF_NikkiDreamGrade.MF_NikkiDreamGrade"
+MF_NIKKI_RIM = "/Game/EnvSandbox/Materials/Functions/MF_NikkiRimGlow.MF_NikkiRimGlow"
+MF_NIKKI_SPARKLE = "/Game/EnvSandbox/Materials/Functions/MF_NikkiSparkle.MF_NikkiSparkle"
+MF_NIKKI_IRID = "/Game/EnvSandbox/Materials/Functions/MF_NikkiIridescenceSheen.MF_NikkiIridescenceSheen"
+MPC_SAKURA = "/Game/EnvSandbox/VFX/MPC/MPC_SakuraDream"
+LAYER_NAMES = ("Rock", "Grass", "Mud", "Path")
 
 INSTANCES = [
     {
@@ -34,6 +47,46 @@ INSTANCES = [
         "profile": "TP_Default",
         "vectors": {"RockTint": (0.38, 0.40, 0.44, 1.0), "GrassTint": (0.55, 0.58, 0.52, 1.0), "MudTint": (0.30, 0.28, 0.26, 1.0), "SnowTint": (0.92, 0.95, 0.98, 1.0)},
         "scalars": {"SlopeSharpness": 5.0, "HeightBlendStrength": 3.0, "GrassAmount": 0.35, "MudAmount": 0.10, "SnowStrength": 0.75, "SnowUpBias": 2.4, "TriplanarTiling": 320.0},
+    },
+    {
+        "name": "MI_Landscape_SakuraGarden",
+        "profile": "TP_Foliage",
+        "vectors": {
+            "RockTint": (0.50, 0.46, 0.40, 1.0),
+            "GrassTint": (0.40, 0.52, 0.28, 1.0),
+            "MudTint": (0.24, 0.30, 0.16, 1.0),
+        },
+        "scalars": {
+            "SlopeSharpness": 2.0, "HeightBlendStrength": 1.7, "GrassAmount": 0.88, "MudAmount": 0.20,
+            "MacroStrength": 0.30, "SnowStrength": 0.0, "TriplanarTiling": 210.0,
+            "PastelLift": 0.22, "DreamSaturation": 0.18, "SparkleIntensity": 0.35,
+            "SparkleThreshold": 0.42, "RimIntensity": 0.18, "Iridescence": 0.12,
+        },
+    },
+    {
+        "name": "MI_Landscape_ForestFloor",
+        "profile": "TP_Foliage",
+        "vectors": {"RockTint": (0.40, 0.38, 0.34, 1.0), "GrassTint": (0.28, 0.46, 0.20, 1.0), "MudTint": (0.22, 0.18, 0.14, 1.0)},
+        "scalars": {"SlopeSharpness": 2.5, "HeightBlendStrength": 2.0, "GrassAmount": 0.92, "MudAmount": 0.18, "MacroStrength": 0.55, "Wetness": 0.35, "WetRoughness": 0.55, "TriplanarTiling": 240.0},
+    },
+    {
+        "name": "MI_Landscape_CoastalCliff",
+        "profile": "TP_Stone",
+        "vectors": {"RockTint": (0.48, 0.46, 0.44, 1.0), "GrassTint": (0.34, 0.50, 0.28, 1.0), "MudTint": (0.30, 0.24, 0.18, 1.0)},
+        "scalars": {"SlopeSharpness": 6.0, "HeightBlendStrength": 3.2, "GrassAmount": 0.35, "MudAmount": 0.12, "MacroStrength": 0.40, "NormalStrength": 1.25, "TriplanarTiling": 300.0},
+    },
+    {
+        "name": "MI_Landscape_PondBank",
+        "profile": "TP_Foliage",
+        "vectors": {
+            "RockTint": (0.46, 0.44, 0.40, 1.0), "GrassTint": (0.32, 0.50, 0.26, 1.0),
+            "MudTint": (0.26, 0.22, 0.16, 1.0), "RimColor": (0.75, 0.88, 0.92, 1.0),
+        },
+        "scalars": {
+            "Wetness": 0.55, "ShoreWetnessBoost": 0.4, "MudAmount": 0.35, "GrassAmount": 0.45,
+            "PastelLift": 0.15, "RimIntensity": 0.28, "SparkleIntensity": 0.25,
+            "SlopeSharpness": 2.4, "HeightBlendStrength": 2.0, "MacroStrength": 0.38, "TriplanarTiling": 200.0,
+        },
     },
 ]
 
@@ -63,8 +116,23 @@ def _layer_tex():
 def build(*, force: bool = False) -> str:
     import unreal
     import material_lib as lib
+    import portfolio_texture_catalog as catalog
+    import setup_material_functions as mf_mod
 
+    mf_mod.build_all(force=force)
     layer_tex = _layer_tex()
+
+    def static_sw(m, name, group, x, y, default=False):
+        s = lib.create_expression(m, unreal.MaterialExpressionStaticSwitchParameter, x, y)
+        s.set_editor_property("parameter_name", name)
+        s.set_editor_property("group", group)
+        s.set_editor_property("default_value", default)
+        return s
+
+    def painted_sw(m, x, y, true_e, false_e):
+        sw = static_sw(m, "bUsePaintedLayers", "Blend", x, y, False)
+        lib.connect_static_switch(sw, true_e, false_e)
+        return sw
 
     def wire_tex(expr, candidates):
         path = lib.resolve_texture_path(candidates)
@@ -88,6 +156,17 @@ def build(*, force: bool = False) -> str:
         lib.connect(tex_expr, "Texture", call, "TextureObject")
         lib.connect(tiling, "", call, "TextureSize")
         return call
+
+    def sample_layer(m, tex_expr, tag, x, y, uv_blend):
+        tri = sample_triplanar(m, tex_expr, tri_tiling, tag, x, y)
+        uv_s = lib.create_expression(m, unreal.MaterialExpressionTextureSample, x + 180, y)
+        lib.connect(tex_expr, "Texture", uv_s, "Texture")
+        lib.connect(layer_uv, "", uv_s, "UVs")
+        blend = lib.create_expression(m, unreal.MaterialExpressionLinearInterpolate, x + 360, y)
+        lib.connect(tri, "", blend, "A")
+        lib.connect(uv_s, "", blend, "B")
+        lib.connect(uv_blend, "", blend, "Alpha")
+        return blend
 
     lib.ensure_directory(lib.MASTER_DIR)
     lib.ensure_directory(INST_DIR)
@@ -116,20 +195,71 @@ def build(*, force: bool = False) -> str:
     lib.try_set_editor_property(m, "bUsedWithLandscapeGrass", True)
 
     profiles = lib.create_toon_profiles(["TP_Default", "TP_Stone", "TP_Foliage"])
-    rock_tint = lib.vector_param(m, "RockTint", "Palette", (0.44, 0.41, 0.38, 1.0), -2200, -200)
-    grass_tint = lib.vector_param(m, "GrassTint", "Palette", (0.30, 0.48, 0.20, 1.0), -2200, -80)
-    mud_tint = lib.vector_param(m, "MudTint", "Palette", (0.28, 0.22, 0.16, 1.0), -2200, 40)
-    snow_tint = lib.vector_param(m, "SnowTint", "Snow", (0.92, 0.95, 0.98, 1.0), -2200, 160)
-    tri_tiling = lib.scalar_param(m, "TriplanarTiling", "Triplanar", 256.0, -2200, 300)
-    slope_sharp = lib.scalar_param(m, "SlopeSharpness", "Blend", 3.0, -2200, 420)
-    height_blend = lib.scalar_param(m, "HeightBlendStrength", "Blend", 2.0, -2200, 540)
-    grass_amt = lib.scalar_param(m, "GrassAmount", "Blend", 0.6, -2200, 660)
-    mud_amt = lib.scalar_param(m, "MudAmount", "Blend", 0.25, -2200, 780)
-    macro_str = lib.scalar_param(m, "MacroStrength", "Macro", 0.4, -2200, 900)
-    macro_scale = lib.scalar_param(m, "MacroScale", "Macro", 0.0004, -2200, 1020)
-    snow_str = lib.scalar_param(m, "SnowStrength", "Snow", 0.0, -2200, 1140)
-    snow_bias = lib.scalar_param(m, "SnowUpBias", "Snow", 2.2, -2200, 1260)
-    roughness_s = lib.scalar_param(m, "Roughness", "Surface", 0.82, -2200, 1380)
+    px, py = -2200, -200
+    rock_tint = lib.vector_param(m, "RockTint", "Palette", (0.44, 0.41, 0.38, 1.0), px, py)
+    grass_tint = lib.vector_param(m, "GrassTint", "Palette", (0.30, 0.48, 0.20, 1.0), px, py + 120)
+    mud_tint = lib.vector_param(m, "MudTint", "Palette", (0.28, 0.22, 0.16, 1.0), px, py + 240)
+    path_tint = lib.vector_param(m, "PathTint", "Palette", (0.58, 0.54, 0.48, 1.0), px, py + 360)
+    snow_tint = lib.vector_param(m, "SnowTint", "Snow", (0.92, 0.95, 0.98, 1.0), px, py + 480)
+    tri_tiling = lib.scalar_param(m, "TriplanarTiling", "Triplanar", 256.0, px, py + 620)
+    uv_scale = lib.scalar_param(m, "LandscapeUVScale", "UV", 1.0, px, py + 740)
+    slope_sharp = lib.scalar_param(m, "SlopeSharpness", "Blend", 3.0, px, py + 860)
+    height_blend = lib.scalar_param(m, "HeightBlendStrength", "Blend", 2.0, px, py + 980)
+    grass_amt = lib.scalar_param(m, "GrassAmount", "Blend", 0.6, px, py + 1100)
+    mud_amt = lib.scalar_param(m, "MudAmount", "Blend", 0.25, px, py + 1220)
+    macro_str = lib.scalar_param(m, "MacroStrength", "Macro", 0.4, px, py + 1340)
+    macro_scale = lib.scalar_param(m, "MacroScale", "Macro", 0.0004, px, py + 1460)
+    snow_str = lib.scalar_param(m, "SnowStrength", "Snow", 0.0, px, py + 1580)
+    snow_bias = lib.scalar_param(m, "SnowUpBias", "Snow", 2.2, px, py + 1700)
+    roughness_s = lib.scalar_param(m, "Roughness", "Surface", 0.82, px, py + 1820)
+    rock_rough = lib.scalar_param(m, "RockRoughness", "Surface", 0.88, px, py + 1940)
+    grass_rough = lib.scalar_param(m, "GrassRoughness", "Surface", 0.78, px, py + 2060)
+    mud_rough = lib.scalar_param(m, "MudRoughness", "Surface", 0.92, px, py + 2180)
+    normal_str = lib.scalar_param(m, "NormalStrength", "Surface", 1.0, px, py + 2300)
+    wetness = lib.scalar_param(m, "Wetness", "Surface", 0.0, px, py + 2420)
+    wet_rough = lib.scalar_param(m, "WetRoughness", "Surface", 0.45, px, py + 2540)
+    shore_wet_boost = lib.scalar_param(m, "ShoreWetnessBoost", "Shore", 0.0, px, py + 2660)
+    shore_darken = lib.scalar_param(m, "ShoreColorDarken", "Shore", 0.0, px, py + 2780)
+    water_align = lib.scalar_param(m, "WaterPaletteAlign", "Shore", 0.0, px, py + 2900)
+    water_tint = lib.vector_param(m, "WaterAlignTint", "Shore", (0.55, 0.72, 0.78, 1.0), px, py + 3020)
+    path_wear = lib.scalar_param(m, "PathWearStrength", "Path", 0.0, px, py + 3140)
+    path_mask = lib.texture_param(m, "PathMask", "Path", px, py + 3260)
+    dream_tint = lib.vector_param(m, "DreamTint", "Nikki", (1.0, 0.85, 0.92, 1.0), px, py + 3380)
+    rim_color = lib.vector_param(m, "RimColor", "Nikki", (0.70, 0.85, 1.0, 1.0), px, py + 3500)
+    spark_color = lib.vector_param(m, "SparkleColor", "Nikki", (1.0, 0.95, 0.80, 1.0), px, py + 3620)
+    irid_tint = lib.vector_param(m, "IridescenceTint", "Nikki", (0.80, 0.60, 1.0, 1.0), px, py + 3740)
+    sheen_tint = lib.vector_param(m, "SheenTint", "Nikki", (1.0, 1.0, 1.0, 1.0), px, py + 3860)
+    spark_mask = lib.texture_param(m, "SparkleMask", "Nikki", px, py + 3980)
+    wire_tex(spark_mask, catalog.MASTER_TEXTURE_DEFAULTS["SparkleMask"])
+    pastel = lib.scalar_param(m, "PastelLift", "Nikki", 0.0, px, py + 4100)
+    dream_sat = lib.scalar_param(m, "DreamSaturation", "Nikki", 0.0, px, py + 4220)
+    dream_con = lib.scalar_param(m, "DreamContrast", "Nikki", 0.0, px, py + 4340)
+    shadow_lift = lib.scalar_param(m, "DreamShadowLift", "Nikki", 0.0, px, py + 4460)
+    rim_width = lib.scalar_param(m, "RimWidth", "Nikki", 1.0, px, py + 4580)
+    rim_int = lib.scalar_param(m, "RimIntensity", "Nikki", 0.0, px, py + 4700)
+    glow_int = lib.scalar_param(m, "GlowIntensity", "Nikki", 0.0, px, py + 4820)
+    bloom = lib.scalar_param(m, "BloomBoost", "Nikki", 0.0, px, py + 4940)
+    spark_int = lib.scalar_param(m, "SparkleIntensity", "Nikki", 0.0, px, py + 5060)
+    spark_thresh = lib.scalar_param(m, "SparkleThreshold", "Nikki", 0.0, px, py + 5180)
+    irid = lib.scalar_param(m, "Iridescence", "Nikki", 0.0, px, py + 5300)
+    irid_pow = lib.scalar_param(m, "IridescencePower", "Nikki", 1.0, px, py + 5420)
+    fabric_sheen = lib.scalar_param(m, "FabricSheen", "Nikki", 0.0, px, py + 5540)
+    static_sw(m, "bNikkiFast", "Nikki", px, py + 5660, False)
+    static_sw(m, "bNikkiHero", "Nikki", px, py + 5780, False)
+
+    layer_coords = lib.create_expression(m, unreal.MaterialExpressionLandscapeLayerCoords, -2000, -80)
+    layer_uv = lib.create_expression(m, unreal.MaterialExpressionMultiply, -1800, -80)
+    lib.connect(layer_coords, "", layer_uv, "A")
+    lib.connect(uv_scale, "", layer_uv, "B")
+    b_landscape_uv = static_sw(m, "bUseLandscapeUV", "UV", -2000, -200, False)
+    uv_one = lib.create_expression(m, unreal.MaterialExpressionConstant, -1800, -200)
+    uv_one.set_editor_property("r", 1.0)
+    uv_zero = lib.create_expression(m, unreal.MaterialExpressionConstant, -1800, -120)
+    uv_zero.set_editor_property("r", 0.0)
+    uv_blend_sw = lib.create_expression(m, unreal.MaterialExpressionLinearInterpolate, -1600, -160)
+    lib.connect(uv_zero, "", uv_blend_sw, "A")
+    lib.connect(uv_one, "", uv_blend_sw, "B")
+    lib.connect(b_landscape_uv, "", uv_blend_sw, "Alpha")
 
     layer_samples: dict[str, dict] = {}
     for i, (layer, tex) in enumerate(layer_tex.items()):
@@ -140,9 +270,9 @@ def build(*, force: bool = False) -> str:
         wire_tex(nrm, tex["Normal"])
         hgt = lib.texture_param(m, f"{layer}_Height", "Textures", -2000, yy + 160)
         wire_tex(hgt, tex["Height"])
-        alb_s = sample_triplanar(m, alb, tri_tiling, f"{layer}_Alb", -1600, yy)
-        nrm_s = sample_triplanar(m, nrm, tri_tiling, f"{layer}_Nrm", -1600, yy + 120)
-        hgt_s = sample_triplanar(m, hgt, tri_tiling, f"{layer}_Hgt", -1600, yy + 240)
+        alb_s = sample_layer(m, alb, f"{layer}_Alb", -1600, yy, uv_blend_sw)
+        nrm_s = sample_layer(m, nrm, f"{layer}_Nrm", -1600, yy + 120, uv_blend_sw)
+        hgt_s = sample_layer(m, hgt, f"{layer}_Hgt", -1600, yy + 240, uv_blend_sw)
         tint_map = {"Rock": rock_tint, "Grass": grass_tint, "Mud": mud_tint}
         tinted = lib.create_expression(m, unreal.MaterialExpressionMultiply, -1200, yy)
         lib.connect(alb_s, "", tinted, "A")
@@ -154,45 +284,191 @@ def build(*, force: bool = False) -> str:
         lib.connect(weights, "", h_dot, "B")
         layer_samples[layer] = {"color": tinted, "normal": nrm_s, "height": h_dot}
 
-    diff_gr = lib.create_expression(m, unreal.MaterialExpressionSubtract, -900, 500)
-    lib.connect(layer_samples["Grass"]["height"], "", diff_gr, "A")
-    lib.connect(layer_samples["Rock"]["height"], "", diff_gr, "B")
-    diff_gm = lib.create_expression(m, unreal.MaterialExpressionSubtract, -900, 640)
-    lib.connect(layer_samples["Grass"]["height"], "", diff_gm, "A")
-    lib.connect(layer_samples["Mud"]["height"], "", diff_gm, "B")
-    mod_gr = lib.create_expression(m, unreal.MaterialExpressionMultiply, -700, 500)
-    lib.connect(diff_gr, "", mod_gr, "A")
-    lib.connect(height_blend, "", mod_gr, "B")
-    mod_gm = lib.create_expression(m, unreal.MaterialExpressionMultiply, -700, 640)
-    lib.connect(diff_gm, "", mod_gm, "A")
-    lib.connect(height_blend, "", mod_gm, "B")
-    alpha_grass = lib.create_expression(m, unreal.MaterialExpressionClamp, -500, 500)
-    lib.connect(mod_gr, "", alpha_grass, "Input")
-    alpha_mud = lib.create_expression(m, unreal.MaterialExpressionClamp, -500, 640)
-    lib.connect(mod_gm, "", alpha_mud, "Input")
-    grass_gate = lib.create_expression(m, unreal.MaterialExpressionMultiply, -300, 500)
-    lib.connect(alpha_grass, "", grass_gate, "A")
-    lib.connect(grass_amt, "", grass_gate, "B")
-    mud_gate = lib.create_expression(m, unreal.MaterialExpressionMultiply, -300, 640)
-    lib.connect(alpha_mud, "", mud_gate, "A")
-    lib.connect(mud_amt, "", mud_gate, "B")
+    compete = mf_call(m, MF_HEIGHT_COMPETE, -900, 520)
+    grass_alpha_pin, mud_alpha_pin = "GrassAlpha", "MudAlpha"
+    if compete:
+        lib.connect(layer_samples["Rock"]["height"], "", compete, "RockHeight")
+        lib.connect(layer_samples["Grass"]["height"], "", compete, "GrassHeight")
+        lib.connect(layer_samples["Mud"]["height"], "", compete, "MudHeight")
+        lib.connect(height_blend, "", compete, "HeightBlendStrength")
+        lib.connect(grass_amt, "", compete, "GrassAmount")
+        lib.connect(mud_amt, "", compete, "MudAmount")
 
-    col_rg = lib.create_expression(m, unreal.MaterialExpressionLinearInterpolate, -100, 520)
-    lib.connect(layer_samples["Rock"]["color"], "", col_rg, "A")
-    lib.connect(layer_samples["Grass"]["color"], "", col_rg, "B")
-    lib.connect(grass_gate, "", col_rg, "Alpha")
-    col_final = lib.create_expression(m, unreal.MaterialExpressionLinearInterpolate, 100, 560)
-    lib.connect(col_rg, "", col_final, "A")
-    lib.connect(layer_samples["Mud"]["color"], "", col_final, "B")
-    lib.connect(mud_gate, "", col_final, "Alpha")
-    nrm_rg = lib.create_expression(m, unreal.MaterialExpressionLinearInterpolate, -100, 760)
-    lib.connect(layer_samples["Rock"]["normal"], "", nrm_rg, "A")
-    lib.connect(layer_samples["Grass"]["normal"], "", nrm_rg, "B")
-    lib.connect(grass_gate, "", nrm_rg, "Alpha")
-    nrm_final = lib.create_expression(m, unreal.MaterialExpressionLinearInterpolate, 100, 800)
-    lib.connect(nrm_rg, "", nrm_final, "A")
-    lib.connect(layer_samples["Mud"]["normal"], "", nrm_final, "B")
-    lib.connect(mud_gate, "", nrm_final, "Alpha")
+    path_sample = lib.create_expression(m, unreal.MaterialExpressionTextureSample, -500, 820)
+    lib.connect(path_mask, "Texture", path_sample, "Texture")
+    path_tex_w = lib.create_expression(m, unreal.MaterialExpressionMultiply, -300, 820)
+    lib.connect(path_sample, "R", path_tex_w, "A")
+    lib.connect(path_wear, "", path_tex_w, "B")
+
+    layer_weights: dict[str, object] = {}
+    for i, lname in enumerate(LAYER_NAMES):
+        ls = lib.create_expression(m, unreal.MaterialExpressionLandscapeLayerSample, -500, 980 + i * 80)
+        ls.set_editor_property("parameter_name", lname)
+        layer_weights[lname] = ls
+    paint_sum = layer_weights[LAYER_NAMES[0]]
+    for i in range(1, len(LAYER_NAMES)):
+        add = lib.create_expression(m, unreal.MaterialExpressionAdd, -300, 980 + i * 80)
+        lib.connect(paint_sum, "", add, "A")
+        lib.connect(layer_weights[LAYER_NAMES[i]], "", add, "B")
+        paint_sum = add
+
+    eps = lib.create_expression(m, unreal.MaterialExpressionConstant, -120, 1100)
+    eps.set_editor_property("r", 0.001)
+    paint_safe = lib.create_expression(m, unreal.MaterialExpressionAdd, 80, 1020)
+    lib.connect(paint_sum, "", paint_safe, "A")
+    lib.connect(eps, "", paint_safe, "B")
+    paint_mul = lib.create_expression(m, unreal.MaterialExpressionMultiply, 80, 900)
+    lib.connect(paint_sum, "", paint_mul, "A")
+    scale50 = lib.create_expression(m, unreal.MaterialExpressionConstant, -120, 900)
+    scale50.set_editor_property("r", 50.0)
+    lib.connect(scale50, "", paint_mul, "B")
+    has_paint = lib.create_expression(m, unreal.MaterialExpressionSaturate, 260, 1020)
+    lib.connect(paint_mul, "", has_paint, "Input")
+
+    path_add = lib.create_expression(m, unreal.MaterialExpressionAdd, -120, 820)
+    lib.connect(layer_weights["Path"], "", path_add, "A")
+    lib.connect(path_tex_w, "", path_add, "B")
+    path_fac = lib.create_expression(m, unreal.MaterialExpressionSaturate, 80, 820)
+    lib.connect(path_add, "", path_fac, "Input")
+    path_inv = lib.create_expression(m, unreal.MaterialExpressionOneMinus, 260, 820)
+    lib.connect(path_fac, "", path_inv, "Input")
+
+    path_mud = lib.create_expression(m, unreal.MaterialExpressionAdd, 80, 700)
+    lib.connect(layer_weights["Path"], "", path_mud, "A")
+    lib.connect(layer_weights["Mud"], "", path_mud, "B")
+    shore_mask = lib.create_expression(m, unreal.MaterialExpressionSaturate, 260, 700)
+    lib.connect(path_mud, "", shore_mask, "Input")
+
+    if compete:
+        grass_base = lib.create_expression(m, unreal.MaterialExpressionMultiply, -120, 520)
+        lib.connect(compete, grass_alpha_pin, grass_base, "A")
+        lib.connect(path_inv, "", grass_base, "B")
+        mud_alpha = compete
+    else:
+        diff_gr = lib.create_expression(m, unreal.MaterialExpressionSubtract, -900, 500)
+        lib.connect(layer_samples["Grass"]["height"], "", diff_gr, "A")
+        lib.connect(layer_samples["Rock"]["height"], "", diff_gr, "B")
+        diff_gm = lib.create_expression(m, unreal.MaterialExpressionSubtract, -900, 640)
+        lib.connect(layer_samples["Grass"]["height"], "", diff_gm, "A")
+        lib.connect(layer_samples["Mud"]["height"], "", diff_gm, "B")
+        mod_gr = lib.create_expression(m, unreal.MaterialExpressionMultiply, -700, 500)
+        lib.connect(diff_gr, "", mod_gr, "A")
+        lib.connect(height_blend, "", mod_gr, "B")
+        mod_gm = lib.create_expression(m, unreal.MaterialExpressionMultiply, -700, 640)
+        lib.connect(diff_gm, "", mod_gm, "A")
+        lib.connect(height_blend, "", mod_gm, "B")
+        alpha_grass = lib.create_expression(m, unreal.MaterialExpressionClamp, -500, 500)
+        lib.connect(mod_gr, "", alpha_grass, "Input")
+        alpha_mud = lib.create_expression(m, unreal.MaterialExpressionClamp, -500, 640)
+        lib.connect(mod_gm, "", alpha_mud, "Input")
+        grass_amt_mul = lib.create_expression(m, unreal.MaterialExpressionMultiply, -300, 500)
+        lib.connect(alpha_grass, "", grass_amt_mul, "A")
+        lib.connect(grass_amt, "", grass_amt_mul, "B")
+        mud_alpha = lib.create_expression(m, unreal.MaterialExpressionMultiply, -300, 640)
+        lib.connect(alpha_mud, "", mud_alpha, "A")
+        lib.connect(mud_amt, "", mud_alpha, "B")
+        grass_base = lib.create_expression(m, unreal.MaterialExpressionMultiply, -120, 500)
+        lib.connect(grass_amt_mul, "", grass_base, "A")
+        lib.connect(path_inv, "", grass_base, "B")
+        mud_alpha_pin = ""
+
+    one_g = lib.create_expression(m, unreal.MaterialExpressionConstant, 440, 480)
+    one_g.set_editor_property("r", 1.0)
+    layer_scale_g = lib.create_expression(m, unreal.MaterialExpressionLinearInterpolate, 440, 560)
+    lib.connect(one_g, "", layer_scale_g, "A")
+    lib.connect(layer_weights["Grass"], "", layer_scale_g, "B")
+    lib.connect(has_paint, "", layer_scale_g, "Alpha")
+    grass_scale = painted_sw(m, 620, 520, layer_scale_g, one_g)
+    grass_final = lib.create_expression(m, unreal.MaterialExpressionMultiply, 800, 520)
+    lib.connect(grass_base, "", grass_final, "A")
+    lib.connect(grass_scale, "", grass_final, "B")
+
+    def proc_lerp3(col_a, col_b, col_c, x, y):
+        ab = lib.create_expression(m, unreal.MaterialExpressionLinearInterpolate, x, y)
+        lib.connect(col_a, "", ab, "A")
+        lib.connect(col_b, "", ab, "B")
+        lib.connect(grass_final, "", ab, "Alpha")
+        out = lib.create_expression(m, unreal.MaterialExpressionLinearInterpolate, x + 200, y)
+        lib.connect(ab, "", out, "A")
+        lib.connect(col_c, "", out, "B")
+        if compete and mud_alpha_pin:
+            lib.connect(mud_alpha, mud_alpha_pin, out, "Alpha")
+        else:
+            lib.connect(mud_alpha, "", out, "Alpha")
+        return out
+
+    proc_col = proc_lerp3(layer_samples["Rock"]["color"], layer_samples["Grass"]["color"], layer_samples["Mud"]["color"], -100, 520)
+    proc_nrm = proc_lerp3(layer_samples["Rock"]["normal"], layer_samples["Grass"]["normal"], layer_samples["Mud"]["normal"], -100, 760)
+
+    def norm_w(w, y):
+        d = lib.create_expression(m, unreal.MaterialExpressionDivide, 440, y)
+        lib.connect(w, "", d, "A")
+        lib.connect(paint_safe, "", d, "B")
+        return d
+
+    norm = {n: norm_w(layer_weights[n], 1180 + i * 60) for i, n in enumerate(LAYER_NAMES)}
+
+    def paint_wsum(vals, y):
+        acc = None
+        for i, (nm, val) in enumerate(vals):
+            term = lib.create_expression(m, unreal.MaterialExpressionMultiply, 640, y + i * 50)
+            lib.connect(norm[nm], "", term, "A")
+            lib.connect(val, "", term, "B")
+            if acc is None:
+                acc = term
+            else:
+                add = lib.create_expression(m, unreal.MaterialExpressionAdd, 820, y + i * 50)
+                lib.connect(acc, "", add, "A")
+                lib.connect(term, "", add, "B")
+                acc = add
+        return acc
+
+    one_c = lib.create_expression(m, unreal.MaterialExpressionConstant, 440, 780)
+    one_c.set_editor_property("r", 1.0)
+    dark_sub = lib.create_expression(m, unreal.MaterialExpressionSubtract, 440, 860)
+    lib.connect(one_c, "", dark_sub, "A")
+    lib.connect(shore_darken, "", dark_sub, "B")
+    mud_dark_mul = lib.create_expression(m, unreal.MaterialExpressionMultiply, 620, 780)
+    lib.connect(layer_samples["Mud"]["color"], "", mud_dark_mul, "A")
+    lib.connect(dark_sub, "", mud_dark_mul, "B")
+    mud_paint_col = lib.create_expression(m, unreal.MaterialExpressionLinearInterpolate, 800, 700)
+    lib.connect(layer_samples["Mud"]["color"], "", mud_paint_col, "A")
+    lib.connect(mud_dark_mul, "", mud_paint_col, "B")
+    lib.connect(shore_mask, "", mud_paint_col, "Alpha")
+
+    paint_col = paint_wsum(
+        [("Rock", layer_samples["Rock"]["color"]), ("Grass", layer_samples["Grass"]["color"]),
+         ("Mud", mud_paint_col), ("Path", path_tint)], 1280)
+    paint_nrm = paint_wsum(
+        [("Rock", layer_samples["Rock"]["normal"]), ("Grass", layer_samples["Grass"]["normal"]),
+         ("Mud", layer_samples["Mud"]["normal"]), ("Path", layer_samples["Rock"]["normal"])], 1480)
+    paint_rough = paint_wsum(
+        [("Rock", rock_rough), ("Grass", grass_rough), ("Mud", mud_rough), ("Path", roughness_s)], 1680)
+
+    col_blend = lib.create_expression(m, unreal.MaterialExpressionLinearInterpolate, 900, 560)
+    lib.connect(proc_col, "", col_blend, "A")
+    lib.connect(paint_col, "", col_blend, "B")
+    lib.connect(has_paint, "", col_blend, "Alpha")
+    col_out = painted_sw(m, 1100, 560, col_blend, proc_col)
+    nrm_blend = lib.create_expression(m, unreal.MaterialExpressionLinearInterpolate, 900, 800)
+    lib.connect(proc_nrm, "", nrm_blend, "A")
+    lib.connect(paint_nrm, "", nrm_blend, "B")
+    lib.connect(has_paint, "", nrm_blend, "Alpha")
+    nrm_out = painted_sw(m, 1100, 800, nrm_blend, proc_nrm)
+
+    nrm_adj = mf_call(m, MF_NORMAL_ADJUST, 1320, 800)
+    if nrm_adj:
+        one_layer = lib.create_expression(m, unreal.MaterialExpressionConstant, 1120, 920)
+        one_layer.set_editor_property("r", 1.0)
+        pow_one = lib.create_expression(m, unreal.MaterialExpressionConstant, 1120, 840)
+        pow_one.set_editor_property("r", 1.0)
+        lib.connect(nrm_out, "", nrm_adj, "Normal")
+        lib.connect(normal_str, "", nrm_adj, "NormalStrength")
+        lib.connect(pow_one, "", nrm_adj, "NormalPower")
+        lib.connect(one_layer, "", nrm_adj, "LayerNormalStrength")
+        nrm_final = nrm_adj
+    else:
+        nrm_final = nrm_out
 
     pnorm = lib.create_expression(m, unreal.MaterialExpressionPixelNormalWS, 300, 340)
     up = lib.create_expression(m, unreal.MaterialExpressionConstant3Vector, 300, 480)
@@ -206,7 +482,7 @@ def build(*, force: bool = False) -> str:
     lib.connect(slope_inv, "", slope_pow, "Base")
     lib.connect(slope_sharp, "", slope_pow, "Exp")
     cliff_col = lib.create_expression(m, unreal.MaterialExpressionLinearInterpolate, 1040, 560)
-    lib.connect(col_final, "", cliff_col, "A")
+    lib.connect(col_out, "", cliff_col, "A")
     lib.connect(layer_samples["Rock"]["color"], "", cliff_col, "B")
     lib.connect(slope_pow, "", cliff_col, "Alpha")
 
@@ -244,12 +520,95 @@ def build(*, force: bool = False) -> str:
     lib.connect(snow_tint, "", final_col, "B")
     lib.connect(snow_amt, "", final_col, "Alpha")
 
-    toon = lib.create_expression(m, unreal.MaterialExpressionSubstrateToonBSDF, 2100, 700)
+    water_lerp = lib.create_expression(m, unreal.MaterialExpressionLinearInterpolate, 2000, 900)
+    lib.connect(final_col, "", water_lerp, "A")
+    lib.connect(water_tint, "", water_lerp, "B")
+    water_fac = lib.create_expression(m, unreal.MaterialExpressionMultiply, 1820, 1000)
+    lib.connect(shore_mask, "", water_fac, "A")
+    lib.connect(water_align, "", water_fac, "B")
+    lib.connect(water_fac, "", water_lerp, "Alpha")
+
+    dream = mf_call(m, MF_NIKKI_DREAM, 2180, 880)
+    nikki_col = water_lerp
+    if dream:
+        lib.connect(water_lerp, "", dream, "BaseColor")
+        lib.connect(pastel, "", dream, "PastelLift")
+        lib.connect(dream_tint, "", dream, "DreamTint")
+        lib.connect(dream_sat, "", dream, "DreamSaturation")
+        lib.connect(dream_con, "", dream, "DreamContrast")
+        lib.connect(shadow_lift, "", dream, "DreamShadowLift")
+        nikki_col = dream
+    rim = mf_call(m, MF_NIKKI_RIM, 2380, 880)
+    if rim:
+        lib.connect(nikki_col, "", rim, "BaseColor")
+        lib.connect(nrm_final, "", rim, "Normal")
+        lib.connect(rim_color, "", rim, "RimColor")
+        lib.connect(rim_int, "", rim, "RimIntensity")
+        lib.connect(rim_width, "", rim, "RimWidth")
+        lib.connect(glow_int, "", rim, "GlowIntensity")
+        lib.connect(bloom, "", rim, "BloomBoost")
+        nikki_col = rim
+    pulse = lib.collection_scalar(m, MPC_SAKURA, "SparklePulse", 2180, 1040)
+    spark_eff = lib.create_expression(m, unreal.MaterialExpressionMultiply, 2360, 1040)
+    lib.connect(spark_int, "", spark_eff, "A")
+    lib.connect(pulse, "", spark_eff, "B")
+    sparkle = mf_call(m, MF_NIKKI_SPARKLE, 2560, 880)
+    if sparkle:
+        lib.connect(nikki_col, "", sparkle, "BaseColor")
+        lib.connect(layer_uv, "", sparkle, "UV")
+        lib.connect(spark_mask, "Texture", sparkle, "SparkleMask")
+        lib.connect(spark_eff, "", sparkle, "SparkleIntensity")
+        lib.connect(spark_thresh, "", sparkle, "SparkleThreshold")
+        lib.connect(spark_color, "", sparkle, "SparkleColor")
+        nikki_col = sparkle
+    irid_mf = mf_call(m, MF_NIKKI_IRID, 2760, 880)
+    if irid_mf:
+        lib.connect(nikki_col, "", irid_mf, "BaseColor")
+        lib.connect(nrm_final, "", irid_mf, "Normal")
+        lib.connect(irid, "", irid_mf, "Iridescence")
+        lib.connect(irid_tint, "", irid_mf, "IridescenceTint")
+        lib.connect(irid_pow, "", irid_mf, "IridescencePower")
+        lib.connect(fabric_sheen, "", irid_mf, "FabricSheen")
+        lib.connect(sheen_tint, "", irid_mf, "SheenTint")
+        nikki_col = irid_mf
+
+    proc_rough = proc_lerp3(rock_rough, grass_rough, mud_rough, 900, 960)
+    rough_blend = lib.create_expression(m, unreal.MaterialExpressionLinearInterpolate, 1100, 960)
+    lib.connect(proc_rough, "", rough_blend, "A")
+    lib.connect(paint_rough, "", rough_blend, "B")
+    lib.connect(has_paint, "", rough_blend, "Alpha")
+    rough_out = painted_sw(m, 1280, 960, rough_blend, proc_rough)
+    shore_wet = lib.create_expression(m, unreal.MaterialExpressionMultiply, 1460, 1040)
+    lib.connect(shore_mask, "", shore_wet, "A")
+    lib.connect(shore_wet_boost, "", shore_wet, "B")
+    total_wet = lib.create_expression(m, unreal.MaterialExpressionAdd, 1640, 1000)
+    lib.connect(wetness, "", total_wet, "A")
+    lib.connect(shore_wet, "", total_wet, "B")
+    wet_sat = lib.create_expression(m, unreal.MaterialExpressionSaturate, 1820, 1000)
+    lib.connect(total_wet, "", wet_sat, "Input")
+    rough_wet = lib.create_expression(m, unreal.MaterialExpressionLinearInterpolate, 2000, 960)
+    lib.connect(rough_out, "", rough_wet, "A")
+    lib.connect(wet_rough, "", rough_wet, "B")
+    lib.connect(wet_sat, "", rough_wet, "Alpha")
+    rough_final = rough_wet
+
+    toon = lib.create_expression(m, unreal.MaterialExpressionSubstrateToonBSDF, 3000, 700)
     lib.try_set_editor_property(toon, "toon_profile", profiles["TP_Default"])
-    lib.connect_toon_pin(toon, final_col, ("BaseColor", "DiffuseColor"))
-    lib.connect_toon_pin(toon, roughness_s, ("Roughness",))
+    lib.connect_toon_pin(toon, nikki_col, ("BaseColor", "DiffuseColor"))
+    lib.connect_toon_pin(toon, rough_final, ("Roughness",))
     lib.connect_toon_pin(toon, nrm_final, ("Normal",))
     lib.connect_front_material(m, toon)
+
+    grass_out_cls = getattr(unreal, "MaterialExpressionLandscapeGrassOutput", None)
+    if grass_out_cls:
+        grass_vis = lib.create_expression(m, unreal.MaterialExpressionMultiply, 2800, 1100)
+        lib.connect(layer_samples["Grass"]["color"], "", grass_vis, "A")
+        lib.connect(grass_final, "", grass_vis, "B")
+        gout = lib.create_expression(m, grass_out_cls, 3000, 1100)
+        for pin in ("Grass", "Input", "Color"):
+            if lib.connect(grass_vis, "", gout, pin):
+                break
+
     unreal.MaterialEditingLibrary.recompile_material(m)
     lib.save_package(m)
 
@@ -261,9 +620,20 @@ def build(*, force: bool = False) -> str:
             lib.set_instance_vector(mi, n, v)
         for n, v in spec.get("scalars", {}).items():
             lib.set_instance_scalar(mi, n, v)
+        for n, v in spec.get("switches", {}).items():
+            lib.set_instance_static_switch(mi, n, bool(v))
         lib.save_package(mi)
 
-    print(f"LANDSCAPE_HB_OK {path} instances={len(INSTANCES)}")
+    report = {
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "master": path,
+        "instances": [s["name"] for s in INSTANCES],
+        "count": len(INSTANCES),
+        "folder": INST_DIR,
+    }
+    REPORT.parent.mkdir(parents=True, exist_ok=True)
+    REPORT.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    print(f"LANDSCAPE_HB_OK {path} instances={len(INSTANCES)} -> {REPORT}")
     return path
 
 
@@ -274,7 +644,6 @@ def main():
         return 0
     except ImportError:
         import subprocess
-        from pathlib import Path
 
         root = Path(__file__).resolve().parents[2]
         ue = Path(r"C:\Program Files\Epic Games\UE_5.8\Engine\Binaries\Win64\UnrealEditor-Cmd.exe")
@@ -286,6 +655,7 @@ def main():
             str(ue), str(root / "BS_GodFile.uproject"),
             f"-ExecutePythonScript={(root / 'Content/Python/setup_landscape_height_blend.py').as_posix()}",
             "-stdout", "-unattended", "-nullrhi",
+            "-DisablePlugins=Monolith",
             f"-log={root / 'Saved/Logs/setup_landscape_height_blend.log'}",
         ]
         return subprocess.run(cmd, cwd=str(root)).returncode

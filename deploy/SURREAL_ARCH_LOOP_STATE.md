@@ -125,4 +125,5 @@
 - Deploy: `deploy/surreal_architecture_gen.py` + `deploy/surreal_arch/` + `deploy/surreal_greybox/`
 - Live sync: run `deploy/sync_surreal_to_live.ps1` or copy manually to `%APPDATA%\Blender Foundation\Blender\5.1\scripts\addons\`
 - Stop nap loop: say **"stop nap loop"** or create empty `deploy/SURREAL_ARCH_LOOP_STOP`
+- **Loop stopped** 2026-06-20 — pivoted to Zen library expansion (tick 17+ ignored)
 - Do not edit `surreal_architecture_overhaul_a4161727.plan.md`

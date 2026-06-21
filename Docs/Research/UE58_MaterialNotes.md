@@ -15,7 +15,11 @@ Append-only scratchpad for engine quirks observed during headless rebuild/audit 
 
 - **Micro-task**: added `MI_Show_NikkiHero` starter (mirrors `MI_Universal_NikkiHero` params; no new textures beyond existing `SparkleMask` profile).
 - **Docs**: repaired broken starter table in `MATERIAL_INTEGRATION.md` (Nikki section had split the markdown table).
-- **Starter apply**: `apply_starter_instances.py` headless uses `-nullrhi` only; Monolith already disabled in `.uproject` — no extra `-DisablePlugins` needed when plugin is off.
+- **Starter apply**: `apply_starter_instances.py` headless uses `-nullrhi` + `-DisablePlugins=Monolith` (`.uproject` enablement is not enough — Monolith still crashes Cmd startup).
+
+### Headless Cmd rule (2026-06-20)
+
+- **Every** `UnrealEditor-Cmd` launch from portfolio Python must include `-DisablePlugins=Monolith` alongside `-unattended` / `-nullrhi`, even if Monolith is disabled in `BS_GodFile.uproject`. Without it, headless runs crash at `UMonolithSettings::Get()` during plugin init.
 
 ### Napo tick #3 (2026-06-20)
 
@@ -83,4 +87,9 @@ Append-only scratchpad for engine quirks observed during headless rebuild/audit 
 ### Napo tick #18 (2026-06-20)
 
 - **Micro-task**: `MI_Show_Default` exposes identity `NormalStrength`/`NormalPower` as parallax-panel baseline; full validation pass (starters + trimsheets + audit).
+- Monolith must stay disabled in `.uproject` OR all `UnrealEditor-Cmd` lines need `-DisablePlugins=Monolith`.
+
+### Napo tick #19 (2026-06-20)
+
+- **Status**: loop paused for water/landscape specialist pivot; no code changes this tick.
 

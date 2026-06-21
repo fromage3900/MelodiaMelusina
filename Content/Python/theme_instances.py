@@ -1,16 +1,17 @@
 """Surreal baroque + zen themed MI_* for M_Master_Toon_Universal.
 
 Uses Japanese ornament alphas from /Game/Textures/70_Japanese_Ornament_Alphas_vfxMed.
+Zen library: see zen_instances.py (apply via apply_zen_instances.py).
 """
 from __future__ import annotations
 
 import material_lib as lib
+from zen_instances import ZEN_INSTANCES, ZEN_DIR
 
 MASTER = f"{lib.MASTER_DIR}/M_Master_Toon_Universal.M_Master_Toon_Universal"
 BAROQUE_DIR = f"{lib.MATERIALS_ROOT}/Instances/Environment/Baroque"
-ZEN_DIR = f"{lib.MATERIALS_ROOT}/Instances/Environment/Zen"
 
-THEME_INSTANCES: list[dict] = [
+BAROQUE_INSTANCES: list[dict] = [
     {
         "name": "MI_Baroque_GildedFiligree",
         "folder": BAROQUE_DIR,
@@ -104,74 +105,7 @@ THEME_INSTANCES: list[dict] = [
         },
         "textures": {"MotifMask": "baroque41", "FairyGlyphMask": "baroque04", "SparkleMask": "twinkle"},
     },
-    {
-        "name": "MI_Zen_MossGarden",
-        "folder": ZEN_DIR,
-        "purpose": "Zen — mossy stone garden with minimal circle motif",
-        "profile": "TP_Stone",
-        "vectors": {"BaseTint": (0.42, 0.48, 0.38, 1.0)},
-        "scalars": {
-            "TextureWeight": 0.75,
-            "Roughness": 0.88,
-            "TriplanarTiling": 280.0,
-            "MacroVariationStrength": 0.45,
-            "MotifScale": 3.0,
-        },
-        "switches": {"bTriplanar": True},
-        "textures": {"MotifMask": "zen01", "FairyGlyphMask": "zen03"},
-    },
-    {
-        "name": "MI_Zen_InkWash",
-        "folder": ZEN_DIR,
-        "purpose": "Zen — ink wash calm with wave glyph on pale stone",
-        "profile": "TP_Default",
-        "vectors": {"BaseTint": (0.82, 0.8, 0.76, 1.0)},
-        "scalars": {
-            "TextureWeight": 0.2,
-            "Roughness": 0.72,
-            "InkIntensity": 0.65,
-            "StrokeStrength": 0.35,
-            "MotifScale": 4.0,
-            "RimSoftness": 0.85,
-        },
-        "textures": {"MotifMask": "zen07", "FairyGlyphMask": "zen07"},
-    },
-    {
-        "name": "MI_Zen_BambooMist",
-        "folder": ZEN_DIR,
-        "purpose": "Zen — bamboo motif in soft morning mist",
-        "profile": "TP_Default",
-        "vectors": {
-            "BaseTint": (0.68, 0.72, 0.65, 1.0),
-            "RimColor": (0.92, 0.95, 0.88, 1.0),
-        },
-        "scalars": {
-            "TextureWeight": 0.35,
-            "Roughness": 0.78,
-            "PastelLift": 0.2,
-            "RimIntensity": 0.55,
-            "RimPower": 2.0,
-            "MotifScale": 5.0,
-        },
-        "textures": {"MotifMask": "zen23", "FairyGlyphMask": "zen23"},
-    },
-    {
-        "name": "MI_Zen_Karesansui",
-        "folder": ZEN_DIR,
-        "purpose": "Zen — dry garden sand ripples, minimal ornament",
-        "profile": "TP_Stone",
-        "vectors": {"BaseTint": (0.58, 0.56, 0.52, 1.0)},
-        "scalars": {
-            "TextureWeight": 0.65,
-            "Roughness": 0.92,
-            "TriplanarTiling": 200.0,
-            "DetailStrength": 0.25,
-            "DetailTiling": 6.0,
-            "MotifScale": 2.5,
-        },
-        "switches": {"bTriplanar": True},
-        "textures": {"MotifMask": "zen35", "FairyGlyphMask": "zen30"},
-    },
 ]
 
+THEME_INSTANCES: list[dict] = BAROQUE_INSTANCES + ZEN_INSTANCES
 THEME_NAMES = frozenset(spec["name"] for spec in THEME_INSTANCES)

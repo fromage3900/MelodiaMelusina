@@ -291,7 +291,7 @@
 		},
 		{
 			"Name": "Monolith",
-			"Enabled": false
+			"Enabled": true
 		}
 	]
 }

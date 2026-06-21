@@ -145,6 +145,8 @@ Editor one-shot: `py ".../run_editor_integration.py"`
 
 ## Loop progress
 
+Napo loop paused (2026-06-20) → see `Docs/MATERIAL_SPECIALISTS_PLAN.md`.
+
 ### Tick #1 (2026-06-19) — universal master organization + starter curation
 
 | Task | Status |
@@ -296,18 +298,35 @@ py Content/Python/run_master_param_loop_tick.py
 
 | Master | Role | Build |
 |--------|------|-------|
-| `M_Master_Toon_Landscape_HeightBlend` | Toon terrain — triplanar Rock/Grass/Mud height competition + slope cliffs + snow | `py Content/Python/setup_landscape_height_blend.py` |
-| `M_Water_Master_Grand_v6` | **Canonical grand water** — Gerstner waves, caustics, magical intensity | `py Content/Python/setup_master_water.py` |
+| `M_Master_Toon_Landscape_HeightBlend` | Toon terrain — triplanar Rock/Grass/Mud height competition + slope cliffs + snow + painted layer branch | `python Content/Python/setup_landscape_height_blend.py` |
+| `M_Water_Master_Grand_v6` | **Canonical grand water** — Gerstner waves, caustics, depth/shoreline params, magical intensity | `python Content/Python/setup_master_water.py` |
 
 **Do not use** `M_Master_Toon_Water` — deprecated duplicate. Expand grand water only.
 
-**Instances:** `MI_GrandWater_OceanDeep`, `MI_GrandWater_RiverClear`, `MI_GrandWater_PondStylized` → `Instances/Water/`
+**Water instances** (`Instances/Water/`): `MI_GrandWater_OceanDeep`, `RiverClear`, `PondStylized`, `SakuraPond`, `ShorelinePond`
+
+**Landscape instances** (`Instances/Landscape/`): `MI_Landscape_CliffGrass`, `Meadow`, `SnowAlpine`, `SakuraGarden`, `ForestFloor`, `CoastalCliff`
+
+**Sakura note:** `MI_Sakura_Water` on Universal is a stylized glass fallback. For the koi pond plane use **`MI_GrandWater_SakuraPond`** (grand water). See `Docs/MATERIAL_SPECIALISTS_PLAN.md`.
+
+**Specialist run order** (headless-safe — `-DisablePlugins=Monolith` on all Cmd launches):
 
 ```text
+python Content/Python/audit_grand_water.py              # optional pre-edit audit
+python Content/Python/setup_material_functions.py --force
+python Content/Python/expand_grand_water.py
+python Content/Python/organize_water_groups.py
+python Content/Python/setup_landscape_height_blend.py   # sets BS_MASTER_FORCE=1 headless
+python Content/Python/organize_landscape_groups.py
+python Content/Python/setup_landscape_layers.py         # LayerInfo Rock/Grass/Mud/Path
 python Content/Python/setup_master_water.py
+python Content/Python/setup_sakura_scene.py             # pond MI assign
+python Content/Python/review_portfolio_masters.py       # universal audit only
 ```
 
-**Audit:** `Saved/Audit/grand_water_expand.json`
+**Audits:** `Saved/Audit/grand_water_graph_audit.json` · `grand_water_expand.json` · `landscape_height_blend.json` · `landscape_layers.json`
+
+**Template validation:** `py Content/Python/setup_template_showcase.py` — adds `MI_Landscape_Meadow` ground slab + `MI_GrandWater_ShorelinePond` plane in `L_Template`.
 
 ## Japanese ornament textures + themed instances
 
@@ -315,11 +334,11 @@ python Content/Python/setup_master_water.py
 
 Wired into `M_Master_Toon_Universal` `MotifMask` / `FairyGlyphMask` defaults via `portfolio_texture_catalog.py` (`JAPANESE_ORNAMENT`).
 
-**Theme instances** (8) — `py Content/Python/apply_theme_instances.py`:
+**Theme instances** — `py Content/Python/apply_theme_instances.py` (all) or `py Content/Python/apply_zen_instances.py` (zen only)
 
 | Folder | Instances |
 |--------|-----------|
 | `Instances/Environment/Baroque/` | `MI_Baroque_GildedFiligree`, `MI_Baroque_CathedralSurreal`, `MI_Baroque_EscherOrnament`, `MI_Baroque_FiligreeDream` |
-| `Instances/Environment/Zen/` | `MI_Zen_MossGarden`, `MI_Zen_InkWash`, `MI_Zen_BambooMist`, `MI_Zen_Karesansui` |
+| `Instances/Environment/Zen/` | `MI_Zen_MossGarden`, `MI_Zen_InkWash`, `MI_Zen_BambooMist`, `MI_Zen_Karesansui`, `MI_Zen_ToriiVermillion`, `MI_Zen_SakuraDrift`, `MI_Zen_LanternWarm`, `MI_Zen_TeaHouseCedar`, `MI_Zen_PondStill`, `MI_Zen_ShojiPaper`, `MI_Zen_TempleStep`, `MI_Zen_MoonlitGarden` |
 
-**Audit:** `Saved/Audit/theme_instances.json`
+**Audit:** `Saved/Audit/theme_instances.json` (full) · `Saved/Audit/zen_instances.json` (zen)

@@ -60,7 +60,7 @@ def patch_monolith(monolith):
     except Exception as _gb_err:
         print(f"[Surreal Architecture] surreal_greybox attach skipped: {_gb_err}")
 
-    from . import gothic_kit, greybox_offset, romanesque_kit, brutalist_kit, venetian_kit, scifi_kit
+    from . import gothic_kit, greybox_offset, romanesque_kit, brutalist_kit, venetian_kit, scifi_kit, zen_kit
     from .kit_registration import register_kit
 
     if first_patch:
@@ -137,6 +137,30 @@ def patch_monolith(monolith):
         builder_attr="build_romanesque_apse",
         material_key="STONE",
     )
+    register_kit(
+        monolith,
+        "GB_ZEN_ROJI_STEP",
+        zen_kit.build_zen_roji_step,
+        snap_fn=zen_kit.compute_zen_kit_snaps,
+        builder_attr="build_zen_roji_step",
+        material_key="STONE",
+    )
+    register_kit(
+        monolith,
+        "GB_ZEN_TORII_GATE",
+        zen_kit.build_zen_torii_gate,
+        snap_fn=zen_kit.compute_zen_kit_snaps,
+        builder_attr="build_zen_torii_gate",
+        material_key="STONE",
+    )
+    register_kit(
+        monolith,
+        "GB_ZEN_TSUKUBAI",
+        zen_kit.build_zen_tsukubai,
+        snap_fn=zen_kit.compute_zen_kit_snaps,
+        builder_attr="build_zen_tsukubai",
+        material_key="STONE",
+    )
 
     if not hasattr(monolith, "_gb_compute_snap_points_orig"):
         monolith._gb_compute_snap_points_orig = monolith._gb_compute_snap_points
@@ -162,6 +186,8 @@ def patch_monolith(monolith):
             return brutalist_kit.compute_brutalist_snap_points(monolith, props)
         if t == "GB_VENETIAN_LOGGIA":
             return venetian_kit.compute_venetian_loggia_snap_points(monolith, props)
+        if t.startswith("GB_ZEN_") or (t.startswith("ZEN_") and t not in ("ZEN_MOSS", "ZEN_RIPPLE", "ZEN_SAND", "ZEN_BAMBOO", "ZEN_PETALS", "ZEN_ORBIT", "ZEN_SMOKE", "ZEN_POND", "ZEN_TERRACE", "ZEN_GINKGO", "ZEN_RUNES", "ZEN_BONSAI")):
+            return zen_kit.compute_zen_snaps(monolith, props, t)
         return monolith._gb_compute_snap_points_orig(props)
 
     monolith._gb_compute_snap_points = _compute_snaps_extended
@@ -205,6 +231,13 @@ def patch_monolith(monolith):
 
     sync_catalog_dispatch(monolith)
 
+    try:
+        from surreal_world.patch import patch_world
+
+        patch_world(monolith)
+    except Exception as _world_err:
+        print(f"[Surreal Architecture] surreal_world patch skipped: {_world_err}")
+
 
 def register_overhaul(monolith):
     _ensure_path()
@@ -225,6 +258,13 @@ def register_overhaul(monolith):
     _EXTRA_CLASSES.extend(register_research_preset_operators(monolith))
     _EXTRA_CLASSES.extend(register_asset_ops(monolith))
     _EXTRA_CLASSES.extend(register_catalog_enum_ops(monolith))
+
+    try:
+        from surreal_world.patch import register_world_operators
+
+        _EXTRA_CLASSES.extend(register_world_operators(monolith))
+    except Exception as _wo_err:
+        print(f"[Surreal Architecture] world operators skipped: {_wo_err}")
 
     class SURREAL_ARCH_OT_export_snap_json(bpy.types.Operator):
         bl_idname = "surreal_arch.export_snap_json"

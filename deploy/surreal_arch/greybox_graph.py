@@ -59,6 +59,21 @@ GRAPH_SCI_FI_DECK_EXPANSION = [
     ("GB_SCIFI_PRESSURE_DOOR", {"gb_length": 3.5, "gb_trim_mode": "RECESS"}),
 ]
 
+GRAPH_ZEN_ROJI_PATH = [
+    ("GB_ZEN_TORII_GATE", {"torii_width": 3.6, "torii_height": 4.2, "gb_trim_mode": "RECESS"}),
+    ("GB_ZEN_ROJI_STEP", {"gb_length": 5.0, "gb_width": 1.8, "gb_trim_mode": "RECESS", "unit_size": 2.0}),
+    ("GB_ZEN_ROJI_STEP", {"gb_length": 4.0, "gb_width": 1.8}),
+    ("GB_ZEN_TSUKUBAI", {"gb_width": 1.6, "gb_depth": 1.6, "gb_height": 0.45, "gb_trim_mode": "RECESS"}),
+    ("ZEN_LANTERN", {"zen_lantern_height": 1.4, "zen_lantern_style": "KASUGA"}),
+]
+
+GRAPH_ZEN_SHRINE_COURTYARD = [
+    ("GB_ZEN_TORII_GATE", {"torii_width": 4.0, "torii_height": 4.5}),
+    ("ZEN_STONE_GARDEN", {"stone_garden_size": 8.0}),
+    ("ZEN_BRIDGE", {"zen_bridge_span": 5.0, "zen_bridge_rise": 0.6}),
+    ("ZEN_TEAHOUSE", {"teahouse_depth": 4.5, "teahouse_width": 5.0}),
+    ("ZEN_LANTERN", {}),
+]
 
 def _preview_chain(spec):
     return " \u203a ".join(at.replace("GREYBOX_", "").replace("GB_", "") for at, _ in spec)
@@ -120,6 +135,22 @@ GRAPH_REGISTRY = {
         "style": "scifi",
         "module_count": len(GRAPH_SCI_FI_DECK_EXPANSION),
         "spec": GRAPH_SCI_FI_DECK_EXPANSION,
+    },
+    "ZEN_ROJI_PATH": {
+        "label": "Zen Roji Approach",
+        "description": "Torii gate, dew-path steps, tsukubai basin, stone lantern — tea garden entry",
+        "preview": _preview_chain(GRAPH_ZEN_ROJI_PATH),
+        "style": "zen",
+        "module_count": len(GRAPH_ZEN_ROJI_PATH),
+        "spec": GRAPH_ZEN_ROJI_PATH,
+    },
+    "ZEN_SHRINE_COURTYARD": {
+        "label": "Zen Shrine Courtyard",
+        "description": "Torii, karesansui garden, bridge, teahouse pavilion, lantern accent",
+        "preview": _preview_chain(GRAPH_ZEN_SHRINE_COURTYARD),
+        "style": "zen",
+        "module_count": len(GRAPH_ZEN_SHRINE_COURTYARD),
+        "spec": GRAPH_ZEN_SHRINE_COURTYARD,
     },
 }
 

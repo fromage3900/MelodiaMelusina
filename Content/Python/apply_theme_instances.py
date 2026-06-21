@@ -153,6 +153,7 @@ def main() -> int:
         "-stdout",
         "-unattended",
         "-nullrhi",
+        "-DisablePlugins=Monolith",
         f"-log={log}",
     ]
     return subprocess.run(cmd, cwd=str(PROJECT_ROOT)).returncode

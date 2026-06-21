@@ -1,5 +1,31 @@
 # Surreal Architecture — Changelog
 
+## v2.69.0 — World pipeline review + TD/LD contracts
+
+- **TD manifest contract** — [`SURREAL_WORLD_MANIFEST.md`](SURREAL_WORLD_MANIFEST.md), `schema_version`, `hism_groups`, project MI paths in `ROLE_UE_HINTS`
+- **LD QA checklist** — [`SURREAL_WORLD_LD_QA.md`](SURREAL_WORLD_LD_QA.md) + automated metrics tier in `_mcp_verify_world.py`
+- **Unified verify** — `_mcp_verify_all.py` + `run_verify.ps1` (always `--factory-startup`)
+- **FBX export verify tier** — per-role batch export in world verify
+- **Layer 2 monolith extract** — library/compose/castle plan delegate to `surreal_world/` (no duplicate implementations)
+- **UE importer** — [`Content/Python/import_world_manifest.py`](../Content/Python/import_world_manifest.py)
+
+## v2.68.0 — Procedural world compose pipeline (AAA)
+
+- **`surreal_world/` package** — library bake, plans, COLLECTION compose, UE manifest export
+- **COLLECTION mode (default)** — non-destructive WorldRoot + linked instances + per-piece metadata
+- **Fixes** — `is_sacred` tag dispatch, `BOULDER_PILE` in library spec, headless-safe library bake
+- **ZEN_SHRINE** compose style + Zen Roji plan spawner
+- **`export_world_ue`** operator — `surreal_arch_world_v1` JSON manifest
+- **Verify** — `_mcp_verify_world.py` + dedicated `surreal_world_loop.ps1`
+
+## v2.67.0 — Zen modular kit expansion
+
+- **`zen_kit.py`** — `GB_ZEN_ROJI_STEP`, `GB_ZEN_TORII_GATE`, `GB_ZEN_TSUKUBAI` greybox builders + snap hooks for `ZEN_*` architecture types
+- **Graph library** — `ZEN_ROJI_PATH`, `ZEN_SHRINE_COURTYARD` module chains (style: zen)
+- **Research presets** — roji step, modular torii gate, tsukubai basin quick-launch
+- **Trim export** — per-kit trim groups for zen greybox modules
+- **Verify** — zen kit smoke + trim_groups tier in `_mcp_verify_overhaul.py`
+
 ## v2.66.11 — Trim export QA (micro)
 
 - **`gn_trim_zone_faces`** in UE sidecar payload when GN trim zones are present

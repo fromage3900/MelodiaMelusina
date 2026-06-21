@@ -22,6 +22,39 @@ REPORT = Path(__file__).resolve().parents[2] / "Saved" / "Audit" / "template_sho
 
 CUBE = "/Engine/BasicShapes/Cube.Cube"
 SPHERE = "/Engine/BasicShapes/Sphere.Sphere"
+PLANE = "/Engine/BasicShapes/Plane.Plane"
+
+# Specialist masters — flat mesh validation (triplanar / pond UV shoreline)
+SPECIALIST_SHOWCASE: list[tuple[str, str, tuple[float, float, float], tuple[float, float, float], str]] = [
+    (
+        "MI_Landscape_Meadow",
+        "/Game/EnvSandbox/Materials/Instances/Landscape/MI_Landscape_Meadow",
+        (0.0, -800.0, 10.0),
+        (14.0, 14.0, 0.08),
+        CUBE,
+    ),
+    (
+        "MI_Landscape_SakuraGarden",
+        "/Game/EnvSandbox/Materials/Instances/Landscape/MI_Landscape_SakuraGarden",
+        (-600.0, -800.0, 12.0),
+        (10.0, 10.0, 0.06),
+        PLANE,
+    ),
+    (
+        "MI_Landscape_PondBank",
+        "/Game/EnvSandbox/Materials/Instances/Landscape/MI_Landscape_PondBank",
+        (1800.0, -800.0, 15.0),
+        (4.0, 4.0, 0.05),
+        PLANE,
+    ),
+    (
+        "MI_GrandWater_ShorelinePond",
+        "/Game/EnvSandbox/Materials/Instances/Water/MI_GrandWater_ShorelinePond",
+        (2200.0, -800.0, 40.0),
+        (6.0, 6.0, 0.05),
+        PLANE,
+    ),
+]
 
 PP_OUTLINE = "/Game/EnvSandbox/Materials/PostProcess/M_PP_ToonOutline.M_PP_ToonOutline"
 PP_VINES = "/Game/EnvSandbox/Materials/PostProcess/M_PP_StorybookVines.M_PP_StorybookVines"
@@ -127,19 +160,83 @@ def _spawn_showcase_spheres() -> list[dict]:
     return results
 
 
+def _spawn_specialist_planes() -> list[dict]:
+    eas = unreal.get_editor_subsystem(unreal.EditorActorSubsystem)
+    results: list[dict] = []
+    for label, mi_path, loc, scale, mesh_path in SPECIALIST_SHOWCASE:
+        if not unreal.EditorAssetLibrary.does_asset_exist(mi_path):
+            results.append({"label": label, "status": "missing_mi"})
+            continue
+        mesh = unreal.load_asset(mesh_path)
+        if not mesh:
+            results.append({"label": label, "status": "missing_mesh"})
+            continue
+        actor = eas.spawn_actor_from_class(
+            unreal.StaticMeshActor,
+            unreal.Vector(*loc),
+            unreal.Rotator(0, 0, 0),
+        )
+        if not actor:
+            results.append({"label": label, "status": "spawn_failed"})
+            continue
+        actor.set_actor_label(f"Specialist_{label}")
+        actor.set_actor_scale3d(unreal.Vector(*scale))
+        sm = actor.static_mesh_component
+        sm.set_static_mesh(mesh)
+        mi = unreal.load_asset(mi_path)
+        sm.set_material(0, mi)
+        results.append({"label": label, "status": "ok", "actor": actor.get_name(), "mi": mi_path})
+    return results
+
+
+def _spawn_landscape_actor_stub() -> dict:
+    """Landscape actor when editor supports it; otherwise labeled validation plane."""
+    eas = unreal.get_editor_subsystem(unreal.EditorActorSubsystem)
+    mi_path = "/Game/EnvSandbox/Materials/Instances/Landscape/MI_Landscape_SakuraGarden"
+    landscape_cls = getattr(unreal, "Landscape", None)
+    if landscape_cls:
+        try:
+            actor = eas.spawn_actor_from_class(
+                landscape_cls, unreal.Vector(-1200.0, -800.0, 0.0), unreal.Rotator(0, 0, 0),
+            )
+            if actor:
+                actor.set_actor_label("LandscapeStub_SakuraGarden")
+                return {"status": "landscape_actor", "actor": actor.get_name(), "mi": mi_path}
+        except Exception as exc:
+            unreal.log_warning(f"[Showcase] Landscape stub: {exc}")
+    if not unreal.EditorAssetLibrary.does_asset_exist(mi_path):
+        return {"status": "missing_mi", "mi": mi_path}
+    mesh = unreal.load_asset(PLANE)
+    actor = eas.spawn_actor_from_class(
+        unreal.StaticMeshActor, unreal.Vector(-1200.0, -800.0, 8.0), unreal.Rotator(0, 0, 0),
+    )
+    if not actor:
+        return {"status": "spawn_failed"}
+    actor.set_actor_label("LandscapeStub_Plane")
+    actor.set_actor_scale3d(unreal.Vector(8.0, 8.0, 0.05))
+    sm = actor.static_mesh_component
+    sm.set_static_mesh(mesh)
+    sm.set_material(0, unreal.load_asset(mi_path))
+    return {"status": "plane_fallback", "actor": actor.get_name(), "mi": mi_path}
+
+
 def build_all() -> int:
     _ensure_level()
     spheres = _spawn_showcase_spheres()
+    specialists = _spawn_specialist_planes()
+    landscape_stub = _spawn_landscape_actor_stub()
     unreal.get_editor_subsystem(unreal.LevelEditorSubsystem).save_current_level()
     report = {
         "level": LEVEL,
         "spheres": spheres,
+        "specialists": specialists,
+        "landscape_stub": landscape_stub,
         "pp_outline": PP_OUTLINE,
         "pp_vines": PP_VINES_INST if unreal.EditorAssetLibrary.does_asset_exist(PP_VINES_INST) else PP_VINES,
     }
     REPORT.parent.mkdir(parents=True, exist_ok=True)
     REPORT.write_text(json.dumps(report, indent=2), encoding="utf-8")
-    unreal.log(f"[Showcase] {len(spheres)} spheres in {LEVEL}")
+    unreal.log(f"[Showcase] {len(spheres)} spheres + {len(specialists)} specialists in {LEVEL}")
     print(json.dumps(report, indent=2))
     return 0
 

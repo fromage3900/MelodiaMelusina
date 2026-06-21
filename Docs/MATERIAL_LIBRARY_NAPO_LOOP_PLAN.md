@@ -46,3 +46,7 @@ Designed so the project can keep improving while you’re away: each loop produc
 4. **VFX + material cohesion**  
    - Align VFX sprite materials with the universal master color language (Nikki, Magical, FairyDust).
 
+### Loop paused (2026-06-20)
+
+Napo loop **paused** for specialist pivot (water, landscape). Resume when user asks.
+

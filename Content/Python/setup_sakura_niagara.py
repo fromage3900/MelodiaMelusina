@@ -317,6 +317,7 @@ SAKURA_TUNING_NOTES: dict[str, list[str]] = {
     "NS_SakuraPondShimmer": [
         "Flat box 400x300 over pond; minimal motion, twinkle only",
         "Assign MI_Niagara_Pond; cool pastel, very low opacity",
+        "Pairs with MI_GrandWater_SakuraPond (WaterRoughness ~0.09, MagicalIntensity ~0.42)",
     ],
     "NS_SakuraPetalGust": [
         "One-shot burst 40-80 petals; User.BurstScale or MPC GustTrigger",

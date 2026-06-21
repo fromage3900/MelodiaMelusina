@@ -15,4 +15,13 @@ Get-ChildItem (Join-Path $deploy "surreal_arch") -Filter "*.py" -Recurse | ForEa
 if (Test-Path (Join-Path $deploy "surreal_greybox")) {
     Copy-Item (Join-Path $deploy "surreal_greybox") (Join-Path $live "surreal_greybox") -Recurse -Force
 }
+if (Test-Path (Join-Path $deploy "surreal_world")) {
+    Get-ChildItem (Join-Path $deploy "surreal_world") -Filter "*.py" -Recurse | ForEach-Object {
+        $rel = $_.FullName.Substring((Join-Path $deploy "surreal_world").Length)
+        $dest = Join-Path (Join-Path $live "surreal_world") $rel
+        $destDir = Split-Path -Parent $dest
+        if (-not (Test-Path $destDir)) { New-Item -ItemType Directory -Path $destDir -Force | Out-Null }
+        Copy-Item $_.FullName $dest -Force
+    }
+}
 Write-Host "Synced deploy -> live Blender addons"

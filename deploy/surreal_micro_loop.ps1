@@ -1,12 +1,60 @@
-# 10-minute Surreal Architecture micro-loop with optional stop sentinel.
-$stopFile = Join-Path $PSScriptRoot "SURREAL_ARCH_LOOP_STOP"
-$tickPrompt = '10m micro-cycle: (1) read deploy/SURREAL_ARCH_LOOP_STATE.md + SURREAL_ARCHITECTURE_RESEARCH.md; (2) pick ONE micro slice (QA/verify/docs/UX glue/pipeline tweak, no big new kits); (3) implement in deploy/; (4) sync to live Blender addons; (5) py_compile touched files + run deploy/_mcp_verify_overhaul.py; (6) if MCP up, smoke-generate one affected GB_* type; (7) append LOOP_STATE'
+# Surreal Architecture kit micro-loop — runs detached via start_surreal_loop.ps1
+param(
+    [int]$IntervalSeconds = 600
+)
 
+$ErrorActionPreference = "Continue"
+$deploy = $PSScriptRoot
+$stopFile = Join-Path $deploy "SURREAL_ARCH_LOOP_STOP"
+$pidFile = Join-Path $deploy "SURREAL_ARCH_LOOP.pid"
+$logFile = Join-Path $deploy "SURREAL_ARCH_LOOP.log"
+$tickPrompt = "10m micro-cycle: read SURREAL_ARCH_LOOP_STATE.md, pick one slice, implement, run deploy/run_verify.ps1 -Mode overhaul"
+
+function Write-Log([string]$msg) {
+    $line = "[{0}] {1}" -f (Get-Date -Format "yyyy-MM-dd HH:mm:ss"), $msg
+    Add-Content -Path $logFile -Value $line -Encoding UTF8
+    Write-Output $line
+}
+
+$PID | Out-File -FilePath $pidFile -Encoding ascii -Force
+Write-Log "AGENT_LOOP_START_surreal_micro10 pid=$PID interval=${IntervalSeconds}s"
+
+if (Test-Path $stopFile) {
+    Remove-Item $stopFile -Force
+}
+
+$tick = 0
 while ($true) {
-    Start-Sleep -Seconds 600
+    try {
+        Start-Sleep -Seconds $IntervalSeconds
+    } catch {
+        Write-Log "sleep interrupted: $_"
+        continue
+    }
+
     if (Test-Path $stopFile) {
-        Write-Output "AGENT_LOOP_STOP_surreal_micro10 stop sentinel detected"
+        Write-Log "AGENT_LOOP_STOP_surreal_micro10 stop sentinel detected"
         break
     }
-    Write-Output "AGENT_LOOP_TICK_surreal_micro10 {`"prompt`":`"$tickPrompt`"}"
+
+    $tick++
+    Write-Log "AGENT_LOOP_TICK_surreal_micro10 tick=$tick {`"prompt`":`"$tickPrompt`"}"
+
+    $verifyScript = Join-Path $deploy "run_verify.ps1"
+    if (Test-Path $verifyScript) {
+        try {
+            & powershell -NoProfile -ExecutionPolicy Bypass -File $verifyScript -Mode overhaul 2>&1 |
+                ForEach-Object { Write-Log "verify: $_" }
+            if ($LASTEXITCODE -eq 0) {
+                Write-Log "verify_health: OK"
+            } else {
+                Write-Log "verify_health: FAIL exit=$LASTEXITCODE"
+            }
+        } catch {
+            Write-Log "verify_health: ERROR $_"
+        }
+    }
 }
+
+if (Test-Path $pidFile) { Remove-Item $pidFile -Force }
+Write-Log "AGENT_LOOP_EXIT_surreal_micro10"

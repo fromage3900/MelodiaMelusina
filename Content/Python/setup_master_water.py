@@ -22,13 +22,24 @@ MASTER_PATH = f"/Game/EnvSandbox/Materials/Masters/{MASTER_NAME}"
 INST_DIR = "/Game/EnvSandbox/Materials/Instances/Water"
 REPORT = Path(__file__).resolve().parents[2] / "Saved" / "Audit" / "grand_water_expand.json"
 
-# Params detected on M_Water_Master_Grand_v6 (disk + editor audit)
+# Params on M_Water_Master_Grand_v6 (expand_grand_water.py adds depth/shoreline/surface)
 GRAND_WATER_SCALARS = (
     "CausticIntensity",
     "GerstnerScale",
     "WaveSpeed",
     "WaterRoughness",
     "MagicalIntensity",
+    "DepthFadeDistance",
+    "ShorelineWidth",
+    "ShorelineFoam",
+    "Opacity",
+    "RefractionStrength",
+)
+
+GRAND_WATER_VECTORS = (
+    "WaterColorShallow",
+    "WaterColorDeep",
+    "CausticTint",
 )
 
 INSTANCES = [
@@ -40,6 +51,13 @@ INSTANCES = [
             "WaveSpeed": 0.35,
             "WaterRoughness": 0.05,
             "MagicalIntensity": 0.0,
+            "DepthFadeDistance": 1200.0,
+            "Opacity": 0.92,
+            "RefractionStrength": 0.03,
+        },
+        "vectors": {
+            "WaterColorShallow": (0.12, 0.45, 0.58, 1.0),
+            "WaterColorDeep": (0.01, 0.08, 0.22, 1.0),
         },
     },
     {
@@ -50,6 +68,13 @@ INSTANCES = [
             "WaveSpeed": 0.55,
             "WaterRoughness": 0.08,
             "MagicalIntensity": 0.15,
+            "DepthFadeDistance": 600.0,
+            "Opacity": 0.88,
+            "RefractionStrength": 0.025,
+        },
+        "vectors": {
+            "WaterColorShallow": (0.18, 0.52, 0.48, 1.0),
+            "WaterColorDeep": (0.04, 0.14, 0.20, 1.0),
         },
     },
     {
@@ -60,7 +85,56 @@ INSTANCES = [
             "WaveSpeed": 0.18,
             "WaterRoughness": 0.10,
             "MagicalIntensity": 0.35,
+            "DepthFadeDistance": 400.0,
+            "Opacity": 0.82,
+            "RefractionStrength": 0.02,
         },
+        "vectors": {
+            "WaterColorShallow": (0.20, 0.58, 0.55, 1.0),
+            "WaterColorDeep": (0.06, 0.18, 0.26, 1.0),
+        },
+    },
+    {
+        "name": "MI_GrandWater_SakuraPond",
+        "purpose": "Sakura koi pond — gentle ripples + caustics + Nikki magical shimmer (pairs with NS_SakuraPondShimmer)",
+        "scalars": {
+            "CausticIntensity": 0.82,
+            "GerstnerScale": 0.14,
+            "WaveSpeed": 0.22,
+            "WaterRoughness": 0.09,
+            "MagicalIntensity": 0.42,
+            "DepthFadeDistance": 350.0,
+            "ShorelineWidth": 0.12,
+            "ShorelineFoam": 0.08,
+            "Opacity": 0.78,
+            "RefractionStrength": 0.018,
+        },
+        "vectors": {
+            "WaterColorShallow": (0.22, 0.58, 0.62, 1.0),
+            "WaterColorDeep": (0.08, 0.20, 0.32, 1.0),
+            "CausticTint": (1.0, 0.95, 0.98, 1.0),
+        },
+    },
+    {
+        "name": "MI_GrandWater_ShorelinePond",
+        "purpose": "Mesh pond — strong UV shoreline fade for stone-to-water transitions",
+        "scalars": {
+            "CausticIntensity": 0.70,
+            "GerstnerScale": 0.10,
+            "WaveSpeed": 0.15,
+            "WaterRoughness": 0.11,
+            "MagicalIntensity": 0.20,
+            "DepthFadeDistance": 280.0,
+            "ShorelineWidth": 0.22,
+            "ShorelineFoam": 0.12,
+            "Opacity": 0.72,
+            "RefractionStrength": 0.015,
+        },
+        "vectors": {
+            "WaterColorShallow": (0.18, 0.52, 0.58, 1.0),
+            "WaterColorDeep": (0.05, 0.16, 0.28, 1.0),
+        },
+        "statics": {"bUseShorelineUV": True},
     },
 ]
 
@@ -95,10 +169,13 @@ def _audit_grand_water(material) -> dict:
         params.append({"name": pname, "kind": kind, "group": group})
 
     names = {p["name"] for p in params}
+    grouped = sum(1 for p in params if p.get("group"))
     return {
         "param_count": len(params),
+        "grouped_count": grouped,
         "params": params,
         "expected_scalars_present": {s: s in names for s in GRAND_WATER_SCALARS},
+        "expected_vectors_present": {s: s in names for s in GRAND_WATER_VECTORS},
     }
 
 
@@ -166,6 +243,16 @@ def build() -> str:
                 lib.set_instance_scalar(mi, n, v)
             except Exception as exc:
                 unreal.log_warning(f"[GrandWater] {spec['name']} {n}: {exc}")
+        for n, v in spec.get("vectors", {}).items():
+            try:
+                lib.set_instance_vector(mi, n, v)
+            except Exception as exc:
+                unreal.log_warning(f"[GrandWater] {spec['name']} {n}: {exc}")
+        for n, v in spec.get("statics", {}).items():
+            try:
+                lib.set_instance_static_switch(mi, n, v)
+            except Exception as exc:
+                unreal.log_warning(f"[GrandWater] {spec['name']} static {n}: {exc}")
         lib.save_package(mi)
         created.append(spec["name"])
 
@@ -207,6 +294,7 @@ def main():
             "-stdout",
             "-unattended",
             "-nullrhi",
+            "-DisablePlugins=Monolith",
             f"-log={root / 'Saved/Logs/setup_grand_water.log'}",
         ]
         return subprocess.run(cmd, cwd=str(root)).returncode

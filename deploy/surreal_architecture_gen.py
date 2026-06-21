@@ -23,7 +23,7 @@ bl_info = {
     "blender": (5, 1, 0),
     "author": "Claude Code",
     "description": "Procedural geometry node system for surreal architecture",
-    "version": (2, 66, 11),
+    "version": (2, 69, 0),
     "location": "Properties > Modifiers",
     "category": "Geometry Nodes",
 }
@@ -1031,6 +1031,9 @@ DEFAULT_MATERIAL_FOR_TYPE = {
     'GB_BRUTALIST_PANEL_WALL': 'STONE',
     'GB_VENETIAN_LOGGIA': 'MARBLE',
     'GB_SCIFI_PRESSURE_DOOR': 'METAL',
+    'GB_ZEN_ROJI_STEP': 'STONE',
+    'GB_ZEN_TORII_GATE': 'STONE',
+    'GB_ZEN_TSUKUBAI': 'STONE',
     # v2.51
     'WALL_RUINED':        'STONE',
     'ARCH_BROKEN':        'STONE',
@@ -1344,6 +1347,9 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
             ('GB_BRUTALIST_PANEL_WALL', "ðŸ— Brutalist Panel Wall", "Pilaster rhythm + recess panels â€” trim-sheet wall module"),
             ('GB_VENETIAN_LOGGIA', "ðŸ‡®ðŸ‡¹ Venetian Loggia Bay", "Bifora void rhythm + cornice shelf â€” greybox loggia module"),
             ('GB_SCIFI_PRESSURE_DOOR', "ðŸš€ Sci-Fi Pressure Door", "Gasket ring recess + frame offset + MUST_CONNECT door snap"),
+            ('GB_ZEN_ROJI_STEP', "ðŸµ Zen Roji Step", "Dew-path stone segment — edge trim + path snaps"),
+            ('GB_ZEN_TORII_GATE', "â›© Zen Torii Gate", "Modular torii greybox — hashira/nuki/kasagi + gate snap"),
+            ('GB_ZEN_TSUKUBAI', "ðŸª¨ Zen Tsukubai", "Stone water basin pad — recess bowl + flagstones"),
             # v2.51 â€” Ruins
             ('WALL_RUINED',     "ðŸš Ruined Wall",        "Stone wall with crumbled top and rubble scatter"),
             ('ARCH_BROKEN',     "ðŸš Broken Arch",        "Arch with missing ring section and fallen keystone"),
@@ -23549,147 +23555,43 @@ def _apply_aest(context, effect_key):
 # plan so users can re-compose after tweaking the massing.
 # â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
-# Library specification â€” what to bake, with sensible default params.
-# arch_type â†’ dict of property overrides for the bake.
-_SURREAL_LIBRARY_SPEC = {
-    # Defensive â€” buildings used as plot fillers
-    'KEEP':              {'base_radius': 1.4, 'height': 7.0},
-    'WATCHTOWER':        {'base_radius': 1.1, 'height': 6.0},
-    'GATEHOUSE':         {'base_radius': 1.2, 'height': 5.5},
-    'BARBICAN':          {'base_radius': 1.0, 'height': 4.5},
-    'CURTAIN_WALL':      {'rail_length': 4.0, 'height': 3.5, 'wall_thickness': 0.5},
-    'CURVED_WALL':       {'wall_arc_angle': 90.0, 'wall_arc_radius': 5.0, 'wall_height': 3.5,
-                          'wall_thickness': 0.45, 'crenel_merlon_count': 8},
-    'CHAPEL':            {'base_radius': 1.3, 'height': 4.0},
-    'BELL_TOWER':        {'base_radius': 1.0, 'height': 7.0},
-    # Civic
-    'TOWN_HOUSE':        {'base_radius': 1.0, 'height': 4.0},
-    'TAVERN':            {'base_radius': 1.2, 'height': 3.8},
-    'BLACKSMITH':        {'base_radius': 1.0, 'height': 3.2},
-    'STABLE':            {'base_radius': 1.0},
-    'TOWN_HALL':         {'base_radius': 1.6, 'height': 5.0},
-    'WINDMILL':          {'base_radius': 1.0, 'height': 6.5},
-    # Asian
-    'CN_TIERED_PAGODA':  {'pagoda_tiers': 4, 'pagoda_base_radius': 2.0, 'pagoda_tier_height': 1.5},
-    'CN_PAILOU':         {'base_radius': 1.2, 'height': 5.0},
-    'CN_MOON_GATE':      {'base_radius': 1.5},
-    'CN_TING_PAVILION':  {'base_radius': 1.5, 'height': 4.0},
-    'KR_HANOK':          {'teahouse_width': 5.0, 'teahouse_depth': 4.0, 'teahouse_height': 3.0},
-    'JP_KURA_STOREHOUSE':{'base_radius': 1.2, 'height': 3.5},
-    # Props
-    'OBELISK':           {'base_radius': 0.7, 'height': 5.0},
-    'STREET_LAMP':       {'height': 3.5},
-    'PUBLIC_FOUNTAIN':   {'fountain_radius': 1.2},
-    'VILLAGE_WELL':      {'base_radius': 0.7},
-    'MARKET_STALL':      {'base_radius': 1.0, 'height': 3.0},
-    'STYLIZED_TREE':     {'height': 4.0},
-    'HERALDIC_BANNER':   {'height': 3.5},
-}
+# Layer 2 library — delegated to surreal_world (v2.68+)
+try:
+    from surreal_world.library import SURREAL_LIBRARY_SPEC as _SURREAL_LIBRARY_SPEC
+except ImportError:
+    _SURREAL_LIBRARY_SPEC = {}
 
-# Style â†’ which library piece fills each role.
-_SURREAL_COMPOSE_STYLES = {
-    'WESTERN_CASTLE': {
-        'large':         '_lib_KEEP',
-        'medium':        '_lib_TOWN_HOUSE',
-        'small':         '_lib_MARKET_STALL',
-        'wall':          '_lib_CURTAIN_WALL',
-        'corner_tower':  '_lib_WATCHTOWER',
-        'gate':          '_lib_GATEHOUSE',
-        'monument':      '_lib_OBELISK',
-        'sacred':        '_lib_CHAPEL',
-    },
-    'WESTERN_VILLAGE': {
-        'large':         '_lib_TOWN_HALL',
-        'medium':        '_lib_TAVERN',
-        'small':         '_lib_BLACKSMITH',
-        'wall':          '_lib_CURTAIN_WALL',
-        'corner_tower':  '_lib_BELL_TOWER',
-        'gate':          '_lib_GATEHOUSE',
-        'monument':      '_lib_VILLAGE_WELL',
-        'sacred':        '_lib_CHAPEL',
-    },
-    'ASIAN_CITY': {
-        'large':         '_lib_KR_HANOK',
-        'medium':        '_lib_CN_TING_PAVILION',
-        'small':         '_lib_JP_KURA_STOREHOUSE',
-        'wall':          '_lib_CURTAIN_WALL',
-        'corner_tower':  '_lib_CN_TIERED_PAGODA',
-        'gate':          '_lib_CN_PAILOU',
-        'monument':      '_lib_CN_MOON_GATE',
-        'sacred':        '_lib_CN_TIERED_PAGODA',
-    },
-}
+try:
+    from surreal_world.compose import COMPOSE_STYLES as _SURREAL_COMPOSE_STYLES
+except ImportError:
+    _SURREAL_COMPOSE_STYLES = {}
 
 
 def _surreal_library_collection(create=True):
-    """Get (or create) the hidden library collection."""
-    coll = bpy.data.collections.get("SurrealArch_Library")
-    if coll is None and create:
-        coll = bpy.data.collections.new("SurrealArch_Library")
-        if coll.name not in [c.name for c in bpy.context.scene.collection.children]:
-            bpy.context.scene.collection.children.link(coll)
-        coll.hide_viewport = True
-        coll.hide_render = True
-    return coll
+    try:
+        from surreal_world import library as _wl
+        return _wl.library_collection(create=create)
+    except ImportError:
+        coll = bpy.data.collections.get("SurrealArch_Library")
+        if coll is None and create:
+            coll = bpy.data.collections.new("SurrealArch_Library")
+            if coll.name not in [c.name for c in bpy.context.scene.collection.children]:
+                bpy.context.scene.collection.children.link(coll)
+            coll.hide_viewport = True
+            coll.hide_render = True
+        return coll
 
 
 def _bake_library_piece(arch_type, params, target_coll, force=False):
-    """Spawn one library piece, apply its GN modifier, store in library coll."""
-    lib_name = f"_lib_{arch_type}"
-    existing = bpy.data.objects.get(lib_name)
-    if existing and not force:
-        return existing, False
-    if existing:
-        bpy.data.objects.remove(existing, do_unlink=True)
-    # Spawn a unit cube as host
-    bpy.ops.mesh.primitive_cube_add(size=1, location=(0, 0, 0))
-    obj = bpy.context.active_object
-    obj.name = lib_name
-    # Apply params + generate
-    if hasattr(obj, 'surreal_arch_props'):
-        p = obj.surreal_arch_props
-        global _AUTO_UPDATE_RUNNING
-        _AUTO_UPDATE_RUNNING = True
-        try:
-            try:
-                p.arch_type = arch_type
-            except TypeError:
-                # arch_type not in this version's enum â€” fail gracefully
-                bpy.data.objects.remove(obj, do_unlink=True)
-                _AUTO_UPDATE_RUNNING = False
-                return None, False
-            for k, v in params.items():
-                try: setattr(p, k, v)
-                except Exception: pass
-        finally:
-            _AUTO_UPDATE_RUNNING = False
-        try:
-            bpy.ops.surreal_arch.generate()
-            # Apply the modifier to bake to mesh
-            for mod in list(obj.modifiers):
-                if mod.name.startswith("SurrealArch"):
-                    try:
-                        bpy.context.view_layer.objects.active = obj
-                        bpy.ops.object.modifier_apply(modifier=mod.name)
-                    except Exception:
-                        pass
-                    break
-        except Exception as e:
-            print(f"[SurrealArch] Library bake failed for {arch_type}: {e}")
-    # Move to library collection (unlink from scene root first)
-    for c in list(obj.users_collection):
-        c.objects.unlink(obj)
-    target_coll.objects.link(obj)
-    obj.hide_viewport = True
-    obj.hide_render = True
-    return obj, True
+    import sys as _sys
+    from surreal_world import library as _wl
+    return _wl.bake_library_piece(_sys.modules[__name__], arch_type, params, target_coll, force)
 
 
 class SURREAL_ARCH_OT_library_init(bpy.types.Operator):
-    """Pre-bake the entire Layer-1 library into hidden `SurrealArch_Library`
-    objects. Run once per project. Re-run to refresh after addon updates."""
+    """Pre-bake the entire Layer-1 library into hidden SurrealArch_Library objects."""
     bl_idname = "surreal_arch.library_init"
-    bl_label = "ðŸ“š Initialize Composer Library"
+    bl_label = "Initialize Composer Library"
     bl_options = {'REGISTER', 'UNDO'}
 
     force_refresh: bpy.props.BoolProperty(
@@ -23719,23 +23621,20 @@ class SURREAL_ARCH_OT_library_init(bpy.types.Operator):
             else:
                 skipped += 1
         self.report({'INFO'},
-                    f"ðŸ“š Library: {baked} baked, {skipped} kept, {failed} failed")
+                    f"Library: {baked} baked, {skipped} kept, {failed} failed")
         bpy.ops.object.select_all(action='DESELECT')
         return {'FINISHED'}
 
 
 class SURREAL_ARCH_OT_library_refresh_polish(bpy.types.Operator):
-    """v2.32: Refresh every baked library piece with the latest polish:
-    re-applies smooth shading + optionally assigns a curated Komikaze
-    material from the same palette the auto-mapper uses."""
+    """Refresh every baked library piece with smooth shading and optional Komikaze materials."""
     bl_idname = "surreal_arch.library_refresh_polish"
-    bl_label = "âœ¨ Refresh Library Polish"
+    bl_label = "Refresh Library Polish"
     bl_options = {'REGISTER', 'UNDO'}
 
     apply_komikaze: bpy.props.BoolProperty(
         name="Apply Komikaze Materials",
-        description="Link Komikaze 'Wood' material onto each library piece "
-                    "for a coherent default look",
+        description="Link Komikaze Wood material onto each library piece",
         default=True, update=auto_update_callback)
     weld_distance: bpy.props.FloatProperty(
         name="Weld Distance",
@@ -23757,38 +23656,34 @@ class SURREAL_ARCH_OT_library_refresh_polish(bpy.types.Operator):
         import bmesh
         coll = _surreal_library_collection(create=False)
         if coll is None:
-            self.report({'WARNING'},
-                        "Library not initialized â€” click ðŸ“š Initialize first")
+            self.report({'WARNING'}, "Library not initialized — click Initialize first")
             return {'CANCELLED'}
-        # Optionally load the Komikaze "Wood" material once
         mat = None
         if self.apply_komikaze:
             mat = _komikaze_link('Wood', link=False)
             if mat is None:
-                self.report({'WARNING'},
-                            "Komikaze 'Wood' not available â€” applied smooth-only")
+                self.report({'WARNING'}, "Komikaze Wood not available — smooth-only")
         n_polished = 0
         for o in list(coll.objects):
-            if not o.name.startswith("_lib_"): continue
-            if o.type != 'MESH': continue
-            # 1) Smooth shading
+            if not o.name.startswith("_lib_"):
+                continue
+            if o.type != 'MESH':
+                continue
             try:
                 for poly in o.data.polygons:
                     poly.use_smooth = True
-            except Exception: pass
-            # 2) Weld topology
+            except Exception:
+                pass
             if self.weld_distance > 0.0:
                 try:
                     bm = bmesh.new()
                     bm.from_mesh(o.data)
-                    bmesh.ops.remove_doubles(bm, verts=bm.verts,
-                                             dist=self.weld_distance)
+                    bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=self.weld_distance)
                     bmesh.ops.recalc_face_normals(bm, faces=bm.faces[:])
                     bm.to_mesh(o.data)
                     bm.free()
                 except Exception as e:
                     print(f"[SurrealArch] weld {o.name}: {e}")
-            # 3) Assign Komikaze material
             if mat is not None:
                 if o.data.materials:
                     o.data.materials[0] = mat
@@ -23797,12 +23692,11 @@ class SURREAL_ARCH_OT_library_refresh_polish(bpy.types.Operator):
             o.data.update()
             n_polished += 1
         self.report({'INFO'},
-                    f"âœ¨ Polished {n_polished} library piece(s)"
-                    + (f", Komikaze applied" if mat else ""))
+                    f"Polished {n_polished} library piece(s)"
+                    + (" with Komikaze" if mat else ""))
         return {'FINISHED'}
 
 
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 # PLAN SPAWNERS â€” generate low-poly massing meshes with vertex-group tags
 # â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
@@ -23827,150 +23721,25 @@ def _create_plan_mesh(name, verts, edges, faces, vgroup_assignments=None,
 
 
 def _spawn_castle_plan(location=(0, 0, 0), size=12.0):
-    """Castle blockout: 5 inner faces (4 wards + central keep), 8 outer
-    vertices (4 corners + 4 edge midpoints), 1 keep vertex group, 1 gate
-    vertex group at south-midpoint."""
-    # Outer 8 verts around a square
-    s = size / 2
-    verts = [
-        (-s, -s, 0),     # 0: SW corner
-        ( 0, -s, 0),     # 1: S midpoint (GATE)
-        ( s, -s, 0),     # 2: SE corner
-        ( s,  0, 0),     # 3: E midpoint
-        ( s,  s, 0),     # 4: NE corner
-        ( 0,  s, 0),     # 5: N midpoint
-        (-s,  s, 0),     # 6: NW corner
-        (-s,  0, 0),     # 7: W midpoint
-        # Inner keep square
-        (-s*0.3, -s*0.3, 0),  # 8: keep SW
-        ( s*0.3, -s*0.3, 0),  # 9: keep SE
-        ( s*0.3,  s*0.3, 0),  # 10: keep NE
-        (-s*0.3,  s*0.3, 0),  # 11: keep NW
-    ]
-    # 5 faces: 1 keep (8-11) + 4 wards radiating out
-    faces = [
-        [8, 9, 10, 11],          # Keep
-        [0, 1, 9, 8],            # SW ward
-        [1, 2, 3, 9],            # SE ward S half
-        [9, 3, 4, 10],           # SE ward N half
-        [10, 4, 5, 11],          # NE ward
-        [11, 5, 6, 7],           # NW ward
-        [8, 11, 7, 0],           # SW ward W half
-    ]
-    vgroups = {
-        'is_corner_tower': [0, 2, 4, 6],   # 4 outer corners
-        'is_gate':         [1],            # south midpoint
-        'is_keep':         [8, 9, 10, 11], # inner ring
-    }
-    return _create_plan_mesh(
-        "SurrealPlan_Castle", verts, [], faces, vgroups, location)
+    from surreal_world import plans as _wp
+    return _wp.spawn_castle_plan(location=location, size=size)
 
 
 def _spawn_village_plan(location=(0, 0, 0), n_plots=8, radius=8.0):
-    """Radial village: ring of N quadrilateral plot faces around a central
-    plaza face. Plots taper inward."""
-    import math
-    verts = [(0.0, 0.0, 0.0)]   # 0 = center
-    # Inner ring (plaza boundary)
-    inner_r = radius * 0.25
-    for i in range(n_plots):
-        ang = (i / n_plots) * math.tau
-        verts.append((math.cos(ang) * inner_r, math.sin(ang) * inner_r, 0))
-    # Outer ring (village boundary)
-    for i in range(n_plots):
-        ang = (i / n_plots) * math.tau
-        verts.append((math.cos(ang) * radius, math.sin(ang) * radius, 0))
-    faces = []
-    # Plaza: central polygon of inner-ring verts (1..n_plots)
-    plaza = [i + 1 for i in range(n_plots)]
-    faces.append(plaza)
-    # Plot quads between inner & outer rings
-    for i in range(n_plots):
-        i_in   = 1 + i
-        i_in_n = 1 + (i + 1) % n_plots
-        i_out  = 1 + n_plots + i
-        i_out_n= 1 + n_plots + (i + 1) % n_plots
-        faces.append([i_in, i_out, i_out_n, i_in_n])
-    vgroups = {
-        'is_plaza':       plaza,
-        'is_corner_tower':[1 + n_plots + i for i in range(n_plots)],
-        'is_gate':        [1 + n_plots + 0],
-    }
-    return _create_plan_mesh(
-        "SurrealPlan_Village", verts, [], faces, vgroups, location)
+    from surreal_world import plans as _wp
+    return _wp.spawn_village_plan(location=location, n_plots=n_plots, radius=radius)
 
 
 def _spawn_grid_city_plan(location=(0, 0, 0), grid=4, plot=4.0, street=1.5):
-    """Grid city: NÃ—N plot faces separated by street gaps, surrounded by walls."""
-    verts = []
-    faces = []
-    cell = plot + street
-    # Build NxN plot quads
-    plot_indices = []
-    plaza_verts = set()
-    for j in range(grid):
-        for i in range(grid):
-            base = len(verts)
-            cx = (i - (grid - 1) / 2) * cell
-            cy = (j - (grid - 1) / 2) * cell
-            verts.append((cx - plot/2, cy - plot/2, 0))
-            verts.append((cx + plot/2, cy - plot/2, 0))
-            verts.append((cx + plot/2, cy + plot/2, 0))
-            verts.append((cx - plot/2, cy + plot/2, 0))
-            faces.append([base, base+1, base+2, base+3])
-            # Central plot = plaza
-            if i == grid // 2 and j == grid // 2:
-                plaza_verts.update([base, base+1, base+2, base+3])
-            plot_indices.append(base // 4)
-    # Tag outer-ring plots as gate row (the bottom edge)
-    gate_verts = []
-    for face in faces:
-        for v in face:
-            if verts[v][1] < -(grid - 1) / 2 * cell + 0.1:
-                gate_verts.append(v)
-    vgroups = {
-        'is_plaza': list(plaza_verts),
-        'is_gate':  list(set(gate_verts))[:2],   # just 2 verts for one gate
-    }
-    return _create_plan_mesh(
-        "SurrealPlan_City", verts, [], faces, vgroups, location)
+    from surreal_world import plans as _wp
+    return _wp.spawn_grid_city_plan(location=location, grid=grid, plot=plot, street=street)
 
 
 # === v2.30 â€” additional plan variants ====================================
 
 def _spawn_motte_bailey_plan(location=(0, 0, 0), motte_r=3.0, bailey_r=9.0):
-    """Motte & Bailey castle: circular elevated motte at center + larger
-    bailey ring around it. The motte gets the keep, bailey holds wards."""
-    import math
-    n_motte = 8       # vertices of the motte octagon
-    n_bailey = 12     # vertices of the bailey ring
-    verts = []
-    # Motte ring (small, central)
-    for i in range(n_motte):
-        ang = (i / n_motte) * math.tau
-        verts.append((math.cos(ang) * motte_r, math.sin(ang) * motte_r, 0.8))   # raised
-    # Bailey ring (large, outer)
-    for i in range(n_bailey):
-        ang = (i / n_bailey) * math.tau + math.pi / n_bailey   # offset for staggered look
-        verts.append((math.cos(ang) * bailey_r, math.sin(ang) * bailey_r, 0))
-    # Motte top face (single n-gon)
-    motte_face = list(range(n_motte))
-    # Bailey wards: ring of trapezoidal quads between motte verts and nearest 1-2 bailey verts
-    faces = [motte_face]
-    for i in range(n_bailey):
-        i_b = n_motte + i
-        i_b_n = n_motte + (i + 1) % n_bailey
-        # Map bailey vert â†’ its closest motte vert
-        ang_b = ((i + 0.5) / n_bailey) * math.tau + math.pi / n_bailey
-        m_idx = int(round(ang_b / math.tau * n_motte)) % n_motte
-        faces.append([m_idx, i_b, i_b_n, (m_idx + 1) % n_motte])
-    vgroups = {
-        'is_keep':         list(range(n_motte)),    # motte top = keep
-        'is_corner_tower': [n_motte + i for i in range(0, n_bailey, 3)],  # every 3rd bailey vert = tower
-        'is_gate':         [n_motte + 0],   # south bailey vert = gate
-    }
-    return _create_plan_mesh(
-        "SurrealPlan_MotteBailey", verts, [], faces, vgroups, location)
+    from surreal_world import plans as _wp
+    return _wp.spawn_motte_bailey_plan(location=location, motte_r=motte_r, bailey_r=bailey_r)
 
 
 def _spawn_linear_coastal_plan(location=(0, 0, 0), length=20.0, depth=4.0, plots=8):
@@ -24183,246 +23952,14 @@ class SURREAL_ARCH_OT_plan_spawn_starfort(bpy.types.Operator):
 
 
 # â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-# COMPOSER â€” walk the plan and instance library pieces
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-
-def _vertex_in_group(obj, vert_idx, group_name):
-    """Check whether vertex vert_idx is in the named vertex group with w > 0.5."""
-    vg = obj.vertex_groups.get(group_name)
-    if vg is None:
-        return False
-    try:
-        for g in obj.data.vertices[vert_idx].groups:
-            if g.group == vg.index and g.weight > 0.5:
-                return True
-    except Exception:
-        pass
-    return False
-
-
-def _instance_library_piece(lib_obj, location, rotation_z=0.0, scale=1.0,
-                              link_to_coll=None, name_hint="instance",
-                              material=None):
-    """Duplicate a library piece's mesh data and place an instance.
-    v2.39: Optionally assign `material` to slot 0 for role-coloured worlds."""
-    if lib_obj is None or lib_obj.data is None:
-        return None
-    new_me = lib_obj.data.copy()
-    new_obj = bpy.data.objects.new(f"{name_hint}_{lib_obj.name[5:]}", new_me)
-    new_obj.location = location
-    new_obj.rotation_euler = (0.0, 0.0, rotation_z)
-    new_obj.scale = (scale, scale, scale)
-    (link_to_coll or bpy.context.scene.collection).objects.link(new_obj)
-    if material is not None:
-        if new_me.materials:
-            new_me.materials[0] = material
-        else:
-            new_me.materials.append(material)
-    return new_obj
-
-
-# v2.39: Per-role material map for compose. Each role gets a distinct
-# Komikaze material â€” keep stands out, walls are neutral, towers shine.
-_SURREAL_ROLE_MATERIALS = {
-    'WESTERN_CASTLE': {
-        'large':        'Wood',                        # keep
-        'medium':       'Wood',                        # plot buildings
-        'small':        'Wood',
-        'wall':         'Voronoi Shader (Flat)',       # crenellated stone
-        'corner_tower': 'Voronoi Shader (3 Tones)',    # accent towers
-        'gate':         'Tree Shader *',               # iridescent gate
-        'monument':     'Voronoi Shader (3 Tones)',
-        'sacred':       'Tree Shader *',
-    },
-    'WESTERN_VILLAGE': {
-        'large':        'Wood',
-        'medium':       'Wood',
-        'small':        'Wood',
-        'wall':         'Voronoi Shader (Flat)',
-        'corner_tower': 'Voronoi Shader (2 Tones)',
-        'gate':         'Voronoi Shader (3 Tones)',
-        'monument':     'Water (Basic)',
-        'sacred':       'Tree Shader *',
-    },
-    'ASIAN_CITY': {
-        'large':        'Wood',
-        'medium':       'Wood',
-        'small':        'Wood',
-        'wall':         'Voronoi Shader (Flat)',
-        'corner_tower': 'Tree Shader *',
-        'gate':         'Tree Shader *',
-        'monument':     'Water (Basic)',
-        'sacred':       'Tree Shader *',
-    },
-}
-
-
-def _resolve_role_materials(style_key):
-    """Return {role: bpy.types.Material} for the given style, lazily linking
-    Komikaze materials. Falls back to None values if Komikaze isn't available."""
-    spec = _SURREAL_ROLE_MATERIALS.get(style_key, {})
-    out = {}
-    for role, mat_name in spec.items():
-        mat = _komikaze_link(mat_name, link=False) if mat_name else None
-        out[role] = mat
-    return out
-
+# COMPOSER — delegated to surreal_world.compose (v2.68+)
 
 def _compose_world(context, plan_obj, style_key='WESTERN_CASTLE',
-                    detail_scale=1.0):
-    """The dispatcher. Walks plan_obj's topology and spawns instances."""
-    import math
-    style = _SURREAL_COMPOSE_STYLES.get(style_key)
-    if style is None:
-        return None, "Unknown style"
-    # Ensure library is initialized
-    lib_coll = _surreal_library_collection(create=False)
-    if lib_coll is None:
-        return None, "Library not initialized â€” click ðŸ“š Initialize first"
-    # Hold all spawned instances in a fresh collection
-    out_coll_name = f"{plan_obj.name}_Composed"
-    out_coll = bpy.data.collections.new(out_coll_name)
-    context.scene.collection.children.link(out_coll)
-    # Resolve every library object referenced by the style
-    libs = {role: bpy.data.objects.get(name) for role, name in style.items()}
-    # v2.39: per-role Komikaze materials (None if not available)
-    role_mats = _resolve_role_materials(style_key)
-    spawned = []
-    me = plan_obj.data
-    plan_mat = plan_obj.matrix_world
-    # --- 1. Faces â†’ buildings -------------------------------------------
-    if len(me.polygons) > 0:
-        areas = [f.area for f in me.polygons]
-        max_area = max(areas) if areas else 1.0
-        for face in me.polygons:
-            world_center = plan_mat @ face.center
-            # Pick role based on vertex group overrides on face's verts
-            role = None
-            for v_idx in face.vertices:
-                if _vertex_in_group(plan_obj, v_idx, 'is_keep'):
-                    role = 'large'; break
-                if _vertex_in_group(plan_obj, v_idx, 'is_plaza'):
-                    role = 'monument'; break
-            # Otherwise, dispatch by area
-            if role is None:
-                a = face.area
-                if a > max_area * 0.7: role = 'large'
-                elif a > max_area * 0.35: role = 'medium'
-                else: role = 'small'
-            lib = libs.get(role)
-            if lib is None:
-                continue
-            # Choose a scale that makes the piece roughly fill the plot
-            # (heuristic: sqrt(face.area)/4)
-            face_radius = math.sqrt(face.area) / 4.0
-            inst_scale = max(0.4, face_radius) * detail_scale
-            # Rotate around Z so the piece's +Y points outward from plan center
-            world_pos = world_center
-            rot_z = math.atan2(world_pos.y, world_pos.x) + math.pi / 2
-            new_obj = _instance_library_piece(
-                lib, world_pos, rot_z, inst_scale,
-                link_to_coll=out_coll, name_hint="bld",
-                material=role_mats.get(role))
-            if new_obj:
-                spawned.append(new_obj)
-    # --- 2. Boundary edges â†’ walls --------------------------------------
-    # An edge is on the boundary if exactly 1 face uses it
-    edge_face_count = {tuple(sorted(e.vertices)): 0 for e in me.edges}
-    for f in me.polygons:
-        for i in range(len(f.vertices)):
-            a = f.vertices[i]; b = f.vertices[(i + 1) % len(f.vertices)]
-            key = tuple(sorted((a, b)))
-            if key in edge_face_count:
-                edge_face_count[key] += 1
-    boundary = [k for k, n in edge_face_count.items() if n == 1]
-    wall_lib = libs.get('wall')
-    if wall_lib is not None and boundary:
-        for (a, b) in boundary:
-            wa = plan_mat @ me.vertices[a].co
-            wb = plan_mat @ me.vertices[b].co
-            mid = (wa + wb) * 0.5
-            length = (wb - wa).length
-            if length < 0.5: continue
-            rot_z = math.atan2(wb.y - wa.y, wb.x - wa.x)
-            # Library wall is built along X; scale Y to match length / its native
-            new_obj = _instance_library_piece(
-                wall_lib, mid, rot_z,
-                scale=detail_scale,
-                link_to_coll=out_coll, name_hint="wall",
-                material=role_mats.get('wall'))
-            if new_obj:
-                # Stretch along edge: walls are built along X-axis, so scale X
-                new_obj.scale.x *= length / 4.0  # native length=4.0 in spec
-                spawned.append(new_obj)
-    # --- 3. Corner vertices (3+ edges) â†’ towers -------------------------
-    vert_edge_count = [0] * len(me.vertices)
-    for e in me.edges:
-        vert_edge_count[e.vertices[0]] += 1
-        vert_edge_count[e.vertices[1]] += 1
-    # Also count edges from faces (some plans have no edges, only faces)
-    for f in me.polygons:
-        for i in range(len(f.vertices)):
-            a = f.vertices[i]; b = f.vertices[(i + 1) % len(f.vertices)]
-    # Gather corner verts (high valence OR explicitly tagged)
-    tower_lib = libs.get('corner_tower')
-    gate_lib  = libs.get('gate')
-    placed_corner_verts = set()
-    if tower_lib is not None or gate_lib is not None:
-        for vi, v in enumerate(me.vertices):
-            wpos = plan_mat @ v.co
-            # Priority 1: gate tag
-            if gate_lib and _vertex_in_group(plan_obj, vi, 'is_gate'):
-                new_obj = _instance_library_piece(
-                    gate_lib, wpos, 0.0, detail_scale,
-                    link_to_coll=out_coll, name_hint="gate",
-                    material=role_mats.get('gate'))
-                if new_obj:
-                    spawned.append(new_obj)
-                    placed_corner_verts.add(vi)
-                continue
-            # Priority 2: corner_tower tag
-            if tower_lib and _vertex_in_group(plan_obj, vi, 'is_corner_tower'):
-                new_obj = _instance_library_piece(
-                    tower_lib, wpos, 0.0, detail_scale,
-                    link_to_coll=out_coll, name_hint="twr",
-                    material=role_mats.get('corner_tower'))
-                if new_obj:
-                    spawned.append(new_obj)
-                    placed_corner_verts.add(vi)
-    # --- 4. Join all spawned into one output object ---------------------
-    if not spawned:
-        return None, "No instances placed â€” check the plan has faces and library is initialized"
-    # Deselect everything via low-level API (avoids op.poll() context issues
-    # when called from scripts without an active 3D viewport).
-    for o in context.view_layer.objects:
-        try: o.select_set(False)
-        except Exception: pass
-    for o in spawned:
-        try: o.select_set(True)
-        except Exception: pass
-    context.view_layer.objects.active = spawned[0]
-    try:
-        # Provide a context override so this works from any caller
-        with context.temp_override(active_object=spawned[0],
-                                    selected_objects=spawned,
-                                    selected_editable_objects=spawned):
-            bpy.ops.object.join()
-    except Exception as e:
-        # Joining failed â€” leave individual pieces in the collection
-        return spawned[0], f"Joined partially ({len(spawned)} pieces, error: {e})"
-    joined = context.view_layer.objects.active
-    joined.name = f"{plan_obj.name}_World"
-    joined["surreal_composed_from"] = plan_obj.name
-    joined["surreal_compose_style"] = style_key
-    # Move joined to scene root, remove now-empty collection if applicable
-    for c in list(joined.users_collection):
-        c.objects.unlink(joined)
-    context.scene.collection.objects.link(joined)
-    try:
-        bpy.data.collections.remove(out_coll)
-    except Exception:
-        pass
-    return joined, f"Composed {plan_obj.name} with {len(spawned)} instances"
+                    detail_scale=1.0, compose_mode='COLLECTION'):
+    import sys as _sys
+    from surreal_world import compose as _wc
+    return _wc.compose_world(_sys.modules[__name__], context, plan_obj,
+                             style_key, detail_scale, compose_mode)
 
 
 class SURREAL_ARCH_OT_compose_world(bpy.types.Operator):
@@ -24435,11 +23972,20 @@ class SURREAL_ARCH_OT_compose_world(bpy.types.Operator):
     style: bpy.props.EnumProperty(
         name="Style",
         items=[
-            ('WESTERN_CASTLE',  "ðŸ° Western Castle",  "Keep + curtain walls + watchtowers + gatehouse"),
-            ('WESTERN_VILLAGE', "ðŸ˜ Western Village", "Town hall + tavern + smithy + bell tower"),
-            ('ASIAN_CITY',      "ðŸ¯ Asian City",      "Hanok + pagoda + ting pavilion + pailou gate"),
+            ('WESTERN_CASTLE',  "Western Castle",  "Keep + curtain walls + watchtowers + gatehouse"),
+            ('WESTERN_VILLAGE', "Western Village", "Town hall + tavern + smithy + bell tower"),
+            ('ASIAN_CITY',      "Asian City",      "Hanok + pagoda + ting pavilion + pailou gate"),
+            ('ZEN_SHRINE',      "Zen Shrine",      "Torii + teahouse + stone garden + lantern"),
         ],
         default='WESTERN_CASTLE', update=auto_update_callback)
+    compose_mode: bpy.props.EnumProperty(
+        name="Compose Mode",
+        items=[
+            ('COLLECTION', "Collection (AAA)", "Non-destructive instances under WorldRoot"),
+            ('JOINED', "Joined Mesh", "Legacy single joined mesh"),
+        ],
+        default='COLLECTION',
+    )
     detail_scale: bpy.props.FloatProperty(
         name="Detail Scale",
         description="Multiplier on every instanced piece's scale",
@@ -24451,6 +23997,7 @@ class SURREAL_ARCH_OT_compose_world(bpy.types.Operator):
     def draw(self, context):
         layout = self.layout
         layout.prop(self, 'style')
+        layout.prop(self, 'compose_mode')
         layout.prop(self, 'detail_scale')
         obj = context.active_object
         if obj:
@@ -24477,7 +24024,7 @@ class SURREAL_ARCH_OT_compose_world(bpy.types.Operator):
                 self.report({'WARNING'}, f"Auto-init failed: {e}")
                 return {'CANCELLED'}
         result, message = _compose_world(
-            context, obj, self.style, self.detail_scale)
+            context, obj, self.style, self.detail_scale, self.compose_mode)
         if result is None:
             self.report({'WARNING'}, message)
             return {'CANCELLED'}
@@ -25000,8 +24547,22 @@ class SURREAL_ARCH_OT_one_click_castle(bpy.types.Operator):
             return {'CANCELLED'}
         # Compose
         try:
-            bpy.ops.surreal_arch.compose_world(style=self.style, detail_scale=0.8)
+            bpy.ops.surreal_arch.compose_world(
+                style=self.style, detail_scale=0.8, compose_mode='COLLECTION')
             world = context.active_object
+            root_name = plan.get("surreal_world_root") if plan else None
+            if root_name:
+                root = bpy.data.objects.get(root_name)
+                if root is not None:
+                    world = root
+            elif world and world.type != 'EMPTY':
+                try:
+                    from surreal_world.export import find_world_root
+                    wr = find_world_root(world)
+                    if wr is not None:
+                        world = wr
+                except ImportError:
+                    pass
         except Exception as e:
             self.report({'WARNING'}, f"Compose failed: {e}")
             return {'CANCELLED'}
@@ -33344,6 +32905,9 @@ _ARCH_CATEGORIES = [
         ('GB_BRUTALIST_PANEL_WALL',"ðŸ— Brutalist Panel"),
         ('GB_VENETIAN_LOGGIA', "ðŸ‡®ðŸ‡¹ Venetian Loggia"),
         ('GB_SCIFI_PRESSURE_DOOR', "ðŸš€ Pressure Door"),
+        ('GB_ZEN_ROJI_STEP', "ðŸµ Roji Step"),
+        ('GB_ZEN_TORII_GATE', "â›© Torii Gate"),
+        ('GB_ZEN_TSUKUBAI', "ðŸª¨ Tsukubai"),
         # â”€ Traversal â”€
         ('GREYBOX_RAMP',        "ðŸ“¦ Ramp"),
         ('GREYBOX_STAIR_BLOCK', "ðŸ“¦ Stair Block"),
@@ -34062,6 +33626,11 @@ _GREYBOX_QUICK_LAUNCH_GROUPS = (
     ('Sci-Fi', (
         ('GB_SCIFI_PRESSURE_DOOR', "Pressure Door"),
     )),
+    ('Zen', (
+        ('GB_ZEN_ROJI_STEP', "Roji Step"),
+        ('GB_ZEN_TORII_GATE', "Torii Gate"),
+        ('GB_ZEN_TSUKUBAI', "Tsukubai"),
+    )),
     ('Gothic kit', (
         ('GB_GOTHIC_PORTAL', "Portal"),
         ('GB_GOTHIC_BAY', "Bay"),
@@ -34152,6 +33721,9 @@ _ZEN_QUICK_LAUNCH = (
     ('ZEN_TEAHOUSE', 'Tea House'),
     ('ZEN_BRIDGE', 'Bridge'),
     ('ZEN_STONE_GARDEN', 'Stone Garden'),
+    ('GB_ZEN_ROJI_STEP', 'Roji Step'),
+    ('GB_ZEN_TORII_GATE', 'Torii GB'),
+    ('GB_ZEN_TSUKUBAI', 'Tsukubai'),
 )
 
 

@@ -42,9 +42,15 @@ def _jro_mask(stem: str) -> str:
 
 JAPANESE_ORNAMENT_MASKS = {
     "zen01": [_jro_mask("JRO_JP_Ornament01_out")],
+    "zen02": [_jro_mask("JRO_JP_Ornament02_out")],
     "zen03": [_jro_mask("JRO_JP_Ornament03_out")],
+    "zen05": [_jro_mask("JRO_JP_Ornament05_out")],
     "zen07": [_jro_mask("JRO_JP_Ornament07_out")],
+    "zen10": [_jro_mask("JRO_JP_Ornament10_out")],
+    "zen15": [_jro_mask("JRO_JP_Ornament15_out")],
+    "zen18": [_jro_mask("JRO_JP_Ornament18_out")],
     "zen23": [_jro_mask("JRO_JP_Ornament23_out")],
+    "zen28": [_jro_mask("JRO_JP_Ornament28_out")],
     "zen30": [_jro_mask("JRO_JP_Ornament30_out")],
     "zen35": [_jro_mask("JRO_JP_Ornament35_out")],
     "baroque04": [_jro_mask("JRO_JP_Ornament04_out")],

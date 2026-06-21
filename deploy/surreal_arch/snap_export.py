@@ -26,7 +26,7 @@ def build_trim_groups(props, monolith=None):
             entry["notes"] = notes
         groups.append(entry)
 
-    if mode == "NONE" and not at.startswith(("GB_SCIFI_", "GB_CORRIDOR_OFFSET", "GB_BRUTALIST_")):
+    if mode == "NONE" and not at.startswith(("GB_SCIFI_", "GB_CORRIDOR_OFFSET", "GB_BRUTALIST_", "GB_ZEN_")):
         return groups
 
     if at == "GB_CORRIDOR_OFFSET":
@@ -57,6 +57,18 @@ def build_trim_groups(props, monolith=None):
            notes="Recessed channel around door — UE trim sheet gasket")
         _g("pressure_frame", "TRIM_FRAME", "M_Trim_Frame", snap_bind="door")
         _g("door_void", "TRIM_OPENING", "M_Trim_Door_Void", snap_bind="door")
+    elif at == "GB_ZEN_ROJI_STEP":
+        _g("path_slab", "TRIM_FLOOR", "M_Trim_Floor", snap_bind="floor")
+        _g("edge_stone", "TRIM_EDGE", "M_Trim_Edge", notes="Raised roji edge stones")
+    elif at == "GB_ZEN_TORII_GATE":
+        _g("hashira", "TRIM_COLUMN", "M_Trim_Column", snap_bind="gate")
+        _g("nuki", "TRIM_BEAM", "M_Trim_Beam")
+        _g("kasagi", "TRIM_LINTEL", "M_Trim_Lintel", snap_bind="gate")
+    elif at == "GB_ZEN_TSUKUBAI":
+        _g("basin", "TRIM_BASIN", "M_Trim_Basin", snap_bind="basin",
+           notes="Recess bowl — UE trim sheet basin band")
+        _g("flagstone", "TRIM_FLAGSTONE", "M_Trim_Flagstone")
+        _g("pad", "TRIM_FLOOR", "M_Trim_Floor", snap_bind="floor")
     elif at in ("GB_GOTHIC_PORTAL", "GB_GOTHIC_BAY", "GB_CORRIDOR_DOOR_END"):
         _g("door_frame", "TRIM_FRAME", "M_Trim_Frame", snap_bind="door")
         if at == "GB_GOTHIC_BAY":

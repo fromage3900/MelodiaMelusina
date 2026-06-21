@@ -175,6 +175,7 @@ def main() -> int:
             "-unattended",
             "-nosplash",
             "-nullrhi",
+            "-DisablePlugins=Monolith",
             f"-log={log}",
         ]
         print(f"Trimsheet instances -> {log}")

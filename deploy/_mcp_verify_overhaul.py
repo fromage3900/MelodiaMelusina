@@ -1,8 +1,12 @@
-"""Extended verify for Surreal Architecture v2.66 — kits, graphs, presets, trim bake."""
+"""Extended verify for Surreal Architecture v2.68 — kits, graphs, presets, trim bake.
+
+Launch with --factory-startup for reliable headless runs:
+  blender --background --factory-startup --python deploy/_mcp_verify_overhaul.py
+"""
 import json
 import bpy
 
-print("=== SURREAL OVERHAUL VERIFY v2.66 ===")
+print("=== SURREAL OVERHAUL VERIFY v2.69 ===")
 print("Blender", bpy.app.version_string)
 
 if "surreal_architecture_gen" not in bpy.context.preferences.addons:
@@ -17,8 +21,9 @@ print("Version:", s.bl_info.get("version"))
 # The addon’s register() patches the monolith, but importlib.reload(s) replaces
 # those monkey-patches. Re-apply kit/snap/trim hooks for accurate verification.
 try:
-    from surreal_arch.integration import patch_monolith
-    patch_monolith(s)
+    import surreal_arch.integration as _integration
+    importlib.reload(_integration)
+    _integration.patch_monolith(s)
 except Exception as e:
     print(f"Patch monolith skipped: {e}")
 
@@ -39,6 +44,9 @@ KIT_TESTS = [
     ("GB_BRUTALIST_PANEL_WALL", {"gb_length": 6.0, "gb_height": 3.5, "gb_trim_mode": "RECESS"}),
     ("GB_VENETIAN_LOGGIA", {"gothic_width": 2.8, "gb_height": 4.0}),
     ("GB_SCIFI_PRESSURE_DOOR", {"gb_length": 3.5, "gb_door_width": 1.2, "gb_trim_mode": "RECESS"}),
+    ("GB_ZEN_ROJI_STEP", {"gb_length": 4.5, "gb_width": 1.8, "gb_trim_mode": "RECESS"}),
+    ("GB_ZEN_TORII_GATE", {"torii_width": 3.6, "torii_height": 4.2, "gb_trim_mode": "RECESS"}),
+    ("GB_ZEN_TSUKUBAI", {"gb_width": 1.6, "gb_depth": 1.6, "gb_height": 0.45, "gb_trim_mode": "RECESS"}),
 ]
 
 print("\n--- Kit smoke ---")
@@ -60,7 +68,7 @@ for atype, overrides in KIT_TESTS:
     if atype.startswith(("GB_", "GREYBOX_")) and len(snaps) == 0:
         print(f"  !! FAIL: {atype} wrote 0 snap points")
         all_ok = False
-    if atype.startswith("GB_") and atype in ("GB_CORRIDOR_OFFSET", "GB_ROMANESQUE_APSE", "GB_SCIFI_PRESSURE_DOOR") and len(trim) == 0:
+    if atype.startswith("GB_") and atype in ("GB_CORRIDOR_OFFSET", "GB_ROMANESQUE_APSE", "GB_SCIFI_PRESSURE_DOOR", "GB_ZEN_ROJI_STEP", "GB_ZEN_TORII_GATE", "GB_ZEN_TSUKUBAI") and len(trim) == 0:
         print(f"  !! FAIL: {atype} wrote 0 trim_groups")
         all_ok = False
 
