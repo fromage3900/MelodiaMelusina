@@ -138,6 +138,21 @@ except Exception as e:
     print(f"  sacred tag error: {e}")
     all_ok = False
 
+print("\n--- Zen temple plan compose ---")
+try:
+    temple = plans.spawn_zen_temple_plan(location=(25, 0, 0))
+    troot, tmsg = compose.compose_world(s, bpy.context, temple, "ZEN_SHRINE", 0.9, "COLLECTION")
+    tfails = verify_hooks.check_zen_temple_ld_metrics(troot)
+    print(f"  temple_compose: {tmsg} metrics={verify_hooks.compose_metrics(troot)}")
+    if tfails:
+        print(f"  !! FAIL: temple LD {tfails}")
+        all_ok = False
+    else:
+        print("  ld_temple: OK")
+except Exception as e:
+    print(f"  temple compose error: {e}")
+    all_ok = False
+
 print("\n--- Village plan compose ---")
 try:
     village = plans.spawn_village_plan(location=(40, 0, 0))

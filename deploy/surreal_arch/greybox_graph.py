@@ -61,6 +61,7 @@ GRAPH_SCI_FI_DECK_EXPANSION = [
 
 GRAPH_ZEN_ROJI_PATH = [
     ("GB_ZEN_TORII_GATE", {"torii_width": 3.6, "torii_height": 4.2, "gb_trim_mode": "RECESS"}),
+    ("GB_ZEN_TOBIISHI", {"gb_length": 4.5, "gb_width": 1.6, "gb_trim_mode": "RECESS", "unit_size": 2.0}),
     ("GB_ZEN_ROJI_STEP", {"gb_length": 5.0, "gb_width": 1.8, "gb_trim_mode": "RECESS", "unit_size": 2.0}),
     ("GB_ZEN_ROJI_STEP", {"gb_length": 4.0, "gb_width": 1.8}),
     ("GB_ZEN_TSUKUBAI", {"gb_width": 1.6, "gb_depth": 1.6, "gb_height": 0.45, "gb_trim_mode": "RECESS"}),
@@ -69,10 +70,22 @@ GRAPH_ZEN_ROJI_PATH = [
 
 GRAPH_ZEN_SHRINE_COURTYARD = [
     ("GB_ZEN_TORII_GATE", {"torii_width": 4.0, "torii_height": 4.5}),
+    ("GB_ZEN_BAMBOO_FENCE", {"gb_length": 8.0, "zen_fence_height": 1.2, "gb_trim_mode": "RECESS"}),
     ("ZEN_STONE_GARDEN", {"stone_garden_size": 8.0}),
     ("ZEN_BRIDGE", {"zen_bridge_span": 5.0, "zen_bridge_rise": 0.6}),
+    ("GB_ZEN_ENGAWA", {"gb_width": 5.5, "gb_depth": 2.5, "gb_height": 0.35, "gb_trim_mode": "RECESS"}),
     ("ZEN_TEAHOUSE", {"teahouse_depth": 4.5, "teahouse_width": 5.0}),
     ("ZEN_LANTERN", {}),
+]
+
+GRAPH_ZEN_TEA_GARDEN = [
+    ("GB_ZEN_TORII_GATE", {"torii_width": 3.2, "torii_height": 3.8, "gb_trim_mode": "RECESS"}),
+    ("GB_ZEN_TOBIISHI", {"gb_length": 6.0, "gb_width": 1.8, "gb_trim_mode": "RECESS"}),
+    ("GB_ZEN_BAMBOO_FENCE", {"gb_length": 6.0, "zen_fence_height": 1.1}),
+    ("GB_ZEN_TSUKUBAI", {"gb_width": 1.4, "gb_depth": 1.4, "gb_height": 0.4, "gb_trim_mode": "RECESS"}),
+    ("GB_ZEN_ENGAWA", {"gb_width": 4.5, "gb_depth": 2.2, "gb_trim_mode": "RECESS"}),
+    ("ZEN_TEAHOUSE", {"teahouse_depth": 4.0, "teahouse_width": 4.5}),
+    ("ZEN_LANTERN", {"zen_lantern_height": 1.2}),
 ]
 
 def _preview_chain(spec):
@@ -146,11 +159,19 @@ GRAPH_REGISTRY = {
     },
     "ZEN_SHRINE_COURTYARD": {
         "label": "Zen Shrine Courtyard",
-        "description": "Torii, karesansui garden, bridge, teahouse pavilion, lantern accent",
+        "description": "Torii, bamboo fence, karesansui, bridge, engawa veranda, teahouse, lantern",
         "preview": _preview_chain(GRAPH_ZEN_SHRINE_COURTYARD),
         "style": "zen",
         "module_count": len(GRAPH_ZEN_SHRINE_COURTYARD),
         "spec": GRAPH_ZEN_SHRINE_COURTYARD,
+    },
+    "ZEN_TEA_GARDEN": {
+        "label": "Zen Tea Garden",
+        "description": "Compact roji — torii, tobi-ishi, bamboo screen, tsukubai, engawa, teahouse",
+        "preview": _preview_chain(GRAPH_ZEN_TEA_GARDEN),
+        "style": "zen",
+        "module_count": len(GRAPH_ZEN_TEA_GARDEN),
+        "spec": GRAPH_ZEN_TEA_GARDEN,
     },
 }
 

@@ -1,6 +1,6 @@
 # Surreal World — Loop State
 
-**Version:** 2.69.0  
+**Version:** 2.71.0  
 **Loop sentinel:** `AGENT_LOOP_TICK_world_micro10`  
 **Interval:** 600s (10 min)  
 **Stop:** `deploy/stop_world_loop.ps1` or `deploy/SURREAL_WORLD_LOOP_STOP`  
@@ -32,6 +32,14 @@
 - **Problem:** inline Cursor background shells exit when agent session ends
 - **Fix:** `start_world_loop.ps1` → detached `Start-Process` + PID file + log + per-tick verify health check
 - **Commands:** `start_world_loop.ps1` / `stop_world_loop.ps1`
+
+## Loop tick 5 (2026-06-21) — zen architecture expansion v2.71
+
+- **Slice:** `GB_ZEN_ENGAWA`, `GB_ZEN_BAMBOO_FENCE`, `GB_ZEN_TOBIISHI` kits + `ZEN_TEA_GARDEN` graph
+- **World:** `spawn_zen_temple_plan` + `ld_temple` verify tier
+- **Loop:** already running (PID 37280)
+- **Verify:** PASS — `run_verify.ps1 -Mode all` (6 zen kits, `ZEN_TEA_GARDEN` graph, `ld_temple: OK`)
+- **Next slice:** zen graph spawn smoke in world loop OR coastal/starfort plan extract
 
 ## Loop tick 4 (2026-06-21) — loop resumed + motte/bailey extract
 

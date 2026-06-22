@@ -1,5 +1,26 @@
 # Surreal Architecture — Changelog
 
+## v2.71.0 — Zen architecture expansion (engawa, bamboo fence, tobi-ishi)
+
+- **`zen_kit.py`** — `GB_ZEN_ENGAWA`, `GB_ZEN_BAMBOO_FENCE`, `GB_ZEN_TOBIISHI` greybox builders + snap hooks
+- **Graph library** — `ZEN_TEA_GARDEN` chain; roji/shrine graphs updated with new modules
+- **Research presets** — engawa veranda, bamboo fence, tobi-ishi path quick-launch
+- **World** — `spawn_zen_temple_plan` L-shaped compound + `plan_spawn_zen_temple` operator
+- **Trim export** — per-kit trim groups for new zen greybox modules
+- **Verify** — zen kit smoke + `ld_temple` world tier
+
+## v2.70.0 — Beavel / Synthia / Higgsas pipeline + Polyhedra library
+
+- **`bevel_bridge.py`** — Beavel Pro (`mesh.beavel_operator`) hybrid with native `MOD_BEVEL`; `bevel_backend` + `surreal_arch.bake_beavel`
+- **`synthia_bridge.py`** — spawn wrapper, tagged capture, 4 `SYNTHIA_*` arch types with bmesh fallback; panel re-enabled
+- **`higgsas_bridge.py`** — library path preference, `load_arch_nodes`, post-generate `higgsas_detail` pass
+- **`capabilities.py` + `pipeline.py`** — optional-deps detection + ordered post-generate stages
+- **`polyhedra.py`** — 14-shape registry (Kepler–Poinsot, Platonic, Archimedean, compounds); `spawn_polyhedron` operator
+- **`bootstrap.py`** — addon preferences for Higgsas/Synthia paths; `repatch()` helper
+- **Unicode** — `deploy/tools/fix_mojibake.py` + UI string restoration
+- **Verify** — polyhedra smoke, bridge tiers, `_surreal_patched` assert; `register_overhaul` in headless path
+- **UI** — Level Design: Bake Beavel Pro; Synthia panel dependency status; `FILE_TICK` icon fix
+
 ## v2.69.0 — World pipeline review + TD/LD contracts
 
 - **TD manifest contract** — [`SURREAL_WORLD_MANIFEST.md`](SURREAL_WORLD_MANIFEST.md), `schema_version`, `hism_groups`, project MI paths in `ROLE_UE_HINTS`

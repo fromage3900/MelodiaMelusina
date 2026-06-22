@@ -40,6 +40,38 @@ def _in_ue() -> bool:
         return False
 
 
+def _set_tag(actor, tag: str) -> None:
+    try:
+        tags = list(actor.tags)
+        if tag not in tags:
+            tags.append(tag)
+            actor.tags = tags
+    except Exception:
+        pass
+
+
+def _pcg_audit_from_level() -> dict:
+    """Read PCG volume + ISM state from the loaded level."""
+    import unreal
+    import pcg_validate_helpers as vh
+
+    volumes: list[str] = []
+    ism_counts: dict[str, int] = {}
+    for actor in unreal.get_editor_subsystem(unreal.EditorActorSubsystem).get_all_level_actors() or []:
+        label = actor.get_actor_label()
+        if label.startswith("PCG_"):
+            volumes.append(label)
+            try:
+                ism_counts[label] = vh.count_ism(actor)
+            except Exception:
+                ism_counts[label] = 0
+    return {
+        "pcg_preset": "showcase",
+        "pcg_volumes": volumes,
+        "ism_counts": ism_counts,
+    }
+
+
 def _audit_from_assets() -> dict:
     """Scene audit JSON without mutating the level (headless validate path)."""
     import unreal
@@ -52,7 +84,7 @@ def _audit_from_assets() -> dict:
         pond_name = "MI_Sakura_Water"
     terrain_name = "MI_Landscape_SakuraGarden" if _mi_exists("MI_Landscape_SakuraGarden", LANDSCAPEROOT) else None
     bank_name = "MI_Landscape_PondBank" if _mi_exists("MI_Landscape_PondBank", LANDSCAPEROOT) else None
-    return {
+    base = {
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "level": LEVEL,
         "koi_pond_material": pond_name,
@@ -61,6 +93,14 @@ def _audit_from_assets() -> dict:
         "grand_water_available": _mi_exists("MI_GrandWater_SakuraPond", WATERROOT),
         "landscape_available": _mi_exists("MI_Landscape_SakuraGarden", LANDSCAPEROOT),
     }
+    try:
+        les = unreal.get_editor_subsystem(unreal.LevelEditorSubsystem)
+        if unreal.EditorAssetLibrary.does_asset_exist(f"{LEVEL}.L_SakuraPath"):
+            les.load_level(LEVEL)
+            base.update(_pcg_audit_from_level())
+    except Exception:
+        base.update({"pcg_preset": None, "pcg_volumes": [], "ism_counts": {}})
+    return base
 
 
 def refresh_audit() -> dict:
@@ -136,15 +176,22 @@ def build(*, force_new: bool = False) -> str:
             c.set_material(0, mat)
         return a
 
-    # ---- dusk lighting rig ----
-    sun = spawn(unreal.DirectionalLight, (0, 0, 900), (-11, 38, 0))
-    if sun:
-        sc = sun.get_component_by_class(unreal.DirectionalLightComponent)
-        if sc:
-            sc.set_editor_property("light_color", unreal.Color(255, 198, 162))
-            sc.set_editor_property("intensity", 3.2)
-    spawn(unreal.SkyAtmosphere)
-    spawn(unreal.SkyLight, (0, 0, 500))
+    # ---- lighting: UDS when available, else dusk fallback ----
+    import portfolio_scene_integration as scene
+
+    uds_info = scene.ensure_uds_actors(eas, time_of_day=1750.0, spawn_weather=True)
+    if not uds_info.get("sky"):
+        sun = spawn(unreal.DirectionalLight, (0, 0, 900), (-11, 38, 0))
+        if sun:
+            sc = sun.get_component_by_class(unreal.DirectionalLightComponent)
+            if sc:
+                sc.set_editor_property("light_color", unreal.Color(255, 198, 162))
+                sc.set_editor_property("intensity", 3.2)
+        spawn(unreal.SkyAtmosphere)
+        spawn(unreal.SkyLight, (0, 0, 500))
+    else:
+        scene.disable_manual_sun_if_uds(eas)
+
     fog = spawn(unreal.ExponentialHeightFog, (0, 0, 60))
     if fog:
         fc = fog.component
@@ -154,12 +201,11 @@ def build(*, force_new: bool = False) -> str:
         except Exception:
             pass
 
-    # ---- post: toon-friendly bloom + locked exposure ----
+    # ---- post: bloom + toon/storybook outline stack ----
     import material_lib as lib
 
-    ppv = spawn(unreal.PostProcessVolume, (0, 0, 300))
+    ppv = scene.find_or_spawn_ppv(eas, (0, 0, 300))
     if ppv:
-        ppv.set_editor_property("unbound", True)
         s = ppv.get_editor_property("settings")
         lib.try_set_editor_property(s, "b_override_bloom_intensity", True)
         lib.try_set_editor_property(s, "bloom_intensity", 1.5)
@@ -168,37 +214,39 @@ def build(*, force_new: bool = False) -> str:
         lib.try_set_editor_property(s, "b_override_auto_exposure_bias", True)
         lib.try_set_editor_property(s, "auto_exposure_bias", 11.0)
         ppv.set_editor_property("settings", s)
+        scene.apply_post_process_stack(ppv)
 
     # ---- greybox blockout ----
     ground = greybox(PLANE, (0, 0, 0), (60, 60, 1), mi("MI_Sakura_Moss"), "Ground")
     if ground:
-        try:
-            tags = list(ground.tags)
-            if "PCG_Ground" not in tags:
-                tags.append("PCG_Ground")
-                ground.tags = tags
-        except Exception:
-            pass
+        _set_tag(ground, "PCG_Ground")
     for i in range(7):
-        greybox(
+        stone = greybox(
             CUBE,
             (-1400 + i * 230, -60 + (i % 2) * 50, 6),
             (1.4, 1.0, 0.12),
             mi("MI_Sakura_StonePath"),
             f"PathStone_{i}",
         )
+        if stone:
+            _set_tag(stone, "PCG_Path")
     red = mi("MI_Sakura_ToriiRed")
     greybox(CUBE, (300, -260, 280), (0.4, 0.4, 5.6), red, "Torii_PillarL")
     greybox(CUBE, (300, 260, 280), (0.4, 0.4, 5.6), red, "Torii_PillarR")
     greybox(CUBE, (300, 0, 560), (0.5, 6.2, 0.4), red, "Torii_TopBeam")
     greybox(CUBE, (300, 0, 470), (0.4, 5.6, 0.28), red, "Torii_Tie")
+    torii_pad = greybox(CUBE, (300, 0, 20), (2.2, 2.2, 0.15), red, "Torii_Pad")
+    if torii_pad:
+        _set_tag(torii_pad, "PCG_Path")
     greybox(CYL, (-600, 360, 90), (0.5, 0.5, 1.8), mi("MI_Sakura_Lantern"), "Lantern")
     bark = mi("MI_Sakura_Bark")
     for x, y in ((-900, -520), (-300, 560), (600, -600), (1000, 500)):
         greybox(CYL, (x, y, 320), (0.7, 0.7, 6.4), bark, f"Trunk_{x}_{y}")
     # koi pond plane (west side) — grand water specialist, not Universal glass
     pond_mat = pond_water_mi()
-    greybox(PLANE, (600, -400, 4), (4.0, 3.0, 1.0), pond_mat, "KoiPond")
+    pond = greybox(PLANE, (600, -400, 4), (4.0, 3.0, 1.0), pond_mat, "KoiPond")
+    if pond:
+        _set_tag(pond, "PCG_Pond")
     pond_mi_name = pond_mat.get_name() if pond_mat else "none"
     unreal.log(f"[Sakura] KoiPond material: {pond_mi_name}")
     print(f"SAKURA_POND_MI {pond_mi_name}")
@@ -214,11 +262,43 @@ def build(*, force_new: bool = False) -> str:
 
     spawn(unreal.CineCameraActor, (-1500, -260, 240), (0, -7, 14))
 
+    pcg_result: dict = {}
+    try:
+        import setup_pcg_greybox as grey_pcg
+        import pcg_portfolio_standards as pcg_std
+
+        pcg_result = grey_pcg.apply_greybox_pcg(
+            LEVEL,
+            preset="showcase",
+            generate=True,
+            grass_mi=pcg_std.MI_SAKURA_GRASS,
+        )
+        eas = unreal.get_editor_subsystem(unreal.EditorActorSubsystem)
+        for actor in eas.get_all_level_actors():
+            if actor.get_actor_label() == pcg_std.ACTOR_GROUND_COVER:
+                actor.set_actor_label(pcg_std.ACTOR_SAKURA_VOLUME)
+    except Exception as exc:
+        unreal.log_warning(f"[Sakura] PCG showcase apply failed: {exc}")
+        pcg_result = {"passed": False, "error": str(exc)}
+
     les.save_current_level()
+
+    water_result: dict = {}
+    try:
+        import setup_ue_water_simulation as water_sim
+
+        water_result = water_sim.build_all()
+    except Exception as exc:
+        water_result = {"passed": False, "error": str(exc)}
+        unreal.log_warning(f"[Sakura] water sim hook failed: {exc}")
+
     report = _audit_from_assets()
+    report["uds"] = uds_info
     report["koi_pond_material"] = pond_mi_name
     report["landscape_mi"] = terrain_mi_name
     report["pond_bank_mi"] = bank_mat.get_name() if bank_mat else None
+    report["pcg_apply"] = pcg_result
+    report["water_sim"] = water_result
     REPORT.parent.mkdir(parents=True, exist_ok=True)
     REPORT.write_text(json.dumps(report, indent=2), encoding="utf-8")
     unreal.log(f"[Sakura] scene built: {LEVEL} -> {REPORT}")

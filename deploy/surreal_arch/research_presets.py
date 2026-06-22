@@ -144,6 +144,52 @@ RESEARCH_PRESETS = {
             unit_size=2.0,
         ),
     },
+    "zen_engawa_veranda": {
+        "label": "Zen Engawa Veranda",
+        "description": "Raised deck slab with post row and railing — connects roji to teahouse",
+        "research_ref": "Engawa typology — transitional veranda between garden and interior (sukiya-zukuri)",
+        "props": dict(
+            arch_type="GB_ZEN_ENGAWA",
+            gb_width=5.0,
+            gb_depth=2.4,
+            gb_height=0.35,
+            gb_wall_thick=0.12,
+            gb_trim_mode="RECESS",
+            gb_trim_recess=0.04,
+            material_choice="WOOD",
+            unit_size=2.5,
+        ),
+    },
+    "zen_bamboo_fence": {
+        "label": "Zen Bamboo Fence",
+        "description": "Tileable bamboo screen — posts and horizontal rails for garden boundary",
+        "research_ref": "Take-gaki typology — low bamboo fence rhythm screening tea garden from outer path",
+        "props": dict(
+            arch_type="GB_ZEN_BAMBOO_FENCE",
+            gb_length=4.0,
+            zen_fence_height=1.2,
+            gb_wall_thick=0.06,
+            gb_trim_mode="RECESS",
+            gb_trim_recess=0.03,
+            material_choice="WOOD",
+            unit_size=2.0,
+        ),
+    },
+    "zen_tobiishi_path": {
+        "label": "Zen Tobi-ishi Path",
+        "description": "Scattered flat stepping stones along path strip — informal roji approach",
+        "research_ref": "Tobi-ishi typology — irregular stone placement guiding gait through roji dew path",
+        "props": dict(
+            arch_type="GB_ZEN_TOBIISHI",
+            gb_length=5.0,
+            gb_width=1.6,
+            gb_wall_thick=0.1,
+            gb_trim_mode="RECESS",
+            gb_trim_recess=0.04,
+            material_choice="STONE",
+            unit_size=2.0,
+        ),
+    },
 }
 
 

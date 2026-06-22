@@ -62,6 +62,31 @@ def spawn_zen_roji_plan(location=(0, 0, 0), path_len=16.0, courtyard_w=8.0):
     return create_plan_mesh("SurrealPlan_ZenRoji", verts, [], faces, vgroups, location)
 
 
+def spawn_zen_temple_plan(location=(0, 0, 0), path_len=20.0, courtyard_w=12.0, engawa_w=6.0):
+    """Temple compound: roji path + sacred courtyard + engawa/teahouse wing."""
+    hl = path_len * 0.5
+    cw = courtyard_w * 0.5
+    ew = engawa_w * 0.5
+    verts = [
+        (-2.2, -hl, 0), (2.2, -hl, 0), (2.2, 0, 0), (-2.2, 0, 0),
+        (-cw, 0, 0), (cw, 0, 0), (cw, cw, 0), (-cw, cw, 0),
+        (cw, cw, 0), (cw + ew, cw, 0), (cw + ew, cw + ew * 0.8, 0), (cw, cw + ew * 0.8, 0),
+    ]
+    faces = [
+        [0, 1, 2, 3],
+        [4, 5, 6, 7],
+        [8, 9, 10, 11],
+    ]
+    vgroups = {
+        "is_gate": [0, 1],
+        "is_plaza": [4, 5, 6, 7],
+        "is_sacred": [4, 5, 6, 7],
+        "is_keep": [8, 9, 10, 11],
+        "is_corner_tower": [0, 1],
+    }
+    return create_plan_mesh("SurrealPlan_ZenTemple", verts, [], faces, vgroups, location)
+
+
 def spawn_village_plan(location=(0, 0, 0), n_plots=8, radius=8.0):
     """Radial village: plaza center + ring of plot quads."""
     verts = [(0.0, 0.0, 0.0)]
@@ -148,6 +173,7 @@ def spawn_motte_bailey_plan(location=(0, 0, 0), motte_r=3.0, bailey_r=9.0):
 PLAN_SPAWNERS = {
     "castle": spawn_castle_plan,
     "zen_roji": spawn_zen_roji_plan,
+    "zen_temple": spawn_zen_temple_plan,
     "village": spawn_village_plan,
     "grid_city": spawn_grid_city_plan,
     "motte_bailey": spawn_motte_bailey_plan,

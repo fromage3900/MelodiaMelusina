@@ -27,6 +27,18 @@ import unreal
 import material_lib as lib
 
 REPORT = Path(__file__).resolve().parents[2] / "Saved" / "Audit" / "uds_time_of_day_sync.json"
+INTEGRATION_REPORT = Path(__file__).resolve().parents[2] / "Saved" / "Audit" / "uds_toon_integration.json"
+
+INSTANCE_ROOTS = (
+    "/Game/EnvSandbox/Materials/Instances/Sakura",
+    "/Game/EnvSandbox/Materials/Instances/Showcase",
+    "/Game/EnvSandbox/Materials/Instances/Landscape",
+)
+
+LEVELS = (
+    "/Game/EnvSandbox/Environments/Sakura/L_SakuraPath",
+    "/Game/EnvSandbox/_Template/L_Template",
+)
 
 UDS_ROOT = "/Game/UltraDynamicSky"
 UDS_BP = f"{UDS_ROOT}/Blueprints/Ultra_Dynamic_Sky"
@@ -112,18 +124,115 @@ def rebuild_master_if_requested() -> str | None:
     return master.build()
 
 
+def apply_uds_on_instances() -> dict:
+    """Enable UseUDSTimeOfDay on universal child instances."""
+    tuned: list[str] = []
+    skipped: list[str] = []
+    for root in INSTANCE_ROOTS:
+        if not unreal.EditorAssetLibrary.does_directory_exist(root):
+            continue
+        paths = unreal.EditorAssetLibrary.list_assets(root, recursive=True, include_folder=False) or []
+        for asset_path in paths:
+            leaf = asset_path.rsplit("/", 1)[-1]
+            if not leaf.startswith("MI_"):
+                continue
+            full = f"{asset_path}.{leaf}" if "." not in asset_path else asset_path
+            if not unreal.EditorAssetLibrary.does_asset_exist(full):
+                continue
+            mi = unreal.load_asset(full)
+            if not mi:
+                skipped.append(full)
+                continue
+            try:
+                lib.set_instance_static_switch(mi, "UseUDSTimeOfDay", True)
+                lib.set_instance_scalar(mi, "TimeOfDayMPCStrength", 1.0)
+                lib.save_package(mi)
+                tuned.append(full)
+            except Exception:
+                skipped.append(full)
+    return {"tuned": tuned, "skipped": skipped, "count": len(tuned)}
+
+
+def apply_uds_scenes() -> dict:
+    import portfolio_scene_integration as scene
+
+    results: dict = {}
+    eas = unreal.get_editor_subsystem(unreal.EditorActorSubsystem)
+    les = unreal.get_editor_subsystem(unreal.LevelEditorSubsystem)
+    for level in LEVELS:
+        leaf = level.rsplit("/", 1)[-1]
+        if not unreal.EditorAssetLibrary.does_asset_exist(f"{level}.{leaf}"):
+            results[level] = {"missing": True}
+            continue
+        les.load_level(level)
+        uds = scene.ensure_uds_actors(eas, time_of_day=1750.0, spawn_weather=True)
+        hidden_sun = scene.disable_manual_sun_if_uds(eas)
+        les.save_current_level()
+        results[level] = {**uds, "manual_sun_hidden": hidden_sun}
+    return results
+
+
+def audit_level_uds() -> dict:
+    import portfolio_scene_integration as scene
+
+    eas = unreal.get_editor_subsystem(unreal.EditorActorSubsystem)
+    les = unreal.get_editor_subsystem(unreal.LevelEditorSubsystem)
+    level_status: dict = {}
+    for level in LEVELS:
+        leaf = level.rsplit("/", 1)[-1]
+        if not unreal.EditorAssetLibrary.does_asset_exist(f"{level}.{leaf}"):
+            level_status[level] = {"missing": True}
+            continue
+        les.load_level(level)
+        sky = scene._find_actor_by_tag(eas, scene.TAG_UDS_SKY)
+        weather = scene._find_actor_by_tag(eas, scene.TAG_UDS_WEATHER)
+        manual_suns = sum(
+            1 for a in eas.get_all_level_actors() or [] if isinstance(a, unreal.DirectionalLight)
+        )
+        level_status[level] = {
+            "uds_sky": sky.get_actor_label() if sky else None,
+            "uds_weather": weather.get_actor_label() if weather else None,
+            "directional_lights": manual_suns,
+        }
+    return level_status
+
+
 def main() -> int:
+    apply = "--apply" in sys.argv
     audit = audit_uds()
     master_path = None
+    apply_result: dict = {}
     if audit["feasible"]:
         master_path = rebuild_master_if_requested()
         if not master_path and _asset_ok(MASTER):
             master_path = f"{MASTER}.M_Master_Toon_Universal"
+        if apply:
+            apply_result["instances"] = apply_uds_on_instances()
+            apply_result["scenes"] = apply_uds_scenes()
     else:
         unreal.log_error(
             "[UDS ToD] UltraDynamicWeather_Parameters or Day_to_Night_Color missing. "
             "Install/sync Content/UltraDynamicSky before enabling UseUDSTimeOfDay."
         )
+
+    level_uds = audit_level_uds() if audit["feasible"] else {}
+    instances_tuned = apply_result.get("instances", {}).get("count", 0)
+    scenes_ok = all(
+        v.get("sky") for v in apply_result.get("scenes", {}).values() if not v.get("missing")
+    ) if apply else any(v.get("uds_sky") for v in level_uds.values() if not v.get("missing"))
+
+    integration = {
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        **audit,
+        "master_material": master_path,
+        "apply_ran": apply,
+        "apply_result": apply_result,
+        "level_uds": level_uds,
+        "instances_with_uds_switch": instances_tuned,
+        "passed": audit["feasible"] and (scenes_ok or not apply),
+    }
+    INTEGRATION_REPORT.parent.mkdir(parents=True, exist_ok=True)
+    INTEGRATION_REPORT.write_text(json.dumps(integration, indent=2), encoding="utf-8")
 
     report = {
         "timestamp": datetime.now(timezone.utc).isoformat(),
@@ -134,6 +243,7 @@ def main() -> int:
             "TimeOfDayMPCStrength": "Scalar 0–1 blend toward UDS day/night tint",
             "TimeOfDayWarmth": "Manual fallback when UseUDSTimeOfDay is off",
         },
+        "integration_report": str(INTEGRATION_REPORT),
         "level_setup": [
             "1. Drag Ultra_Dynamic_Sky into the level (Content/UltraDynamicSky/Blueprints).",
             "2. Optional: add Ultra_Dynamic_Weather for wetness/snow MPC scalars.",
@@ -150,11 +260,14 @@ def main() -> int:
         "rebuild_command": (
             'py "G:/EnvironmentPortfolio/BS_GodFile/Content/Python/setup_time_of_day_mpc.py" --rebuild-master'
         ),
+        "apply_command": (
+            'py "G:/EnvironmentPortfolio/BS_GodFile/Content/Python/setup_time_of_day_mpc.py" --apply'
+        ),
     }
     REPORT.parent.mkdir(parents=True, exist_ok=True)
     REPORT.write_text(json.dumps(report, indent=2), encoding="utf-8")
-    print(json.dumps(report, indent=2))
-    return 0 if audit["feasible"] else 1
+    print(json.dumps(integration, indent=2))
+    return 0 if integration.get("passed") else 1
 
 
 if __name__ == "__main__":

@@ -25,6 +25,7 @@ def patch_world(monolith):
 
     monolith._spawn_castle_plan = plans.spawn_castle_plan
     monolith._spawn_zen_roji_plan = plans.spawn_zen_roji_plan
+    monolith._spawn_zen_temple_plan = plans.spawn_zen_temple_plan
 
     _patch_library_init(monolith)
     _patch_compose_world(monolith)
@@ -125,6 +126,29 @@ def register_world_operators(monolith):
             self.report({"INFO"}, f"Zen roji plan: {obj.name}")
             return {"FINISHED"}
 
+    class SURREAL_ARCH_OT_plan_spawn_zen_temple(bpy.types.Operator):
+        bl_idname = "surreal_arch.plan_spawn_zen_temple"
+        bl_label = "Zen Temple Plan"
+        bl_options = {"REGISTER", "UNDO"}
+
+        path_len: bpy.props.FloatProperty(name="Path Length", default=20.0, min=8.0, max=80.0)
+        courtyard_w: bpy.props.FloatProperty(name="Courtyard Width", default=12.0, min=6.0, max=40.0)
+        engawa_w: bpy.props.FloatProperty(name="Engawa Wing", default=6.0, min=3.0, max=20.0)
+
+        def execute(self, context):
+            cursor = context.scene.cursor.location
+            obj = plans.spawn_zen_temple_plan(
+                location=tuple(cursor),
+                path_len=self.path_len,
+                courtyard_w=self.courtyard_w,
+                engawa_w=self.engawa_w,
+            )
+            bpy.ops.object.select_all(action="DESELECT")
+            obj.select_set(True)
+            context.view_layer.objects.active = obj
+            self.report({"INFO"}, f"Zen temple plan: {obj.name}")
+            return {"FINISHED"}
+
     class SURREAL_ARCH_OT_export_world_ue(bpy.types.Operator):
         bl_idname = "surreal_arch.export_world_ue"
         bl_label = "Export World to UE"
@@ -169,10 +193,11 @@ def register_world_operators(monolith):
         box = layout.box()
         box.label(text="Zen + UE Export", icon="WORLD")
         box.operator("surreal_arch.plan_spawn_zen_roji", text="Zen Roji Plan", icon="MESH_GRID")
+        box.operator("surreal_arch.plan_spawn_zen_temple", text="Zen Temple Plan", icon="HOME")
         box.operator("surreal_arch.export_world_ue", text="Export World to UE", icon="EXPORT")
 
     if orig_draw and not getattr(monolith.SURREAL_ARCH_PT_compose, "_world_patched", False):
         monolith.SURREAL_ARCH_PT_compose.draw = compose_panel_draw
         monolith.SURREAL_ARCH_PT_compose._world_patched = True
 
-    return [SURREAL_ARCH_OT_plan_spawn_zen_roji, SURREAL_ARCH_OT_export_world_ue]
+    return [SURREAL_ARCH_OT_plan_spawn_zen_roji, SURREAL_ARCH_OT_plan_spawn_zen_temple, SURREAL_ARCH_OT_export_world_ue]

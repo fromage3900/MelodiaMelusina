@@ -60,6 +60,7 @@ def build_mpc() -> str:
 
 def build_post_process(force: bool = False) -> str:
     lib.ensure_directory(lib.POST_DIR)
+    lib.close_open_material_editors((PP_NAME,))
     path = lib.asset_path(lib.POST_DIR, PP_NAME)
     material = None
     if unreal.EditorAssetLibrary.does_asset_exist(path):
@@ -91,6 +92,19 @@ def build_post_process(force: bool = False) -> str:
         material, "OutlineColor", "Outline", (0.02, 0.02, 0.05, 1.0), -800, 280
     )
     edge_strength = lib.scalar_param(material, "EdgeStrength", "Outline", 1.0, -800, 400)
+    audio_pulse = lib.scalar_param(material, "AudioPulseStrength", "Outline", 0.35, -800, 520)
+
+    mpc_path = lib.asset_path(lib.MPC_DIR, MPC_NAME)
+    beat_mod = None
+    if unreal.EditorAssetLibrary.does_asset_exist(mpc_path):
+        mpc = unreal.load_asset(mpc_path)
+        if mpc:
+            beat = lib.create_expression(material, unreal.MaterialExpressionCollectionParameter, -560, 520)
+            beat.set_editor_property("collection", mpc)
+            beat.set_editor_property("parameter_name", "BeatPhase")
+            beat_mod = lib.create_expression(material, unreal.MaterialExpressionMultiply, -360, 440)
+            lib.connect(beat, "", beat_mod, "A")
+            lib.connect(audio_pulse, "", beat_mod, "B")
 
     depth_tex = lib.create_expression(material, unreal.MaterialExpressionSceneTexture, -800, 520)
     depth_tex.set_editor_property(
@@ -103,8 +117,9 @@ def build_post_process(force: bool = False) -> str:
     lib.connect_unary(depth_delta, depth_edge)
 
     edge_mask = lib.create_expression(material, unreal.MaterialExpressionMultiply, -160, 280)
+    strength_src = beat_mod if beat_mod else edge_strength
     lib.connect(depth_edge, "", edge_mask, "A")
-    lib.connect(edge_strength, "", edge_mask, "B")
+    lib.connect(strength_src, "", edge_mask, "B")
 
     scene_rgb = lib.mask_rgb(material, scene_tex, -400, 0)
     edge_rgb = lib.mask_rgb(material, edge_color, -200, 280)

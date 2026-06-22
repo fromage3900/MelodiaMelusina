@@ -158,6 +158,18 @@ SAKURA_SYSTEMS: tuple[SakuraSystemSpec, ...] = (
         theme="canopy petal drift",
     ),
     SakuraSystemSpec(
+        "NS_SakuraPetals_v2",
+        template_emitter=f"{NIAGARA_EMITTER_ROOT}/Fountain",
+        seed_system=f"{SYSTEMS_SAKURA}/NS_SakuraPetals",
+        sprite_material="MI_Niagara_Petal",
+        user_params=(
+            ("User.SpawnRate", "float", 180.0),
+            ("User.WindStrength", "float", 0.42),
+            ("User.Color", "color", {"R": 1.0, "G": 0.76, "B": 0.86, "A": 1.0}),
+        ),
+        theme="canopy petal drift v2 (authoritative)",
+    ),
+    SakuraSystemSpec(
         "NS_SakuraGroundPetals",
         atmospheric_preset="floating_dust",
         seed_system=f"{SYSTEMS_AMBIENT}/NS_EmberMotes",
@@ -300,6 +312,12 @@ SAKURA_TUNING_NOTES: dict[str, list[str]] = {
         "Assign MI_Niagara_Petal on sprite renderer (Python cannot bind in UE 5.8)",
         "GPU sim if spawn rate > ~2k",
     ],
+    "NS_SakuraPetals_v2": [
+        "Authoritative canopy system — prefer over NS_SakuraPetals",
+        "Spawn: box aligned to trunk bounds from scene anchors",
+        "Bind WindStrength + GustTrigger from MPC_SakuraDream",
+        "Assign MI_Niagara_Petal; tune curl noise in Niagara Editor",
+    ],
     "NS_SakuraGroundPetals": [
         "Spawn: flat box along path Y=0-30; higher density under tree positions",
         "Motion: slow horizontal drift, short lifetime, desaturated pink",
@@ -326,10 +344,96 @@ SAKURA_TUNING_NOTES: dict[str, list[str]] = {
 }
 
 
+CANOPY_SYSTEM_LEGACY = "NS_SakuraPetals"
+CANOPY_SYSTEM_V2 = "NS_SakuraPetals_v2"
+PETAL_SYSTEMS = (CANOPY_SYSTEM_V2, "NS_SakuraGroundPetals", "NS_SakuraPetalGust")
+TRUNK_FALLOFF_RADIUS_UU = 420.0
+
+
+def canonical_canopy_system() -> str:
+    import unreal
+
+    v2_path = _asset_path(SYSTEMS_SAKURA, CANOPY_SYSTEM_V2)
+    if unreal.EditorAssetLibrary.does_asset_exist(v2_path):
+        return CANOPY_SYSTEM_V2
+    return CANOPY_SYSTEM_LEGACY
+
+
+def _spawn_anchors_from_scene(eas) -> dict:
+    import unreal
+
+    trunks: list[tuple[float, float, float]] = []
+    canopy_center = None
+    pond_center = None
+    for actor in eas.get_all_level_actors() or []:
+        label = actor.get_actor_label()
+        loc = actor.get_actor_location()
+        if label.startswith("Trunk_"):
+            trunks.append((loc.x, loc.y, loc.z))
+        if label.startswith("Trunk_") and canopy_center is None:
+            canopy_center = (loc.x, loc.y, loc.z + 420.0)
+        tags = list(getattr(actor, "tags", []) or [])
+        if "PCG_Pond" in tags or "KoiPond" in label:
+            pond_center = (loc.x, loc.y, loc.z + 8.0)
+    if canopy_center is None:
+        canopy_center = (400.0, 200.0, 420.0)
+    return {
+        "canopy": {"location": list(canopy_center), "trunks": trunks, "source": "scene"},
+        "pond": {"location": list(pond_center or (600.0, -400.0, 8.0)), "source": "scene"},
+    }
+
+
+def _resolve_level_spawns(eas) -> list[dict]:
+    anchors = _spawn_anchors_from_scene(eas)
+    canopy_loc = tuple(anchors["canopy"]["location"])
+    resolved: list[dict] = []
+    for spawn in LEVEL_SPAWNS:
+        entry = dict(spawn)
+        if spawn["label"] == "VFX_SakuraCanopy":
+            entry["system"] = canonical_canopy_system()
+            entry["location"] = canopy_loc
+            entry["anchor_source"] = anchors["canopy"]["source"]
+        elif spawn["label"] == "VFX_PondShimmer":
+            entry["location"] = tuple(anchors["pond"]["location"])
+            entry["anchor_source"] = anchors["pond"]["source"]
+        resolved.append(entry)
+    return resolved
+
+
+def _probe_mpc_material_bindings() -> dict[str, bool]:
+    import unreal
+
+    master_path = f"{VFX_MAT_DIR}/{MASTER_SPRITE}.{MASTER_SPRITE}"
+    result = {name: False for name, _ in MPC_SCALARS}
+    if not unreal.EditorAssetLibrary.does_asset_exist(master_path):
+        return result
+    mat = unreal.load_asset(master_path)
+    if not mat:
+        return result
+    for expr in unreal.MaterialEditingLibrary.get_material_expressions(mat) or []:
+        if not expr or "CollectionParameter" not in type(expr).__name__:
+            continue
+        try:
+            pname = str(expr.get_editor_property("parameter_name") or "")
+            if pname in result:
+                result[pname] = True
+        except Exception:
+            pass
+    return result
+
+
+def _probe_system_mpc_exposure(system, spec: SakuraSystemSpec) -> dict:
+    exposed = {p[0]: False for p in spec.user_params}
+    for name in ("WindStrength", "GustTrigger", "PetalDensity"):
+        if name in exposed or any(name in p[0] for p in spec.user_params):
+            exposed[name] = True
+    return {"user_params": exposed, "mpc_note": "Bind MPC_SakuraDream in Niagara Editor for live wind"}
+
+
 LEVEL_SPAWNS = [
     {
         "label": "VFX_SakuraCanopy",
-        "system": "NS_SakuraPetals",
+        "system": CANOPY_SYSTEM_V2,
         "location": (400.0, 200.0, 420.0),
         "scale": (3.0, 2.5, 1.5),
         "auto_activate": True,
@@ -1182,7 +1286,7 @@ def spawn_sakura_vfx_on_level(*, use_mcp: bool = True) -> list[str]:
     spawned: list[str] = []
     mcp_ok = use_mcp and _mcp_ping(retries=1)
 
-    for spawn in LEVEL_SPAWNS:
+    for spawn in _resolve_level_spawns(eas):
         label = spawn["label"]
         sys_name = spawn["system"]
         sys_path = _asset_path(SYSTEMS_SAKURA, sys_name)

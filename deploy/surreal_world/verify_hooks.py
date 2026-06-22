@@ -131,6 +131,19 @@ def check_zen_ld_metrics(world_root):
     return fails
 
 
+def check_zen_temple_ld_metrics(world_root):
+    """Return list of LD failures for zen temple compound compose."""
+    m = compose_metrics(world_root)
+    fails = []
+    if m["instance_count"] < 10:
+        fails.append(f"instance_count={m['instance_count']} < 10")
+    if m["sacred"] < 1:
+        fails.append("no sacred instance")
+    if m["large"] < 1:
+        fails.append("no teahouse/keep instance")
+    return fails
+
+
 def probe_library_vs_enum(monolith):
     """Return arch_types in library spec missing from enum."""
     missing = []

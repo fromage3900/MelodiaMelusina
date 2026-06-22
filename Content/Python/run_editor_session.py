@@ -56,6 +56,7 @@ def _run_session() -> int:
 
     rebuild_master = "--rebuild-master" in sys.argv
     showcase = "--showcase" in sys.argv
+    orchestrator = "--orchestrator" in sys.argv
     started = datetime.now(timezone.utc).isoformat()
     t0 = time.monotonic()
 
@@ -126,13 +127,32 @@ def _run_session() -> int:
     )
 
     step(
-        "sakura pcg ground cover (phase 1)",
+        "pcg portfolio audit",
+        lambda: __import__("audit_pcg_portfolio")._audit_in_ue(),
+        optional=True,
+    )
+
+    step(
+        "universal pcg build",
+        lambda: __import__("setup_pcg_universal").build_all(force=rebuild_master),
+        optional=True,
+    )
+
+    step(
+        "sakura pcg showcase wrapper",
         lambda: __import__("setup_pcg_sakura").build_all(rebuild=False, spawn=True),
         optional=True,
     )
 
     if showcase:
         step("template showcase level", lambda: __import__("setup_template_showcase").build_all())
+
+    if orchestrator:
+        step(
+            "portfolio orchestrator tick",
+            lambda: __import__("run_portfolio_orchestrator_loop_tick")._run_in_ue(),
+            optional=True,
+        )
 
     unreal.EditorLoadingAndSavingUtils.save_dirty_packages(True, True)
 
@@ -146,6 +166,7 @@ def _run_session() -> int:
         "flags": {
             "rebuild_master": rebuild_master,
             "showcase": showcase,
+            "orchestrator": orchestrator,
         },
         "steps_ok": ok,
         "steps_total": total,
@@ -160,6 +181,9 @@ def _run_session() -> int:
             "Saved/Audit/storybook_outline_build.json",
             "Saved/Audit/niagara_library_build.json",
             "Saved/Audit/sakura_pcg_build.json",
+            "Saved/Audit/pcg_portfolio_audit.json",
+            "Saved/Audit/pcg_universal_build.json",
+            "Saved/Audit/portfolio_orchestrator_loop.json",
         ],
     }
     if showcase:

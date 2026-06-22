@@ -67,6 +67,7 @@ def _vine_mask_expression(material):
 def _acquire_storybook_material(force: bool):
     """Return (material, path) creating or reusing the PP material asset."""
     lib.ensure_directory(lib.POST_DIR)
+    lib.close_open_material_editors((PP_NAME, "M_PP_ToonOutline"))
     path = lib.asset_path(lib.POST_DIR, PP_NAME)
     material = None
     if unreal.EditorAssetLibrary.does_asset_exist(path):
@@ -181,6 +182,18 @@ def build_storybook_pp(force: bool = False) -> str:
     vine_scale = lib.scalar_param(material, "VineBranchScale", "Storybook", 6.0, -1000, 920)
     vine_str = lib.scalar_param(material, "VineBranchStrength", "Storybook", 0.75, -1000, 1020)
     vine_speed = lib.scalar_param(material, "VineGrowthSpeed", "Storybook", 0.08, -1000, 1120)
+    speed_src = vine_speed
+    sakura_mpc = "/Game/EnvSandbox/VFX/MPC/MPC_SakuraDream.MPC_SakuraDream"
+    if unreal.EditorAssetLibrary.does_asset_exist(sakura_mpc):
+        mpc = unreal.load_asset(sakura_mpc)
+        if mpc:
+            gust = lib.create_expression(material, unreal.MaterialExpressionCollectionParameter, -760, 1200)
+            gust.set_editor_property("collection", mpc)
+            gust.set_editor_property("parameter_name", "GustTrigger")
+            gust_boost = lib.create_expression(material, unreal.MaterialExpressionAdd, -560, 1120)
+            lib.connect(vine_speed, "", gust_boost, "A")
+            lib.connect(gust, "", gust_boost, "B")
+            speed_src = gust_boost
     vine_ink = lib.vector_param(material, "VineInkColor", "Storybook", (0.04, 0.12, 0.06, 1.0), -1000, 1220)
     leaf_tint = lib.vector_param(material, "LeafHighlightColor", "Storybook", (0.35, 0.62, 0.28, 1.0), -1000, 1340)
     branch_tex = lib.texture_param(material, "VineBranchMask", "Storybook", -1000, 1460)
@@ -192,7 +205,7 @@ def build_storybook_pp(force: bool = False) -> str:
     time_n = lib.create_expression(material, unreal.MaterialExpressionTime, -760, 1040)
     scroll = lib.create_expression(material, unreal.MaterialExpressionMultiply, -560, 1040)
     lib.connect(time_n, "", scroll, "A")
-    lib.connect(vine_speed, "", scroll, "B")
+    lib.connect(speed_src, "", scroll, "B")
     # diagonal 2D scroll (scalar+scalar -> float2); avoids invalid float2+scalar add
     scroll_uv = lib.create_expression(material, unreal.MaterialExpressionAppendVector, -560, 1120)
     lib.connect(scroll, "", scroll_uv, "A")

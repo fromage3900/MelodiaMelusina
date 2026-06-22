@@ -1,9 +1,10 @@
-﻿"""
+﻿# -*- coding: utf-8 -*-
+"""
 Surreal Architecture Generator - Geometry Node System for Blender 5.1
 
 Procedural surreal architecture with towers, organic forms, railings, staircases,
 arches, flying buttresses, full buildings, M.C. Escher-style impossible stairs,
-classical pillars, domes, castle crenellations, and fractal towers â€” with
+classical pillars, domes, castle crenellations, and fractal towers — with
 whimsical musical ornamentation, harmonic notation rhythms, curved roof generator
 (12 roof types incl. pagoda/onion/geodesic), bounding-box grow system (6 modes),
 one-click magical distortion presets (liquid/crystal/portal/aurora + 6 more),
@@ -23,7 +24,7 @@ bl_info = {
     "blender": (5, 1, 0),
     "author": "Claude Code",
     "description": "Procedural geometry node system for surreal architecture",
-    "version": (2, 69, 0),
+    "version": (2, 71, 0),
     "location": "Properties > Modifiers",
     "category": "Geometry Nodes",
 }
@@ -53,12 +54,12 @@ def _apply_sv_quality_preset(self, context):
 
 def auto_update_callback(self, context):
     """
-    Property update callback â€” auto-regenerates geometry when properties change
+    Property update callback — auto-regenerates geometry when properties change
     if `auto_update` is enabled. Skipped during operator execution.
 
     v2.43 fix: detect "specialty" objects (SurrealRoof, SurrealLib, etc.)
     that were created by direct-bmesh operators rather than GN trees, and
-    DO NOT rebuild them as a generic SurrealArch tower â€” that wipes the
+    DO NOT rebuild them as a generic SurrealArch tower — that wipes the
     user's work.
     """
     global _AUTO_UPDATE_RUNNING
@@ -108,8 +109,8 @@ def roof_update_callback(self, context):
     if not obj or obj.type != 'MESH':
         return
     if not obj.name.startswith("SurrealRoof_"):
-        # User is editing roof sliders on a non-roof object â€” wait until
-        # they explicitly click ðŸ  Build Roof.
+        # User is editing roof sliders on a non-roof object — wait until
+        # they explicitly click 🏠 Build Roof.
         return
     try:
         _AUTO_UPDATE_RUNNING = True
@@ -192,7 +193,7 @@ class _SubPanelBase:
 
 
 class _EffectsSubPanelBase:
-    """Nested under Effects & Atmosphere â€” optional overlay panels."""
+    """Nested under Effects & Atmosphere — optional overlay panels."""
     bl_space_type  = 'PROPERTIES'
     bl_region_type = 'WINDOW'
     bl_context     = "modifier"
@@ -206,31 +207,31 @@ class _EffectsSubPanelBase:
 
 # Synthia preset list (curated subset with the most surreal/architectural shapes)
 SYNTHIA_EQUATION_PRESETS = [
-    ('helix',         "ðŸŒ€ Helix",          "Parametric helix"),
-    ('spiral',        "ðŸš Spiral",         "Archimedean spiral"),
-    ('torus_knot',    "ðŸª¢ Torus Knot",     "(p,q) torus knot"),
-    ('lissajous',     "â™¾ Lissajous",      "Lissajous figure"),
-    ('lorenz',        "ðŸŒª Lorenz",         "Lorenz attractor"),
-    ('rossler',       "ðŸŒŠ RÃ¶ssler",        "RÃ¶ssler attractor"),
-    ('mobius',        "â™¾ MÃ¶bius",          "MÃ¶bius strip"),
-    ('klein_bottle',  "ðŸ¶ Klein Bottle",   "Klein bottle (4D projection)"),
-    ('ripple',        "ðŸ’§ Ripple",         "sin(sqrt(xÂ²+yÂ²))"),
-    ('wave_interference', "ðŸŒŠ Wave Interference", "sin(x) + sin(y)"),
-    ('gaussian',      "ðŸ”” Gaussian",       "exp(-(xÂ²+yÂ²))"),
-    ('saddle',        "ðŸŽ Saddle",         "xÂ² - yÂ²"),
-    ('paraboloid',    "ðŸ¥£ Paraboloid",     "xÂ² + yÂ²"),
-    ('sine_cosine_surface', "ðŸŒ SineÃ—Cosine Surface", "sin(x)*cos(y)"),
+    ('helix',         "🌀 Helix",          "Parametric helix"),
+    ('spiral',        "🐚 Spiral",         "Archimedean spiral"),
+    ('torus_knot',    "🪢 Torus Knot",     "(p,q) torus knot"),
+    ('lissajous',     "♾ Lissajous",      "Lissajous figure"),
+    ('lorenz',        "🌪 Lorenz",         "Lorenz attractor"),
+    ('rossler',       "🌊 Rössler",        "Rössler attractor"),
+    ('mobius',        "♾ Möbius",          "Möbius strip"),
+    ('klein_bottle',  "🍶 Klein Bottle",   "Klein bottle (4D projection)"),
+    ('ripple',        "💧 Ripple",         "sin(sqrt(x²+y²))"),
+    ('wave_interference', "🌊 Wave Interference", "sin(x) + sin(y)"),
+    ('gaussian',      "🔔 Gaussian",       "exp(-(x²+y²))"),
+    ('saddle',        "🐎 Saddle",         "x² - y²"),
+    ('paraboloid',    "🥣 Paraboloid",     "x² + y²"),
+    ('sine_cosine_surface', "🌐 Sine×Cosine Surface", "sin(x)*cos(y)"),
 ]
 
 SYNTHIA_GEOMETRY_PRESETS = [
-    ('platonic_solids',  "ðŸ”· Platonic Solids",  "Five regular polyhedra"),
-    ('golden_ratio',     "ðŸŒ€ Golden Ratio",     "Ï† â‰ˆ 1.618 spiral"),
-    ('eulers_identity',  "ðŸ§® Euler's Identity", "e^(iÏ€) + 1 = 0"),
-    ('pi_visualization', "Ï€ Pi",                 "Circle circumference / diameter"),
-    ('cube_net',         "ðŸ“¦ Cube Net",          "Unfold cube to 2D"),
+    ('platonic_solids',  "🔷 Platonic Solids",  "Five regular polyhedra"),
+    ('golden_ratio',     "🌀 Golden Ratio",     "φ ≈ 1.618 spiral"),
+    ('eulers_identity',  "🧮 Euler's Identity", "e^(iπ) + 1 = 0"),
+    ('pi_visualization', "π Pi",                 "Circle circumference / diameter"),
+    ('cube_net',         "📦 Cube Net",          "Unfold cube to 2D"),
 ]
 
-# Material library palette â€” pastel base colors (RGBA)
+# Material library palette — pastel base colors (RGBA)
 MATERIAL_PALETTE = {
     'STONE':       (0.78, 0.76, 0.72, 1.0),    # warm grey
     'MARBLE':      (0.95, 0.94, 0.92, 1.0),    # off-white
@@ -258,7 +259,7 @@ MAT_NAMES = {
 
 WORLD_NAME = "SurrealArch_DayNightWorld"
 
-# Musical note pattern â†’ frequency multiplier
+# Musical note pattern → frequency multiplier
 NOTE_PATTERNS = {
     'WHOLE':    1.0,
     'HALF':     2.0,
@@ -271,7 +272,7 @@ NOTE_PATTERNS = {
 
 
 # ----------------------------------------------------------------------
-# SHADER LIBRARY  â€”  stylized materials synced to architecture
+# SHADER LIBRARY  —  stylized materials synced to architecture
 # ----------------------------------------------------------------------
 
 def _color_shader_node(n, color_key):
@@ -301,7 +302,7 @@ def _set_principled(bsdf, **kwargs):
 
 
 def _attach_driver(socket, obj, data_path, expression="var", index=0):
-    """Add a driver from object property â†’ shader socket."""
+    """Add a driver from object property → shader socket."""
     try:
         fc = socket.driver_add("default_value", index) if index else socket.driver_add("default_value")
         d = fc.driver if not isinstance(fc, list) else fc[0].driver
@@ -317,7 +318,7 @@ def _attach_driver(socket, obj, data_path, expression="var", index=0):
 
 
 def build_base_material():
-    """Default stylized PBR â€” soft pastel matte base."""
+    """Default stylized PBR — soft pastel matte base."""
     name = MAT_NAMES['STONE']
     mat = bpy.data.materials.get(name) or bpy.data.materials.new(name)
     mat.use_nodes = True
@@ -347,7 +348,7 @@ def build_base_material():
     nt.links.new(ramp.outputs['Color'], bsdf.inputs['Base Color'])
     nt.links.new(bsdf.outputs['BSDF'], out.inputs['Surface'])
 
-    fr = _frame(nt, "Stone â€” Stylized PBR", "tower", x=-200, y=200)
+    fr = _frame(nt, "Stone — Stylized PBR", "tower", x=-200, y=200)
     for n in (out, bsdf, noise, ramp): n.parent = fr
     return mat
 
@@ -366,7 +367,7 @@ def build_marble_material():
 
     coord = nt.nodes.new('ShaderNodeTexCoord'); coord.location = (-600, 0)
 
-    # Marble veins â€” Wave + Noise distortion
+    # Marble veins — Wave + Noise distortion
     noise = nt.nodes.new('ShaderNodeTexNoise'); noise.location = (-300, -200)
     _color_shader_node(noise, "noise")
     noise.inputs['Scale'].default_value = 2.0
@@ -400,20 +401,20 @@ def build_marble_material():
     nt.links.new(ramp.outputs['Color'], bsdf.inputs['Base Color'])
     nt.links.new(bsdf.outputs['BSDF'], out.inputs['Surface'])
 
-    fr = _frame(nt, "Marble â€” Veined Stone", "pillar", x=-700, y=300)
+    fr = _frame(nt, "Marble — Veined Stone", "pillar", x=-700, y=300)
     for n in (out, bsdf, coord, noise, wave, add, ramp): n.parent = fr
     return mat
 
 
 def build_musical_water_material():
     """
-    MAGICAL LAYERED WATER â€” 5 stacked layers:
-      1. Depth-color gradient (deep blue â†’ cyan based on Z)
+    MAGICAL LAYERED WATER — 5 stacked layers:
+      1. Depth-color gradient (deep blue → cyan based on Z)
       2. 3-band sine ripples (low/mid/high freq, driven by harmonic params)
       3. Voronoi sparkles (twinkling pink highlights)
       4. Fresnel iridescence (purple rim color)
       5. Foam crests (white at wave peaks)
-    All layers tinted, mixed, and bumped â€” harmonic params drive ripple frequencies.
+    All layers tinted, mixed, and bumped — harmonic params drive ripple frequencies.
     """
     name = MAT_NAMES['WATER']
     mat = bpy.data.materials.get(name) or bpy.data.materials.new(name)
@@ -509,7 +510,7 @@ def build_musical_water_material():
     cr2.elements[1].position = 1.0; cr2.elements[1].color = (0.7, 0.95, 1.0, 1.0)
     nt.links.new(norm_waves.outputs['Result'], wave_color.inputs['Fac'])
 
-    # Layer 1 + Layer 2 â†’ overlay mix
+    # Layer 1 + Layer 2 → overlay mix
     mix_dw = nt.nodes.new('ShaderNodeMixRGB'); mix_dw.location = (250, 0)
     mix_dw.blend_type = 'OVERLAY'; mix_dw.inputs['Fac'].default_value = 0.6
     _color_shader_node(mix_dw, "deform")
@@ -569,7 +570,7 @@ def build_musical_water_material():
     nt.links.new(mix_fr.outputs['Color'], mix_foam.inputs['Color1'])
     nt.links.new(foam_ramp.outputs['Color'], mix_foam.inputs['Color2'])
 
-    # Final â†’ BSDF
+    # Final → BSDF
     nt.links.new(mix_foam.outputs['Color'], bsdf.inputs['Base Color'])
     if 'Emission Color' in bsdf.inputs:
         nt.links.new(mix_foam.outputs['Color'], bsdf.inputs['Emission Color'])
@@ -583,7 +584,7 @@ def build_musical_water_material():
 
     nt.links.new(bsdf.outputs['BSDF'], out.inputs['Surface'])
 
-    fr = _frame(nt, "Magical Layered Water â€” 5 layers (depth + 3 sine bands + sparkle + fresnel + foam)",
+    fr = _frame(nt, "Magical Layered Water — 5 layers (depth + 3 sine bands + sparkle + fresnel + foam)",
                 "music", x=-1900, y=950)
     for n in (out, bsdf, coord, sep, geom, sep_g, freq_a, freq_b, freq_c, phase,
               depth_norm, depth_ramp, sx_a, sy_b, sd_c, xy_add, sum_xy, sum_all,
@@ -594,7 +595,7 @@ def build_musical_water_material():
 
 
 def build_stained_glass_material():
-    """Stained glass â€” Voronoi cells in jewel tones, perfect for rose windows."""
+    """Stained glass — Voronoi cells in jewel tones, perfect for rose windows."""
     name = MAT_NAMES['STAINED']
     mat = bpy.data.materials.get(name) or bpy.data.materials.new(name)
     mat.use_nodes = True
@@ -617,7 +618,7 @@ def build_stained_glass_material():
     voronoi.inputs['Scale'].default_value = 6.0
     nt.links.new(coord.outputs['Generated'], voronoi.inputs['Vector'])
 
-    # Color the cells â€” use position output to offset hue
+    # Color the cells — use position output to offset hue
     ramp = nt.nodes.new('ShaderNodeValToRGB'); ramp.location = (-150, -100)
     _color_shader_node(ramp, "ornament")
     # Add jewel-tone color stops
@@ -634,13 +635,13 @@ def build_stained_glass_material():
     nt.links.new(ramp.outputs['Color'], bsdf.inputs['Emission Color'])
     nt.links.new(bsdf.outputs['BSDF'], out.inputs['Surface'])
 
-    fr = _frame(nt, "Stained Glass â€” Jewel-Tone Voronoi", "tracery", x=-800, y=300)
+    fr = _frame(nt, "Stained Glass — Jewel-Tone Voronoi", "tracery", x=-800, y=300)
     for n in (out, bsdf, coord, voronoi, ramp): n.parent = fr
     return mat
 
 
 def build_iridescent_material():
-    """Iridescent metal for railings/ornaments â€” Layer Weight + color gradient."""
+    """Iridescent metal for railings/ornaments — Layer Weight + color gradient."""
     name = MAT_NAMES['IRIDESCENT']
     mat = bpy.data.materials.get(name) or bpy.data.materials.new(name)
     mat.use_nodes = True
@@ -684,7 +685,7 @@ def build_gold_material():
         **{'Base Color': MATERIAL_PALETTE['GOLD']},
         Metallic=1.0, Roughness=0.25)
     nt.links.new(bsdf.outputs['BSDF'], out.inputs['Surface'])
-    fr = _frame(nt, "Gold â€” Warm Metal", "ornament", x=100, y=200)
+    fr = _frame(nt, "Gold — Warm Metal", "ornament", x=100, y=200)
     for n in (out, bsdf): n.parent = fr
     return mat
 
@@ -711,7 +712,7 @@ def build_clef_glow_material():
     nt.links.new(pulse.outputs[0], bsdf.inputs['Emission Strength'])
 
     nt.links.new(bsdf.outputs['BSDF'], out.inputs['Surface'])
-    fr = _frame(nt, "Clef Glow â€” Musical Emissive", "music", x=0, y=200)
+    fr = _frame(nt, "Clef Glow — Musical Emissive", "music", x=0, y=200)
     for n in (out, bsdf, pulse): n.parent = fr
     return mat
 
@@ -719,11 +720,11 @@ def build_clef_glow_material():
 def build_genshin_material():
     """
     Genshin-Impact-inspired toon shader:
-      â€¢ Soft 3-step cel-shading on diffuse
-      â€¢ Pastel base color
-      â€¢ Fresnel rim light (anime glow)
-      â€¢ Subtle gradient between two tints
-      â€¢ Slight emissive lift in shadows for that "always lit" Genshin feel
+      • Soft 3-step cel-shading on diffuse
+      • Pastel base color
+      • Fresnel rim light (anime glow)
+      • Subtle gradient between two tints
+      • Slight emissive lift in shadows for that "always lit" Genshin feel
     """
     name = MAT_NAMES['GENSHIN']
     mat = bpy.data.materials.get(name) or bpy.data.materials.new(name)
@@ -739,7 +740,7 @@ def build_genshin_material():
     if 'Emission Strength' in bsdf.inputs:
         bsdf.inputs['Emission Strength'].default_value = 0.4
 
-    # Layer Weight for cel-shading  (facing â†’ mid â†’ grazing)
+    # Layer Weight for cel-shading  (facing → mid → grazing)
     lw = nt.nodes.new('ShaderNodeLayerWeight'); lw.location = (-200, 200)
     lw.inputs['Blend'].default_value = 0.4
     _color_shader_node(lw, "genshin")
@@ -788,14 +789,14 @@ def build_genshin_material():
     nt.links.new(mix_tint.outputs['Color'], rim_add.inputs['Color1'])
     nt.links.new(rim_mul.outputs['Color'], rim_add.inputs['Color2'])
 
-    # Final â†’ BSDF base + emission (so shadows still glow softly)
+    # Final → BSDF base + emission (so shadows still glow softly)
     nt.links.new(rim_add.outputs['Color'], bsdf.inputs['Base Color'])
     if 'Emission Color' in bsdf.inputs:
         nt.links.new(rim_mul.outputs['Color'], bsdf.inputs['Emission Color'])
 
     nt.links.new(bsdf.outputs['BSDF'], out.inputs['Surface'])
 
-    fr = _frame(nt, "Genshin Toon â€” cel-shaded, pastel, Fresnel-rim", "genshin", x=-300, y=350)
+    fr = _frame(nt, "Genshin Toon — cel-shaded, pastel, Fresnel-rim", "genshin", x=-300, y=350)
     for n in (out, bsdf, lw, cel_ramp, tint, mix_tint, fres, rim_color, rim_mul, rim_add):
         n.parent = fr
     return mat
@@ -821,13 +822,13 @@ def build_gothic_dark_material():
     nt.links.new(noise.outputs['Fac'], bump.inputs['Height'])
     nt.links.new(bump.outputs['Normal'], bsdf.inputs['Normal'])
     nt.links.new(bsdf.outputs['BSDF'], out.inputs['Surface'])
-    fr = _frame(nt, "Gothic Dark â€” Worn Stone", "gothic", x=-100, y=200)
+    fr = _frame(nt, "Gothic Dark — Worn Stone", "gothic", x=-100, y=200)
     for n in (out, bsdf, noise, bump): n.parent = fr
     return mat
 
 
 # ----------------------------------------------------------------------
-# WORLD SHADER  â€”  day/night sky synced to time-of-day prop
+# WORLD SHADER  —  day/night sky synced to time-of-day prop
 # ----------------------------------------------------------------------
 
 def build_world_shader():
@@ -846,7 +847,7 @@ def build_world_shader():
     sky.sun_elevation = math.radians(40)  # default mid-day
     sky.turbidity = 2.5
 
-    # Night color â€” RGB node so user can re-tint
+    # Night color — RGB node so user can re-tint
     night = nt.nodes.new('ShaderNodeRGB'); night.location = (-200, -200); night.label = "Night Color"
     _color_shader_node(night, "ornament")
     night.outputs[0].default_value = (0.02, 0.04, 0.10, 1.0)
@@ -865,7 +866,7 @@ def build_world_shader():
     nt.links.new(mix.outputs['Result'], bg.inputs['Color'])
     nt.links.new(bg.outputs['Background'], out.inputs['Surface'])
 
-    fr = _frame(nt, "Day / Night Sky â€” Time of Day Mix", "music", x=-300, y=400)
+    fr = _frame(nt, "Day / Night Sky — Time of Day Mix", "music", x=-300, y=400)
     for n in (out, bg, sky, night, tod, mix): n.parent = fr
     return world
 
@@ -996,28 +997,28 @@ DEFAULT_MATERIAL_FOR_TYPE = {
     'WALL_MULTI_WINDOW':  'STONE',
     'WALL_ARCHED_WINDOW': 'STONE',
     'WALL_BAY_WINDOW':    'STONE',
-    # v2.55 â€” Curved Rooms
+    # v2.55 — Curved Rooms
     'GB_ROOM_CIRCULAR': 'STONE',  'GB_ROOM_APSIDAL':   'STONE',
     'GB_CORRIDOR_ARC':  'STONE',  'GB_ROOM_ROTUNDA':   'STONE',
     'GB_CORRIDOR_ARC_CROSS': 'STONE',
-    # v2.53 â€” Lebbeus Woods
+    # v2.53 — Lebbeus Woods
     'GB_WOODS_PARASITE':   'STONE',  'GB_WOODS_FREESPACE':  'STONE',
     'GB_WOODS_RIBS':       'STONE',  'GB_WOODS_HARPSICHORD':'STONE',
     'GB_WOODS_WAR_SCAR':   'STONE',
-    # v2.53 â€” David Umemoto
+    # v2.53 — David Umemoto
     'GB_UMEMOTO_TERRACE':  'STONE',  'GB_UMEMOTO_VAULT':    'STONE',
     'GB_UMEMOTO_LATTICE':  'STONE',  'GB_UMEMOTO_FORTRESS': 'STONE',
-    # v2.52 â€” Higgsas
+    # v2.52 — Higgsas
     'HIGG_SURFACE_WALL': 'STONE',
     'HIGG_COLONNADE':    'MARBLE',
-    # v2.52 â€” Escher greybox
+    # v2.52 — Escher greybox
     'GB_ESCHER_RELATIVITY':    'STONE',
     'GB_ESCHER_PENROSE_LOOP':  'STONE',
     'GB_ESCHER_GRAVITY_SHIFT': 'STONE',
     'GB_ESCHER_BELVEDERE':     'MARBLE',
     'GB_ESCHER_WATERFALL':     'STONE',
     'GB_ESCHER_RECURSIVE':     'STONE',
-    # v2.52 â€” extended greybox
+    # v2.52 — extended greybox
     'GB_CORRIDOR_BEND':   'STONE',
     'GB_CORRIDOR_CROSS':  'STONE',
     'GB_CORRIDOR_T':      'STONE',
@@ -1034,6 +1035,9 @@ DEFAULT_MATERIAL_FOR_TYPE = {
     'GB_ZEN_ROJI_STEP': 'STONE',
     'GB_ZEN_TORII_GATE': 'STONE',
     'GB_ZEN_TSUKUBAI': 'STONE',
+    'GB_ZEN_ENGAWA': 'WOOD',
+    'GB_ZEN_BAMBOO_FENCE': 'WOOD',
+    'GB_ZEN_TOBIISHI': 'STONE',
     # v2.51
     'WALL_RUINED':        'STONE',
     'ARCH_BROKEN':        'STONE',
@@ -1090,7 +1094,7 @@ def sync_world_drivers(world, obj):
         if n.type == 'TEX_SKY':
             try:
                 fc = n.driver_add("sun_elevation")
-                fc.driver.expression = "(tod / 24.0) * 3.14159 - 1.57"  # 0h=-Ï€/2, 12h=Ï€/2
+                fc.driver.expression = "(tod / 24.0) * 3.14159 - 1.57"  # 0h=-π/2, 12h=π/2
                 v = fc.driver.variables.new(); v.name = "tod"
                 v.targets[0].id_type = 'OBJECT'; v.targets[0].id = obj
                 v.targets[0].data_path = 'surreal_arch_props.time_of_day'
@@ -1113,7 +1117,7 @@ def sync_world_drivers(world, obj):
 class SurrealArchProperties(bpy.types.PropertyGroup):
     """All parameters for surreal architecture generation."""
 
-    # Real-time editing toggle â€” when ON, geometry regenerates on every prop change
+    # Real-time editing toggle — when ON, geometry regenerates on every prop change
     auto_update: bpy.props.BoolProperty(
         name="Auto Update",
         description="Regenerate geometry in real-time as parameters change",
@@ -1157,24 +1161,24 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
             ('RAILING',   "Railing",     "Parametric railing with balusters"),
             ('STAIRCASE', "Staircase",   "Spiral / straight stairs"),
             ('ARCH',      "Arch",        "Surreal ornate arch"),
-            ('BUTTRESS',  "Buttress",    "~4 m flying buttress â€” arched brace transferring wall thrust to pier"),
-            ('BUILDING',  "Building",    "~5 m hero composite â€” surreal tower + railings + arches landmark"),
+            ('BUTTRESS',  "Buttress",    "~4 m flying buttress — arched brace transferring wall thrust to pier"),
+            ('BUILDING',  "Building",    "~5 m hero composite — surreal tower + railings + arches landmark"),
             ('PENROSE',   "Penrose Stairs", "M.C. Escher impossible stairs (square loop)"),
             ('PILLAR',    "Pillar",      "Classical fluted column with capital + base"),
-            ('DOME',      "Dome",        "~3 m ribbed hemispherical dome â€” radial ribs, pendentives + optional spire"),
+            ('DOME',      "Dome",        "~3 m ribbed hemispherical dome — radial ribs, pendentives + optional spire"),
             ('CRENEL',    "Crenellation","Castle battlements / merlons"),
             ('FRACTAL',   "Fractal Tower","Self-similar recursive tower stack"),
             ('TREBLE_CLEF', "Treble Clef",   "Decorative G-clef ornament"),
             ('NOTE_HEAD',   "Note Head",     "Musical note head (whole/half/quarter) with optional stem"),
             ('STAFF',       "Music Staff",   "Five-line staff with arrayed notes"),
-            ('GOTHIC_ARCH', "Gothic Arch",   "~2 m pointed portal arch â€” twin intersecting arcs with frame thickness"),
-            ('TREFOIL',     "Trefoil",       "~1 m trefoil tracery panel â€” three-lobed clover Gothic opening"),
-            ('ROSE_WINDOW', "Rose Window",   "~3 m radial window â€” stained-glass petal spokes (count = time signature)"),
-            ('LANCET',      "Lancet Window", "~1Ã—4.5 m pointed window â€” tall slender light, array side-by-side"),
-            ('OGEE_ARCH',   "Ogee Arch (Venetian)", "~2 m Venetian S-curve arch â€” inflected ogee profile + optional finial"),
-            ('BIFORA',      "Bifora",       "~1.5 m paired lancets â€” twin pointed lights + central colonnette + quatrefoil"),
-            ('CUSPED_ARCH', "Cusped Arch",  "~2 m foiled pointed arch â€” multi-lobed cusps on interior edge"),
-            ('PALAZZO',     "Palazzo (Venetian)", "~14 m Venetian facade â€” ground arcade + bifora piano nobile + cornice"),
+            ('GOTHIC_ARCH', "Gothic Arch",   "~2 m pointed portal arch — twin intersecting arcs with frame thickness"),
+            ('TREFOIL',     "Trefoil",       "~1 m trefoil tracery panel — three-lobed clover Gothic opening"),
+            ('ROSE_WINDOW', "Rose Window",   "~3 m radial window — stained-glass petal spokes (count = time signature)"),
+            ('LANCET',      "Lancet Window", "~1×4.5 m pointed window — tall slender light, array side-by-side"),
+            ('OGEE_ARCH',   "Ogee Arch (Venetian)", "~2 m Venetian S-curve arch — inflected ogee profile + optional finial"),
+            ('BIFORA',      "Bifora",       "~1.5 m paired lancets — twin pointed lights + central colonnette + quatrefoil"),
+            ('CUSPED_ARCH', "Cusped Arch",  "~2 m foiled pointed arch — multi-lobed cusps on interior edge"),
+            ('PALAZZO',     "Palazzo (Venetian)", "~14 m Venetian facade — ground arcade + bifora piano nobile + cornice"),
             ('BRICK_WALL',  "Brick Wall",   "Staggered brick masonry pattern"),
             ('BRIDGE',      "Venetian Bridge", "Multi-arch bridge (Rialto-style) over a span"),
             ('ESCHER_PATH', "Escher Path",  "Curving impossible-loop walkway with arch supports"),
@@ -1182,189 +1186,197 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
             ('DOOR',        "Door",         "Doorway opening with arch top"),
             ('BALCONY',     "Balcony",      "Small platform with railings"),
             ('CORNICE',     "Cornice",      "Decorative horizontal molding strip"),
-            ('FOUNTAIN',    "Fountain",     "~3 m tiered courtyard fountain â€” stacked bowls + central column"),
+            ('FOUNTAIN',    "Fountain",     "~3 m tiered courtyard fountain — stacked bowls + central column"),
             ('FLOOR_TILE',  "Floor Tile",   "Decorative tile (instanceable)"),
             ('ROOF_TILES',  "Roof Tiles",   "Overlapping curved tiles on a slope"),
             ('LANTERN',     "Lantern Post", "Venetian-style lamppost"),
-            ('SPLINE_INSTANCE', "ðŸŒ€ Instance to Spline", "Array a chosen piece along a curve in the scene"),
-            ('RADIAL_ARRAY',    "ðŸŽ¯ Radial Array",       "Array a piece radially around a center axis (snaps to tower edges)"),
-            ('TESSELLATION',    "ðŸ¦ Escher Tessellation", "Interlocking tile pattern (M.C. Escher Circle Limit / metamorphosis)"),
-            ('HYPERBOLIC',      "âšª Hyperbolic Disk",      "PoincarÃ© disk projection â€” geodesics bending toward edge (Escher Circle Limit III)"),
-            ('SHEET_MUSIC_RAIL', "ðŸŽ¼ Sheet Music Railing", "Railing built as a 5-line musical staff with note heads and bar lines"),
+            ('SPLINE_INSTANCE', "🌀 Instance to Spline", "Array a chosen piece along a curve in the scene"),
+            ('RADIAL_ARRAY',    "🎯 Radial Array",       "Array a piece radially around a center axis (snaps to tower edges)"),
+            ('TESSELLATION',    "🐦 Escher Tessellation", "Interlocking tile pattern (M.C. Escher Circle Limit / metamorphosis)"),
+            ('HYPERBOLIC',      "⚪ Hyperbolic Disk",      "Poincaré disk projection — geodesics bending toward edge (Escher Circle Limit III)"),
+            ('SHEET_MUSIC_RAIL', "🎼 Sheet Music Railing", "Railing built as a 5-line musical staff with note heads and bar lines"),
             # === Level Design / Greybox modular pieces ===
-            ('WALL_STRAIGHT',   "ðŸ§± Wall Straight",      "Standard wall segment (snaps to unit grid)"),
-            ('WALL_CORNER',     "ðŸ“ Wall Corner",        "90Â° corner wall piece"),
-            ('WALL_DOOR',       "ðŸšª Wall + Door",        "Wall containing a doorway opening"),
-            ('WALL_WINDOW',     "ðŸªŸ Wall + Window",      "Wall containing a window opening"),
-            ('CEILING_TILE',    "â¬› Ceiling Tile",       "Ceiling matching the floor unit"),
-            ('CORNER_PIECE',    "ðŸ› Corner Pillar",      "Decorative corner column (modular snap)"),
+            ('WALL_STRAIGHT',   "🧱 Wall Straight",      "Standard wall segment (snaps to unit grid)"),
+            ('WALL_CORNER',     "📐 Wall Corner",        "90° corner wall piece"),
+            ('WALL_DOOR',       "🚪 Wall + Door",        "Wall containing a doorway opening"),
+            ('WALL_WINDOW',     "🪟 Wall + Window",      "Wall containing a window opening"),
+            ('CEILING_TILE',    "⬛ Ceiling Tile",       "Ceiling matching the floor unit"),
+            ('CORNER_PIECE',    "🏛 Corner Pillar",      "Decorative corner column (modular snap)"),
             # === Escher modular structures ===
-            ('CASCADING_BEAMS', "ðŸŒŠ Cascading Beams",    "Erindale-style recursive parallel beams"),
-            ('MODULAR_HOUSE',   "ðŸ  Modular House",      "~8 m unit-grid cottage â€” 4 walls + roof + door + window cuts"),
-            ('CURVED_BUILDING', "ðŸŒ™ Curved Building",    "~12 m arc palazzo â€” facade + arcade bent along Bezier curve"),
-            ('RADIAL_BUILDING', "ðŸ”„ Radial Building",    "~10 m dia. round palazzo â€” arches ring around center axis"),
-            # === ðŸµ Zen architecture ===
-            ('ZEN_PAGODA',       "ðŸ¯ Pagoda",            "Multi-tier Japanese pagoda with curved roofs"),
-            ('ZEN_TORII',        "â›© Torii Gate",        "Japanese torii gate"),
-            ('ZEN_SHOJI',        "ðŸŽ‹ Shoji Screen",      "Paper screen with adjustable lattice grid"),
-            ('ZEN_LANTERN',      "ðŸ® Stone Lantern",     "Toro stone lantern with capped roof"),
-            ('ZEN_TEAHOUSE',     "ðŸµ Tea House",         "Small Zen pavilion with curved roof"),
-            ('ZEN_BRIDGE',       "ðŸŒŠ Garden Bridge",     "Curved Japanese garden bridge"),
-            ('ZEN_STONE_GARDEN', "ðŸª¨ Stone Garden",      "Raked sand with arranged stones"),
+            ('CASCADING_BEAMS', "🌊 Cascading Beams",    "Erindale-style recursive parallel beams"),
+            ('MODULAR_HOUSE',   "🏠 Modular House",      "~8 m unit-grid cottage — 4 walls + roof + door + window cuts"),
+            ('CURVED_BUILDING', "🌙 Curved Building",    "~12 m arc palazzo — facade + arcade bent along Bezier curve"),
+            ('RADIAL_BUILDING', "🔄 Radial Building",    "~10 m dia. round palazzo — arches ring around center axis"),
+            # === 🍵 Zen architecture ===
+            ('ZEN_PAGODA',       "🏯 Pagoda",            "Multi-tier Japanese pagoda with curved roofs"),
+            ('ZEN_TORII',        "⛩ Torii Gate",        "Japanese torii gate"),
+            ('ZEN_SHOJI',        "🎋 Shoji Screen",      "Paper screen with adjustable lattice grid"),
+            ('ZEN_LANTERN',      "🏮 Stone Lantern",     "Toro stone lantern with capped roof"),
+            ('ZEN_TEAHOUSE',     "🍵 Tea House",         "Small Zen pavilion with curved roof"),
+            ('ZEN_BRIDGE',       "🌊 Garden Bridge",     "Curved Japanese garden bridge"),
+            ('ZEN_STONE_GARDEN', "🪨 Stone Garden",      "Raked sand with arranged stones"),
             # ===== Baroque / Classical (v2.58) =====
-            ('BAROQUE_VAULT',       "ðŸ› Baroque Vault",       "Barrel, groin, or ribbed vault ceiling"),
-            ('BAROQUE_FACADE',      "ðŸ› Baroque Facade",      "~14 m seven-bay facade â€” pilaster rhythm, piano nobile windows"),
-            ('BAROQUE_NICHE',       "ðŸ› Baroque Niche",       "Recessed aedicula niche in wall plane"),
-            ('BAROQUE_BALUSTRADE',  "ðŸ› Baroque Balustrade",  "Baluster railing with handrail"),
-            # ===== ðŸ‡¨ðŸ‡³ Chinese traditional architecture =====
-            ('CN_DOUGONG',       "ðŸ› Dougong æ–—æ ±",       "Chinese bracket-set cluster (cap-block + radial arms + tiers)"),
-            ('CN_TIERED_PAGODA', "ðŸ›• Chinese Pagoda å¡”",  "Multi-tier Chinese pagoda â€” flared eaves, octagonal plan, finial spire"),
-            # ===== ðŸ‡°ðŸ‡· Korean traditional architecture =====
-            ('KR_HANOK',         "ðŸ˜ Korean Hanok í•œì˜¥",  "Elevated single-story hanok with low-pitched gable roof + ondol platform"),
-            # ===== ðŸ° Castle / city piece library (v2.23) =====
-            ('WATCHTOWER',       "ðŸ—¼ Watchtower",        "Corner watchtower: shaft + machicolation + conical roof"),
-            ('GATEHOUSE',        "ðŸ› Gatehouse",         "Twin-tower gatehouse with arched portcullis between"),
-            ('KEEP',             "ðŸ¯ Keep / Donjon",     "Central rectangular keep with battlements + corner turrets"),
-            ('CURTAIN_WALL',     "ðŸ§± Curtain Wall",      "Crenellated curtain-wall section with battlement walkway"),
-            ('CURVED_WALL',      "ðŸŒ™ Curved Wall",       "Bezier arc wall with swept cross-section + optional crenellations"),
-            # ===== ðŸ“¦ Greybox / level-design library (v2.49) =====
-            ('GREYBOX_ROOM',     "ðŸ“¦ Greybox Room",      "Parametric room shell: floor + 4 walls + door cuts + optional ceiling"),
-            ('GREYBOX_CORRIDOR', "ðŸ“¦ Greybox Corridor",  "Tileable corridor: floor + side walls + ceiling + pilaster ribs"),
-            ('GREYBOX_RAMP',     "ðŸ“¦ Greybox Ramp",      "Parametric inclined ramp with side curbs"),
-            ('GREYBOX_PLATFORM', "ðŸ“¦ Greybox Platform",  "Raised mezzanine on corner legs + safety railing"),
-            ('GREYBOX_COVER',    "ðŸ“¦ Greybox Cover",     "Shooter cover block (waist/full height) with lip + foot"),
-            ('GREYBOX_CATWALK',  "ðŸ“¦ Greybox Catwalk",   "Industrial walkway: grated deck + posts + railings"),
-            ('GREYBOX_PILLAR_HALL',"ðŸ“¦ Greybox Pillar Hall","Hypostyle hall: column grid + floor + roof slab â€” sci-fi atrium / civic hall blockout"),
-            ('GREYBOX_STAIR_BLOCK',"ðŸ“¦ Greybox Stair Block","Solid blockout stair + stringer walls + top landing + optional back-wall door boolean"),
-            ('GREYBOX_DOORWAY',  "ðŸ“¦ Greybox Doorway",   "Freestanding portal frame with boolean door cut + trim"),
-            ('GREYBOX_ARENA',    "ðŸ“¦ Greybox Arena",     "~28 m dia. tiered amphitheater â€” town square / combat bowl blockout"),
-            ('GREYBOX_TOWER',    "ðŸ“¦ Greybox Tower",     "Multi-floor tower shell + internal slabs + window cuts"),
-            ('GREYBOX_PIPE_RUN', "ðŸ“¦ Greybox Pipe Run",  "Sci-fi bent pipe run with flange rings at joints"),
-            ('BARBICAN',         "ðŸ›¡ Barbican",          "Outer fortified gatehouse with two flanking towers"),
-            ('DRAWBRIDGE',       "ðŸŒ‰ Drawbridge",        "Hinged drawbridge with chains and frame"),
-            ('STONE_BRIDGE',     "ðŸŒ‰ Stone Bridge",      "Multi-arch stone bridge with railings"),
-            ('WINDMILL',         "ðŸŒ¬ Windmill",          "Tower windmill with rotating blades and cap"),
-            ('CHAPEL',           "â›ª Chapel",            "Small church with single bell tower + arched windows"),
-            ('VILLAGE_WELL',     "ðŸª£ Village Well",      "Stone village well with bucket + roof shelter"),
-            ('MARKET_STALL',     "ðŸª Market Stall",      "Merchant stall with awning + counter + hanging sign"),
-            ('OBELISK',          "ðŸ—¿ Obelisk",           "Tall narrow stone obelisk monument with pyramidion top"),
-            # ===== ðŸ˜ Town & civic library (v2.24) =====
-            ('TOWN_HOUSE',       "ðŸ  Tudor Town House",  "Multi-story timber-frame town house with overhanging upper floor"),
-            ('TAVERN',           "ðŸº Tavern / Inn",      "Half-timber tavern with hanging sign + chimney"),
-            ('BLACKSMITH',       "ðŸ›  Blacksmith Forge",  "Forge building with chimney, anvil, and open front"),
-            ('STABLE',           "ðŸ´ Stable",            "Long low building with row of stall doors"),
-            ('BELL_TOWER',       "ðŸ”” Bell Tower",        "Standalone stone bell tower (campanile) with louvres + cap"),
-            ('MONASTERY',        "â›ª Monastery Cloister", "~20 m square cloister â€” four colonnade wings, court floor Z=0"),
-            ('WATERMILL',        "ðŸ’§ Watermill",         "Water-driven mill with side waterwheel"),
-            ('LIGHTHOUSE',       "ðŸ—¼ Lighthouse",        "Tall tapered maritime tower with lantern room + gallery"),
-            # ===== ðŸŒ Asian piece library expansion (v2.24) =====
-            ('CN_MOON_GATE',     "ðŸŒ• Moon Gate æœˆäº®é—¨",   "Circular Chinese garden doorway in a wall"),
-            ('CN_PAILOU',        "â›© Pailou ç‰Œæ¥¼",        "Chinese memorial archway with multiple roof tiers"),
-            # ===== ðŸ› Civic ornament (v2.24) =====
-            ('STREET_LAMP',      "ðŸ® Street Lamp",       "Period street lamp on tapered post with bracket"),
-            ('PUBLIC_FOUNTAIN',  "â›² Public Fountain",    "~5 m plaza centerpiece â€” triple basins + central spire"),
-            # ===== ðŸŒ Asian library expansion (v2.25) =====
-            ('CN_TING_PAVILION', "ðŸ¯ Chinese Ting Pavilion","Hexagonal Chinese garden pavilion with curved roof"),
-            ('JP_KURA_STOREHOUSE',"ðŸš Japanese Kura è”µ",   "Whitewashed storehouse with thick walls + heavy door"),
-            ('KR_JANGSEUNG',     "ðŸ—¿ Korean Jangseung ìž¥ìŠ¹","Wooden guardian totem pole with carved face"),
-            ('KR_HONG_SAL_MUN',  "â›© Korean Hongsalmun í™ì‚´ë¬¸","Korean red-arrow gate with raised central pole"),
-            # ===== ðŸ› Civic / extra (v2.25) =====
-            ('TOWN_HALL',        "ðŸ› Town Hall",         "~14 m civic hall â€” clock tower + portico + bell stage"),
-            ('GUILD_HALL',       "ðŸ¯ Guild Hall",        "~12 m guild assembly â€” columned portico + heraldic banner"),
-            ('CRYPT_ENTRANCE',   "âš° Crypt Entrance",    "Sunken stairs descending to an arched doorway"),
-            ('WAYSIDE_SHRINE',   "ðŸ•¯ Wayside Shrine",    "~4 m Shinto/Buddhist honden â€” plinth, niche, peaked roof + finial"),
-            # ===== ðŸŒ³ Natural / landscape (v2.25) =====
-            ('STYLIZED_TREE',    "ðŸŒ³ Stylized Tree",     "Low-poly stylized tree with branches and foliage clusters"),
-            ('BOULDER_PILE',     "ðŸª¨ Boulder Pile",      "Cluster of irregular weathered boulders"),
-            # ===== ðŸ›¡ Decor (v2.25) =====
-            ('HERALDIC_BANNER',  "ðŸš© Heraldic Banner",   "Hanging banner / pennant on a pole"),
-            ('TORCH_SCONCE',     "ðŸ•¯ Torch Sconce",      "Wall-mounted iron torch holder with flame"),
+            ('BAROQUE_VAULT',       "🏛 Baroque Vault",       "Barrel, groin, or ribbed vault ceiling"),
+            ('BAROQUE_FACADE',      "🏛 Baroque Facade",      "~14 m seven-bay facade — pilaster rhythm, piano nobile windows"),
+            ('BAROQUE_NICHE',       "🏛 Baroque Niche",       "Recessed aedicula niche in wall plane"),
+            ('BAROQUE_BALUSTRADE',  "🏛 Baroque Balustrade",  "Baluster railing with handrail"),
+            # ===== 🇨🇳 Chinese traditional architecture =====
+            ('CN_DOUGONG',       "🏛 Dougong 斗栱",       "Chinese bracket-set cluster (cap-block + radial arms + tiers)"),
+            ('CN_TIERED_PAGODA', "🛕 Chinese Pagoda 塔",  "Multi-tier Chinese pagoda — flared eaves, octagonal plan, finial spire"),
+            # ===== 🇰🇷 Korean traditional architecture =====
+            ('KR_HANOK',         "🏘 Korean Hanok 핝옥",  "Elevated single-story hanok with low-pitched gable roof + ondol platform"),
+            # ===== 🏰 Castle / city piece library (v2.23) =====
+            ('WATCHTOWER',       "🗼 Watchtower",        "Corner watchtower: shaft + machicolation + conical roof"),
+            ('GATEHOUSE',        "🏛 Gatehouse",         "Twin-tower gatehouse with arched portcullis between"),
+            ('KEEP',             "🏯 Keep / Donjon",     "Central rectangular keep with battlements + corner turrets"),
+            ('CURTAIN_WALL',     "🧱 Curtain Wall",      "Crenellated curtain-wall section with battlement walkway"),
+            ('CURVED_WALL',      "🌙 Curved Wall",       "Bezier arc wall with swept cross-section + optional crenellations"),
+            # ===== 📦 Greybox / level-design library (v2.49) =====
+            ('GREYBOX_ROOM',     "📦 Greybox Room",      "Parametric room shell: floor + 4 walls + door cuts + optional ceiling"),
+            ('GREYBOX_CORRIDOR', "📦 Greybox Corridor",  "Tileable corridor: floor + side walls + ceiling + pilaster ribs"),
+            ('GREYBOX_RAMP',     "📦 Greybox Ramp",      "Parametric inclined ramp with side curbs"),
+            ('GREYBOX_PLATFORM', "📦 Greybox Platform",  "Raised mezzanine on corner legs + safety railing"),
+            ('GREYBOX_COVER',    "📦 Greybox Cover",     "Shooter cover block (waist/full height) with lip + foot"),
+            ('GREYBOX_CATWALK',  "📦 Greybox Catwalk",   "Industrial walkway: grated deck + posts + railings"),
+            ('GREYBOX_PILLAR_HALL',"📦 Greybox Pillar Hall","Hypostyle hall: column grid + floor + roof slab — sci-fi atrium / civic hall blockout"),
+            ('GREYBOX_STAIR_BLOCK',"📦 Greybox Stair Block","Solid blockout stair + stringer walls + top landing + optional back-wall door boolean"),
+            ('GREYBOX_DOORWAY',  "📦 Greybox Doorway",   "Freestanding portal frame with boolean door cut + trim"),
+            ('GREYBOX_ARENA',    "📦 Greybox Arena",     "~28 m dia. tiered amphitheater — town square / combat bowl blockout"),
+            ('GREYBOX_TOWER',    "📦 Greybox Tower",     "Multi-floor tower shell + internal slabs + window cuts"),
+            ('GREYBOX_PIPE_RUN', "📦 Greybox Pipe Run",  "Sci-fi bent pipe run with flange rings at joints"),
+            ('BARBICAN',         "🛡 Barbican",          "Outer fortified gatehouse with two flanking towers"),
+            ('DRAWBRIDGE',       "🌉 Drawbridge",        "Hinged drawbridge with chains and frame"),
+            ('STONE_BRIDGE',     "🌉 Stone Bridge",      "Multi-arch stone bridge with railings"),
+            ('WINDMILL',         "🌬 Windmill",          "Tower windmill with rotating blades and cap"),
+            ('CHAPEL',           "⛪ Chapel",            "Small church with single bell tower + arched windows"),
+            ('VILLAGE_WELL',     "🪣 Village Well",      "Stone village well with bucket + roof shelter"),
+            ('MARKET_STALL',     "🏪 Market Stall",      "Merchant stall with awning + counter + hanging sign"),
+            ('OBELISK',          "🗿 Obelisk",           "Tall narrow stone obelisk monument with pyramidion top"),
+            # ===== 🏘 Town & civic library (v2.24) =====
+            ('TOWN_HOUSE',       "🏠 Tudor Town House",  "Multi-story timber-frame town house with overhanging upper floor"),
+            ('TAVERN',           "🍺 Tavern / Inn",      "Half-timber tavern with hanging sign + chimney"),
+            ('BLACKSMITH',       "🛠 Blacksmith Forge",  "Forge building with chimney, anvil, and open front"),
+            ('STABLE',           "🐴 Stable",            "Long low building with row of stall doors"),
+            ('BELL_TOWER',       "🔔 Bell Tower",        "Standalone stone bell tower (campanile) with louvres + cap"),
+            ('MONASTERY',        "⛪ Monastery Cloister", "~20 m square cloister — four colonnade wings, court floor Z=0"),
+            ('WATERMILL',        "💧 Watermill",         "Water-driven mill with side waterwheel"),
+            ('LIGHTHOUSE',       "🗼 Lighthouse",        "Tall tapered maritime tower with lantern room + gallery"),
+            # ===== 🌏 Asian piece library expansion (v2.24) =====
+            ('CN_MOON_GATE',     "🌕 Moon Gate 月亮门",   "Circular Chinese garden doorway in a wall"),
+            ('CN_PAILOU',        "⛩ Pailou 牌楼",        "Chinese memorial archway with multiple roof tiers"),
+            # ===== 🏛 Civic ornament (v2.24) =====
+            ('STREET_LAMP',      "🏮 Street Lamp",       "Period street lamp on tapered post with bracket"),
+            ('PUBLIC_FOUNTAIN',  "⛲ Public Fountain",    "~5 m plaza centerpiece — triple basins + central spire"),
+            # ===== 🌏 Asian library expansion (v2.25) =====
+            ('CN_TING_PAVILION', "🏯 Chinese Ting Pavilion","Hexagonal Chinese garden pavilion with curved roof"),
+            ('JP_KURA_STOREHOUSE',"🏚 Japanese Kura 蔵",   "Whitewashed storehouse with thick walls + heavy door"),
+            ('KR_JANGSEUNG',     "🗿 Korean Jangseung 장승","Wooden guardian totem pole with carved face"),
+            ('KR_HONG_SAL_MUN',  "⛩ Korean Hongsalmun 홍살문","Korean red-arrow gate with raised central pole"),
+            # ===== 🏛 Civic / extra (v2.25) =====
+            ('TOWN_HALL',        "🏛 Town Hall",         "~14 m civic hall — clock tower + portico + bell stage"),
+            ('GUILD_HALL',       "🏯 Guild Hall",        "~12 m guild assembly — columned portico + heraldic banner"),
+            ('CRYPT_ENTRANCE',   "⚰ Crypt Entrance",    "Sunken stairs descending to an arched doorway"),
+            ('WAYSIDE_SHRINE',   "🕯 Wayside Shrine",    "~4 m Shinto/Buddhist honden — plinth, niche, peaked roof + finial"),
+            # ===== 🌳 Natural / landscape (v2.25) =====
+            ('STYLIZED_TREE',    "🌳 Stylized Tree",     "Low-poly stylized tree with branches and foliage clusters"),
+            ('BOULDER_PILE',     "🪨 Boulder Pile",      "Cluster of irregular weathered boulders"),
+            # ===== 🛡 Decor (v2.25) =====
+            ('HERALDIC_BANNER',  "🚩 Heraldic Banner",   "Hanging banner / pennant on a pole"),
+            ('TORCH_SCONCE',     "🕯 Torch Sconce",      "Wall-mounted iron torch holder with flame"),
             # === Advanced walls (with adjustable window grids) ===
-            ('WALL_MULTI_WINDOW',  "ðŸªŸ Wall (Multi-Pane)",  "Wall with grid of mullioned windows"),
-            ('WALL_ARCHED_WINDOW', "ðŸªŸ Wall (Arched)",       "Wall with arched-top window"),
-            ('WALL_BAY_WINDOW',    "ðŸªŸ Wall (Bay Window)",   "Wall with projecting bay window"),
-            # === âš— Advanced GN / Blender 5.1 showcase ===
-            ('RAYCAST_FACADE',    "ðŸªŸ Raycast Facade",     "Curtain wall with panel distribution via Raycast node"),
-            ('VOLUME_CLOUD',      "â˜ Volume Cloud Palace", "Puffy volumetric palace via Meshâ†’Volumeâ†’Mesh pipeline"),
-            ('GEODESIC_VORONOI',  "ðŸ”® Geodesic Voronoi Dome","Voronoi-tiled structural dome with Edge Angle + Named Attributes"),
-            ('DNA_HELIX',         "ðŸ§¬ DNA Helix Tower",    "Double helix tower with cross-rungs using Curve to Mesh"),
-            ('KLEIN_BOTTLE',      "âˆž Klein Bottle",        "Self-intersecting Klein bottle sculptural form"),
-            ('MOBIUS_CATHEDRAL',  "â™¾ MÃ¶bius Cathedral",   "Single-sided MÃ¶bius band cathedral"),
-            ('SEIFERT_SURFACE',   "ðŸŽ€ Seifert Surface",   "Trefoil knot Seifert surface (Milnor fibre)"),
-            ('FIELD_SCULPTURE',   "ðŸ§² Field Sculpture",   "Distance-field sculpture via Index of Nearest + Field at Index"),
-            ('WEAVE_SURFACE',     "ðŸ§¶ UV Weave Surface",  "Architectural weave using Sample UV Surface + Curve to Mesh"),
-            ('TESSELLATION_TOWER',"ðŸ”³ Tessellation Tower","Voronoi-extruded tessellation layers with Named Attributes"),
-            ('COSMIC_WEB',        "ðŸŒŒ Cosmic Web",        "Distribute Points in Volume + filament sweeps"),
-            ('SPIDERWEB_DOME',    "ðŸ•¸ Spider Web Dome",   "Radial spoke + ring dome from Curve to Mesh"),
-            ('AUTO_BUILDING',     "ðŸ¢ Auto Building",     "Parametric city block â€” residential/commercial/skyscraper style presets"),
-            # â”€â”€ v2.50 generators â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-            ('ARCHWAY_ADV', "ðŸ› Advanced Archway",  "~3 m structural portal â€” Roman/Gothic/Tudor/Moorish/Ogee styles"),
-            ('BRIDGE_ADV',  "ðŸŒ‰ Advanced Bridge",   "Multi-style bridge (Stone arch/Roman/Suspension/Truss/Covered/Beam)"),
-            ('FENCE',       "ðŸªµ Fence Generator",   "Multi-style fence / barrier (Picket/Iron/Ranch/Stone/Lattice/Bamboo/Modern)"),
-            # v2.55 â€” Curved Room greybox
-            ('GB_ROOM_CIRCULAR',  "â­• Circular Room",    "Full circular drum room with boolean door/window cuts"),
-            ('GB_ROOM_APSIDAL',   "â›ª Apsidal Room",     "~12Ã—28 m nave + semicircular apse â€” Roman basilica / cathedral plan"),
-            ('GB_CORRIDOR_ARC',   "ðŸŒ€ Arc Corridor",     "Curved hallway â€” inner wall boolean door + optional window cuts"),
-            ('GB_ROOM_ROTUNDA',   "ðŸ› Rotunda",          "~18 m dia. Pantheon-style drum â€” gallery + oculus dome cap"),
-            ('GB_CORRIDOR_ARC_CROSS',"âœ› Arc Cross",     "Four 90Â° arc arms at hub â€” inner-wall door + window booleans (v2.60 aligned)"),
-            # v2.53 â€” Lebbeus Woods greybox
-            ('GB_WOODS_PARASITE',   "ðŸš Parasite Structure",  "Angled parasitic volumes on host â€” optional host-facing door booleans (gb_door_n)"),
-            ('GB_WOODS_FREESPACE',  "ðŸš Freespace",           "Two volumes interpenetrating at angle â€” inhabitable void between them"),
-            ('GB_WOODS_RIBS',       "ðŸ¦´ Rib Cage Room",       "Room with exposed structural rib frames running floor-to-ceiling"),
-            ('GB_WOODS_HARPSICHORD',"ðŸ— Harpsichord Tower",   "Slender tower with angled blade fins at each level"),
-            ('GB_WOODS_WAR_SCAR',   "ðŸ’¥ War Scar",            "Building cross-section showing interior stratigraphic layers"),
-            # v2.53 â€” David Umemoto greybox
-            ('GB_UMEMOTO_TERRACE',  "ðŸ› Terraced Tower",      "Stacked receding floors, thick walls, deep window slots (Umemoto)"),
-            ('GB_UMEMOTO_VAULT',    "ðŸ¦ Vault Cluster",       "Grid of barrel-vaulted chambers with thick brutalist piers"),
-            ('GB_UMEMOTO_LATTICE',  "â–¦ Lattice Block",       "Solid block with regular grid of square through-openings"),
-            ('GB_UMEMOTO_FORTRESS', "ðŸ° Fortress Room",       "Monumental thick-walled room with deep niches and corner buttresses"),
-            # v2.52 â€” Higgsas-powered builders
-            ('HIGG_SURFACE_WALL', "ðŸ”Œ Higgsas Surface Wall",  "Brick/Hex/Voronoi/Cairo surface wall using NTBricks Grid"),
-            ('HIGG_COLONNADE',    "ðŸ› Higgsas Colonnade",     "Column row/ring using NTCircular Array or NTArray"),
-            # v2.52 â€” Escher Greybox
-            ('GB_ESCHER_RELATIVITY',   "ðŸªœ Relativity Room",    "Room with 3 gravity directions â€” floor/wall/ceiling staircases"),
-            ('GB_ESCHER_PENROSE_LOOP', "â™¾ Penrose Loop",        "Rooftop ring staircase that endlessly ascends and returns"),
-            ('GB_ESCHER_GRAVITY_SHIFT',"ðŸ”„ Gravity Shift",      "Corridor that rotates 90Â° â€” floor becomes a wall"),
-            ('GB_ESCHER_BELVEDERE',    "ðŸ› Belvedere",          "2-story loggia with cross-connected impossible columns"),
-            ('GB_ESCHER_WATERFALL',    "ðŸ’§ Waterfall Loop",     "Triangular aqueduct with impossible recirculating flow"),
-            ('GB_ESCHER_RECURSIVE',    "ðŸŒ€ Recursive Room",     "Nested concentric rooms with infinite regression feel"),
-            # v2.52 â€” Extended Greybox
-            ('GB_CORRIDOR_BEND',  "ðŸ“ Corridor Bend",       "90Â° L-shaped corridor with corner infill"),
-            ('GB_CORRIDOR_CROSS', "âœ› Corridor Cross",      "4-way cross intersection"),
-            ('GB_CORRIDOR_T',     "âŠ¤ Corridor T-Junction", "T-junction â€” main hall + side arm"),
-            ('GB_ROOM_COMPOSITE', "ðŸ  Composite Room",     "Multi-shape room (L/T/U/rectangle) with windows"),
-            ('GB_ELEVATOR_SHAFT', "ðŸ›— Elevator Shaft",     "Vertical shaft â€” landings, S-wall doors, optional N/E/W window booleans"),
-            ('GB_COMBAT_ROOM',    "ðŸŽ¯ Combat Room",        "FPS tactical room with cover blocks and elevated area"),
-            ('GB_CORRIDOR_REC',   "ðŸŒ¿ Recursive Corridor", "Branching corridor tree with configurable depth"),
-            ('GB_CORRIDOR_DOOR_END', "ðŸšª Corridor Door End", "Tileable corridor stub + end-wall door boolean + recess trim"),
-            ('GB_GOTHIC_PORTAL', "â›ª Gothic Portal", "Pointed-arch doorway with recess trim + snap"),
-            ('GB_GOTHIC_BAY', "â›ª Gothic Bay", "Nave bay wall + lancet boolean + window reveals"),
-            ('GB_GOTHIC_BUTTRESS', "â›ª Gothic Buttress", "Engaged buttress kit piece with wall snap"),
-            ('GB_GOTHIC_TRACERY_PANEL', "â›ª Tracery Panel", "Flat tracery panel with petal voids for trim sheets"),
-            ('GB_CORRIDOR_OFFSET', "ðŸ“ Corridor Offset", "Tileable corridor â€” recessed wall panels + floor ledge trim"),
-            ('GB_ROMANESQUE_ARCADE', "ðŸ› Romanesque Arcade", "Round-arch bay with colonette, impost block, barrel vault"),
-            ('GB_ROMANESQUE_APSE', "ðŸ› Romanesque Apse", "Semicircular choir apse with recess shell â€” bay termination"),
-            ('GB_BRUTALIST_PANEL_WALL', "ðŸ— Brutalist Panel Wall", "Pilaster rhythm + recess panels â€” trim-sheet wall module"),
-            ('GB_VENETIAN_LOGGIA', "ðŸ‡®ðŸ‡¹ Venetian Loggia Bay", "Bifora void rhythm + cornice shelf â€” greybox loggia module"),
-            ('GB_SCIFI_PRESSURE_DOOR', "ðŸš€ Sci-Fi Pressure Door", "Gasket ring recess + frame offset + MUST_CONNECT door snap"),
-            ('GB_ZEN_ROJI_STEP', "ðŸµ Zen Roji Step", "Dew-path stone segment — edge trim + path snaps"),
-            ('GB_ZEN_TORII_GATE', "â›© Zen Torii Gate", "Modular torii greybox — hashira/nuki/kasagi + gate snap"),
-            ('GB_ZEN_TSUKUBAI', "ðŸª¨ Zen Tsukubai", "Stone water basin pad — recess bowl + flagstones"),
-            # v2.51 â€” Ruins
-            ('WALL_RUINED',     "ðŸš Ruined Wall",        "Stone wall with crumbled top and rubble scatter"),
-            ('ARCH_BROKEN',     "ðŸš Broken Arch",        "Arch with missing ring section and fallen keystone"),
-            ('COLLAPSED_FLOOR', "ðŸš Collapsed Floor",    "Angled slab with exposed beams and rubble slide"),
-            # v2.51 â€” Modular frames & structural
-            ('DOOR_FRAME',      "ðŸšª Door Frame",         "Standalone door frame with jambs, lintel, sill and optional arch cap"),
-            ('WINDOW_FRAME',    "ðŸªŸ Window Frame",       "Standalone window frame with sill, mullion or shutters"),
-            ('WALL_T_JOIN',     "ðŸ§± T-Join Wall",        "T-intersection wall module â€” the missing modular kit piece"),
-            ('WALL_ARROW_SLITS',"ðŸ° Arrow Slit Wall",   "Castle wall with cross-shaped arrow slits and battlements"),
-            ('RETAINING_WALL',  "ðŸª¨ Retaining Wall",    "Stepped battered retaining wall â€” terrain seam piece"),
-            # v2.51 â€” Environment props
-            ('BARREL_STACK',    "ðŸª£ Barrel Stack",       "2-3 wooden barrels with hoop rings"),
-            ('CRATE_PILE',      "ðŸ“¦ Crate Pile",         "Stack of wooden crates with scatter and plank lines"),
-            ('CAMPFIRE',        "ðŸ”¥ Campfire",           "Radial log pile with stone ring and flame stand-in"),
-            ('HALF_TIMBER_WALL',"ðŸ  Half-Timber Wall",  "Tudor X-brace timber wall panel with plaster infill"),
+            ('WALL_MULTI_WINDOW',  "🪟 Wall (Multi-Pane)",  "Wall with grid of mullioned windows"),
+            ('WALL_ARCHED_WINDOW', "🪟 Wall (Arched)",       "Wall with arched-top window"),
+            ('WALL_BAY_WINDOW',    "🪟 Wall (Bay Window)",   "Wall with projecting bay window"),
+            # === ⚗ Advanced GN / Blender 5.1 showcase ===
+            ('RAYCAST_FACADE',    "🪟 Raycast Facade",     "Curtain wall with panel distribution via Raycast node"),
+            ('VOLUME_CLOUD',      "☁ Volume Cloud Palace", "Puffy volumetric palace via Mesh→Volume→Mesh pipeline"),
+            ('GEODESIC_VORONOI',  "🔮 Geodesic Voronoi Dome","Voronoi-tiled structural dome with Edge Angle + Named Attributes"),
+            ('DNA_HELIX',         "🧬 DNA Helix Tower",    "Double helix tower with cross-rungs using Curve to Mesh"),
+            ('KLEIN_BOTTLE',      "∞ Klein Bottle",        "Self-intersecting Klein bottle sculptural form"),
+            ('MOBIUS_CATHEDRAL',  "♾ Möbius Cathedral",   "Single-sided Möbius band cathedral"),
+            ('SEIFERT_SURFACE',   "🎀 Seifert Surface",   "Trefoil knot Seifert surface (Milnor fibre)"),
+            ('FIELD_SCULPTURE',   "🧲 Field Sculpture",   "Distance-field sculpture via Index of Nearest + Field at Index"),
+            ('WEAVE_SURFACE',     "🧶 UV Weave Surface",  "Architectural weave using Sample UV Surface + Curve to Mesh"),
+            ('TESSELLATION_TOWER',"🔳 Tessellation Tower","Voronoi-extruded tessellation layers with Named Attributes"),
+            ('COSMIC_WEB',        "🌌 Cosmic Web",        "Distribute Points in Volume + filament sweeps"),
+            ('SPIDERWEB_DOME',    "🕸 Spider Web Dome",   "Radial spoke + ring dome from Curve to Mesh"),
+            ('AUTO_BUILDING',     "🏢 Auto Building",     "Parametric city block — residential/commercial/skyscraper style presets"),
+            # ── v2.50 generators ──────────────────────────────────────────
+            ('ARCHWAY_ADV', "🏛 Advanced Archway",  "~3 m structural portal — Roman/Gothic/Tudor/Moorish/Ogee styles"),
+            ('BRIDGE_ADV',  "🌉 Advanced Bridge",   "Multi-style bridge (Stone arch/Roman/Suspension/Truss/Covered/Beam)"),
+            ('FENCE',       "🪵 Fence Generator",   "Multi-style fence / barrier (Picket/Iron/Ranch/Stone/Lattice/Bamboo/Modern)"),
+            # v2.55 — Curved Room greybox
+            ('GB_ROOM_CIRCULAR',  "⭕ Circular Room",    "Full circular drum room with boolean door/window cuts"),
+            ('GB_ROOM_APSIDAL',   "⛪ Apsidal Room",     "~12×28 m nave + semicircular apse — Roman basilica / cathedral plan"),
+            ('GB_CORRIDOR_ARC',   "🌀 Arc Corridor",     "Curved hallway — inner wall boolean door + optional window cuts"),
+            ('GB_ROOM_ROTUNDA',   "🏛 Rotunda",          "~18 m dia. Pantheon-style drum — gallery + oculus dome cap"),
+            ('GB_CORRIDOR_ARC_CROSS',"✛ Arc Cross",     "Four 90° arc arms at hub — inner-wall door + window booleans (v2.60 aligned)"),
+            # v2.53 — Lebbeus Woods greybox
+            ('GB_WOODS_PARASITE',   "🏚 Parasite Structure",  "Angled parasitic volumes on host — optional host-facing door booleans (gb_door_n)"),
+            ('GB_WOODS_FREESPACE',  "🏚 Freespace",           "Two volumes interpenetrating at angle — inhabitable void between them"),
+            ('GB_WOODS_RIBS',       "🦴 Rib Cage Room",       "Room with exposed structural rib frames running floor-to-ceiling"),
+            ('GB_WOODS_HARPSICHORD',"🏗 Harpsichord Tower",   "Slender tower with angled blade fins at each level"),
+            ('GB_WOODS_WAR_SCAR',   "💥 War Scar",            "Building cross-section showing interior stratigraphic layers"),
+            # v2.53 — David Umemoto greybox
+            ('GB_UMEMOTO_TERRACE',  "🏛 Terraced Tower",      "Stacked receding floors, thick walls, deep window slots (Umemoto)"),
+            ('GB_UMEMOTO_VAULT',    "🏦 Vault Cluster",       "Grid of barrel-vaulted chambers with thick brutalist piers"),
+            ('GB_UMEMOTO_LATTICE',  "▦ Lattice Block",       "Solid block with regular grid of square through-openings"),
+            ('GB_UMEMOTO_FORTRESS', "🏰 Fortress Room",       "Monumental thick-walled room with deep niches and corner buttresses"),
+            # v2.52 — Higgsas-powered builders
+            ('HIGG_SURFACE_WALL', "🔌 Higgsas Surface Wall",  "Brick/Hex/Voronoi/Cairo surface wall using NTBricks Grid"),
+            ('HIGG_COLONNADE',    "🏛 Higgsas Colonnade",     "Column row/ring using NTCircular Array or NTArray"),
+            # v2.70 — Synthia math→geometry arch types
+            ('SYNTHIA_TORUS_KNOT', "🪢 Synthia Torus Knot", "Math viz torus knot (Synthia or fallback)"),
+            ('SYNTHIA_MOBIUS',     "♾ Synthia Möbius",     "Möbius strip math sculpture"),
+            ('SYNTHIA_LORENZ',     "🌪 Synthia Lorenz",     "Lorenz attractor sculpture"),
+            ('SYNTHIA_PLATONIC',   "🔷 Synthia Platonic",   "Platonic solids via Synthia geometry preset"),
+            # v2.52 — Escher Greybox
+            ('GB_ESCHER_RELATIVITY',   "🪜 Relativity Room",    "Room with 3 gravity directions — floor/wall/ceiling staircases"),
+            ('GB_ESCHER_PENROSE_LOOP', "♾ Penrose Loop",        "Rooftop ring staircase that endlessly ascends and returns"),
+            ('GB_ESCHER_GRAVITY_SHIFT',"🔄 Gravity Shift",      "Corridor that rotates 90° — floor becomes a wall"),
+            ('GB_ESCHER_BELVEDERE',    "🏛 Belvedere",          "2-story loggia with cross-connected impossible columns"),
+            ('GB_ESCHER_WATERFALL',    "💧 Waterfall Loop",     "Triangular aqueduct with impossible recirculating flow"),
+            ('GB_ESCHER_RECURSIVE',    "🌀 Recursive Room",     "Nested concentric rooms with infinite regression feel"),
+            # v2.52 — Extended Greybox
+            ('GB_CORRIDOR_BEND',  "📐 Corridor Bend",       "90° L-shaped corridor with corner infill"),
+            ('GB_CORRIDOR_CROSS', "✛ Corridor Cross",      "4-way cross intersection"),
+            ('GB_CORRIDOR_T',     "⊤ Corridor T-Junction", "T-junction — main hall + side arm"),
+            ('GB_ROOM_COMPOSITE', "🏠 Composite Room",     "Multi-shape room (L/T/U/rectangle) with windows"),
+            ('GB_ELEVATOR_SHAFT', "🛗 Elevator Shaft",     "Vertical shaft — landings, S-wall doors, optional N/E/W window booleans"),
+            ('GB_COMBAT_ROOM',    "🎯 Combat Room",        "FPS tactical room with cover blocks and elevated area"),
+            ('GB_CORRIDOR_REC',   "🌿 Recursive Corridor", "Branching corridor tree with configurable depth"),
+            ('GB_CORRIDOR_DOOR_END', "🚪 Corridor Door End", "Tileable corridor stub + end-wall door boolean + recess trim"),
+            ('GB_GOTHIC_PORTAL', "⛪ Gothic Portal", "Pointed-arch doorway with recess trim + snap"),
+            ('GB_GOTHIC_BAY', "⛪ Gothic Bay", "Nave bay wall + lancet boolean + window reveals"),
+            ('GB_GOTHIC_BUTTRESS', "⛪ Gothic Buttress", "Engaged buttress kit piece with wall snap"),
+            ('GB_GOTHIC_TRACERY_PANEL', "⛪ Tracery Panel", "Flat tracery panel with petal voids for trim sheets"),
+            ('GB_CORRIDOR_OFFSET', "📐 Corridor Offset", "Tileable corridor — recessed wall panels + floor ledge trim"),
+            ('GB_ROMANESQUE_ARCADE', "🏛 Romanesque Arcade", "Round-arch bay with colonette, impost block, barrel vault"),
+            ('GB_ROMANESQUE_APSE', "🏛 Romanesque Apse", "Semicircular choir apse with recess shell — bay termination"),
+            ('GB_BRUTALIST_PANEL_WALL', "🏗 Brutalist Panel Wall", "Pilaster rhythm + recess panels — trim-sheet wall module"),
+            ('GB_VENETIAN_LOGGIA', "🇮🇹 Venetian Loggia Bay", "Bifora void rhythm + cornice shelf — greybox loggia module"),
+            ('GB_SCIFI_PRESSURE_DOOR', "🚀 Sci-Fi Pressure Door", "Gasket ring recess + frame offset + MUST_CONNECT door snap"),
+            ('GB_ZEN_ROJI_STEP', "🍵 Zen Roji Step", "Dew-path stone segment — edge trim + path snaps"),
+            ('GB_ZEN_TORII_GATE', "⛩ Zen Torii Gate", "Modular torii greybox — hashira/nuki/kasagi + gate snap"),
+            ('GB_ZEN_TSUKUBAI', "🪨 Zen Tsukubai", "Stone water basin pad — recess bowl + flagstones"),
+            ('GB_ZEN_ENGAWA', "🏯 Zen Engawa", "Veranda deck — posts, railing, roji/garden snaps"),
+            ('GB_ZEN_BAMBOO_FENCE', "🎋 Zen Bamboo Fence", "Tileable bamboo screen — post + rail rhythm"),
+            ('GB_ZEN_TOBIISHI', "🪨 Zen Tobi-ishi", "Stepping stone path — scattered flat stones + path snaps"),
+            # v2.51 — Ruins
+            ('WALL_RUINED',     "🏚 Ruined Wall",        "Stone wall with crumbled top and rubble scatter"),
+            ('ARCH_BROKEN',     "🏚 Broken Arch",        "Arch with missing ring section and fallen keystone"),
+            ('COLLAPSED_FLOOR', "🏚 Collapsed Floor",    "Angled slab with exposed beams and rubble slide"),
+            # v2.51 — Modular frames & structural
+            ('DOOR_FRAME',      "🚪 Door Frame",         "Standalone door frame with jambs, lintel, sill and optional arch cap"),
+            ('WINDOW_FRAME',    "🪟 Window Frame",       "Standalone window frame with sill, mullion or shutters"),
+            ('WALL_T_JOIN',     "🧱 T-Join Wall",        "T-intersection wall module — the missing modular kit piece"),
+            ('WALL_ARROW_SLITS',"🏰 Arrow Slit Wall",   "Castle wall with cross-shaped arrow slits and battlements"),
+            ('RETAINING_WALL',  "🪨 Retaining Wall",    "Stepped battered retaining wall — terrain seam piece"),
+            # v2.51 — Environment props
+            ('BARREL_STACK',    "🪣 Barrel Stack",       "2-3 wooden barrels with hoop rings"),
+            ('CRATE_PILE',      "📦 Crate Pile",         "Stack of wooden crates with scatter and plank lines"),
+            ('CAMPFIRE',        "🔥 Campfire",           "Radial log pile with stone ring and flame stand-in"),
+            ('HALF_TIMBER_WALL',"🏠 Half-Timber Wall",  "Tudor X-brace timber wall panel with plaster infill"),
         ],
         default='TOWER',
         update=auto_update_callback,
@@ -1428,7 +1440,7 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
     penrose_steps_per_side: bpy.props.IntProperty(  name="Steps per Side", default=5,   min=2, max=20, update=auto_update_callback)
     penrose_side_length:    bpy.props.FloatProperty(name="Side Length",    default=4.0, min=1.0, max=15.0, update=auto_update_callback)
     penrose_rise:           bpy.props.FloatProperty(name="Subtle Rise",    default=0.18,min=0.0, max=0.5,
-                                                    description="Tiny rise per step â€” keep small for the illusion", update=auto_update_callback)
+                                                    description="Tiny rise per step — keep small for the illusion", update=auto_update_callback)
 
     # === Pillar / column ===
     pillar_radius:        bpy.props.FloatProperty(name="Pillar Radius",   default=0.4, min=0.05, max=2.0, update=auto_update_callback)
@@ -1470,10 +1482,10 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
     note_kind: bpy.props.EnumProperty(
         name="Note Kind",
         items=[
-            ('WHOLE_NOTE',  "ð…—ð…¥ Whole",   "Hollow oval, no stem"),
-            ('HALF_NOTE',   "ð…— Half",     "Hollow oval with stem"),
-            ('QUARTER',     "â™© Quarter",  "Solid filled with stem"),
-            ('EIGHTH_NOTE', "â™ª Eighth",   "Solid + stem + flag"),
+            ('WHOLE_NOTE',  "𝅗𝅥 Whole",   "Hollow oval, no stem"),
+            ('HALF_NOTE',   "𝅗 Half",     "Hollow oval with stem"),
+            ('QUARTER',     "♩ Quarter",  "Solid filled with stem"),
+            ('EIGHTH_NOTE', "♪ Eighth",   "Solid + stem + flag"),
         ],
         default='QUARTER',
         update=auto_update_callback,
@@ -1506,7 +1518,7 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
     lancet_width:     bpy.props.FloatProperty(name="Lancet Width",  default=1.0, min=0.2, max=5.0,  update=auto_update_callback)
     lancet_height:    bpy.props.FloatProperty(name="Lancet Height", default=4.0, min=1.0, max=15.0, update=auto_update_callback)
     lancet_pointiness:bpy.props.FloatProperty(name="Pointiness",    default=1.5, min=1.0, max=3.0, update=auto_update_callback,
-                                              description="Ratio of arc radius to half-width â€” bigger = sharper")
+                                              description="Ratio of arc radius to half-width — bigger = sharper")
     lancet_count:     bpy.props.IntProperty(  name="Lancet Count",  default=1,   min=1,   max=8,   update=auto_update_callback,
                                               description='Multiple lancets side-by-side (notes in a measure)')
 
@@ -1522,13 +1534,13 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
         name="Note Pattern",
         description="Musical note duration that scales harmonic frequencies",
         items=[
-            ('WHOLE',     "â™©  Whole",     "Long sustained ornaments"),
-            ('HALF',      "â™ª  Half",      "Slow modulation"),
-            ('QUARTER',   "â™©  Quarter",   "Medium musical pulse (default)"),
-            ('EIGHTH',    "â™«  Eighth",    "Quicker rhythm"),
-            ('SIXTEENTH', "â™¬  Sixteenth", "Fast intricate detail"),
-            ('TRIPLET',   "â™©â‚ƒ Triplet",   "Triple-meter waltz feel"),
-            ('DOTTED',    "â™©. Dotted",    "Lopsided dotted rhythm"),
+            ('WHOLE',     "♩  Whole",     "Long sustained ornaments"),
+            ('HALF',      "♪  Half",      "Slow modulation"),
+            ('QUARTER',   "♩  Quarter",   "Medium musical pulse (default)"),
+            ('EIGHTH',    "♫  Eighth",    "Quicker rhythm"),
+            ('SIXTEENTH', "♬  Sixteenth", "Fast intricate detail"),
+            ('TRIPLET',   "♩₃ Triplet",   "Triple-meter waltz feel"),
+            ('DOTTED',    "♩. Dotted",    "Lopsided dotted rhythm"),
         ],
         default='QUARTER',
         update=auto_update_callback,
@@ -1536,7 +1548,7 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
     tempo_factor: bpy.props.FloatProperty(name="Tempo", default=1.0, min=0.1, max=4.0,
                                           description="Overall multiplier for harmonic frequencies", update=auto_update_callback)
 
-    # === Venetian Gothic (after Boscarino et al., "3D Geometric Analysis of the FaÃ§ades of Gothic Buildings in Venice") ===
+    # === Venetian Gothic (after Boscarino et al., "3D Geometric Analysis of the Façades of Gothic Buildings in Venice") ===
     ogee_width:        bpy.props.FloatProperty(name="Ogee Width",      default=2.0, min=0.5, max=8.0,  update=auto_update_callback)
     ogee_height:       bpy.props.FloatProperty(name="Ogee Height",     default=3.0, min=1.0, max=12.0, update=auto_update_callback)
     ogee_swell:        bpy.props.FloatProperty(name="Ogee Swell",      default=0.4, min=0.0, max=1.5, subtype='FACTOR',
@@ -1590,7 +1602,7 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
                                                    default=True,
                                                    update=auto_update_callback)
 
-    # === ðŸµ Zen Architecture ===
+    # === 🍵 Zen Architecture ===
     pagoda_tiers:       bpy.props.IntProperty(name="Pagoda Tiers", default=3, min=2, max=7, update=auto_update_callback)
     pagoda_base_radius: bpy.props.FloatProperty(name="Pagoda Base Radius", default=1.2, min=0.3, max=8.0, update=auto_update_callback)
     pagoda_tier_height: bpy.props.FloatProperty(name="Tier Height", default=1.0, min=0.4, max=3.0, update=auto_update_callback)
@@ -1624,7 +1636,7 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
     teahouse_height: bpy.props.FloatProperty(name="Tea House Height", default=2.5, min=1.5, max=6.0, update=auto_update_callback)
     teahouse_pitch_factor: bpy.props.FloatProperty(name="Roof Pitch", default=0.6, min=0.2, max=1.5, subtype='FACTOR', update=auto_update_callback)
     teahouse_engawa:       bpy.props.BoolProperty(name="Engawa (porch)", default=True,
-                                                   description="Add a wraparound veranda â€” classic Sukiya feature",
+                                                   description="Add a wraparound veranda — classic Sukiya feature",
                                                    update=auto_update_callback)
     teahouse_engawa_width: bpy.props.FloatProperty(name="Engawa Width",  default=0.6, min=0.2, max=2.0, update=auto_update_callback)
 
@@ -1642,27 +1654,27 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
                                                      update=auto_update_callback)
     stone_garden_tsukubai: bpy.props.BoolProperty(
         name="Tsukubai (è¹²è¸ž)",
-        description="Stone water basin â€” roji purification feature beside the gravel field",
+        description="Stone water basin — roji purification feature beside the gravel field",
         default=False,
         update=auto_update_callback,
     )
 
-    # === ðŸµ Zen â€” research-backed component controls (geometry only) ===
+    # === 🍵 Zen — research-backed component controls (geometry only) ===
     zen_lantern_style: bpy.props.EnumProperty(
         name="TÅrÅ Style (ç¯ç± )",
         description="Traditional stone-lantern typology (Kasuga shrine, snow-viewing, Oribe tea, cape/oki)",
         items=[
-            ('KASUGA', "Kasuga-dÅrÅ (æ˜¥æ—¥ç¯ç± )", "Tall sao, hexagonal hibukuro â€” Kasuga Taisha prototype"),
-            ('YUKIMI', "Yukimi-dÅrÅ (é›ªè¦‹ç¯ç± )", "Wide low kasa for snow-viewing; short or absent sao"),
-            ('ORIBE',  "Oribe-gata (ç¹”éƒ¨å½¢)", "Square hibukuro, restrained tea-garden proportions"),
-            ('MISAKI', "Misaki-dÅrÅ (å²¬ç¯ç± )", "Low oki/cape lantern â€” minimal shaft, broad kasa"),
+            ('KASUGA', "Kasuga-dÅrÅ (æ˜¥æ—¥ç¯ç± )", "Tall sao, hexagonal hibukuro — Kasuga Taisha prototype"),
+            ('YUKIMI', "Yukimi-dōrō (雪見灯籠)", "Wide low kasa for snow-viewing; short or absent sao"),
+            ('ORIBE',  "Oribe-gata (織部形)", "Square hibukuro, restrained tea-garden proportions"),
+            ('MISAKI', "Misaki-dÅrÅ (å²¬ç¯ç± )", "Low oki/cape lantern — minimal shaft, broad kasa"),
         ],
         default='KASUGA',
         update=auto_update_callback,
     )
     zen_lantern_warabide: bpy.props.FloatProperty(
         name="Warabide Curl (è•¨æ‰‹)",
-        description="Upward curl at kasa corners â€” young bracken-shoot motif",
+        description="Upward curl at kasa corners — young bracken-shoot motif",
         default=0.35, min=0.0, max=1.0, subtype='FACTOR',
         update=auto_update_callback,
     )
@@ -1670,9 +1682,9 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
         name="Higuchi (ç«å£)",
         description="Fire-opening motif on hibukuro faces",
         items=[
-            ('ROUND', "Maru (ä¸¸)", "Full-moon circular opening â€” traditionally faces east"),
+            ('ROUND', "Maru (ä¸¸)", "Full-moon circular opening — traditionally faces east"),
             ('SQUARE', "Kaku (è§’)", "Square geometric opening"),
-            ('MOON', "Tsuki (æœˆ)", "Crescent moon opening â€” traditionally faces west"),
+            ('MOON', "Tsuki (æœˆ)", "Crescent moon opening — traditionally faces west"),
         ],
         default='ROUND',
         update=auto_update_callback,
@@ -1690,14 +1702,14 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
         update=auto_update_callback,
     )
     zen_lantern_show_kidan: bpy.props.BoolProperty(
-        name="Kidan (åŸºå£‡)",
+        name="Kidan (基壇)",
         description="Optional raised stone platform beneath kiso foundation",
         default=True,
         update=auto_update_callback,
     )
     zen_lantern_show_ukebana: bpy.props.BoolProperty(
         name="Ukebana (è«‹èŠ±)",
-        description="Lotus seat supporting the hÅju â€” symbolizes kÅ« (void)",
+        description="Lotus seat supporting the hōju — symbolizes kū (void)",
         default=True,
         update=auto_update_callback,
     )
@@ -1705,8 +1717,8 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
     torii_style: bpy.props.EnumProperty(
         name="Torii Style (é³¥å±…)",
         items=[
-            ('MYOJIN', "MyÅjin (æ˜Žç¥ž)", "Curved kasagi + shimaki â€” most common shrine gate"),
-            ('SHINMEI', "Shinmei (ç¥žæ˜Ž)", "Straight Ise-style â€” kasagi + nuki only"),
+            ('MYOJIN', "MyÅjin (æ˜Žç¥ž)", "Curved kasagi + shimaki — most common shrine gate"),
+            ('SHINMEI', "Shinmei (ç¥žæ˜Ž)", "Straight Ise-style — kasagi + nuki only"),
             ('ISE', "Ise (ä¼Šå‹¢)", "Shinmei with pentagonal-section kasagi"),
         ],
         default='MYOJIN',
@@ -1719,20 +1731,20 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
         update=auto_update_callback,
     )
     torii_show_gakuzuka: bpy.props.BoolProperty(
-        name="Gakuzuka (é¡æŸ)",
+        name="Gakuzuka (額束)",
         description="Center vertical strut between nuki and shimaki",
         default=True,
         update=auto_update_callback,
     )
     torii_show_kusabi: bpy.props.BoolProperty(
-        name="Kusabi Wedges (æ¥”)",
+        name="Kusabi Wedges (楔)",
         description="Structural wedges where nuki penetrates hashira posts",
         default=True,
         update=auto_update_callback,
     )
     torii_show_shimenawa: bpy.props.BoolProperty(
         name="Shimenawa (æ³¨é€£ç¸„)",
-        description="Sacred braided rope between hashira â€” archaic shime-torii motif",
+        description="Sacred braided rope between hashira — archaic shime-torii motif",
         default=False,
         update=auto_update_callback,
     )
@@ -1744,13 +1756,13 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
         update=auto_update_callback,
     )
     pagoda_show_mokoshi: bpy.props.BoolProperty(
-        name="Mokoshi (è£³éšŽ)",
-        description="Skirt story â€” decorative pent roof band at pagoda base",
+        name="Mokoshi (裳階)",
+        description="Skirt story — decorative pent roof band at pagoda base",
         default=False,
         update=auto_update_callback,
     )
     pagoda_show_shinbashira: bpy.props.BoolProperty(
-        name="Shinbashira (å¿ƒæŸ±)",
+        name="Shinbashira (心柱)",
         description="Central heart column running through all pagoda stories",
         default=True,
         update=auto_update_callback,
@@ -1761,20 +1773,20 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
         items=[
             ('GRID', "Yoko-kumiko (æ¨ªçµ„å­)", "Simple orthogonal lattice"),
             ('ASANOHA', "Asanoha (éº»ã®è‘‰)", "Hemp-leaf diagonal motif"),
-            ('YUKITSUBAKI', "Yukitsubaki (é›ªæ¤¿)", "Snow-camellia diamond motif"),
+            ('YUKITSUBAKI', "Yukitsubaki (雪椿)", "Snow-camellia diamond motif"),
         ],
         default='GRID',
         update=auto_update_callback,
     )
     shoji_frame_depth: bpy.props.FloatProperty(
         name="Shamoji Frame Depth",
-        description="Depth of outer shÅji frame (éšœå­æž )",
+        description="Depth of outer shōji frame (隝子枠)",
         default=0.06, min=0.02, max=0.2,
         update=auto_update_callback,
     )
 
     teahouse_tokonoma: bpy.props.BoolProperty(
-        name="Tokonoma (åºŠã®é–“)",
+        name="Tokonoma (床の間)",
         description="Recessed alcove with tokobashira pillar",
         default=True,
         update=auto_update_callback,
@@ -1801,14 +1813,14 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
     zen_bridge_style: bpy.props.EnumProperty(
         name="Bridge Style",
         items=[
-            ('TAIKOBASHI', "Taikobashi (å¤ªé¼“æ©‹)", "Steep drum bridge â€” reflection forms full circle"),
+            ('TAIKOBASHI', "Taikobashi (太鼓橋)", "Steep drum bridge — reflection forms full circle"),
             ('SORIBASHI', "Soribashi (åæ©‹)", "Gentler arched moon bridge"),
         ],
         default='TAIKOBASHI',
         update=auto_update_callback,
     )
     zen_bridge_giboshi: bpy.props.BoolProperty(
-        name="Giboshi Finials (æ“¬å®ç )",
+        name="Giboshi Finials (擬宝珠)",
         description="Onion-shaped railing post caps",
         default=True,
         update=auto_update_callback,
@@ -1836,7 +1848,7 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
         name="Column Order",
         items=[
             ('TUSCAN', "Tuscan", "Plain Roman Doric"),
-            ('DORIC', "Doric", "Greek Doric â€” robust"),
+            ('DORIC', "Doric", "Greek Doric — robust"),
             ('IONIC', "Ionic", "Volute capital"),
             ('CORINTHIAN', "Corinthian", "Acanthus capital"),
         ],
@@ -1875,10 +1887,10 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
         name="Quality Preset",
         description="One-click multiplier for resolution / complexity (overrides individual sliders when changed)",
         items=[
-            ('LOW',    "ðŸª¶ Low",    "Game-ready greybox (fast)"),
-            ('MEDIUM', "ðŸŽ¯ Medium", "Balanced (default)"),
-            ('HIGH',   "âœ¨ High",   "Detailed (slower)"),
-            ('ULTRA',  "ðŸ’Ž Ultra",  "Maximum detail (slow)"),
+            ('LOW',    "🪶 Low",    "Game-ready greybox (fast)"),
+            ('MEDIUM', "🎯 Medium", "Balanced (default)"),
+            ('HIGH',   "✨ High",   "Detailed (slower)"),
+            ('ULTRA',  "💎 Ultra",  "Maximum detail (slow)"),
         ],
         default='MEDIUM',
         update=lambda self, ctx: _apply_sv_quality_preset(self, ctx),
@@ -1887,7 +1899,7 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
     # === Universal cross-cutting modifiers (apply to ANY type) ===
     universal_music_influence: bpy.props.FloatProperty(
         name="Universal Music Influence",
-        description="How strongly musical harmonics modulate ANY geometry (radial pulse) â€” makes Venetian sing",
+        description="How strongly musical harmonics modulate ANY geometry (radial pulse) — makes Venetian sing",
         default=0.0, min=0.0, max=1.0, subtype='FACTOR',
         update=auto_update_callback,
     )
@@ -2005,7 +2017,7 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
     lantern_glass_size: bpy.props.FloatProperty(name="Glass Size", default=0.35, min=0.1, max=1.5, update=auto_update_callback)
     lantern_emissive:  bpy.props.BoolProperty(name="Glowing Glass", default=True, update=auto_update_callback)
 
-    # === LEVEL DESIGN / GREYBOX â€” unified unit-grid system ===
+    # === LEVEL DESIGN / GREYBOX — unified unit-grid system ===
     # All wall/floor/ceiling pieces snap to this grid for easy modular layout in Unreal Engine.
     unit_size: bpy.props.FloatProperty(
         name="Grid Unit Size",
@@ -2019,7 +2031,7 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
     wall_thickness: bpy.props.FloatProperty(name="Wall Thickness", default=0.2, min=0.05, max=1.0,
                                              update=auto_update_callback)
     wall_arc_angle: bpy.props.FloatProperty(
-        name="Arc Angle (Â°)", default=90.0, min=10.0, max=360.0,
+        name="Arc Angle (°)", default=90.0, min=10.0, max=360.0,
         description="Arc sweep angle for curved wall segment (degrees)",
         update=auto_update_callback)
     wall_arc_radius: bpy.props.FloatProperty(
@@ -2027,7 +2039,7 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
         description="Radius of the curved wall arc spine",
         update=auto_update_callback)
 
-    # â”€â”€ Greybox / level-design library (v2.49) â”€â”€
+    # ── Greybox / level-design library (v2.49) ──
     gb_width: bpy.props.FloatProperty(name="GB Width", default=8.0, min=0.5, max=80.0,
         description="Greybox footprint width (X)", update=auto_update_callback)
     gb_depth: bpy.props.FloatProperty(name="GB Depth", default=6.0, min=0.5, max=80.0,
@@ -2082,11 +2094,11 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
         description="Add trim frame around doorway opening", update=auto_update_callback)
     gb_trim_mode: bpy.props.EnumProperty(
         name="GB Trim Mode",
-        description="Trim placement â€” recess/offset avoids coplanar z-fighting on wall faces",
+        description="Trim placement — recess/offset avoids coplanar z-fighting on wall faces",
         items=[
             ('RECESS', "Recess", "Trim inset in shallow wall recess"),
             ('OFFSET', "Offset", "Trim offset outward from wall face"),
-            ('NONE', "None", "Boolean opening only â€” no additive trim"),
+            ('NONE', "None", "Boolean opening only — no additive trim"),
         ],
         default='RECESS',
         update=auto_update_callback,
@@ -2122,10 +2134,10 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
     )
     gb_corridor_ceiling: bpy.props.EnumProperty(
         name="Corridor Ceiling",
-        description="Ceiling treatment â€” partial grid exposes beams for trim sheets",
+        description="Ceiling treatment — partial grid exposes beams for trim sheets",
         items=[
             ('FULL', "Full Slab", "Solid ceiling panel"),
-            ('OPEN', "Open", "No ceiling â€” vertical volume for atrium links"),
+            ('OPEN', "Open", "No ceiling — vertical volume for atrium links"),
             ('PARTIAL_GRID', "Beam Grid", "T-bar ceiling grid for modular trim"),
         ],
         default='FULL',
@@ -2135,7 +2147,7 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
         name="Pilaster Rib Mode",
         description="Wall rib placement along corridor bays",
         items=[
-            ('NONE', "None", "Flush walls â€” clean for trim sheets"),
+            ('NONE', "None", "Flush walls — clean for trim sheets"),
             ('INSET', "Inset", "Shallow pilaster recess into wall"),
             ('OFFSET', "Offset", "Pilaster proud of wall inner face"),
         ],
@@ -2186,26 +2198,26 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
     gb_door_w: bpy.props.BoolProperty(name="Door West", default=False,
         description="Cut a door in the west (-X) wall", update=auto_update_callback)
 
-    # â”€â”€ HIGGSAS v2.52 â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── HIGGSAS v2.52 ──────────────────────────────────────────────────────
     higgsas_surface_style: bpy.props.EnumProperty(
         name="Surface Pattern",
-        items=[('BRICK',    "ðŸ§± Brick Courses",   "Staggered brick / block courses (NTBricks Grid)"),
-               ('HEX',     "â¬¡ Hex Tile",          "Hexagonal floor or wall tile (NTHexagon Grid)"),
-               ('VORONOI', "ðŸª¨ Stone Voronoi",    "Natural stone cell pattern (NTDistance to Edge Voronoi)"),
-               ('CAIRO',   "âœ¦ Cairo Tile",         "Islamic cairo pentagon tiling (NTCairo Tile Grid)"),
-               ('TRIANGLE',"â–³ Triangle Grid",     "Triangular surface tiling (NTTriangle Grid)"),],
+        items=[('BRICK',    "🧱 Brick Courses",   "Staggered brick / block courses (NTBricks Grid)"),
+               ('HEX',     "⬡ Hex Tile",          "Hexagonal floor or wall tile (NTHexagon Grid)"),
+               ('VORONOI', "🪨 Stone Voronoi",    "Natural stone cell pattern (NTDistance to Edge Voronoi)"),
+               ('CAIRO',   "✦ Cairo Tile",         "Islamic cairo pentagon tiling (NTCairo Tile Grid)"),
+               ('TRIANGLE',"△ Triangle Grid",     "Triangular surface tiling (NTTriangle Grid)"),],
         default='BRICK', update=auto_update_callback)
     higgsas_array_mode: bpy.props.EnumProperty(
         name="Array Mode",
-        items=[('LINEAR', "â†’ Linear",  "Column row along X axis"),
-               ('RADIAL', "â—‹ Radial",  "Column ring around centre (NTCircular Array)"),],
+        items=[('LINEAR', "→ Linear",  "Column row along X axis"),
+               ('RADIAL', "○ Radial",  "Column ring around centre (NTCircular Array)"),],
         default='LINEAR', update=auto_update_callback)
 
-    # â”€â”€ GREYBOX v2.52 extended props â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── GREYBOX v2.52 extended props ───────────────────────────────────────
     gb_room_shape: bpy.props.EnumProperty(
         name="Room Shape",
-        items=[('RECTANGLE', "â–¡ Rectangle",    "Single rectangular room"),
-               ('L_SHAPE',   "âŒ L-Shape",      "Two rooms joined at a corner"),
+        items=[('RECTANGLE', "□ Rectangle",    "Single rectangular room"),
+               ('L_SHAPE',   "⌐ L-Shape",      "Two rooms joined at a corner"),
                ('T_SHAPE',   "T T-Shape",       "Three arms meeting at a junction"),
                ('U_SHAPE',   "U U-Shape",       "Three sides open in the middle"),],
         default='RECTANGLE', update=auto_update_callback)
@@ -2239,17 +2251,17 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
         update=auto_update_callback)
     gb_railing_style: bpy.props.EnumProperty(
         name="Railing Style",
-        items=[('ADVANCED', "âš™ Advanced (swept)", "Full AAA swept-profile railing"),
-               ('SIMPLE',   "â–¡ Simple (box)",     "Fast single box per side"),
-               ('NONE',     "âœ• None",             "No railings"),],
+        items=[('ADVANCED', "⚙ Advanced (swept)", "Full AAA swept-profile railing"),
+               ('SIMPLE',   "□ Simple (box)",     "Fast single box per side"),
+               ('NONE',     "✕ None",             "No railings"),],
         default='ADVANCED', update=auto_update_callback)
 
-    # â”€â”€ ARCHWAY v2.50 â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── ARCHWAY v2.50 ──────────────────────────────────────────────────────
     archway_style: bpy.props.EnumProperty(name="Archway Style", default='ROMAN',
         update=auto_update_callback,
         items=[('ROMAN',    "Roman Semicircle", "Classic round arch"),
                ('SEGMENTAL',"Segmental",        "Shallow arc, rise < radius"),
-               ('HORSESHOE',"Horseshoe/Moorish","Arc exceeds 180Â°, Islamic feel"),
+               ('HORSESHOE',"Horseshoe/Moorish","Arc exceeds 180°, Islamic feel"),
                ('GOTHIC',   "Gothic Pointed",   "Two arcs meeting at apex"),
                ('TUDOR',    "Tudor",            "Low four-centred Tudor arch"),
                ('OGEE',     "Ogee S-Curve",     "Convex-then-concave S profile"),
@@ -2264,7 +2276,7 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
     archway_piers:     bpy.props.BoolProperty( name="Piers / Imposts",  default=True,                    update=auto_update_callback)
     archway_voussoirs: bpy.props.IntProperty(  name="Voussoir Lines",   default=0,    min=0,   max=24,   update=auto_update_callback)
 
-    # â”€â”€ BRIDGE v2.50 â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── BRIDGE v2.50 ───────────────────────────────────────────────────────
     bridge_style: bpy.props.EnumProperty(name="Bridge Style", default='STONE_ARCH',
         update=auto_update_callback,
         items=[('STONE_ARCH',    "Stone Arch",       "Multi-arch masonry bridge"),
@@ -2281,7 +2293,7 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
     bridge_deck_thick:bpy.props.FloatProperty(name="Deck Thickness", default=0.25, min=0.05, max=1.5,  update=auto_update_callback)
     bridge_railings:  bpy.props.BoolProperty( name="Parapets/Rails", default=True,                     update=auto_update_callback)
 
-    # â”€â”€ FENCE v2.50 â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── FENCE v2.50 ────────────────────────────────────────────────────────
     fence_style: bpy.props.EnumProperty(name="Fence Style", default='PICKET',
         update=auto_update_callback,
         items=[('PICKET', "Picket",   "Pointed picket fence"),
@@ -2298,31 +2310,31 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
     fence_rails:       bpy.props.IntProperty(  name="Rail Count",    default=2,   min=1,   max=6,    update=auto_update_callback)
     fence_picket_gap:  bpy.props.FloatProperty(name="Picket/Baluster Gap",default=0.06,min=0.01,max=0.5, update=auto_update_callback)
 
-    # === v2.51 â€” Ruins / Destruction ===
+    # === v2.51 — Ruins / Destruction ===
     ruin_damage: bpy.props.FloatProperty(
         name="Damage Level", default=0.6, min=0.0, max=1.0, subtype='FACTOR',
         description="0=intact, 1=heavily ruined. Controls crumble height + rubble density",
         update=auto_update_callback)
     ruin_style: bpy.props.EnumProperty(
         name="Ruin Style",
-        items=[('CRUMBLED', "ðŸ’€ Crumbled",  "Broken stone/brick"),
-               ('OVERGROWN',"ðŸŒ¿ Overgrown", "Vines + moss rings growing over ruins"),
-               ('BURNT',    "ðŸ”¥ Burnt",     "Scorched/blackened masonry"),],
+        items=[('CRUMBLED', "💀 Crumbled",  "Broken stone/brick"),
+               ('OVERGROWN',"🌿 Overgrown", "Vines + moss rings growing over ruins"),
+               ('BURNT',    "🔥 Burnt",     "Scorched/blackened masonry"),],
         default='CRUMBLED', update=auto_update_callback)
 
-    # === v2.51 â€” Modular Frames ===
+    # === v2.51 — Modular Frames ===
     frame_arch_cap: bpy.props.EnumProperty(
         name="Arch Cap",
-        items=[('FLAT',   "â”€ Flat Lintel", "Flat rectangular lintel above door"),
-               ('ROMAN',  "âŒ’ Roman Arc",  "Semicircular arch cap above door"),
-               ('GOTHIC', "â‹€ Gothic Point","Pointed Gothic arch cap above door"),],
+        items=[('FLAT',   "─ Flat Lintel", "Flat rectangular lintel above door"),
+               ('ROMAN',  "⌒ Roman Arc",  "Semicircular arch cap above door"),
+               ('GOTHIC', "⋀ Gothic Point","Pointed Gothic arch cap above door"),],
         default='ROMAN', update=auto_update_callback)
     frame_with_shutters: bpy.props.BoolProperty(
         name="With Shutters", default=False,
         description="Add shutter panels flanking the window opening",
         update=auto_update_callback)
 
-    # === v2.51 â€” Retaining Wall ===
+    # === v2.51 — Retaining Wall ===
     retaining_steps: bpy.props.IntProperty(
         name="Terraces", default=3, min=1, max=6,
         description="Number of stepped terraces descending to grade",
@@ -2332,7 +2344,7 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
         description="Inward lean per metre of height (0=vertical, 0.1=slight taper)",
         update=auto_update_callback)
 
-    # === v2.51 â€” Environment Props ===
+    # === v2.51 — Environment Props ===
     prop_count: bpy.props.IntProperty(
         name="Count", default=3, min=1, max=8,
         description="Number of prop items in the pile/stack/cluster",
@@ -2369,10 +2381,10 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
     beams_thickness: bpy.props.FloatProperty(name="Beam Thickness", default=0.18, min=0.04, max=1.0, update=auto_update_callback)
     beams_spacing: bpy.props.FloatProperty(name="Beam Spacing", default=0.4, min=0.1, max=3.0, update=auto_update_callback)
     beams_z_cascade: bpy.props.FloatProperty(name="Cascade Step (Z)", default=0.15, min=0.0, max=2.0,
-                                              description="Each beam offset down â€” Escher staircase feel",
+                                              description="Each beam offset down — Escher staircase feel",
                                               update=auto_update_callback)
     beams_x_cascade: bpy.props.FloatProperty(name="Cascade Step (X)", default=0.2, min=0.0, max=2.0,
-                                              description="Each beam offset along its length â€” gives perspective slip",
+                                              description="Each beam offset along its length — gives perspective slip",
                                               update=auto_update_callback)
     beams_twist:    bpy.props.FloatProperty(name="Cascade Twist", default=0.0, min=-math.pi, max=math.pi,
                                              subtype='ANGLE',
@@ -2407,11 +2419,11 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
         name="Auto-Align",
         description="Auto-snap geometry to a consistent origin so every preset lines up with every other preset",
         items=[
-            ('GROUND', "ðŸŒ Ground + Center XY",
+            ('GROUND', "🌍 Ground + Center XY",
              "Center geometry on X=Y=0 and place its bottom on Z=0 (recommended for level design)"),
-            ('CENTER', "âšª Center XYZ",
+            ('CENTER', "⚪ Center XYZ",
              "Center geometry on origin in all axes (decorative pieces, instances)"),
-            ('NONE',   "âŒ No Auto-Align",
+            ('NONE',   "❌ No Auto-Align",
              "Leave geometry where the builder placed it (original behavior)"),
         ],
         default='GROUND',
@@ -2431,7 +2443,7 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
                                                     description="Always run topology cleanup at the end (recommended for game export)",
                                                     update=auto_update_callback)
 
-    # === Auto UV â€” game-ready texture coordinates for UE5 ===
+    # === Auto UV — game-ready texture coordinates for UE5 ===
     auto_uv_unwrap: bpy.props.BoolProperty(
         name="Auto UV Unwrap",
         description="Generate UV coordinates on every Generate (Triplanar/Box in GeoNodes; Smart UV when modifiers are applied)",
@@ -2442,8 +2454,8 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
         name="UV Method",
         description="Triplanar/Box work with live GeoNodes; Smart UV needs applied mesh (or Bake & Export)",
         items=[
-            ('TRIPLANAR', "Triplanar (UE Tile)", "Blend X/Y/Z planar UVs by face normal â€” best for stone/wood tiling in UE"),
-            ('BOX',       "Box Project",        "Normalize XZ footprint to 0-1 â€” good for buildings and lanterns"),
+            ('TRIPLANAR', "Triplanar (UE Tile)", "Blend X/Y/Z planar UVs by face normal — best for stone/wood tiling in UE"),
+            ('BOX',       "Box Project",        "Normalize XZ footprint to 0-1 — good for buildings and lanterns"),
             ('SMART',     "Smart UV Project",   "Blender island unwrap (runs when Apply Modifiers is on, or via Unwrap button)"),
             ('NONE',      "Skip",               "No automatic UV generation"),
         ],
@@ -2471,16 +2483,16 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
     uv_scale: bpy.props.FloatProperty(
         name="UV World Scale",
         default=1.0, min=0.01, max=20.0,
-        description="Multiply procedural UVs â€” lower = more texture repeats in UE",
+        description="Multiply procedural UVs — lower = more texture repeats in UE",
         update=auto_update_callback,
     )
 
-    # === Palazzo back wall option (default OFF â€” fixes the random-cube bug) ===
-    palazzo_back_wall: bpy.props.BoolProperty(name="Back Wall (faÃ§ade only)", default=False,
-                                              description="Add a thin background wall behind the arches (off by default â€” just a faÃ§ade)",
+    # === Palazzo back wall option (default OFF — fixes the random-cube bug) ===
+    palazzo_back_wall: bpy.props.BoolProperty(name="Back Wall (façade only)", default=False,
+                                              description="Add a thin background wall behind the arches (off by default — just a façade)",
                                               update=auto_update_callback)
 
-    # === Spline instancing â€” array any piece along a curve in the scene ===
+    # === Spline instancing — array any piece along a curve in the scene ===
     spline_target: bpy.props.PointerProperty(
         name="Curve Object", type=bpy.types.Object,
         description="Curve / path object to array instances along (any CURVE in the scene)",
@@ -2489,12 +2501,12 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
     spline_piece_type: bpy.props.EnumProperty(
         name="Piece to Instance",
         items=[
-            ('BALUSTER',    "ðŸ›¡ Baluster",        "Small column for railing"),
-            ('LANTERN',     "ðŸ® Lantern",          "Lamppost"),
-            ('CAPITAL',     "ðŸ› Column Capital",  "Column with capital"),
-            ('OGEE_ARCH',   "ðŸŒ€ Ogee Arch",       "Venetian ogee arch"),
-            ('TREFOIL',     "â˜˜ Trefoil",          "Three-lobed Gothic ornament"),
-            ('SMALL_CUBE',  "ðŸŸ§ Bevel Cube",      "Small beveled cube (test/decoration)"),
+            ('BALUSTER',    "🛡 Baluster",        "Small column for railing"),
+            ('LANTERN',     "🏮 Lantern",          "Lamppost"),
+            ('CAPITAL',     "🏛 Column Capital",  "Column with capital"),
+            ('OGEE_ARCH',   "🌀 Ogee Arch",       "Venetian ogee arch"),
+            ('TREFOIL',     "☘ Trefoil",          "Three-lobed Gothic ornament"),
+            ('SMALL_CUBE',  "🟧 Bevel Cube",      "Small beveled cube (test/decoration)"),
         ],
         default='BALUSTER',
         update=auto_update_callback,
@@ -2520,11 +2532,11 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
     spline_source_object: bpy.props.PointerProperty(
         name="Instance Source",
         type=bpy.types.Object,
-        description="Use this object's geometry as the instance â€” works with ANY preset built on another mesh",
+        description="Use this object's geometry as the instance — works with ANY preset built on another mesh",
         update=auto_update_callback,
     )
 
-    # === Radial Array â€” array around Z axis at a chosen radius ===
+    # === Radial Array — array around Z axis at a chosen radius ===
     radial_count:    bpy.props.IntProperty(name="Radial Count", default=12, min=2, max=120,
                                            update=auto_update_callback)
     radial_radius:   bpy.props.FloatProperty(name="Radial Radius", default=2.0, min=0.1, max=20.0,
@@ -2537,18 +2549,18 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
     radial_source_object: bpy.props.PointerProperty(
         name="Instance Source",
         type=bpy.types.Object,
-        description="Use this object's geometry as the instance â€” instance ANY preset radially",
+        description="Use this object's geometry as the instance — instance ANY preset radially",
         update=auto_update_callback,
     )
     radial_piece_type: bpy.props.EnumProperty(
         name="Piece",
         items=[
-            ('BALUSTER',    "ðŸ›¡ Baluster",        "Small column for railing"),
-            ('LANTERN',     "ðŸ® Lantern",          "Lamppost"),
-            ('OGEE_ARCH',   "ðŸŒ€ Ogee Arch",       "Venetian ogee arch"),
-            ('TREFOIL',     "â˜˜ Trefoil",          "Three-lobed ornament"),
-            ('WINDOW',      "ðŸªŸ Window",          "Window with arch top"),
-            ('SMALL_CUBE',  "ðŸŸ§ Bevel Cube",      "Small beveled cube"),
+            ('BALUSTER',    "🛡 Baluster",        "Small column for railing"),
+            ('LANTERN',     "🏮 Lantern",          "Lamppost"),
+            ('OGEE_ARCH',   "🌀 Ogee Arch",       "Venetian ogee arch"),
+            ('TREFOIL',     "☘ Trefoil",          "Three-lobed ornament"),
+            ('WINDOW',      "🪟 Window",          "Window with arch top"),
+            ('SMALL_CUBE',  "🟧 Bevel Cube",      "Small beveled cube"),
         ],
         default='BALUSTER',
         update=auto_update_callback,
@@ -2571,7 +2583,7 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
     hyperbolic_rings:     bpy.props.IntProperty(name="Concentric Rings", default=6, min=2, max=20, update=auto_update_callback)
     hyperbolic_petals:    bpy.props.IntProperty(name="Radial Spokes", default=12, min=3, max=64, update=auto_update_callback)
     hyperbolic_curvature: bpy.props.FloatProperty(name="Curvature", default=0.7, min=0.0, max=1.0, subtype='FACTOR',
-                                                  description="0=flat disk, 1=fully PoincarÃ© (geodesics bend to boundary)",
+                                                  description="0=flat disk, 1=fully Poincaré (geodesics bend to boundary)",
                                                   update=auto_update_callback)
 
     # === Sheet Music Railing ===
@@ -2603,7 +2615,7 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
 
     # === Genshin Impact Stylization ===
     genshin_style: bpy.props.BoolProperty(
-        name="ðŸŽ€ Genshin-Style Toon",
+        name="🎀 Genshin-Style Toon",
         default=False,
         description="Apply Genshin-Impact-style cel-shading to the auto-applied material",
         update=auto_update_callback,
@@ -2633,7 +2645,7 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
                                               subtype='FACTOR',
                                               update=auto_update_callback)
     subsidence_amount: bpy.props.FloatProperty(name="Subsidence", default=0.0, min=0.0, max=0.5,
-                                               description="Settling/sagging deformation â€” bottom-heavy distortion",
+                                               description="Settling/sagging deformation — bottom-heavy distortion",
                                                subtype='FACTOR',
                                                update=auto_update_callback)
     survey_imperfection: bpy.props.FloatProperty(name="Survey Imperfection", default=0.0, min=0.0, max=0.1,
@@ -2645,16 +2657,16 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
         name="Material",
         description="Material from the stylized library to apply",
         items=[
-            ('AUTO',        "ðŸŽ¨ Auto (by Type)",      "Pick best material for current architecture type"),
-            ('STONE',       "ðŸª¨ Stone",                "Stylized PBR stone"),
-            ('MARBLE',      "ðŸ—¿ Marble",               "White veined marble"),
-            ('WATER',       "ðŸŒŠ Musical Water",        "Animated waves driven by harmonics"),
-            ('STAINED',     "ðŸªŸ Stained Glass",        "Jewel-tone Voronoi panels"),
-            ('IRIDESCENT',  "ðŸ’Ž Iridescent",           "Color-shifting metal"),
-            ('GOLD',        "ðŸŸ¡ Gold",                 "Warm metallic gold"),
-            ('CLEF_GLOW',   "âœ¨ Clef Glow",            "Emissive musical glow"),
-            ('GOTHIC_DARK', "ðŸª¦ Gothic Dark",          "Worn dark stone"),
-            ('GENSHIN',     "ðŸŽ€ Genshin Toon",         "Cel-shaded pastel anime style"),
+            ('AUTO',        "🎨 Auto (by Type)",      "Pick best material for current architecture type"),
+            ('STONE',       "🪨 Stone",                "Stylized PBR stone"),
+            ('MARBLE',      "🗿 Marble",               "White veined marble"),
+            ('WATER',       "🌊 Musical Water",        "Animated waves driven by harmonics"),
+            ('STAINED',     "🪟 Stained Glass",        "Jewel-tone Voronoi panels"),
+            ('IRIDESCENT',  "💎 Iridescent",           "Color-shifting metal"),
+            ('GOLD',        "🟡 Gold",                 "Warm metallic gold"),
+            ('CLEF_GLOW',   "✨ Clef Glow",            "Emissive musical glow"),
+            ('GOTHIC_DARK', "🪦 Gothic Dark",          "Worn dark stone"),
+            ('GENSHIN',     "🎀 Genshin Toon",         "Cel-shaded pastel anime style"),
         ],
         default='AUTO',
         update=auto_update_callback,
@@ -2687,19 +2699,19 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
         update=auto_update_callback,
     )
 
-    # === Bevel pass â€” proper edge bevels (or legacy subdivision) ===
+    # === Bevel pass — proper edge bevels (or legacy subdivision) ===
     bevel_mode: bpy.props.EnumProperty(
         name="Bevel Mode",
         description="Edge-only bevels (real Bevel modifier) vs all-edges rounding (subdivision)",
         items=[
-            ('EDGE',   "ðŸ”ª Edge Bevel (Modifier)", "Real edge bevel with angle threshold â€” only sharp edges affected"),
-            ('SUBDIV', "ðŸŸ¢ Subdivision Round",     "Legacy â€” rounds all edges via Subdivision Surface"),
-            ('NONE',   "âŒ None",                  "No bevel pass"),
+            ('EDGE',   "🔪 Edge Bevel (Modifier)", "Real edge bevel with angle threshold — only sharp edges affected"),
+            ('SUBDIV', "🟢 Subdivision Round",     "Legacy — rounds all edges via Subdivision Surface"),
+            ('NONE',   "❌ None",                  "No bevel pass"),
         ],
         default='EDGE',
         update=auto_update_callback,
     )
-    # v2.29 â€” bumped defaults for a more cohesive beveled silhouette across all pieces.
+    # v2.29 — bumped defaults for a more cohesive beveled silhouette across all pieces.
     bevel_amount: bpy.props.FloatProperty(name="Bevel Width", default=0.04, min=0.0, max=1.0,
                                           description="Bevel modifier 'Width' (or subdivision rounding amount in legacy mode)",
                                           update=auto_update_callback)
@@ -2715,6 +2727,35 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
     bevel_clamp_overlap: bpy.props.BoolProperty(name="Clamp Overlap", default=True,
                                                 description="Prevents bevel widths from overlapping",
                                                 update=auto_update_callback)
+    bevel_backend: bpy.props.EnumProperty(
+        name="Bevel Backend",
+        description="MODIFIER for live preview; BEAVEL for destructive Beavel Pro bake",
+        items=[
+            ("AUTO", "Auto", "Modifier on generate, Beavel on explicit bake"),
+            ("MODIFIER", "Modifier", "Native MOD_BEVEL (non-destructive)"),
+            ("BEAVEL", "Beavel Pro", "Egret Beavel destructive bake"),
+        ],
+        default="MODIFIER",
+        update=auto_update_callback,
+    )
+    auto_bevel_on_generate: bpy.props.BoolProperty(
+        name="Auto Bevel On Generate",
+        default=True,
+        description="Apply bevel pass automatically after geometry generation",
+        update=auto_update_callback,
+    )
+    higgsas_detail: bpy.props.EnumProperty(
+        name="Higgsas Detail",
+        items=[
+            ("NONE", "None", "No Higgsas post-pass"),
+            ("BRICK", "Brick", "Warm Higgsas brick grid overlay"),
+            ("HEX", "Hex", "Hexagonal surface overlay"),
+            ("VORONOI", "Voronoi", "Stone voronoi overlay"),
+            ("CAIRO", "Cairo", "Cairo tile overlay"),
+        ],
+        default="NONE",
+        update=auto_update_callback,
+    )
 
     # === Synthia integration (math equation visualization) ===
     synthia_preset: bpy.props.EnumProperty(
@@ -2740,7 +2781,7 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
     synthia_custom_formula: bpy.props.StringProperty(
         name="Custom Formula",
         default="sin(x*2) * cos(y*2)",
-        description="Math expression â€” variables x, y, t (time/parameter)",
+        description="Math expression — variables x, y, t (time/parameter)",
         update=auto_update_callback,
     )
     synthia_apply_bevel: bpy.props.BoolProperty(
@@ -2760,7 +2801,7 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
     # These affect ALL Sverchok presets when set, instead of needing per-preset props.
     sv_keep_tree: bpy.props.BoolProperty(
         name="Keep Sverchok Tree (editable)",
-        description="Keep the Sverchok node tree after baking so you can manually tweak the preset in the Sverchok editor. Default ON â€” lets you customize generated geometry.",
+        description="Keep the Sverchok node tree after baking so you can manually tweak the preset in the Sverchok editor. Default ON — lets you customize generated geometry.",
         default=True,
         update=auto_update_callback,
     )
@@ -2811,18 +2852,18 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
         name="Roof Type",
         description="Style of curved roof to generate",
         items=[
-            ('HIP',        "ðŸ  Hip Roof",          "Four sloping sides meeting at a ridge"),
-            ('GABLED',     "ðŸ¡ Gabled",             "Two sloping sides with triangular gable ends"),
-            ('PAGODA',     "ðŸ¯ Pagoda / Curved Eave","Multi-tier upswept eaves (Chinese / Japanese)"),
-            ('BARREL',     "ðŸ›¢ Barrel Vault",       "Semicircular barrel vault ceiling"),
-            ('ONION',      "ðŸ§… Onion Dome",         "Bulging onion-shaped cupola"),
-            ('MANSARD',    "ðŸ˜ Mansard",            "Double-sloped; steep lower, shallow upper"),
-            ('BUTTERFLY',  "ðŸ¦‹ Butterfly",          "Two inward-sloping sides â€” V valley"),
-            ('SHED',       "ðŸ›– Shed / Mono-Pitch",  "Single slope from high to low wall"),
-            ('DUTCH_GABLE',"ðŸ— Dutch Gable",        "Hip roof with small gabled dormer at ridge"),
-            ('GEODESIC',   "ðŸ”® Geodesic Dome",      "Triangulated dome subdivided from icosphere"),
-            ('VAULTED',    "â›ª Pointed Vault",       "Pointed Gothic vault with ribs"),
-            ('WAVE',       "ðŸŒŠ Wave Roof",          "Sinusoidal undulating roof plane"),
+            ('HIP',        "🏠 Hip Roof",          "Four sloping sides meeting at a ridge"),
+            ('GABLED',     "🏡 Gabled",             "Two sloping sides with triangular gable ends"),
+            ('PAGODA',     "🏯 Pagoda / Curved Eave","Multi-tier upswept eaves (Chinese / Japanese)"),
+            ('BARREL',     "🛢 Barrel Vault",       "Semicircular barrel vault ceiling"),
+            ('ONION',      "🧅 Onion Dome",         "Bulging onion-shaped cupola"),
+            ('MANSARD',    "🏘 Mansard",            "Double-sloped; steep lower, shallow upper"),
+            ('BUTTERFLY',  "🦋 Butterfly",          "Two inward-sloping sides — V valley"),
+            ('SHED',       "🛖 Shed / Mono-Pitch",  "Single slope from high to low wall"),
+            ('DUTCH_GABLE',"🏗 Dutch Gable",        "Hip roof with small gabled dormer at ridge"),
+            ('GEODESIC',   "🔮 Geodesic Dome",      "Triangulated dome subdivided from icosphere"),
+            ('VAULTED',    "⛪ Pointed Vault",       "Pointed Gothic vault with ribs"),
+            ('WAVE',       "🌊 Wave Roof",          "Sinusoidal undulating roof plane"),
         ],
         default='HIP',
         update=auto_update_callback,
@@ -2848,12 +2889,12 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
     bbox_grow_mode: bpy.props.EnumProperty(
         name="Grow Mode",
         items=[
-            ('SHELL',        "ðŸ“¦ Shell",          "Thin shell offset outward from bbox"),
-            ('OUTWARD',      "ðŸ”´ Outward Steps",  "Concentric bbox shells stepping outward"),
-            ('CRYSTAL_GROW', "ðŸ’Ž Crystal Grow",   "Spike-like crystals emitted from bbox faces"),
-            ('ORGANIC_GROW', "ðŸŒ¿ Organic Tendrils","Branching tendrils from bbox corners"),
-            ('NOISE_INFLATE',"ðŸŒ Noise Inflate",  "Noise-displaced inflated bbox"),
-            ('WIRE_CAGE',    "â¬¡ Wire Cage",       "Low-poly wireframe cage around bbox"),
+            ('SHELL',        "📦 Shell",          "Thin shell offset outward from bbox"),
+            ('OUTWARD',      "🔴 Outward Steps",  "Concentric bbox shells stepping outward"),
+            ('CRYSTAL_GROW', "💎 Crystal Grow",   "Spike-like crystals emitted from bbox faces"),
+            ('ORGANIC_GROW', "🌿 Organic Tendrils","Branching tendrils from bbox corners"),
+            ('NOISE_INFLATE',"🌐 Noise Inflate",  "Noise-displaced inflated bbox"),
+            ('WIRE_CAGE',    "⬡ Wire Cage",       "Low-poly wireframe cage around bbox"),
         ],
         default='SHELL',
         update=auto_update_callback,
@@ -2876,16 +2917,16 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
         name="Magic Preset",
         description="One-click magical effect applied on top of any geometry",
         items=[
-            ('LIQUID',     "ðŸ’§ Liquid Distortion",  "Flowing liquid warp with noise displacement"),
-            ('CRYSTAL',    "ðŸ’Ž Crystal Shatter",    "Faceted crystalline break with angular normals"),
-            ('PORTAL',     "ðŸŒ€ Portal Rift",        "Swirling vortex inward warp"),
-            ('DISSOLVE',   "âœ¨ Dissolve Mist",      "Gradient fade with noise-eroded silhouette"),
-            ('TIMERIFT',   "â³ Time Rift",          "Sinusoidal wave distortion on Z axis"),
-            ('DREAMWEAVE', "ðŸŒˆ Dreamweave",         "Multi-frequency noise cloth-like warp"),
-            ('VOID_BLOOM', "ðŸ–¤ Void Bloom",         "Inward-collapsing bloom with tendrils"),
-            ('GHOST_ECHO', "ðŸ‘» Ghost Echo",         "Layered semi-transparent offset copies"),
-            ('GRAVITY_WELL',"ðŸ•³ Gravity Well",     "Mesh pulled toward a central attractor"),
-            ('AURORA',     "ðŸŒŒ Aurora Wave",        "Layered sine planes in vertical bands"),
+            ('LIQUID',     "💧 Liquid Distortion",  "Flowing liquid warp with noise displacement"),
+            ('CRYSTAL',    "💎 Crystal Shatter",    "Faceted crystalline break with angular normals"),
+            ('PORTAL',     "🌀 Portal Rift",        "Swirling vortex inward warp"),
+            ('DISSOLVE',   "✨ Dissolve Mist",      "Gradient fade with noise-eroded silhouette"),
+            ('TIMERIFT',   "⏳ Time Rift",          "Sinusoidal wave distortion on Z axis"),
+            ('DREAMWEAVE', "🌈 Dreamweave",         "Multi-frequency noise cloth-like warp"),
+            ('VOID_BLOOM', "🖤 Void Bloom",         "Inward-collapsing bloom with tendrils"),
+            ('GHOST_ECHO', "👻 Ghost Echo",         "Layered semi-transparent offset copies"),
+            ('GRAVITY_WELL',"🕳 Gravity Well",     "Mesh pulled toward a central attractor"),
+            ('AURORA',     "🌌 Aurora Wave",        "Layered sine planes in vertical bands"),
         ],
         default='LIQUID',
         update=auto_update_callback,
@@ -2898,10 +2939,10 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
         name="Warp Shape",
         items=[
             ('SINE',     "ã€° Sine",     "Smooth sinusoidal wave"),
-            ('NOISE',    "ðŸ“¶ Noise",   "Turbulent Perlin noise"),
-            ('VORONOI',  "â¬¡ Voronoi", "Cell / Voronoi pattern"),
-            ('FRACTAL',  "â„ Fractal", "Fractal Brownian motion"),
-            ('SPIRAL',   "ðŸŒ€ Spiral", "Logarithmic spiral warp"),
+            ('NOISE',    "📶 Noise",   "Turbulent Perlin noise"),
+            ('VORONOI',  "⬡ Voronoi", "Cell / Voronoi pattern"),
+            ('FRACTAL',  "❄ Fractal", "Fractal Brownian motion"),
+            ('SPIRAL',   "🌀 Spiral", "Logarithmic spiral warp"),
         ],
         default='NOISE',
         update=auto_update_callback,
@@ -2924,11 +2965,11 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
         name="Profile Type",
         description="Bevel profile curve shape",
         items=[
-            ('SUPERELLIPSE', "â¬­ Superellipse",  "Parametric rounded/chamfered profile"),
-            ('CUSTOM',       "âœ Custom Curve",  "Draw your own profile in the Bevel modifier"),
-            ('CHAMFER',      "ðŸ”· Chamfer",       "Flat 45Â° cut (n=1 superellipse)"),
-            ('CONCAVE',      "âŒ’ Concave",       "Inward-curving bevel (profile < 0.5)"),
-            ('CONVEX',       "âŒ£ Convex",        "Outward-bulging bevel (profile > 0.5)"),
+            ('SUPERELLIPSE', "⬭ Superellipse",  "Parametric rounded/chamfered profile"),
+            ('CUSTOM',       "❏ Custom Curve",  "Draw your own profile in the Bevel modifier"),
+            ('CHAMFER',      "🔷 Chamfer",       "Flat 45° cut (n=1 superellipse)"),
+            ('CONCAVE',      "⌒ Concave",       "Inward-curving bevel (profile < 0.5)"),
+            ('CONVEX',       "⌣ Convex",        "Outward-bulging bevel (profile > 0.5)"),
         ],
         default='SUPERELLIPSE',
         update=auto_update_callback,
@@ -2990,15 +3031,15 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
         name="Sci-Fi Effect",
         description="Non-destructive surface effect applied on top of any mesh",
         items=[
-            ('GREEBLE',      "â¬› Greeble Panels",   "Raised rectangular hull plates â€” classic hard-surface sci-fi detail"),
-            ('CIRCUIT',      "ðŸ”Œ Circuit Board",    "PCB trace network + component pads on the surface"),
-            ('NEON_TRIM',    "ðŸ’¡ Neon Trim",        "Glowing tube outlines along sharp edges (Curve-to-Mesh sweep)"),
-            ('PANEL_LINES',  "â–¬ Panel Lines",       "Engraved panel line grid with chamfered trenches"),
-            ('ANTENNA',      "ðŸ“¡ Antenna Array",    "Rows of antennas and transmitters on upward-facing surfaces"),
-            ('DAMAGE',       "ðŸ’¥ Battle Damage",    "Blast craters, dents and erosion via Voronoi displacement"),
-            ('HOLOGRAM',     "ðŸ‘ Hologram Shell",   "Offset translucent copy lattice for holographic projection feel"),
-            ('VENT_GRILLE',  "â–¦ Vent Grille",       "Louvered vent grilles on a selected face cluster"),
-            ('HEX_ARMOUR',   "â¬¡ Hex Armour",       "Hexagonal tile plating via Voronoi-extruded surface"),
+            ('GREEBLE',      "⬛ Greeble Panels",   "Raised rectangular hull plates — classic hard-surface sci-fi detail"),
+            ('CIRCUIT',      "🔌 Circuit Board",    "PCB trace network + component pads on the surface"),
+            ('NEON_TRIM',    "💡 Neon Trim",        "Glowing tube outlines along sharp edges (Curve-to-Mesh sweep)"),
+            ('PANEL_LINES',  "▬ Panel Lines",       "Engraved panel line grid with chamfered trenches"),
+            ('ANTENNA',      "📡 Antenna Array",    "Rows of antennas and transmitters on upward-facing surfaces"),
+            ('DAMAGE',       "💥 Battle Damage",    "Blast craters, dents and erosion via Voronoi displacement"),
+            ('HOLOGRAM',     "👁 Hologram Shell",   "Offset translucent copy lattice for holographic projection feel"),
+            ('VENT_GRILLE',  "▦ Vent Grille",       "Louvered vent grilles on a selected face cluster"),
+            ('HEX_ARMOUR',   "⬡ Hex Armour",       "Hexagonal tile plating via Voronoi-extruded surface"),
         ],
         default='GREEBLE',
         update=auto_update_callback,
@@ -3007,7 +3048,7 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
     scifi_depth:      bpy.props.FloatProperty(name="Extrude Depth",  default=0.08, min=0.001,max=1.0,  update=auto_update_callback)
     scifi_panel_scale:bpy.props.FloatProperty(name="Panel Scale",    default=0.8,  min=0.05, max=3.0,  subtype='FACTOR')
     scifi_randomness: bpy.props.FloatProperty(name="Randomness",     default=0.6,  min=0.0,  max=1.0,  subtype='FACTOR', update=auto_update_callback)
-    scifi_edge_angle: bpy.props.FloatProperty(name="Edge Angle Â°",   default=30.0, min=5.0,  max=80.0, update=auto_update_callback)
+    scifi_edge_angle: bpy.props.FloatProperty(name="Edge Angle °",   default=30.0, min=5.0,  max=80.0, update=auto_update_callback)
     scifi_inset:      bpy.props.FloatProperty(name="Inset Amount",   default=0.05, min=0.0,  max=0.5,  update=auto_update_callback)
     scifi_tube_radius:bpy.props.FloatProperty(name="Tube Radius",    default=0.025,min=0.005,max=0.3,  update=auto_update_callback)
     scifi_layers:     bpy.props.IntProperty(  name="Detail Layers",  default=2,    min=1,    max=5,    update=auto_update_callback)
@@ -3017,94 +3058,94 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
 
     # ===================================================================
     # AESTHETIC EFFECT GENERATOR (Gothic / Vaporwave / Zen / Spiritual)
-    # Non-destructive â€” adds a separate GN modifier on top of any mesh.
+    # Non-destructive — adds a separate GN modifier on top of any mesh.
     # ===================================================================
     aesthetic_effect: bpy.props.EnumProperty(
         name="Aesthetic Effect",
         items=[
             # Gothic
-            ('GOTH_TRACERY',  "ðŸ•¯ Gothic Tracery",   "Distribute Gothic cross/star ornaments across the surface"),
-            ('GOTH_DRIP',     "ðŸ©¸ Dripping Wax",     "Vertical wax/blood drips along the lower half"),
-            ('GOTH_SPIKES',   "âš” Gargoyle Spikes",  "Sharp spikes pointing outward along the surface"),
-            ('GOTH_RIBS',     "ðŸ¦´ Cathedral Ribs",   "Vertical Gothic rib pillars wrapping the silhouette"),
-            ('GOTH_WEATHERED',"ðŸª¦ Weathered Stone",  "Eroded, cracked, age-worn stone surface"),
+            ('GOTH_TRACERY',  "🕯 Gothic Tracery",   "Distribute Gothic cross/star ornaments across the surface"),
+            ('GOTH_DRIP',     "🩸 Dripping Wax",     "Vertical wax/blood drips along the lower half"),
+            ('GOTH_SPIKES',   "⚔ Gargoyle Spikes",  "Sharp spikes pointing outward along the surface"),
+            ('GOTH_RIBS',     "🦴 Cathedral Ribs",   "Vertical Gothic rib pillars wrapping the silhouette"),
+            ('GOTH_WEATHERED',"🪦 Weathered Stone",  "Eroded, cracked, age-worn stone surface"),
             # Vaporwave
-            ('VAP_WIRE',      "ðŸ’œ Neon Wireframe",   "Pastel neon wireframe overlay"),
-            ('VAP_PIXEL',     "ðŸŸª Pixel Shatter",    "Voxelized cube-shatter look"),
-            ('VAP_CHROMATIC', "ðŸŒˆ Chromatic Ghost",  "RGB-offset ghost copies for chromatic aberration"),
-            ('VAP_GRID',      "ðŸŸ¦ Tron Grid",        "Glowing surface grid lines"),
-            ('VAP_PALMS',     "ðŸŒ´ Palm Plaza",       "Pink/teal palm trees around the base"),
+            ('VAP_WIRE',      "💜 Neon Wireframe",   "Pastel neon wireframe overlay"),
+            ('VAP_PIXEL',     "🟪 Pixel Shatter",    "Voxelized cube-shatter look"),
+            ('VAP_CHROMATIC', "🌈 Chromatic Ghost",  "RGB-offset ghost copies for chromatic aberration"),
+            ('VAP_GRID',      "🟦 Tron Grid",        "Glowing surface grid lines"),
+            ('VAP_PALMS',     "🌴 Palm Plaza",       "Pink/teal palm trees around the base"),
             # Zen
-            ('ZEN_MOSS',      "ðŸŒ¿ Moss Blanket",     "Soft moss spheres on upward-facing surfaces"),
-            ('ZEN_RIPPLE',    "ðŸŒŠ Stone Ripple",     "Concentric ripple displacements from origin"),
-            ('ZEN_SAND',      "ðŸ– Sand Patterns",    "Karesansui-style raked sand grooves on top surfaces"),
-            ('ZEN_BAMBOO',    "ðŸŽ‹ Bamboo Guard",     "Vertical bamboo poles around the perimeter"),
-            ('ZEN_PETALS',    "ðŸŒ¸ Floating Petals",  "Cherry blossom petals drifting around"),
+            ('ZEN_MOSS',      "🌿 Moss Blanket",     "Soft moss spheres on upward-facing surfaces"),
+            ('ZEN_RIPPLE',    "🌊 Stone Ripple",     "Concentric ripple displacements from origin"),
+            ('ZEN_SAND',      "🏖 Sand Patterns",    "Karesansui-style raked sand grooves on top surfaces"),
+            ('ZEN_BAMBOO',    "🎋 Bamboo Guard",     "Vertical bamboo poles around the perimeter"),
+            ('ZEN_PETALS',    "🌸 Floating Petals",  "Cherry blossom petals drifting around"),
             # Spiritual
-            ('SPI_AURA',      "âœ¨ Aura Shell",       "Iridescent offset shell hugging the mesh"),
-            ('SPI_MANDALA',   "ðŸ•‰ Mandala Base",     "Radial mandala glyph beneath the object"),
-            ('SPI_CHAKRA',    "ðŸŒˆ Chakra Orbs",      "Seven floating chakra orbs in vertical alignment"),
-            ('SPI_BEAM',      "ðŸ”† Pillar of Light",  "Vertical light beam ascending through the object"),
-            ('SPI_RING',      "ðŸ’« Sacred Ring",      "Orbiting sacred ring(s) around the object"),
-            ('SPI_ASTRAL',    "ðŸ‘» Astral Echo",      "Floating duplicate offset upward, ghosted"),
-            ('SPI_EYE',       "ðŸ‘ Third Eye",        "Single inset eye-shape on the front face"),
-            ('SPI_LOTUS',     "ðŸª· Lotus Bloom",      "Lotus petals around the base"),
-            # â”€â”€ v2.16: procedurally rich variants â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+            ('SPI_AURA',      "✨ Aura Shell",       "Iridescent offset shell hugging the mesh"),
+            ('SPI_MANDALA',   "🕉 Mandala Base",     "Radial mandala glyph beneath the object"),
+            ('SPI_CHAKRA',    "🌈 Chakra Orbs",      "Seven floating chakra orbs in vertical alignment"),
+            ('SPI_BEAM',      "🔆 Pillar of Light",  "Vertical light beam ascending through the object"),
+            ('SPI_RING',      "💫 Sacred Ring",      "Orbiting sacred ring(s) around the object"),
+            ('SPI_ASTRAL',    "👻 Astral Echo",      "Floating duplicate offset upward, ghosted"),
+            ('SPI_EYE',       "👁 Third Eye",        "Single inset eye-shape on the front face"),
+            ('SPI_LOTUS',     "🪷 Lotus Bloom",      "Lotus petals around the base"),
+            # ── v2.16: procedurally rich variants ───────────────────
             # Gothic
-            ('GOTH_LATTICE',  "ðŸ”² Gothic Lattice",   "Fractal Gothic lattice grown across the surface"),
-            ('GOTH_NICHES',   "ðŸ•³ Arched Niches",    "Inset arched niches via voronoi mask + extrude"),
-            ('GOTH_FANS',     "ðŸª­ Buttress Fans",    "Radial fan ribs sprouting from the base"),
-            ('GOTH_FINIALS',  "ðŸ‘‘ Finial Crown",     "Pointed Gothic finials clustered along the top edge"),
-            ('GOTH_LEADWORK', "ðŸªŸ Lead Glasswork",   "Stained-glass voronoi lead lines wrapping the mesh"),
-            ('GOTH_SPIRES',   "ðŸ° Spire Forest",     "Procedural spire growth from upward-facing peaks"),
+            ('GOTH_LATTICE',  "🔲 Gothic Lattice",   "Fractal Gothic lattice grown across the surface"),
+            ('GOTH_NICHES',   "🕳 Arched Niches",    "Inset arched niches via voronoi mask + extrude"),
+            ('GOTH_FANS',     "🪭 Buttress Fans",    "Radial fan ribs sprouting from the base"),
+            ('GOTH_FINIALS',  "👑 Finial Crown",     "Pointed Gothic finials clustered along the top edge"),
+            ('GOTH_LEADWORK', "🪟 Lead Glasswork",   "Stained-glass voronoi lead lines wrapping the mesh"),
+            ('GOTH_SPIRES',   "🏰 Spire Forest",     "Procedural spire growth from upward-facing peaks"),
             # Vaporwave
-            ('VAP_SLICES',    "ðŸ“¼ Glitch Slices",    "Horizontal Z-band slices offset by noise (VHS glitch)"),
-            ('VAP_SCANLINES', "ðŸ“º CRT Scanlines",    "Raised horizontal scanline ridges across the surface"),
-            ('VAP_BUSTS',     "ðŸ—¿ Marble Busts",     "Classical bust columns scattered around the base"),
-            ('VAP_SLABS',     "ðŸª© Holo Slabs",       "Floating tilted holographic slabs orbiting the mesh"),
-            ('VAP_SUN',       "ðŸŒ… Retro Sun",        "Banded retro sun half-disc behind the object"),
-            ('VAP_NEON_WRAP', "ðŸ’« Neon Wrap",        "Neon tube ribbon spiraling around the silhouette"),
+            ('VAP_SLICES',    "📼 Glitch Slices",    "Horizontal Z-band slices offset by noise (VHS glitch)"),
+            ('VAP_SCANLINES', "📺 CRT Scanlines",    "Raised horizontal scanline ridges across the surface"),
+            ('VAP_BUSTS',     "🗿 Marble Busts",     "Classical bust columns scattered around the base"),
+            ('VAP_SLABS',     "🪩 Holo Slabs",       "Floating tilted holographic slabs orbiting the mesh"),
+            ('VAP_SUN',       "🌅 Retro Sun",        "Banded retro sun half-disc behind the object"),
+            ('VAP_NEON_WRAP', "💫 Neon Wrap",        "Neon tube ribbon spiraling around the silhouette"),
             # Zen
-            ('ZEN_ORBIT',     "ðŸ® Lantern Orbit",    "Paper lanterns orbiting in concentric rings"),
-            ('ZEN_SMOKE',     "ðŸŒ« Incense Smoke",    "Helical incense smoke trails rising from the base"),
-            ('ZEN_POND',      "ðŸ  Carp Pond",        "Reflective water disk + lily pads beneath the object"),
-            ('ZEN_TERRACE',   "ðŸª¨ Stone Terraces",   "Stepped terraced rock layers grown from the bbox"),
-            ('ZEN_GINKGO',    "ðŸ‚ Ginkgo Drift",     "Ginkgo leaves drifting around in noise field"),
-            ('ZEN_RUNES',     "ðŸˆ Calligraphy Runes","Kanji-style raised marks distributed on faces"),
+            ('ZEN_ORBIT',     "🏮 Lantern Orbit",    "Paper lanterns orbiting in concentric rings"),
+            ('ZEN_SMOKE',     "🌫 Incense Smoke",    "Helical incense smoke trails rising from the base"),
+            ('ZEN_POND',      "🐠 Carp Pond",        "Reflective water disk + lily pads beneath the object"),
+            ('ZEN_TERRACE',   "🪨 Stone Terraces",   "Stepped terraced rock layers grown from the bbox"),
+            ('ZEN_GINKGO',    "🍂 Ginkgo Drift",     "Ginkgo leaves drifting around in noise field"),
+            ('ZEN_RUNES',     "🈁 Calligraphy Runes","Kanji-style raised marks distributed on faces"),
             # Spiritual
-            ('SPI_RUNES',     "ðŸ”¯ Rune Circle",      "Glyphic rune circle inscribed on the floor"),
-            ('SPI_HALO',      "ðŸ’  Fractal Halo",     "Fractal subdivided halo above the object"),
-            ('SPI_TRIANGLES', "â–³ Sacred Triangles", "Overlapping sacred-geometry triangles"),
-            ('SPI_FLAMES',    "ðŸ”¥ Soul Flames",      "Wisps of flame instances around the base"),
-            ('SPI_OUROBOROS', "ðŸ Ouroboros",        "Snake-ring of segmented spheres around the silhouette"),
-            ('SPI_PORTAL',    "ðŸŒ€ Portal Gate",      "Large flat ring portal behind the object"),
-            # â”€â”€ v2.17: music-reactive â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-            ('MUS_PULSE',     "ðŸ’“ Music Pulse",      "Whole-mesh sine pulse driven by musical_freq_a"),
-            ('MUS_EQ_BARS',   "ðŸ“Š EQ Bars",          "Vertical EQ bars around the silhouette, heights driven by harmonics"),
-            ('MUS_WAVE_DISP', "ðŸŽ¶ Sound Wave Displace","Noise displacement amplitude scaled by music influence"),
-            ('MUS_BEAT_RING', "â­• Beat Ring",        "Orbiting ring of orbs with sine-pulsing radii"),
-            ('MUS_HARMONIC',  "ðŸŽ¼ Harmonic Lattice", "Stack of horizontal noise grooves at frequencies a+b"),
-            # â”€â”€ v2.17: advanced GN â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-            ('ADV_RAY_GROW',  "ðŸ“¡ Raycast Growth",   "Rays from origin â†’ instances at hit normals"),
-            ('ADV_NEAR_FUR',  "ðŸ¦” Nearest Fur",      "Fur cones pointing toward nearest point on a target"),
-            ('ADV_EDGE_TUBES',"ðŸŸ¦ Edge Tube Highlights","Tube sweeps along sharp edges (Edge Angle field)"),
-            ('ADV_DUAL_MESH', "ðŸ”· Dual Mesh",        "Convert to dual mesh + offset cells (Catmull-Clark feel)"),
-            ('ADV_VOR_FRAC',  "ðŸ’Ž Voronoi Fracture", "3D voronoi cell shatter via volume + points"),
-            ('ADV_CRYSTALS',  "ðŸ§Š Crystal Cluster",  "Distribute pointy octahedra by 3D voronoi field"),
-            ('ADV_FIELD_LAT', "ðŸ•¸ Field Lattice",    "Subdivided lattice driven by Position->Math field"),
-            # â”€â”€ v2.18: curve-rich geometry (no more cones/cubes) â”€â”€â”€â”€
-            ('GOTH_VAULT',    "ðŸ› Bezier Rib Vault", "Pointed Gothic ribbed vault â€” real bezier arches swept with profile"),
-            ('GOTH_TRACERY2', "ðŸŒ¿ Branching Tracery","Recursive bezier tracery branching across the silhouette"),
-            ('VAP_DOLPHIN',   "ðŸ¬ Dolphin Arcs",     "Sine-wave dolphin-jump arcs swept with neon tube profile"),
-            ('ZEN_BONSAI',    "ðŸŒ³ Bonsai Branching", "Recursive bezier branching like a bonsai tree growing from base"),
-            ('SPI_FLOWER',    "ðŸŒ¸ Flower of Life",   "Sacred geometry: overlapping bezier circles in flower-of-life lattice"),
-            ('SPI_METATRON',  "âœ¡ Metatron's Cube",  "13-circle Metatron's Cube with connecting bezier lines"),
-            # â”€â”€ v2.19: mechanical â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-            ('MECH_BOLTS',    "ðŸ”© Hex Bolts",        "Hex-head bolt instances across the surface (mask-gated)"),
-            ('MECH_PIPES',    "ðŸ”§ Pipe Network",     "Bezier-arc pipes with flange torus joints"),
-            ('MECH_GEARS',    "âš™ Gears",            "Cog gears (body + tooth ring) distributed on faces"),
-            ('MECH_PISTONS',  "ðŸ›  Pistons",          "Shaft + bell housing piston rings"),
-            ('MECH_PANELS',   "ðŸŸ« Industrial Panels","Rectangular extruded panel inserts (mask-gated)"),
+            ('SPI_RUNES',     "🔯 Rune Circle",      "Glyphic rune circle inscribed on the floor"),
+            ('SPI_HALO',      "💠 Fractal Halo",     "Fractal subdivided halo above the object"),
+            ('SPI_TRIANGLES', "△ Sacred Triangles", "Overlapping sacred-geometry triangles"),
+            ('SPI_FLAMES',    "🔥 Soul Flames",      "Wisps of flame instances around the base"),
+            ('SPI_OUROBOROS', "🐍 Ouroboros",        "Snake-ring of segmented spheres around the silhouette"),
+            ('SPI_PORTAL',    "🌀 Portal Gate",      "Large flat ring portal behind the object"),
+            # ── v2.17: music-reactive ───────────────────────────────
+            ('MUS_PULSE',     "💓 Music Pulse",      "Whole-mesh sine pulse driven by musical_freq_a"),
+            ('MUS_EQ_BARS',   "📊 EQ Bars",          "Vertical EQ bars around the silhouette, heights driven by harmonics"),
+            ('MUS_WAVE_DISP', "🎶 Sound Wave Displace","Noise displacement amplitude scaled by music influence"),
+            ('MUS_BEAT_RING', "⭕ Beat Ring",        "Orbiting ring of orbs with sine-pulsing radii"),
+            ('MUS_HARMONIC',  "🎼 Harmonic Lattice", "Stack of horizontal noise grooves at frequencies a+b"),
+            # ── v2.17: advanced GN ──────────────────────────────────
+            ('ADV_RAY_GROW',  "📡 Raycast Growth",   "Rays from origin → instances at hit normals"),
+            ('ADV_NEAR_FUR',  "🦔 Nearest Fur",      "Fur cones pointing toward nearest point on a target"),
+            ('ADV_EDGE_TUBES',"🟦 Edge Tube Highlights","Tube sweeps along sharp edges (Edge Angle field)"),
+            ('ADV_DUAL_MESH', "🔷 Dual Mesh",        "Convert to dual mesh + offset cells (Catmull-Clark feel)"),
+            ('ADV_VOR_FRAC',  "💎 Voronoi Fracture", "3D voronoi cell shatter via volume + points"),
+            ('ADV_CRYSTALS',  "🧊 Crystal Cluster",  "Distribute pointy octahedra by 3D voronoi field"),
+            ('ADV_FIELD_LAT', "🕸 Field Lattice",    "Subdivided lattice driven by Position->Math field"),
+            # ── v2.18: curve-rich geometry (no more cones/cubes) ────
+            ('GOTH_VAULT',    "🏛 Bezier Rib Vault", "Pointed Gothic ribbed vault — real bezier arches swept with profile"),
+            ('GOTH_TRACERY2', "🌿 Branching Tracery","Recursive bezier tracery branching across the silhouette"),
+            ('VAP_DOLPHIN',   "🐬 Dolphin Arcs",     "Sine-wave dolphin-jump arcs swept with neon tube profile"),
+            ('ZEN_BONSAI',    "🌳 Bonsai Branching", "Recursive bezier branching like a bonsai tree growing from base"),
+            ('SPI_FLOWER',    "🌸 Flower of Life",   "Sacred geometry: overlapping bezier circles in flower-of-life lattice"),
+            ('SPI_METATRON',  "✡ Metatron's Cube",  "13-circle Metatron's Cube with connecting bezier lines"),
+            # ── v2.19: mechanical ───────────────────────────────────
+            ('MECH_BOLTS',    "🔩 Hex Bolts",        "Hex-head bolt instances across the surface (mask-gated)"),
+            ('MECH_PIPES',    "🔧 Pipe Network",     "Bezier-arc pipes with flange torus joints"),
+            ('MECH_GEARS',    "⚙ Gears",            "Cog gears (body + tooth ring) distributed on faces"),
+            ('MECH_PISTONS',  "🛠 Pistons",          "Shaft + bell housing piston rings"),
+            ('MECH_PANELS',   "🟫 Industrial Panels","Rectangular extruded panel inserts (mask-gated)"),
         ],
         default='GOTH_TRACERY',
         update=auto_update_callback,
@@ -3140,34 +3181,34 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
     # `aest_music_gain` props (declared a bit further down) and consumed
     # by the `_aest_val()` and `_music_mod()` helpers in the effect builders.
 
-    # â”€â”€ v2.19: profile picker (shared by all curve-swept effects) â”€â”€
+    # ── v2.19: profile picker (shared by all curve-swept effects) ──
     aest_profile: bpy.props.EnumProperty(
         name="Sweep Profile",
         items=[
-            ('CIRCLE', "â—‹ Round Tube",   "Smooth cylindrical tube (default)"),
-            ('SQUARE', "â–¡ Beam",         "Squared rectangular beam cross-section"),
+            ('CIRCLE', "○ Round Tube",   "Smooth cylindrical tube (default)"),
+            ('SQUARE', "□ Beam",         "Squared rectangular beam cross-section"),
             ('OGEE',   "S Ogee",         "Double-curved S-profile (architectural ogee)"),
-            ('FLUTE',  "âœ¦ Fluted",       "Multi-lobed fluted column cross-section"),
-            ('LOTUS',  "â€ Lotus Petal",  "Lotus-petal cross-section"),
+            ('FLUTE',  "✦ Fluted",       "Multi-lobed fluted column cross-section"),
+            ('LOTUS',  "❀ Lotus Petal",  "Lotus-petal cross-section"),
         ],
         default='CIRCLE',
         update=auto_update_callback)
-    # â”€â”€ v2.19: vertex-group mask (effect only fires where mask > 0.5) â”€â”€
+    # ── v2.19: vertex-group mask (effect only fires where mask > 0.5) ──
     aest_mask_attr: bpy.props.StringProperty(
         name="Mask Vertex Group",
         description="Name of a vertex group on the mesh. Effects gate their "
                     "distribution / displacement to vertices where this group's "
                     "weight > 0.5. Leave blank to affect the whole mesh.",
         default="", update=auto_update_callback)
-    # â”€â”€ v2.19: stack-role sorting â”€â”€
+    # ── v2.19: stack-role sorting ──
     aest_stack_role: bpy.props.EnumProperty(
         name="Stack Role",
         items=[
-            ('BASE',     "1 Â· Base displacement", "Reshape the underlying mesh (drip, weathered, ripple)"),
-            ('OVERLAY',  "2 Â· Surface overlay",   "Wireframe / scanlines / tracery sitting on the surface"),
-            ('INSTANCE', "3 Â· Instances",         "Per-face instances (greeble, spikes, finials)"),
-            ('PROP',     "4 Â· Free-standing prop","Standalone props (busts, palms, lanterns)"),
-            ('TOP',      "5 Â· Top layer (glow)",  "Outermost emissive / wireframe layer"),
+            ('BASE',     "1 · Base displacement", "Reshape the underlying mesh (drip, weathered, ripple)"),
+            ('OVERLAY',  "2 · Surface overlay",   "Wireframe / scanlines / tracery sitting on the surface"),
+            ('INSTANCE', "3 · Instances",         "Per-face instances (greeble, spikes, finials)"),
+            ('PROP',     "4 · Free-standing prop","Standalone props (busts, palms, lanterns)"),
+            ('TOP',      "5 · Top layer (glow)",  "Outermost emissive / wireframe layer"),
         ],
         default='OVERLAY',
         description="Controls modifier sort order when stacking effects",
@@ -3195,14 +3236,14 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
     bld_style: bpy.props.EnumProperty(
         name="Building Style",
         items=[
-            ('RESIDENTIAL',   "ðŸ  Residential",      "Low-rise housing block with regular windows + balconies"),
-            ('COMMERCIAL',    "ðŸ¢ Commercial",        "Mixed-use block: retail ground floor + office upper floors"),
-            ('SKYSCRAPER',    "ðŸ™ Skyscraper",        "High-rise with setbacks, curtain-wall facade + rooftop spire"),
-            ('WAREHOUSE',     "ðŸ­ Warehouse",         "Single-floor industrial with loading bays + sawtooth roof"),
-            ('CYBERPUNK',     "ðŸŒƒ Cyberpunk Tower",   "Irregular stacked volumes + LED panels + makeshift additions"),
-            ('SCIFI_STATION', "ðŸš€ Sci-Fi Station",    "Modular orbital station with docking rings + antenna clusters"),
-            ('GOTHIC_MANOR',  "ðŸ° Gothic Manor",      "Medieval manor with towers + pointed windows + battlements"),
-            ('BRUTALIST',     "ðŸ§± Brutalist Block",   "Raw concrete slab tower with horizontal banding"),
+            ('RESIDENTIAL',   "🏠 Residential",      "Low-rise housing block with regular windows + balconies"),
+            ('COMMERCIAL',    "🏢 Commercial",        "Mixed-use block: retail ground floor + office upper floors"),
+            ('SKYSCRAPER',    "🏙 Skyscraper",        "High-rise with setbacks, curtain-wall facade + rooftop spire"),
+            ('WAREHOUSE',     "🏭 Warehouse",         "Single-floor industrial with loading bays + sawtooth roof"),
+            ('CYBERPUNK',     "🌃 Cyberpunk Tower",   "Irregular stacked volumes + LED panels + makeshift additions"),
+            ('SCIFI_STATION', "🚀 Sci-Fi Station",    "Modular orbital station with docking rings + antenna clusters"),
+            ('GOTHIC_MANOR',  "🏰 Gothic Manor",      "Medieval manor with towers + pointed windows + battlements"),
+            ('BRUTALIST',     "🧱 Brutalist Block",   "Raw concrete slab tower with horizontal banding"),
         ],
         default='COMMERCIAL',
         update=auto_update_callback,
@@ -3218,11 +3259,11 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
     bld_facade_style: bpy.props.EnumProperty(
         name="Facade Material",
         items=[
-            ('CONCRETE', "ðŸ§± Concrete",    "Raw concrete with horizontal banding"),
-            ('GLASS',    "ðŸªŸ Glass",       "Full curtain-wall glazing"),
-            ('BRICK',    "ðŸ”¶ Brick",       "Red brick coursing"),
-            ('LED',      "ðŸ’¡ LED Panels",  "Cyberpunk LED panel grid"),
-            ('SCIFI',    "ðŸš€ Sci-Fi",      "Panelled hull plating"),
+            ('CONCRETE', "🧱 Concrete",    "Raw concrete with horizontal banding"),
+            ('GLASS',    "🪟 Glass",       "Full curtain-wall glazing"),
+            ('BRICK',    "🔶 Brick",       "Red brick coursing"),
+            ('LED',      "💡 LED Panels",  "Cyberpunk LED panel grid"),
+            ('SCIFI',    "🚀 Sci-Fi",      "Panelled hull plating"),
         ],
         default='CONCRETE',
         update=auto_update_callback,
@@ -3384,7 +3425,7 @@ def add_twist(tree, in_geom, twist_angle, height, x=0, y=300):
 
 def make_harmonic_value(tree, index_socket, freq_a, freq_b, layers, x, y):
     """
-    Compose layered sine waves driven by point index â†’ musical/harmonic factor.
+    Compose layered sine waves driven by point index → musical/harmonic factor.
     Returns a Math output socket (value in roughly [-2..2]).
     """
     # Layer 1
@@ -3441,7 +3482,7 @@ def make_harmonic_value(tree, index_socket, freq_a, freq_b, layers, x, y):
 
 
 # ----------------------------------------------------------------------
-# BUILDERS â€” TOWER / ORGANIC / HYBRID (existing)
+# BUILDERS — TOWER / ORGANIC / HYBRID (existing)
 # ----------------------------------------------------------------------
 
 def build_tower(tree, props, base_x=-1400):
@@ -3520,15 +3561,15 @@ def build_hybrid(tree, props):
 # ----------------------------------------------------------------------
 
 def build_railing(tree, props, x_offset=0, y_offset=0, length=None, height=None):
-    """AAA railing â€” curve-swept balusters + proper horizontal rails aligned to piece.
+    """AAA railing — curve-swept balusters + proper horizontal rails aligned to piece.
 
     v2.49 overhaul:
-    â€¢ Balusters are vertical CurvePrimitiveLine segments swept with a decorative
-      profile (round / ogee / fluted) â€” no more MeshCube / MeshCylinder instances.
-    â€¢ Top and bottom rails are horizontal CurvePrimitiveLine segments swept with
-      a slightly larger matching profile â€” seamless cap geometry, no floating cubes.
-    â€¢ Balusters start at z=0 (piece floor), top rail sits at z=H â€” zero Z-gap.
-    â€¢ Harmonic height modulation kept for musical whimsy.
+    • Balusters are vertical CurvePrimitiveLine segments swept with a decorative
+      profile (round / ogee / fluted) — no more MeshCube / MeshCylinder instances.
+    • Top and bottom rails are horizontal CurvePrimitiveLine segments swept with
+      a slightly larger matching profile — seamless cap geometry, no floating cubes.
+    • Balusters start at z=0 (piece floor), top rail sits at z=H — zero Z-gap.
+    • Harmonic height modulation kept for musical whimsy.
     """
     L  = length if length is not None else props.rail_length
     H  = height if height is not None else props.rail_height
@@ -3539,7 +3580,7 @@ def build_railing(tree, props, x_offset=0, y_offset=0, length=None, height=None)
     spacing = L / max(1, n - 1)
     parts   = []
 
-    # â”€â”€ Shared baluster profile (picked from props.aest_profile) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Shared baluster profile (picked from props.aest_profile) ──────────
     bal_prof = _make_circle_profile(tree, br, resolution=10,
                                     loc=(bx - 300, -300), props=props)
     if bal_prof is None:
@@ -3552,7 +3593,7 @@ def build_railing(tree, props, x_offset=0, y_offset=0, length=None, height=None)
             except Exception:
                 pass
 
-    # â”€â”€ Rail profile (slightly larger, always round for clean cap) â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Rail profile (slightly larger, always round for clean cap) ────────
     rail_prof = _safe_node(tree, 'GeometryNodeCurvePrimitiveCircle', (bx - 300, -600))
     if rail_prof:
         try:
@@ -3562,7 +3603,7 @@ def build_railing(tree, props, x_offset=0, y_offset=0, length=None, height=None)
             pass
     color_node(rail_prof, "railing") if rail_prof else None
 
-    # â”€â”€ Individual swept balusters â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Individual swept balusters ─────────────────────────────────────────
     # Use InstanceOnPoints so baluster count is a real parameter.
     # Each baluster: vertical CurvePrimitiveLine from (x, 0, 0) to (x, 0, H),
     # assembled as a single instance and placed along a point line.
@@ -3608,7 +3649,7 @@ def build_railing(tree, props, x_offset=0, y_offset=0, length=None, height=None)
             _link(tree, bal_geom_out, iop.inputs['Instance'])
             color_node(iop, "railing")
 
-            # Musical height modulation â€” scale Z per baluster
+            # Musical height modulation — scale Z per baluster
             idx = _safe_node(tree, 'GeometryNodeInputIndex', (bx, -300))
             if idx:
                 try:
@@ -3651,7 +3692,7 @@ def build_railing(tree, props, x_offset=0, y_offset=0, length=None, height=None)
                 _link(tree, iop_out, rea.inputs['Geometry'])
                 parts.append(rea.outputs['Geometry'])
 
-    # â”€â”€ Top rail â€” horizontal sweep â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Top rail — horizontal sweep ────────────────────────────────────────
     top_curve = _safe_node(tree, 'GeometryNodeCurvePrimitiveLine', (bx, 700))
     if top_curve:
         try:
@@ -3670,7 +3711,7 @@ def build_railing(tree, props, x_offset=0, y_offset=0, length=None, height=None)
                 color_node(top_sw, "railing")
                 parts.append(top_sw.outputs['Mesh'])
 
-    # â”€â”€ Bottom rail â€” horizontal sweep â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Bottom rail — horizontal sweep ────────────────────────────────────
     bot_curve = _safe_node(tree, 'GeometryNodeCurvePrimitiveLine', (bx, 900))
     if bot_curve:
         try:
@@ -3689,7 +3730,7 @@ def build_railing(tree, props, x_offset=0, y_offset=0, length=None, height=None)
                 color_node(bot_sw, "railing")
                 parts.append(bot_sw.outputs['Mesh'])
 
-    # â”€â”€ Mid rail (optional decorative) at 40% height â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Mid rail (optional decorative) at 40% height ──────────────────────
     if n > 4:
         mid_curve = _safe_node(tree, 'GeometryNodeCurvePrimitiveLine', (bx, 1100))
         if mid_curve:
@@ -3709,7 +3750,7 @@ def build_railing(tree, props, x_offset=0, y_offset=0, length=None, height=None)
                     color_node(mid_sw, "railing")
                     parts.append(mid_sw.outputs['Mesh'])
 
-    # â”€â”€ Join all parts â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Join all parts ─────────────────────────────────────────────────────
     if not parts:
         return None
     join = _safe_node(tree, 'GeometryNodeJoinGeometry', (bx + 2000, 0))
@@ -3733,14 +3774,14 @@ def build_railing(tree, props, x_offset=0, y_offset=0, length=None, height=None)
 
 
 def build_curved_wall(tree, props, base_x=-1400):
-    """Curved wall segment â€” a horizontal bezier arc swept with a rectangle profile.
+    """Curved wall segment — a horizontal bezier arc swept with a rectangle profile.
 
     v2.49 new function:
     Produces a proper curved wall section (1/4 to full circle arc) with:
-    â€¢ Bezier arc spine (arc angle controlled by props.wall_arc_angle)
-    â€¢ Rectangular cross-section sweep (wall thickness Ã— wall height)
-    â€¢ Optional crenellations on top (reuses crenel props)
-    â€¢ Returns geometry socket for joining into any building
+    • Bezier arc spine (arc angle controlled by props.wall_arc_angle)
+    • Rectangular cross-section sweep (wall thickness × wall height)
+    • Optional crenellations on top (reuses crenel props)
+    • Returns geometry socket for joining into any building
     """
     import math
     arc_deg  = getattr(props, 'wall_arc_angle',    90.0)
@@ -3753,11 +3794,11 @@ def build_curved_wall(tree, props, base_x=-1400):
     arc_rad  = math.radians(arc_deg)
     half_ang = arc_rad / 2.0
 
-    # â”€â”€ Arc spine as a BezierSegment â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Arc spine as a BezierSegment ─────────────────────────────────────
     # Start: (cos(-half_ang)*radius, sin(-half_ang)*radius, 0)
     # End:   (cos( half_ang)*radius, sin( half_ang)*radius, 0)
     # Cubic bezier approximation of a circular arc:
-    #   tangent length â‰ˆ (4/3)*tan(arc/4)*radius
+    #   tangent length ≈ (4/3)*tan(arc/4)*radius
     tan_len = (4.0 / 3.0) * math.tan(arc_rad / 4.0) * radius
 
     sx = math.cos(-half_ang) * radius
@@ -3782,7 +3823,7 @@ def build_curved_wall(tree, props, base_x=-1400):
             pass
         color_node(spine, "wall")
 
-    # â”€â”€ Rectangular cross-section profile (width=thickness, height=wall_h) â”€
+    # ── Rectangular cross-section profile (width=thickness, height=wall_h) ─
     rect_prof = _safe_node(tree, 'GeometryNodeCurvePrimitiveQuadrilateral', (base_x - 300, -200))
     if rect_prof:
         try:
@@ -3802,7 +3843,7 @@ def build_curved_wall(tree, props, base_x=-1400):
             color_node(wall_sweep, "wall")
             parts.append(wall_sweep.outputs['Mesh'])
 
-    # â”€â”€ Optional crenellations on top â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Optional crenellations on top ─────────────────────────────────────
     if crenels > 0 and spine:
         # Resample arc to N merlon positions
         resample = _safe_node(tree, 'GeometryNodeResampleCurve', (base_x + 300, -400))
@@ -3850,7 +3891,7 @@ def build_curved_wall(tree, props, base_x=-1400):
                                 _link(tree, tr_up.outputs['Instances'], rea.inputs['Geometry'])
                                 parts.append(rea.outputs['Geometry'])
 
-    # â”€â”€ Join â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Join ───────────────────────────────────────────────────────────────
     if not parts:
         return None
     if len(parts) == 1:
@@ -3979,7 +4020,7 @@ def _gb_trim_depth(props, wall_t):
 
 
 def _gb_doorway_frame_trim(tree, props, base_x, dw, dh, t, node_y=0):
-    """Lintels/jambs with recess or offset â€” never coplanar with uncut wall face."""
+    """Lintels/jambs with recess or offset — never coplanar with uncut wall face."""
     if not getattr(props, 'gb_frame', True):
         return []
     mode = _gb_trim_mode(props)
@@ -4057,7 +4098,7 @@ def _gb_ceiling_active(props):
 
 def _gb_add_corridor_ceiling(tree, props, base_x, span_w, span_l, H, t, cx, cy,
                              node_y, along_x=False):
-    """Full slab or T-bar grid â€” trim-sheet friendly ceiling bays."""
+    """Full slab or T-bar grid — trim-sheet friendly ceiling bays."""
     if not _gb_ceiling_active(props):
         return []
     mode = _gb_ceiling_mode(props)
@@ -4132,7 +4173,7 @@ def _gb_corridor_ribs(tree, props, base_x, span_l, W, H, t, cx, cy, along_x, nod
 
 def _gb_corridor_wainscot(tree, props, base_x, span_l, W, H, t, cx, cy,
                           along_x, node_y, side_sign=1):
-    """Recessed wainscot + baseboard bands â€” flat panels for trim sheets."""
+    """Recessed wainscot + baseboard bands — flat panels for trim sheets."""
     wh = getattr(props, 'gb_wainscot_height', 0.0)
     bb = getattr(props, 'gb_baseboard_height', 0.0)
     if wh < 0.01 and bb < 0.01:
@@ -4169,7 +4210,7 @@ def _gb_junction_column(tree, props, base_x, cx, cy, W, H, t, node_y):
 
 
 def _gb_corner_sleeve_bend(tree, props, base_x, W, L, H, t, node_y):
-    """L-bend inner corner sleeve â€” quarter floor + return walls (not solid infill)."""
+    """L-bend inner corner sleeve — quarter floor + return walls (not solid infill)."""
     parts = []
     sleeve = min(W, L) * 0.5
     wh = H - t
@@ -4200,7 +4241,7 @@ def _gb_corner_sleeve_bend(tree, props, base_x, W, L, H, t, node_y):
 
 
 def _gb_opening_cutter_depth(t, mult=4.0):
-    """Deep cutter through wall thickness â€” prevents boolean clipping in UE blockout."""
+    """Deep cutter through wall thickness — prevents boolean clipping in UE blockout."""
     return t * mult
 
 
@@ -4227,7 +4268,7 @@ def _gb_collect_door_cutters_for_rect(tree, props, rw, rd, t, dh, dw, base_x, no
 
 def _gb_collect_window_cutters_for_rect(tree, props, rw, rd, t, H, base_x, node_y,
                                         rx=0.0, ry=0.0):
-    """Window cutters â€” v2.58 count props or legacy per-side toggles."""
+    """Window cutters — v2.58 count props or legacy per-side toggles."""
     cutters_ns, cutters_ew = [], []
     depth = _gb_opening_cutter_depth(t)
     if getattr(props, 'gb_windows_enabled', False):
@@ -4463,7 +4504,7 @@ def build_greybox_platform(tree, props, base_x=-1400):
                      base_x, 300 + i * 200)
         if lg: parts.append(lg)
 
-    # Perimeter railings â€” all 4 edges at deck height
+    # Perimeter railings — all 4 edges at deck height
     style = getattr(props, 'gb_railing_style', 'ADVANCED')
     if style != 'NONE' and getattr(props, 'gb_railings', True):
         import math as _m
@@ -4538,7 +4579,7 @@ def build_greybox_catwalk(tree, props, base_x=-1400):
                            base_x + 300, 300 + i * 80)
             if post: parts.append(post)
 
-    # Railings down both long sides â€” properly aligned at deck edge
+    # Railings down both long sides — properly aligned at deck edge
     style = getattr(props, 'gb_railing_style', 'ADVANCED')
     if style != 'NONE' and getattr(props, 'gb_railings', True):
         import math as _m
@@ -4581,13 +4622,13 @@ def build_greybox_pillar_hall(tree, props, base_x=-1400):
     fw = span_x + pad * 2
     fd = span_y + pad * 2
 
-    # Floor + roof â€” v2.60.2 walk-plane: floor top at Z=0
+    # Floor + roof — v2.60.2 walk-plane: floor top at Z=0
     floor = _gb_box(tree, (fw, fd, t), (0, 0, -t * 0.5), base_x, 0)
     if floor: parts.append(floor)
     roof = _gb_box(tree, (fw, fd, t), (0, 0, H - t * 0.5), base_x, 300, "ceiling")
     if roof: parts.append(roof)
 
-    # Column grid â€” octagonal columns via fill+extrude for nicer silhouette
+    # Column grid — octagonal columns via fill+extrude for nicer silhouette
     import math as _m
     idx = 0
     for ix in range(cols_x):
@@ -4635,7 +4676,7 @@ def build_greybox_pillar_hall(tree, props, base_x=-1400):
 
 def build_greybox_stair_block(tree, props, base_x=-1400):
     """Blockout staircase: solid stepped wedge + side stringer walls + top
-    landing. Wider/cleaner than the spiral STAIRCASE â€” for level traversal."""
+    landing. Wider/cleaner than the spiral STAIRCASE — for level traversal."""
     steps = max(2, getattr(props, 'gb_steps', 10))
     rise  = getattr(props, 'gb_rise', 0.2)
     run_  = getattr(props, 'gb_run',  0.3)
@@ -4667,14 +4708,14 @@ def build_greybox_stair_block(tree, props, base_x=-1400):
                               base_x + 400, 1000 + (sx + 1) * 150, "level")
             if sw: parts.append(sw)
 
-    # v2.60.2 â€” walk-plane entry pad (top at Z=0) + landing top at upper walk plane
+    # v2.60.2 — walk-plane entry pad (top at Z=0) + landing top at upper walk plane
     pad_y = -total_run * 0.5 - run_ * 0.5
     entry_pad = _gb_box(tree, (W + t * 2, run_ * 2, t),
                         (0, pad_y, -t * 0.5), base_x - 50, 0, "level")
     if entry_pad:
         parts.insert(0, entry_pad)
 
-    # Top landing â€” top surface at total_rise + t (upper walk plane)
+    # Top landing — top surface at total_rise + t (upper walk plane)
     if getattr(props, 'gb_landing', True):
         land_y = total_run * 0.5 + run_ * 1.5
         land = _gb_box(tree, (W, run_ * 3, t),
@@ -4729,7 +4770,7 @@ def build_greybox_arena(tree, props, base_x=-1400):
     depth  = getattr(props, 'gb_run',  1.0)   # tier tread depth
     parts = []
 
-    # Central arena floor slab â€” top at Z=0 (v2.60.1 walk-plane alignment)
+    # Central arena floor slab — top at Z=0 (v2.60.1 walk-plane alignment)
     floor_t = max(0.2, rise * 0.35)
     circ = _safe_node(tree, 'GeometryNodeCurvePrimitiveCircle', (base_x, 0))
     if circ:
@@ -4884,7 +4925,7 @@ def build_greybox_pipe_run(tree, props, base_x=-1400):
             z += seg_len * 0.6
         pts.append((x, y, z))
 
-    # Create the curve via a Mesh Line we reposition, then Meshâ†’Curve.
+    # Create the curve via a Mesh Line we reposition, then Mesh→Curve.
     # Simpler robust route: build bezier-less poly by chaining CurveLine sweeps.
     prof = _safe_node(tree, 'GeometryNodeCurvePrimitiveCircle', (base_x - 300, 0))
     if prof:
@@ -4931,7 +4972,7 @@ def build_greybox_pipe_run(tree, props, base_x=-1400):
 
 
 # ==============================================================================
-# ðŸ—  EXTENDED GREYBOX BUILDERS  (v2.52)
+# 🏗  EXTENDED GREYBOX BUILDERS  (v2.52)
 #   Corridor bends/crosses, recursive branching, combat rooms, elevator shafts,
 #   composite room shapes. All properly aligned with the advanced railing system.
 # ==============================================================================
@@ -4964,8 +5005,8 @@ def _gb_railing_edge(tree, props, length, deck_z, tx, ty, rot_z, x_offset, idx):
 
 
 def build_greybox_corridor_bend(tree, props, base_x=-1400):
-    """90Â° bent (L-shaped) corridor: Arm A along +Y, Arm B along +X.
-    Inner corner sleeve (quarter floor + return walls) â€” kitbash, not solid infill."""
+    """90° bent (L-shaped) corridor: Arm A along +Y, Arm B along +X.
+    Inner corner sleeve (quarter floor + return walls) — kitbash, not solid infill."""
     L, W, H, t = _gb_corridor_dims(props)
     parts = []
     wz = t + (H - t) * 0.5
@@ -5407,14 +5448,14 @@ def build_greybox_corridor_recursive(tree, props, base_x=-1400):
 
 
 # ==============================================================================
-# ðŸŒ€  CURVED ROOM GREYBOX  (v2.55)
-#   Arc-plan rooms and corridors. Built from CurveArcâ†’fill+extrude rings
+# 🌀  CURVED ROOM GREYBOX  (v2.55)
+#   Arc-plan rooms and corridors. Built from CurveArc→fill+extrude rings
 #   so walls follow true circular geometry. All pieces sit at z=0, bottom-center.
 # ==============================================================================
 
 def _arc_wall_ring(tree, r_inner, r_outer, h, start_ang, sweep_ang, t_floor, base_x, y_off, label="wall"):
     """Extrude a filled annular sector from r_inner to r_outer, height h.
-    Uses CurveArc â†’ offset â†’ fill â†’ extrude. Returns geometry socket."""
+    Uses CurveArc → offset → fill → extrude. Returns geometry socket."""
     import math as _m
     # Outer arc
     arc_o = _safe_node(tree, 'GeometryNodeCurveArc', (base_x, y_off))
@@ -5443,7 +5484,7 @@ def _arc_wall_ring(tree, r_inner, r_outer, h, start_ang, sweep_ang, t_floor, bas
         _link(tree, arc_o.outputs['Curve'], jc.inputs['Geometry'])
         _link(tree, arc_i.outputs['Curve'], jc.inputs['Geometry'])
         color_node(jc, label)
-        # Fill â†’ Extrude
+        # Fill → Extrude
         fill = _safe_node(tree, 'GeometryNodeFillCurve', (base_x + 400, y_off))
         if fill:
             try: fill.mode = 'NGONS'
@@ -5495,7 +5536,7 @@ def _arc_floor_disc(tree, radius, t, start_ang, sweep_ang, base_x, y_off, label=
         except Exception: pass
         _link(tree, fill.outputs['Mesh'], ext.inputs['Mesh'])
         color_node(ext, label)
-        # v2.60.1 â€” floor top at Z=0 (walk plane); extrude rises +Z from curve plane
+        # v2.60.1 — floor top at Z=0 (walk plane); extrude rises +Z from curve plane
         if t > 0:
             floor_z = _move(tree, ext.outputs['Mesh'], (base_x + 600, y_off),
                             translation=(0, 0, -t), label=label)
@@ -5574,7 +5615,7 @@ def _gb_collect_door_cutter_circular(tree, props, R, t, base_x, node_y):
 
 
 def _gb_collect_window_cutters_circular(tree, props, R, t, H, base_x, node_y):
-    """Evenly spaced window cutters on circular drum â€” skips south door sector."""
+    """Evenly spaced window cutters on circular drum — skips south door sector."""
     import math as _m
     if not getattr(props, 'gb_windows_enabled', False):
         return []
@@ -5623,7 +5664,7 @@ def _gb_collect_door_cutter_arc_inner(tree, props, R_inner, t, base_x, node_y, d
 
 def _gb_collect_window_cutters_arc_inner(tree, props, R_inner, t, H, sweep, base_x, node_y,
                                          door_ang=0.0):
-    """Evenly spaced window cutters on arc corridor inner wall â€” skips door sector."""
+    """Evenly spaced window cutters on arc corridor inner wall — skips door sector."""
     import math as _m
     if not getattr(props, 'gb_windows_enabled', False):
         return []
@@ -5734,7 +5775,7 @@ def build_gb_room_circular(tree, props, base_x=-1400):
     floor = _arc_floor_disc(tree, R, t, 0, _m.tau, base_x, 0)
     if floor: parts.append(floor)
 
-    # Perimeter wall â€” full ring, door/windows boolean-cut (replaces arc gap v2.55)
+    # Perimeter wall — full ring, door/windows boolean-cut (replaces arc gap v2.55)
     wall = _arc_wall_ring(tree, R - t, R, H, 0, _m.tau, t, base_x, -400)
     wall = _gb_apply_circular_openings(tree, wall, props, R, t, H, base_x, -400)
     if wall: parts.append(wall)
@@ -5770,11 +5811,11 @@ def build_gb_room_apsidal(tree, props, base_x=-1400):
     wh  = H - t
     wz  = t + wh * 0.5
 
-    # â”€â”€ Rectangular nave portion â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Rectangular nave portion ─────────────────────────────────────
     # Nave starts at y=0, ends at y=D
-    # N wall (top of nave, where apse begins) â€” no door, full width
+    # N wall (top of nave, where apse begins) — no door, full width
     parts.append(_gb_box(tree, (W + t*2, t, wh), (0, D*0.5+t*0.5, wz), base_x, 200))
-    # S wall (entry) â€” boolean door cut through solid wall (v2.59.14)
+    # S wall (entry) — boolean door cut through solid wall (v2.59.14)
     door_z = t + dh * 0.5
     depth = _gb_opening_cutter_depth(t)
     sw_wall = _gb_box(tree, (W, t, wh), (0, -D*0.5 - t*0.5, wz), base_x, 350)
@@ -5784,7 +5825,7 @@ def build_gb_room_apsidal(tree, props, base_x=-1400):
     sw_cut = _gb_apply_openings_to_wall(tree, sw_wall, 'S', cutters_ns, [], base_x, 400)
     if sw_cut:
         parts.append(sw_cut)
-    # E and W walls â€” optional boolean window cuts (v2.59.17)
+    # E and W walls — optional boolean window cuts (v2.59.17)
     if getattr(props, 'gb_windows_enabled', False):
         class _ApsidalWinProps:
             pass
@@ -5811,7 +5852,7 @@ def build_gb_room_apsidal(tree, props, base_x=-1400):
     # Nave floor
     parts.append(_gb_box(tree, (W, D, t), (0, 0, t*0.5), base_x, 900))
 
-    # â”€â”€ Semicircular apse (north end) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Semicircular apse (north end) ────────────────────────────────
     apse_y_ctr = D * 0.5   # apse centre = top of nave
     # Apse wall ring
     apse_wall = _arc_wall_ring(tree, R - t, R, H, 0, _m.pi, 0, base_x, -600)
@@ -5867,12 +5908,12 @@ def build_gb_corridor_arc(tree, props, base_x=-1400):
 
     # Floor slab (annular sector)
     floor = _arc_floor_disc(tree, R_outer, t, 0, sweep, base_x, 0)
-    # Cut inner disc â€” approximate with full floor - inner void
+    # Cut inner disc — approximate with full floor - inner void
     # (true boolean not available in GN, so build floor as ring)
     floor_ring = _arc_floor_ring(tree, R_inner + t, R_outer - t, t, 0, sweep, base_x, 200, "level")
     if floor_ring: parts.append(floor_ring)
 
-    # Inner curved wall â€” full sector + boolean door/windows (v2.59.21 / v2.59.24)
+    # Inner curved wall — full sector + boolean door/windows (v2.59.21 / v2.59.24)
     inner_wall = _arc_wall_ring(tree, R_inner, R_inner + t, H, 0, sweep, t, base_x, -200)
     inner_wall = _gb_apply_arc_inner_openings(
         tree, inner_wall, props, R_inner, t, base_x, -200, door_ang=0.0, H=H, sweep=sweep)
@@ -5925,7 +5966,7 @@ def build_gb_room_rotunda(tree, props, base_x=-1400):
         r_inner_wall = R - t if is_ground else R - gallery_w - t
         r_outer_wall = R
 
-        # Wall ring â€” ground: door/windows; upper gallery: outer-wall window booleans (v2.59.24)
+        # Wall ring — ground: door/windows; upper gallery: outer-wall window booleans (v2.59.24)
         ring = _arc_wall_ring(tree, r_inner_wall, r_outer_wall, fh, 0, _m.tau, 0 if is_ground else z0, base_x, -f*600)
         if is_ground:
             ring = _gb_apply_circular_openings(tree, ring, props, R, t, fh, base_x, -f*600)
@@ -5955,7 +5996,7 @@ def build_gb_room_rotunda(tree, props, base_x=-1400):
                     color_node(tr2, "level")
                     parts.append(tr2.outputs['Geometry'])
         else:
-            # Gallery floor ring (annular) â€” v2.60.3: _arc_floor_ring for walk-plane top at Z=0
+            # Gallery floor ring (annular) — v2.60.3: _arc_floor_ring for walk-plane top at Z=0
             gfl = _arc_floor_ring(
                 tree, R - gallery_w, R, t, 0, _m.tau, base_x, -f*600-400, "level")
             if gfl:
@@ -5985,8 +6026,8 @@ def build_gb_room_rotunda(tree, props, base_x=-1400):
 
 def build_gb_corridor_arc_cross(tree, props, base_x=-1400):
     """Curved Cross: four arc corridor arms meeting at a circular hub room.
-    The hub is a small circular room; each arm sweeps 90Â°. Together they make
-    a rounded X-junction â€” great for sci-fi space stations, castle roundels.
+    The hub is a small circular room; each arm sweeps 90°. Together they make
+    a rounded X-junction — great for sci-fi space stations, castle roundels.
     Inner arm walls: full sector rings + boolean door at hub junction (v2.59.22)
     + optional window booleans when gb_windows_enabled (v2.59.24).
     Parameters: gb_width (arm width), gb_radius (arm curve radius), gb_height,
@@ -6005,7 +6046,7 @@ def build_gb_corridor_arc_cross(tree, props, base_x=-1400):
     hub_floor = _arc_floor_disc(tree, hub_r, t, 0, _m.tau, base_x, -300)
     if hub_floor: parts.append(hub_floor)
 
-    # Four arms at N/S/E/W â€” annular 90Â° sectors rooted at hub_r (v2.60: no double offset)
+    # Four arms at N/S/E/W — annular 90° sectors rooted at hub_r (v2.60: no double offset)
     arm_len = max(W * 2.0, R)
     arm_configs = [(0, 0), (_m.pi * 0.5, 0), (_m.pi, 0), (_m.pi * 1.5, 0)]
     for ai, (yaw, _) in enumerate(arm_configs):
@@ -6031,7 +6072,7 @@ def build_gb_corridor_arc_cross(tree, props, base_x=-1400):
 
 
 # ==============================================================================
-# ðŸªœ  M.C. ESCHER GREYBOX PRESETS  (v2.52)
+# 🪝  M.C. ESCHER GREYBOX PRESETS  (v2.52)
 #   Solid, traversable level geometry inspired by Escher's impossible architecture.
 #   Each piece works as a standalone room/connector in a game level.
 # ==============================================================================
@@ -6049,7 +6090,7 @@ def build_gb_escher_relativity(tree, props, base_x=-1400):
     run  = S * 0.5 / max(1, n)
     parts = []
 
-    # â”€â”€ Outer chamber shell (floor + 4 walls + ceiling) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Outer chamber shell (floor + 4 walls + ceiling) ─────────────
     parts.append(_gb_box(tree, (S, S, t),  (0, 0, t*0.5),     base_x, 0))           # floor
     parts.append(_gb_box(tree, (S, S, t),  (0, 0, H+t*0.5),   base_x, 200, "ceiling"))  # ceiling
     parts.append(_gb_box(tree, (S, t, H),  (0,  S*0.5, H*0.5), base_x, 400))        # N wall
@@ -6057,11 +6098,11 @@ def build_gb_escher_relativity(tree, props, base_x=-1400):
     parts.append(_gb_box(tree, (t, S, H),  ( S*0.5, 0, H*0.5), base_x, 800))        # E wall
     parts.append(_gb_box(tree, (t, S, H),  (-S*0.5, 0, H*0.5), base_x, 1000))       # W wall
 
-    # â”€â”€ Central landing hub â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Central landing hub ──────────────────────────────────────────
     hub_s = S * 0.25
     parts.append(_gb_box(tree, (hub_s, hub_s, t*2), (0, 0, H*0.5), base_x, 1200, "level"))
 
-    # â”€â”€ Staircase A: normal gravity â€” floor, running +Y â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Staircase A: normal gravity — floor, running +Y ──────────────
     stair_w = S * 0.28
     ox_a, oy_a = -S*0.2, -S*0.3
     for i in range(n):
@@ -6071,10 +6112,10 @@ def build_gb_escher_relativity(tree, props, base_x=-1400):
                              (ox_a, sy_c, sz_top * 0.5),
                              base_x, 1400 + i * 80, "level"))
 
-    # â”€â”€ Staircase B: E-wall gravity â€” climbs up the +X wall â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Staircase B: E-wall gravity — climbs up the +X wall ──────────
     # In E-wall-gravity, "floor" = east wall. Steps climb toward -Z as
     # seen from the room, but along the wall surface toward +Z of room.
-    # We rotate step blocks: each step is a _gb_box_node rotated 90Â° around Y.
+    # We rotate step blocks: each step is a _gb_box_node rotated 90° around Y.
     for i in range(n):
         step_depth = t + (i + 1) * rise
         sy_b = S*0.1 + i * run + run * 0.5
@@ -6085,9 +6126,9 @@ def build_gb_escher_relativity(tree, props, base_x=-1400):
             (0, _m.radians(90), 0),
             base_x, 2200 + i * 80, "level"))
 
-    # â”€â”€ Staircase C: ceiling gravity â€” hangs from the ceiling, runs -Y â”€
+    # ── Staircase C: ceiling gravity — hangs from the ceiling, runs -Y ─
     # Ceiling gravity: upside-down. Steps hang down from ceiling,
-    # each slightly lower. Rotated 180Â° around the X axis.
+    # each slightly lower. Rotated 180° around the X axis.
     for i in range(n):
         sz_hang = t + (i + 1) * rise
         sy_c2   = S*0.3 - i * run - run * 0.5
@@ -6097,7 +6138,7 @@ def build_gb_escher_relativity(tree, props, base_x=-1400):
             (_m.pi, 0, 0),
             base_x, 3000 + i * 80, "ceiling"))
 
-    # â”€â”€ Arch connectors from each staircase top to hub â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Arch connectors from each staircase top to hub ───────────────
     for (ax, ay, az) in [(-S*0.2, oy_a + n*run, t + n*rise),
                           (S*0.5 - (t + n*rise), S*0.1 + n*run, H*0.55 - n*rise + run),
                           (S*0.15, S*0.3 - n*run, H - t - n*rise)]:
@@ -6127,12 +6168,12 @@ def build_gb_escher_penrose_loop(tree, props, base_x=-1400):
     outer_wall_h = 1.4                             # parapet height
     parts  = []
 
-    # â”€â”€ Rooftop base slab â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Rooftop base slab ────────────────────────────────────────────
     inner = side - W_cor * 2
     parts.append(_gb_box(tree, (side, side, t), (0, 0, t*0.5), base_x, 0, "level"))
-    # Inner courtyard void (leave open â€” no geometry inside the ring)
+    # Inner courtyard void (leave open — no geometry inside the ring)
 
-    # â”€â”€ Four staircase arms, each climbing n*rise â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Four staircase arms, each climbing n*rise ────────────────────
     # Arm 0: +Y face, steps go +X (CW when viewed from above)
     # Arm 1: +X face, steps go -Y
     # Arm 2: -Y face, steps go -X
@@ -6174,7 +6215,7 @@ def build_gb_escher_penrose_loop(tree, props, base_x=-1400):
                               corner_z * 0.5),
                              base_x, 8100 + ai * 100, "level"))
 
-    # â”€â”€ Outer parapet (4 short walls around loop perimeter) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Outer parapet (4 short walls around loop perimeter) ──────────
     total_z = 4 * n * rise
     for (pw, pd, px, py) in [
         (side, t, 0,       side*0.5),   # N
@@ -6186,7 +6227,7 @@ def build_gb_escher_penrose_loop(tree, props, base_x=-1400):
                              (px, py, total_z + outer_wall_h*0.5),
                              base_x, 9000 + len(parts)*50, "wall"))
 
-    # â”€â”€ Supporting structure below (tower walls) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Supporting structure below (tower walls) ─────────────────────
     if getattr(props, 'gb_ceiling', True):   # repurpose ceiling flag = add tower walls
         tower_h = getattr(props, 'gb_height', 6.0)
         for (tw, td, tx, ty) in [
@@ -6203,7 +6244,7 @@ def build_gb_escher_penrose_loop(tree, props, base_x=-1400):
 
 
 def build_gb_escher_gravity_shift(tree, props, base_x=-1400):
-    """Gravity Shift Corridor: a corridor that progressively rotates 90Â° around
+    """Gravity Shift Corridor: a corridor that progressively rotates 90° around
     its own travel axis. You enter with the floor underfoot; you exit with the
     original floor as the left wall. 5 discrete sections.
     In-game use: portal room, anti-gravity zone, puzzle transition."""
@@ -6212,18 +6253,18 @@ def build_gb_escher_gravity_shift(tree, props, base_x=-1400):
     W    = getattr(props, 'gb_width',     3.0)    # corridor cross-section
     H    = getattr(props, 'gb_height',    3.0)    # corridor cross-section (= W for square)
     t    = getattr(props, 'gb_wall_thick', 0.25)
-    n_segs = 5                                     # 5 rotation steps: 0Â°,22.5Â°,45Â°,67.5Â°,90Â°
+    n_segs = 5                                     # 5 rotation steps: 0°,22.5°,45°,67.5°,90°
     seg_l  = L / n_segs
     parts  = []
 
     for si in range(n_segs):
-        ang   = si * (_m.pi / 2) / (n_segs - 1)   # 0Â° â†’ 90Â° over 5 steps
+        ang   = si * (_m.pi / 2) / (n_segs - 1)   # 0° → 90° over 5 steps
         cos_a = _m.cos(ang)
         sin_a = _m.sin(ang)
         y_ctr = -L*0.5 + seg_l * (si + 0.5)
 
         # The corridor cross-section at this point:
-        # Floor, ceiling, left wall, right wall â€” all rotated by `ang` around Y (travel axis)
+        # Floor, ceiling, left wall, right wall — all rotated by `ang` around Y (travel axis)
         for (role, lx, lz, bw, bh, color) in [
             # (role, local_x_center, local_z_center, box_W, box_H, color)
             ("floor",   0,        -H*0.5,  W,    t,    "level"),
@@ -6232,7 +6273,7 @@ def build_gb_escher_gravity_shift(tree, props, base_x=-1400):
             ("right",   W*0.5,     0,      t,    H,    "level"),
         ]:
             # Rotate this panel around Y (the travel axis through the corridor centre)
-            # Local: (lx, 0, lz) â†’ rotated â†’ (lx*cos_a - lz*sin_a, 0, lx*sin_a + lz*cos_a)
+            # Local: (lx, 0, lz) → rotated → (lx*cos_a - lz*sin_a, 0, lx*sin_a + lz*cos_a)
             rx = lx * cos_a - lz * sin_a
             rz = lx * sin_a + lz * cos_a + H*0.5  # shift up so z=0 is ground
 
@@ -6248,7 +6289,7 @@ def build_gb_escher_gravity_shift(tree, props, base_x=-1400):
                                  base_x, si * 400 + len(parts) * 60, color)
             if piece: parts.append(piece)
 
-    # â”€â”€ Entry label: floor markers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Entry label: floor markers ────────────────────────────────────
     # Arrow hint on entry floor (thin dark slab)
     parts.append(_gb_box(tree, (W*0.3, seg_l*0.4, t*0.5),
                          (0, -L*0.5 + seg_l*0.25, t*1.05),
@@ -6272,12 +6313,12 @@ def build_gb_escher_belvedere(tree, props, base_x=-1400):
     col_s = t * 1.5
     parts = []
 
-    # â”€â”€ Ground floor slab + upper floor slab â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Ground floor slab + upper floor slab ────────────────────────
     parts.append(_gb_box(tree, (W, D, t), (0, 0,         t*0.5),        base_x,  0))
     parts.append(_gb_box(tree, (W, D, t), (0, 0, H1    + t*0.5),        base_x, 200, "level"))
     parts.append(_gb_box(tree, (W, D, t), (0, 0, H1+H2 + t*0.5),        base_x, 400, "ceiling"))
 
-    # â”€â”€ Lower floor: 4 normal columns at corners â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Lower floor: 4 normal columns at corners ─────────────────────
     corners = [(-W*0.5+col_s*0.5, -D*0.5+col_s*0.5),
                ( W*0.5-col_s*0.5, -D*0.5+col_s*0.5),
                ( W*0.5-col_s*0.5,  D*0.5-col_s*0.5),
@@ -6287,9 +6328,9 @@ def build_gb_escher_belvedere(tree, props, base_x=-1400):
                              (cx, cy, H1*0.5 + t),
                              base_x, 600 + i*100, "pillar"))
 
-    # â”€â”€ Upper floor: 4 columns connecting to OPPOSITE corners â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Upper floor: 4 columns connecting to OPPOSITE corners ────────
     # Escher's twist: column at NW bottom connects to SE top, etc.
-    # Pairs: (0â†’2), (1â†’3), (2â†’0), (3â†’1) â€” each column is diagonal
+    # Pairs: (0→2), (1→3), (2→0), (3→1) — each column is diagonal
     opp_corners = [corners[2], corners[3], corners[0], corners[1]]
     for i, ((bx_lo, by_lo), (bx_hi, by_hi)) in enumerate(zip(corners, opp_corners)):
         # Diagonal column from (bx_lo, by_lo, H1+t) to (bx_hi, by_hi, H1+H2+t)
@@ -6306,7 +6347,7 @@ def build_gb_escher_belvedere(tree, props, base_x=-1400):
             (tilt_x, 0, yaw),
             base_x, 1000 + i*120, "pillar"))
 
-    # â”€â”€ The impossible cross-beams at mid-level â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── The impossible cross-beams at mid-level ───────────────────────
     # Two horizontal beams at H1+H2/2, crossing at the centre
     beam_h = t * 1.8
     for ang in [0, _m.pi*0.5]:
@@ -6317,7 +6358,7 @@ def build_gb_escher_belvedere(tree, props, base_x=-1400):
             (0, 0, ang),
             base_x, 1500 + int(ang*100), "pillar"))
 
-    # â”€â”€ Perimeter balustrade on upper level â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Perimeter balustrade on upper level ───────────────────────────
     for (bw, bd, bx2, by2) in [
         (W, t,  0,       D*0.5-t*0.5),
         (W, t,  0,      -D*0.5+t*0.5),
@@ -6334,7 +6375,7 @@ def build_gb_escher_belvedere(tree, props, base_x=-1400):
 def build_gb_escher_waterfall(tree, props, base_x=-1400):
     """Impossible Waterfall: three elevated aqueduct channels arranged in a
     triangle. Each channel tilts slightly downward, but the loop closes at the
-    top â€” the water appears to flow down yet return to the source.
+    top — the water appears to flow down yet return to the source.
     Based on Escher's 'Waterfall' (1961).
     In-game use: puzzle room, impossible cistern, magical water feature."""
     import math as _m
@@ -6345,15 +6386,15 @@ def build_gb_escher_waterfall(tree, props, base_x=-1400):
     H_col = getattr(props, 'gb_height',  4.0)     # support column height
     parts = []
 
-    # Three channel arms, 120Â° apart, each tilted by (rise/span) downward
-    # The tilt angle is gentle â€” mostly horizontal
-    tilt = _m.atan2(rise, span)   # ~3â€“6Â° depending on props
+    # Three channel arms, 120° apart, each tilted by (rise/span) downward
+    # The tilt angle is gentle — mostly horizontal
+    tilt = _m.atan2(rise, span)   # ~3–6° depending on props
     ch_len = _m.sqrt(span**2 + rise**2)
 
     for ai in range(3):
-        yaw = ai * _m.tau / 3    # 0Â°, 120Â°, 240Â°
+        yaw = ai * _m.tau / 3    # 0°, 120°, 240°
 
-        # Channel arm centre in XY, elevation drops from riseâ†’0 along arm
+        # Channel arm centre in XY, elevation drops from rise→0 along arm
         cx = _m.cos(yaw) * span * 0.5
         cy = _m.sin(yaw) * span * 0.5
         cz = H_col + rise * (1 - ai / 3)   # each arm at different height for visual
@@ -6387,7 +6428,7 @@ def build_gb_escher_waterfall(tree, props, base_x=-1400):
             (cx, cy, cz * 0.5),
             base_x, ai * 800 + 600, "pillar"))
 
-    # â”€â”€ Corner junction blocks (where arms meet) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Corner junction blocks (where arms meet) ─────────────────────
     for ai in range(3):
         yaw_a = ai * _m.tau / 3
         yaw_b = ((ai + 1) % 3) * _m.tau / 3
@@ -6398,7 +6439,7 @@ def build_gb_escher_waterfall(tree, props, base_x=-1400):
                              (jx, jy, jz),
                              base_x, 2400 + ai * 100, "level"))
 
-    # â”€â”€ Base platform â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Base platform ────────────────────────────────────────────────
     parts.append(_gb_box(tree, (span * 2.2, span * 2.2, t_ch),
                          (0, 0, t_ch * 0.5),
                          base_x, 2700, "level"))
@@ -6408,7 +6449,7 @@ def build_gb_escher_waterfall(tree, props, base_x=-1400):
 
 def build_gb_escher_recursive_room(tree, props, base_x=-1400):
     """Recursive Room: concentric square rooms of decreasing scale, each rotated
-    slightly and connected by doorway passages â€” suggesting infinite regression.
+    slightly and connected by doorway passages — suggesting infinite regression.
     Based on Escher's 'Smaller and Smaller' / 'Print Gallery' concepts.
     In-game use: hub room for recursive puzzle levels, magical library, void antechamber."""
     import math as _m
@@ -6430,7 +6471,7 @@ def build_gb_escher_recursive_room(tree, props, base_x=-1400):
         cos_r = _m.cos(rot)
         sin_r = _m.sin(rot)
 
-        # Floor of this ring (annular â€” outer square minus inner square)
+        # Floor of this ring (annular — outer square minus inner square)
         # Approximate with 4 floor strips
         Wn = W0 * (scale ** (di + 1)) if di + 1 < depth else W * 0.1
         margin = (W - Wn) * 0.5
@@ -6451,7 +6492,7 @@ def build_gb_escher_recursive_room(tree, props, base_x=-1400):
 
         # 4 walls for this ring level (with door gap in +Y wall)
         for (bw, bd, bx2, by2, is_door) in [
-            (W, t,  0,       W*0.5-t*0.5,  True),    # N wall â€” door
+            (W, t,  0,       W*0.5-t*0.5,  True),    # N wall — door
             (W, t,  0,      -W*0.5+t*0.5,  False),   # S wall
             (t, W,  W*0.5-t*0.5,  0,       False),   # E wall
             (t, W, -W*0.5+t*0.5,  0,       False),   # W wall
@@ -6485,7 +6526,7 @@ def build_gb_escher_recursive_room(tree, props, base_x=-1400):
 
 
 # ==============================================================================
-# ðŸš  LEBBEUS WOODS GREYBOX  (v2.53)
+# 🏚  LEBBEUS WOODS GREYBOX  (v2.53)
 #   Parametric greybox geometry inspired by Woods' impossible, post-conflict,
 #   harvested and parasite architecture. All pieces are walkable game geometry.
 # ==============================================================================
@@ -6512,7 +6553,7 @@ def _gb_parasite_inner_opening(tree, par_geom, pw, pd, ph, t, dw, dh, face_key, 
 
 def build_gb_woods_parasite(tree, props, base_x=-1400):
     """Parasite Structure: a rectangular host building with 2-4 angled parasitic
-    volumes bolted onto its exterior faces at 15-35Â° angles â€” the Lebbeus Woods
+    volumes bolted onto its exterior faces at 15-35° angles — the Lebbeus Woods
     'colonization' of dead architecture. The parasite volumes are inhabitable
     (open on their inner face where they meet the host via gb_door_width/height).
     In-game use: slum add-on rooms, post-collapse habitat modules, sci-fi bolt-ons."""
@@ -6527,7 +6568,7 @@ def build_gb_woods_parasite(tree, props, base_x=-1400):
     rng = random.Random(getattr(props, 'seed', 1) + 77)
     parts = []
 
-    # â”€â”€ Host volume (thick-walled box, open top) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Host volume (thick-walled box, open top) ─────────────────────
     # Use NTRounded Cube for softer brutalist silhouette if Higgsas available
     host = _higg_node(tree, 'NTRounded Cube', (base_x, 0))
     if host is not None:
@@ -6540,7 +6581,7 @@ def build_gb_woods_parasite(tree, props, base_x=-1400):
     host_t = _move(tree, host_geom, (base_x + 200, 0), translation=(0, 0, H * 0.5), label="tower")
     if host_t: parts.append(host_t)
 
-    # â”€â”€ Parasitic bolt-on volumes (2-4 angled rooms) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Parasitic bolt-on volumes (2-4 angled rooms) ─────────────────
     n_parasites = getattr(props, 'gb_cover_count', 3)  # repurpose cover_count
     n_parasites = max(1, min(4, n_parasites))
 
@@ -6559,7 +6600,7 @@ def build_gb_woods_parasite(tree, props, base_x=-1400):
         pw = rng.uniform(W * 0.28, W * 0.48)
         pd = rng.uniform(D * 0.25, D * 0.42)
         ph = rng.uniform(H * 0.35, H * 0.65)
-        # Random tilt in 2 axes â€” the Woods signature diagonal
+        # Random tilt in 2 axes — the Woods signature diagonal
         tilt_x = rng.uniform(_m.radians(8), _m.radians(28))
         tilt_z = rng.uniform(-_m.radians(20), _m.radians(20))
 
@@ -6614,7 +6655,7 @@ def build_gb_woods_parasite(tree, props, base_x=-1400):
             color_node(strut_t, "ornament")
             parts.append(strut_t.outputs['Geometry'])
 
-    # â”€â”€ Gash / scar line across the host (Woods' war mark) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Gash / scar line across the host (Woods' war mark) ────────────
     scar = _cube(tree, (base_x, -2800), W * 1.05, t * 0.5, H * 0.06, "ornament")
     scar_t = _move(tree, scar, (base_x + 200, -2800),
                    translation=(0, -D * 0.5 - 0.01, H * rng.uniform(0.35, 0.55)),
@@ -6626,7 +6667,7 @@ def build_gb_woods_parasite(tree, props, base_x=-1400):
 
 def build_gb_woods_freespace(tree, props, base_x=-1400):
     """Freespace: two rectangular volumes interpenetrating at an angle.
-    The inhabitable zone is the gap/overlap between them â€” a void created by
+    The inhabitable zone is the gap/overlap between them — a void created by
     structural collision, lit from oblique openings. Inspired by Woods' 'Freespaces
     between buildings in the city' (Zagreb Free Zone, 1991).
     In-game use: tight urban combat space, tension-filled connector, impossible alley."""
@@ -6638,7 +6679,7 @@ def build_gb_woods_freespace(tree, props, base_x=-1400):
     ang = _m.radians(getattr(props, 'gb_steps', 22))   # interpenetration angle
     parts = []
 
-    # â”€â”€ Volume A (upright, standard orientation) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Volume A (upright, standard orientation) ──────────────────────
     for (bw, bd, bx2, by2, label) in [
         (W, t, 0,       D*0.5-t*0.5, "tower"),  # N wall
         (W, t, 0,      -D*0.5+t*0.5, "tower"),  # S wall
@@ -6652,11 +6693,11 @@ def build_gb_woods_freespace(tree, props, base_x=-1400):
                            (base_x + 200, len(parts)*150),
                            translation=(bx2, by2, tz), label=label))
 
-    # â”€â”€ Volume B (angled, offset â€” crashes into Volume A) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Volume B (angled, offset — crashes into Volume A) ─────────────
     cos_a, sin_a = _m.cos(ang), _m.sin(ang)
     offx = W * 0.35    # how far B is shifted relative to A
     offy = D * 0.25
-    offz = H * 0.15    # B sits slightly higher â€” creates the freespace gap
+    offz = H * 0.15    # B sits slightly higher — creates the freespace gap
 
     for (bw, bd, bx2, by2, label) in [
         (W, t, 0,       D*0.5-t*0.5, "wall"),
@@ -6675,14 +6716,14 @@ def build_gb_woods_freespace(tree, props, base_x=-1400):
                                   (0, 0, ang),
                                   base_x, 900 + len(parts) * 120, label))
 
-    # â”€â”€ Freespace floor (the inhabitable void between the volumes) â”€â”€â”€â”€â”€
+    # ── Freespace floor (the inhabitable void between the volumes) ─────
     # Thin slab in the gap between the two volumes
     gap_w = W * 0.4
     gap_d = D * 0.35
     parts.append(_gb_box(tree, (gap_w, gap_d, t),
                          (offx * 0.5, offy * 0.5, offz + t * 0.5), base_x, 2200, "level"))
 
-    # â”€â”€ Tension cables connecting the two volumes (thin diagonal bars) â”€
+    # ── Tension cables connecting the two volumes (thin diagonal bars) ─
     for cable_i in range(3):
         frac = (cable_i + 0.5) / 3
         cx1 = -W * 0.3 + frac * W * 0.6
@@ -6712,7 +6753,7 @@ def build_gb_woods_freespace(tree, props, base_x=-1400):
 
 def build_gb_woods_ribs(tree, props, base_x=-1400):
     """Rib Cage Room: a rectangular volume whose structural system is a series of
-    exposed angled rib frames â€” each rib runs floor-to-ceiling diagonally. Like
+    exposed angled rib frames — each rib runs floor-to-ceiling diagonally. Like
     a building where the skeleton is the architecture. Inspired by Woods' harvested
     and rebuilt structural systems.
     In-game use: ruins interior, cave-like corridor, sci-fi organic structure."""
@@ -6724,18 +6765,18 @@ def build_gb_woods_ribs(tree, props, base_x=-1400):
     n    = max(3, getattr(props, 'gb_cover_count', 6))   # number of ribs
     parts = []
 
-    # â”€â”€ Floor slab â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Floor slab ───────────────────────────────────────────────────
     parts.append(_move(tree, _cube(tree, (base_x, 0), W, L, t, "level"),
                        (base_x + 200, 0), translation=(0, 0, t * 0.5), label="level"))
 
-    # â”€â”€ Rib frames â€” each a quadrilateral portal frame â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Rib frames — each a quadrilateral portal frame ────────────────
     # Each rib: 2 side columns angled inward at the top (Gothic-rib style)
     # + a curved crown at the apex
     rib_thickness = t * 1.4
     for ri in range(n):
         ry = -L * 0.5 + (ri + 0.5) * (L / n)
         # Each rib leans inward at a varying angle (alternating for Woods' rhythm)
-        lean = _m.radians(8 + (ri % 2) * 12)   # 8Â° or 20Â° lean
+        lean = _m.radians(8 + (ri % 2) * 12)   # 8° or 20° lean
         rib_h = _m.sqrt(H**2 + (W * 0.5 * _m.tan(lean))**2)
 
         for sx in (-1, 1):
@@ -6753,7 +6794,7 @@ def build_gb_woods_ribs(tree, props, base_x=-1400):
             (base_x + 200, ri * 600 + 1400),
             translation=(0, ry, H + rib_thickness * 0.2), label="ornament"))
 
-    # â”€â”€ Side membrane walls (thin infill between ribs â€” perforated) â”€â”€â”€
+    # ── Side membrane walls (thin infill between ribs — perforated) ───
     for sx in (-1, 1):
         wall_x = sx * (W * 0.5 - t * 0.5)
         # Two panels above and below the mid-height void
@@ -6761,7 +6802,7 @@ def build_gb_woods_ribs(tree, props, base_x=-1400):
             parts.append(_gb_box(tree, (t, L, zh),
                                  (wall_x, 0, zb + zh * 0.5), base_x, 8000 + zi * 300 + (sx+1)*200, "wall"))
 
-    # â”€â”€ Tension cable spine (from first to last rib at crown) â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Tension cable spine (from first to last rib at crown) ─────────
     spine = _move(tree,
         _cube(tree, (base_x, 9000), t * 0.6, L, t * 0.6, "ornament"),
         (base_x + 200, 9000),
@@ -6786,7 +6827,7 @@ def build_gb_woods_harpsichord(tree, props, base_x=-1400):
     total_h = floors * fh
     parts   = []
 
-    # â”€â”€ Core shaft (octagonal â€” use NTRounded Cube if available) â”€â”€â”€â”€â”€â”€
+    # ── Core shaft (octagonal — use NTRounded Cube if available) ──────
     core = _higg_node(tree, 'NTRounded Cube', (base_x, 0))
     if core is not None:
         _higg_input(core, 'Size',       (R * 2, R * 2, total_h))
@@ -6808,7 +6849,7 @@ def build_gb_woods_harpsichord(tree, props, base_x=-1400):
                    translation=(0, 0, total_h * 0.5), label="tower")
     if core_t: parts.append(core_t)
 
-    # â”€â”€ Blade fins per floor â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Blade fins per floor ───────────────────────────────────────────
     fin_w  = R * 3.5      # fin length (horizontal reach)
     fin_h  = fh * 0.08    # fin thickness
     fin_d  = t * 1.2      # fin depth
@@ -6817,7 +6858,7 @@ def build_gb_woods_harpsichord(tree, props, base_x=-1400):
         for fi in range(n_fins):
             ang = fi * _m.tau / n_fins + f * (_m.pi / n_fins)  # rotated per floor
             # Each fin sweeps outward from the core
-            # Lean angle: alternates +/- 15Â° per floor (harpsichord string feel)
+            # Lean angle: alternates +/- 15° per floor (harpsichord string feel)
             lean = _m.radians(12 + (fi % 2) * 18) * (-1 if f % 2 else 1)
             fin_len = fin_w * (0.7 + fi / n_fins * 0.5)
 
@@ -6830,7 +6871,7 @@ def build_gb_woods_harpsichord(tree, props, base_x=-1400):
                 base_x, f * 800 + fi * 100 + 3000, "ornament")
             if fin: parts.append(fin)
 
-    # â”€â”€ Floor plate rings at each level â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Floor plate rings at each level ────────────────────────────────
     for f in range(floors):
         ring_z = f * fh
         ring = _safe_node(tree, 'GeometryNodeMeshTorus',
@@ -6853,7 +6894,7 @@ def build_gb_woods_harpsichord(tree, props, base_x=-1400):
 
 def build_gb_woods_war_scar(tree, props, base_x=-1400):
     """War Scar / Stratigraphic Cut: a building facade with a diagonal slice
-    revealing its interior layers â€” like geology of habitation exposed by conflict.
+    revealing its interior layers — like geology of habitation exposed by conflict.
     Each stratum is a different material/era. Inspired by Woods' Berlin and Sarajevo
     interventions showing 'archaeological sections' of living.
     In-game use: bombed building face, portal into history, ruin cross-section."""
@@ -6868,7 +6909,7 @@ def build_gb_woods_war_scar(tree, props, base_x=-1400):
     stratum_h = H / n_strata
     stratum_labels = ["tower", "wall", "ornament", "level"] * 4
 
-    # â”€â”€ Stratum layers â€” each a horizontal band with different depth â”€â”€â”€
+    # ── Stratum layers — each a horizontal band with different depth ───
     for si in range(n_strata):
         z_bot = si * stratum_h
         depth = t * (1.0 + si * 0.4)   # deeper layers are thicker
@@ -6906,7 +6947,7 @@ def build_gb_woods_war_scar(tree, props, base_x=-1400):
                             label="ornament")
             if rebar_t: parts.append(rebar_t)
 
-    # â”€â”€ Diagonal cut plane marker (thin slab at the scar angle) â”€â”€â”€â”€â”€â”€â”€
+    # ── Diagonal cut plane marker (thin slab at the scar angle) ───────
     cut_h = _m.sqrt(H**2 + (H * _m.tan(scar_ang))**2) * 0.8
     cut = _gb_box_node(tree, (cut_h * _m.cos(scar_ang) * 0.9, t * 0.08, cut_h),
                        (W * 0.1, 0, H * 0.45),
@@ -6918,20 +6959,20 @@ def build_gb_woods_war_scar(tree, props, base_x=-1400):
 
 
 def rng_val(seed):
-    """Tiny seeded float 0â€“1 for rebar length variation."""
+    """Tiny seeded float 0–1 for rebar length variation."""
     import math
     return abs(math.sin(seed * 9301 + 49297) % 1.0) * 0.8 + 0.2
 
 
 # ==============================================================================
-# ðŸ—  DAVID UMEMOTO GREYBOX  (v2.53)
+# 🏗  DAVID UMEMOTO GREYBOX  (v2.53)
 #   Brutal, geometric, repetitive concrete forms. Thick walls, deep recesses,
 #   stacked terraces, vault clusters. Umemoto's architecture is the language of
-#   the impenetrable â€” every piece reads as monumental, compressed, earthbound.
+#   the impenetrable — every piece reads as monumental, compressed, earthbound.
 # ==============================================================================
 
 def build_gb_umemoto_terrace(tree, props, base_x=-1400):
-    """Terraced Brutalist Tower: stacked receding rectangular floors â€” each level
+    """Terraced Brutalist Tower: stacked receding rectangular floors — each level
     smaller than the one below, set back progressively to create outdoor terraces.
     Thick walls, deep window slots. Umemoto's characteristic stepped mass.
     In-game use: brutalist tower, Mayan temple, sci-fi habitat stack."""
@@ -6955,7 +6996,7 @@ def build_gb_umemoto_terrace(tree, props, base_x=-1400):
 
         if W < t * 3 or D < t * 3: break
 
-        # â”€â”€ Four thick walls â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+        # ── Four thick walls ─────────────────────────────────────────
         for (bw, bd, bx2, by2) in [
             (W, t, 0,       D*0.5-t*0.5),
             (W, t, 0,      -D*0.5+t*0.5),
@@ -6966,12 +7007,12 @@ def build_gb_umemoto_terrace(tree, props, base_x=-1400):
                                (base_x + 200, len(parts)*80),
                                translation=(bx2, by2, z0 + wz), label="tower"))
 
-        # â”€â”€ Floor slab â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+        # ── Floor slab ────────────────────────────────────────────────
         parts.append(_move(tree, _cube(tree, (base_x, len(parts)*80), W, D, t, "level"),
                            (base_x + 200, len(parts)*80),
                            translation=(0, 0, z0 + t * 0.5), label="level"))
 
-        # â”€â”€ Terrace ledge (at the setback line of lower floor) â”€â”€â”€â”€â”€â”€â”€â”€
+        # ── Terrace ledge (at the setback line of lower floor) ────────
         if f > 0:
             terrace_w = setback
             terrace_d = D0 - (f-1) * setback * 2
@@ -6982,7 +7023,7 @@ def build_gb_umemoto_terrace(tree, props, base_x=-1400):
                     translation=(sx * (W * 0.5 + terrace_w * 0.5 - setback * 0.1), 0, z0 + t * 0.5),
                     label="level"))
 
-        # â”€â”€ Deep window slots â€” 2 per N/S face â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+        # ── Deep window slots — 2 per N/S face ────────────────────────
         slot_z = z0 + wz
         for side_y in (D*0.5-t*0.5, -D*0.5+t*0.5):
             for wx_frac in (-0.25, 0.25):
@@ -6991,22 +7032,22 @@ def build_gb_umemoto_terrace(tree, props, base_x=-1400):
                                translation=(wx_frac * W, side_y, slot_z), label="door")
                 if slot_t: parts.append(slot_t)
 
-        # â”€â”€ NTTaper: taper each floor slab for entasis-like bulge â”€â”€â”€â”€â”€
+        # ── NTTaper: taper each floor slab for entasis-like bulge ─────
         # (Applied as a deform on the wall geometry via Higgsas if available)
         if f == 0:
             higg_taper = _higg_node(tree, 'NTTaper', (base_x + 2000, 0))
             if higg_taper is not None:
                 _higg_input(higg_taper, 'Upper Factor', 0.96)
                 _higg_input(higg_taper, 'Lower Factor', 1.03)
-                # This would ideally be applied to the joined geometry â€” skip for now
+                # This would ideally be applied to the joined geometry — skip for now
                 # (Higgsas deformers need proper linking; use the node as decoration)
 
     return _finalize_building(tree, parts, (base_x + 4000, 0))
 
 
 def build_gb_umemoto_vault_cluster(tree, props, base_x=-1400):
-    """Vault Cluster: a grid of barrel vaulted chambers â€” Umemoto's signature.
-    NÃ—M vaults in a grid, each with thick walls and a semi-circular ceiling.
+    """Vault Cluster: a grid of barrel vaulted chambers — Umemoto's signature.
+    N×M vaults in a grid, each with thick walls and a semi-circular ceiling.
     The thick piers between vaults create deep recesses. Inhabitable from below.
     In-game use: undercroft, bunker interior, warehouse, temple crypt."""
     import math as _m
@@ -7027,7 +7068,7 @@ def build_gb_umemoto_vault_cluster(tree, props, base_x=-1400):
             ox = ci * bay_w - (cols - 1) * bay_w * 0.5
             oy = ri * bay_d - (rows - 1) * bay_d * 0.5
 
-            # Floor slab â€” v2.60.2 walk-plane: floor top at Z=0
+            # Floor slab — v2.60.2 walk-plane: floor top at Z=0
             parts.append(_move(tree,
                 _cube(tree, (base_x, len(parts)*60), vault_w + t * 2, vault_d + t * 2, t, "level"),
                 (base_x + 200, len(parts)*60),
@@ -7049,7 +7090,7 @@ def build_gb_umemoto_vault_cluster(tree, props, base_x=-1400):
                     translation=(ox, oy + sy * (vault_d * 0.5 + t * 0.5), vault_h * 0.5),
                     label="tower"))
 
-            # Barrel vault arc (CurveArc â†’ rect profile â†’ CurveToMesh)
+            # Barrel vault arc (CurveArc → rect profile → CurveToMesh)
             arc = _safe_node(tree, 'GeometryNodeCurveArc',
                              (base_x + 600, len(parts) * 40))
             if arc:
@@ -7099,12 +7140,12 @@ def build_gb_umemoto_lattice_block(tree, props, base_x=-1400):
     pier = getattr(props, 'gb_wall_thick',  0.55) * 0.35  # pier between openings
     parts = []
 
-    # â”€â”€ Outer monolithic slab â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Outer monolithic slab ─────────────────────────────────────────
     slab = _move(tree, _cube(tree, (base_x, 0), W, T, H, "tower"),
                  (base_x + 200, 0), translation=(0, 0, H * 0.5), label="tower")
     if slab: parts.append(slab)
 
-    # â”€â”€ Opening grid (boolean-style markers â€” or NTArray if Higgsas) â”€â”€
+    # ── Opening grid (boolean-style markers — or NTArray if Higgsas) ──
     opening_w = cell * 0.65    # width of each square opening
     grid_cols = max(1, int((W - pier) / (cell + pier)))
     grid_rows = max(1, int((H - pier) / (cell + pier)))
@@ -7141,7 +7182,7 @@ def build_gb_umemoto_lattice_block(tree, props, base_x=-1400):
                              translation=(ox, 0, oz), label="door")
                 if op_t: parts.append(op_t)
 
-    # â”€â”€ Surround frame (thick border around entire block) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Surround frame (thick border around entire block) ────────────
     border_t = T * 0.4
     for (bw, bd, bx2, bz) in [
         (W + border_t * 2, border_t, 0, border_t * 0.5),            # bottom
@@ -7157,7 +7198,7 @@ def build_gb_umemoto_lattice_block(tree, props, base_x=-1400):
 
 
 def build_gb_umemoto_fortress_room(tree, props, base_x=-1400):
-    """Fortress Room: Umemoto's monumental thick-walled room. Walls are 3-4Ã— normal
+    """Fortress Room: Umemoto's monumental thick-walled room. Walls are 3-4× normal
     thickness, with deep orthogonal insets for windows/doors. Interior buttresses
     create alcoves. The floor is raised on a thick plinth. Oppressive and powerful.
     Uses Higgsas NTInset Face for window/niche recesses when available.
@@ -7174,7 +7215,7 @@ def build_gb_umemoto_fortress_room(tree, props, base_x=-1400):
     wh = H - T
     wz = T + wh * 0.5
 
-    # â”€â”€ Massive walls â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Massive walls ─────────────────────────────────────────────────
     for (bw, bd, bx2, by2) in [
         (W + T*2, T, 0,       D*0.5+T*0.5),    # N exterior
         (W + T*2, T, 0,      -D*0.5-T*0.5),    # S exterior
@@ -7185,7 +7226,7 @@ def build_gb_umemoto_fortress_room(tree, props, base_x=-1400):
                            (base_x + 200, len(parts)*80),
                            translation=(bx2, by2, wz), label="tower"))
 
-    # â”€â”€ Raised plinth floor â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Raised plinth floor ───────────────────────────────────────────
     plinth_h = T * 0.6
     parts.append(_move(tree,
         _cube(tree, (base_x, len(parts)*80), W + T*2, D + T*2, plinth_h, "level"),
@@ -7197,14 +7238,14 @@ def build_gb_umemoto_fortress_room(tree, props, base_x=-1400):
         (base_x + 200, len(parts)*80),
         translation=(0, 0, plinth_h + T * 0.15), label="level"))
 
-    # â”€â”€ Door passage (S wall, centred) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Door passage (S wall, centred) ───────────────────────────────
     door_slot = _move(tree,
         _cube(tree, (base_x, len(parts)*80), dw, T * 3, dh, "door"),
         (base_x + 200, len(parts)*80),
         translation=(0, -D*0.5 - T*0.5, plinth_h + dh * 0.5), label="door")
     if door_slot: parts.append(door_slot)
 
-    # â”€â”€ Wall niches / recessed panels (N wall + 2 side walls) â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Wall niches / recessed panels (N wall + 2 side walls) ─────────
     niche_d = T * 0.55    # depth of recess into wall
     niche_w = min(dw * 1.6, W / (n_niches + 1) * 0.7)
     niche_h = H * 0.45
@@ -7220,7 +7261,7 @@ def build_gb_umemoto_fortress_room(tree, props, base_x=-1400):
             label="door")
         if niche: parts.append(niche)
 
-    # â”€â”€ Interior buttress piers (massive diagonal blocks at corners) â”€â”€
+    # ── Interior buttress piers (massive diagonal blocks at corners) ──
     bsize = T * 0.85
     for (sx, sy) in [(-1,-1),(1,-1),(1,1),(-1,1)]:
         butt = _move(tree,
@@ -7449,7 +7490,7 @@ def build_buttress(tree, props, base_x=-1400):
     sample.inputs['Count'].default_value = 32
     tree.links.new(line.outputs['Curve'], sample.inputs['Curve'])
 
-    # Arch bow: Set Position with sin(Ï€*t)
+    # Arch bow: Set Position with sin(π*t)
     param = tree.nodes.new('GeometryNodeSplineParameter'); param.location = (base_x+300, -200)
     mul_pi = tree.nodes.new('ShaderNodeMath'); mul_pi.location = (base_x+500, -200); mul_pi.operation = 'MULTIPLY'
     mul_pi.inputs[1].default_value = math.pi
@@ -7570,7 +7611,7 @@ def build_building(tree, props):
 
     parts.append(tower_geom)
 
-    # 2. Top railing â€” computed at the actual tapered radius of the tower's top
+    # 2. Top railing — computed at the actual tapered radius of the tower's top
     if props.building_with_railings:
         # tower top radius after taper (build_tower applies max(0.05, 1.0 - taper) at top)
         top_radius = props.base_radius * max(0.05, 1.0 - props.taper_ratio * 0.6)
@@ -7600,14 +7641,14 @@ def build_building(tree, props):
             tree.links.new(rail_extra_geom, trans2.inputs['Geometry'])
             parts.append(trans2.outputs['Geometry'])
 
-    # 3. Side arches at each floor â€” placed around all 4 faces, snapped to outer wall
+    # 3. Side arches at each floor — placed around all 4 faces, snapped to outer wall
     if props.building_with_arches:
         # Compute the outer radius at top (after taper) so arches snap correctly
         # Tower body uses props.base_radius * (1 - 0.6 * taper_ratio) at top.
         # We'll position arches at the AVERAGE radius (mid-height of each floor)
         arch_geom = build_arch(tree, props, base_x=4500)
 
-        # Place arches on all 4 faces Ã— N per face Ã— M floors
+        # Place arches on all 4 faces × N per face × M floors
         per_face = max(1, props.building_arches_per_face)
         for floor in range(props.building_floors):
             # Compute Z and radius at this floor's center
@@ -7754,17 +7795,17 @@ def build_penrose(tree, props, base_x=-1400):
 def build_pillar(tree, props, base_x=-1400):
     """Classical fluted pillar with capital + base.
     v2.52: When Higgsas is available, uses NTSpin to lathe a custom profile
-    (wider at base, entasis bulge at 1/3) â†’ NTTaper for classical entasis.
+    (wider at base, entasis bulge at 1/3) → NTTaper for classical entasis.
     Falls back to cylinder + cosine-flute deform when Higgsas is absent."""
     R = props.pillar_radius
     H = props.pillar_height
     n_flutes = props.pillar_flutes
 
-    # â”€â”€ Higgsas path: NTSpin profile + NTTaper entasis â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Higgsas path: NTSpin profile + NTTaper entasis ─────────────────
     higg_spin = _higg_node(tree, 'NTSpin', (base_x, 0))
     if higg_spin is not None:
         # Build a half-profile curve (quarter of a circle for the shaft cross-section)
-        # Use a CurveArc for the shaft silhouette, then spin 360Â°
+        # Use a CurveArc for the shaft silhouette, then spin 360°
         profile_arc = _safe_node(tree, 'GeometryNodeCurveArc', (base_x - 300, 0))
         if profile_arc:
             try:
@@ -7777,7 +7818,7 @@ def build_pillar(tree, props, base_x=-1400):
             fill = _safe_node(tree, 'GeometryNodeFillCurve', (base_x - 100, 0))
             if fill:
                 _link(tree, profile_arc.outputs['Curve'], fill.inputs['Curve'])
-                _higg_input(higg_spin, 'Angle', math.tau)   # full 360Â°
+                _higg_input(higg_spin, 'Angle', math.tau)   # full 360°
                 _higg_input(higg_spin, 'Steps', max(16, n_flutes * 2))
                 try:
                     _link(tree, fill.outputs['Mesh'], higg_spin.inputs['Mesh'])
@@ -7803,7 +7844,7 @@ def build_pillar(tree, props, base_x=-1400):
         # Still add native capital + base on top
         # Fall through to capital code below with geom = geom_out
         geom = geom_out
-        # Skip the cylinder+flute section â€” jump straight to capital
+        # Skip the cylinder+flute section — jump straight to capital
         # (done via goto-equivalent: just don't define shaft; set n_flutes=0 for capital section)
         shaft = None
         n_flutes_orig = n_flutes
@@ -7840,7 +7881,7 @@ def build_pillar(tree, props, base_x=-1400):
         for p in parts: tree.links.new(p, join.inputs['Geometry'])
         return join.outputs['Geometry']
 
-    # â”€â”€ Native fallback: cylinder + cosine-flute deform â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Native fallback: cylinder + cosine-flute deform ────────────────
     shaft = tree.nodes.new('GeometryNodeMeshCylinder'); shaft.location = (base_x, 0); color_node(shaft, "pillar")
     shaft.inputs['Vertices'].default_value = max(16, n_flutes * 2)
     shaft.inputs['Side Segments'].default_value = 8
@@ -7888,7 +7929,7 @@ def build_pillar(tree, props, base_x=-1400):
         tree.links.new(flute_offset.outputs[0], set_flute.inputs['Offset'])
         geom = set_flute.outputs['Geometry']
 
-    # Capital â€” tapered cone
+    # Capital — tapered cone
     cap = tree.nodes.new('GeometryNodeMeshCone'); cap.location = (base_x, 700); color_node(cap, "pillar")
     cap.inputs['Vertices'].default_value = max(16, n_flutes * 2)
     cap.inputs['Radius Top'].default_value    = props.pillar_capital_size
@@ -8143,12 +8184,12 @@ def build_fractal(tree, props, base_x=-2400):
 def build_treble_clef(tree, props, base_x=-1400):
     """
     Properly-shaped G-clef ornament:
-      â€¢ Flat 2D spiral curl (not a helix) â€” sits in the XZ plane facing forward
-      â€¢ S-curve stem above the spiral (Bezier â€” captures the iconic clef shape)
-      â€¢ Tail loop below the spiral
-      â€¢ Finial dots at top and bottom
+      • Flat 2D spiral curl (not a helix) — sits in the XZ plane facing forward
+      • S-curve stem above the spiral (Bezier — captures the iconic clef shape)
+      • Tail loop below the spiral
+      • Finial dots at top and bottom
     """
-    s = props.clef_size / 2.0  # scale (default size 2 â†’ unit scale)
+    s = props.clef_size / 2.0  # scale (default size 2 → unit scale)
     thick = props.clef_thickness
 
     # === Profile circle for sweeping (small radius for thin lines) ===
@@ -8157,15 +8198,15 @@ def build_treble_clef(tree, props, base_x=-1400):
     profile.inputs['Resolution'].default_value = 8
     profile.inputs['Radius'].default_value = thick
 
-    # === Belly spiral â€” FLAT 2D curl in XY (not helical) ===
+    # === Belly spiral — FLAT 2D curl in XY (not helical) ===
     spiral = tree.nodes.new('GeometryNodeCurveSpiral'); spiral.location = (base_x, 0); color_node(spiral, "music")
     spiral.inputs['Resolution'].default_value = 96
     spiral.inputs['Rotations'].default_value = props.clef_curls
     spiral.inputs['Start Radius'].default_value = 0.08 * s
     spiral.inputs['End Radius'].default_value = 0.45 * s
-    spiral.inputs['Height'].default_value = 0.0  # â† FLAT, no helix
+    spiral.inputs['Height'].default_value = 0.0  # ← FLAT, no helix
 
-    # Rotate spiral 90Â° around X so it stands up in XZ plane (facing forward),
+    # Rotate spiral 90° around X so it stands up in XZ plane (facing forward),
     # then translate down to the belly position
     spiral_t = tree.nodes.new('GeometryNodeTransform'); spiral_t.location = (base_x+300, 0); color_node(spiral_t, "music")
     spiral_t.inputs['Translation'].default_value = (0, 0, -0.05 * s)
@@ -8177,19 +8218,19 @@ def build_treble_clef(tree, props, base_x=-1400):
     tree.links.new(profile.outputs['Curve'], spiral_sweep.inputs['Profile Curve'])
     spiral_sweep.inputs['Fill Caps'].default_value = True
 
-    # === Stem â€” Bezier S-curve from spiral top going up & slightly right then back ===
+    # === Stem — Bezier S-curve from spiral top going up & slightly right then back ===
     # The clef stem starts at the top of the spiral (~+0.45s above belly center)
     # and goes up and slightly to the right, then back left at the top
     stem = tree.nodes.new('GeometryNodeCurvePrimitiveBezierSegment'); stem.location = (base_x, 600); color_node(stem, "music")
     stem.inputs['Resolution'].default_value = 48
-    # In XZ plane (Bezier defaults to XY, so we'll rotate 90Â° around X afterwards)
+    # In XZ plane (Bezier defaults to XY, so we'll rotate 90° around X afterwards)
     stem.inputs['Start'].default_value         = (0.0,        0.45 * s, 0)   # belly top
     stem.inputs['Start Handle'].default_value  = (0.4  * s,   0.95 * s, 0)   # bulge right & up
     stem.inputs['End Handle'].default_value    = (0.15 * s,   1.55 * s, 0)   # come back toward center
     stem.inputs['End'].default_value           = (-0.15 * s,  1.65 * s, 0)   # tip slightly left
 
     stem_t = tree.nodes.new('GeometryNodeTransform'); stem_t.location = (base_x+300, 600); color_node(stem_t, "music")
-    stem_t.inputs['Rotation'].default_value = (math.radians(90), 0, 0)  # XY â†’ XZ plane
+    stem_t.inputs['Rotation'].default_value = (math.radians(90), 0, 0)  # XY → XZ plane
     tree.links.new(stem.outputs['Curve'], stem_t.inputs['Geometry'])
 
     stem_sweep = tree.nodes.new('GeometryNodeCurveToMesh'); stem_sweep.location = (base_x+600, 600); color_node(stem_sweep, "music")
@@ -8197,7 +8238,7 @@ def build_treble_clef(tree, props, base_x=-1400):
     tree.links.new(profile.outputs['Curve'], stem_sweep.inputs['Profile Curve'])
     stem_sweep.inputs['Fill Caps'].default_value = True
 
-    # === Tail â€” Bezier S-curve below the spiral (the descending loop of a G clef) ===
+    # === Tail — Bezier S-curve below the spiral (the descending loop of a G clef) ===
     tail = tree.nodes.new('GeometryNodeCurvePrimitiveBezierSegment'); tail.location = (base_x, -600); color_node(tail, "music")
     tail.inputs['Resolution'].default_value = 32
     tail.inputs['Start'].default_value         = (0.0,        -0.45 * s, 0)
@@ -8214,7 +8255,7 @@ def build_treble_clef(tree, props, base_x=-1400):
     tree.links.new(profile.outputs['Curve'], tail_sweep.inputs['Profile Curve'])
     tail_sweep.inputs['Fill Caps'].default_value = True
 
-    # === Top finial â€” small sphere at the tip of the stem ===
+    # === Top finial — small sphere at the tip of the stem ===
     finial = tree.nodes.new('GeometryNodeMeshUVSphere'); finial.location = (base_x, 1000); color_node(finial, "ornament")
     finial.inputs['Radius'].default_value = thick * 2.2
     finial.inputs['Segments'].default_value = 16
@@ -8223,7 +8264,7 @@ def build_treble_clef(tree, props, base_x=-1400):
     finial_t.inputs['Translation'].default_value = (-0.15 * s, 0, 1.65 * s)
     tree.links.new(finial.outputs['Mesh'], finial_t.inputs['Geometry'])
 
-    # === Bottom dot â€” at the tail end (the iconic dot below the G-clef) ===
+    # === Bottom dot — at the tail end (the iconic dot below the G-clef) ===
     bd = tree.nodes.new('GeometryNodeMeshUVSphere'); bd.location = (base_x, -1000); color_node(bd, "ornament")
     bd.inputs['Radius'].default_value = thick * 2.0
     bd.inputs['Segments'].default_value = 16
@@ -8252,7 +8293,7 @@ def build_note_head(tree, props, base_x=-1400):
     s = props.note_size
     kind = props.note_kind
 
-    # Note head â€” flattened oval (UV sphere with non-uniform scale)
+    # Note head — flattened oval (UV sphere with non-uniform scale)
     head = tree.nodes.new('GeometryNodeMeshUVSphere'); head.location = (base_x, 0); color_node(head, "music")
     head.inputs['Radius'].default_value = s * 0.5
     head.inputs['Segments'].default_value = 24
@@ -8266,7 +8307,7 @@ def build_note_head(tree, props, base_x=-1400):
 
     parts = [head_t.outputs['Geometry']]
 
-    # Stem â€” for half/quarter/eighth notes
+    # Stem — for half/quarter/eighth notes
     if kind in {'HALF_NOTE', 'QUARTER', 'EIGHTH_NOTE'}:
         stem = tree.nodes.new('GeometryNodeMeshCube'); stem.location = (base_x, 300); color_node(stem, "music")
         stem.inputs['Size'].default_value = (0.05 * s, 0.05 * s, props.note_stem_len)
@@ -8276,7 +8317,7 @@ def build_note_head(tree, props, base_x=-1400):
         tree.links.new(stem.outputs['Mesh'], stem_t.inputs['Geometry'])
         parts.append(stem_t.outputs['Geometry'])
 
-    # Flag â€” for eighth notes
+    # Flag — for eighth notes
     if kind == 'EIGHTH_NOTE':
         flag_curve = tree.nodes.new('GeometryNodeCurveArc'); flag_curve.location = (base_x, 600); color_node(flag_curve, "music")
         flag_curve.mode = 'RADIUS'
@@ -8348,7 +8389,7 @@ def build_staff(tree, props, base_x=-1400):
     tree.links.new(note_line.outputs['Mesh'], inst.inputs['Points'])
     tree.links.new(note_flat.outputs['Geometry'], inst.inputs['Instance'])
 
-    # Vary note Z position (pitch) using harmonic â€” creates a melody
+    # Vary note Z position (pitch) using harmonic — creates a melody
     idx = tree.nodes.new('GeometryNodeInputIndex'); idx.location = (base_x, 1100)
     h = make_harmonic_value(tree, idx.outputs['Index'],
                              props.musical_freq_a, props.musical_freq_b,
@@ -8412,7 +8453,7 @@ def build_sheet_music_railing(tree, props, base_x=-1400):
     note_s = props.sheet_note_size
     parts = []
 
-    line_spacing = H / 4  # 5 lines â†’ 4 gaps
+    line_spacing = H / 4  # 5 lines → 4 gaps
 
     # === 5 horizontal staff lines (cylinders along X) ===
     for i in range(5):
@@ -8445,7 +8486,7 @@ def build_sheet_music_railing(tree, props, base_x=-1400):
         tree.links.new(bi.outputs['Instances'], br.inputs['Geometry'])
         parts.append(br.outputs['Geometry'])
 
-    # === Note heads â€” array along the staff with harmonic-driven Z position ===
+    # === Note heads — array along the staff with harmonic-driven Z position ===
     note_line = tree.nodes.new('GeometryNodeMeshLine'); note_line.location = (base_x, 1000); color_node(note_line, "sheet_music")
     note_line.mode = 'END_POINTS'
     note_line.inputs['Count'].default_value = n_notes
@@ -8568,13 +8609,13 @@ def build_sheet_music_railing(tree, props, base_x=-1400):
 def build_gothic_arch(tree, props, base_x=-1400):
     """Pointed Gothic arch: two intersecting circle arcs."""
     W = props.gothic_width
-    R = max(W / 2 + 0.001, props.gothic_radius)  # must be â‰¥ half-width
+    R = max(W / 2 + 0.001, props.gothic_radius)  # must be ≥ half-width
     half_W = W / 2
 
     # peak angle from horizontal at arc center
     peak_angle = math.acos(min(1.0, max(-1.0, (R - half_W) / R)))
 
-    # Right-side arc â€” center at (-half_W + R, 0)
+    # Right-side arc — center at (-half_W + R, 0)
     right_arc = tree.nodes.new('GeometryNodeCurveArc'); right_arc.location = (base_x, 200); color_node(right_arc, "gothic")
     right_arc.mode = 'RADIUS'
     right_arc.inputs['Resolution'].default_value = 32
@@ -8934,8 +8975,8 @@ def build_lancet(tree, props, base_x=-1400):
 
 # ----------------------------------------------------------------------
 # VENETIAN GOTHIC BUILDERS
-# (after Boscarino et al., 3D Geometric Analysis of the FaÃ§ades of
-#  Gothic Buildings in Venice â€” academia.edu/3354616)
+# (after Boscarino et al., 3D Geometric Analysis of the Façades of
+#  Gothic Buildings in Venice — academia.edu/3354616)
 # ----------------------------------------------------------------------
 
 def _ogee_curve_pair(tree, half_W, height, swell, shoulder, base_x=0, base_y=0):
@@ -9174,14 +9215,14 @@ def build_bifora(tree, props, base_x=-1400):
 
 
 def build_cusped_arch(tree, props, base_x=-1400):
-    """Pointed arch with multi-lobed (foiled) inner edge â€” Venetian Gothic detail."""
+    """Pointed arch with multi-lobed (foiled) inner edge — Venetian Gothic detail."""
     W = props.cusped_width
     H = props.cusped_height
     n_cusps = props.cusped_lobes
     cusp_d = props.cusped_lobe_depth
     half_W = W / 2
 
-    # Outer arch â€” same as Gothic arch
+    # Outer arch — same as Gothic arch
     R = max(half_W + 0.001, half_W * 1.4)
     peak_angle = math.acos(min(1.0, max(-1.0, (R - half_W) / R)))
 
@@ -9286,10 +9327,10 @@ def build_palazzo(tree, props):
     base_x = -3500
     total_h = floors * floor_h
 
-    # Back wall â€” only if user wants it (default OFF â€” faÃ§ade-only is the Venetian look)
+    # Back wall — only if user wants it (default OFF — façade-only is the Venetian look)
     if getattr(props, "palazzo_back_wall", False):
         back_wall = tree.nodes.new('GeometryNodeMeshCube'); back_wall.location = (base_x, 0); color_node(back_wall, "palazzo")
-        # Make it a true thin faÃ§ade plane, not a solid box
+        # Make it a true thin façade plane, not a solid box
         back_wall.inputs['Size'].default_value = (W, 0.15, total_h)
         bwt = tree.nodes.new('GeometryNodeTransform'); bwt.location = (base_x + 300, 0)
         bwt.inputs['Translation'].default_value = (0, -0.075, total_h / 2)
@@ -9372,7 +9413,7 @@ def build_palazzo(tree, props):
 
 
 # ----------------------------------------------------------------------
-# DEFORMATION PASSES â€” Venetian "imperfection" after Boscarino
+# DEFORMATION PASSES — Venetian "imperfection" after Boscarino
 # ----------------------------------------------------------------------
 
 def add_entropiombo_pass(tree, in_geom, lean, x=11000):
@@ -9388,7 +9429,7 @@ def add_entropiombo_pass(tree, in_geom, lean, x=11000):
     sep = tree.nodes.new('ShaderNodeSeparateXYZ'); sep.location = (x + 200, 200)
     tree.links.new(pos.outputs['Position'], sep.inputs['Vector'])
 
-    # Mock bbox: assume Z range -10..+10 â†’ normalize to [-1, 1] roughly
+    # Mock bbox: assume Z range -10..+10 → normalize to [-1, 1] roughly
     z_norm = tree.nodes.new('ShaderNodeMath'); z_norm.location = (x + 400, 200); z_norm.operation = 'MULTIPLY'
     z_norm.inputs[1].default_value = 0.1
     tree.links.new(sep.outputs['Z'], z_norm.inputs[0])
@@ -9430,7 +9471,7 @@ def add_entropiombo_pass(tree, in_geom, lean, x=11000):
 
 
 def add_subsidence_pass(tree, in_geom, amount, x=12500):
-    """Bottom-heavy settling deformation â€” sags lower, rises slightly mid."""
+    """Bottom-heavy settling deformation — sags lower, rises slightly mid."""
     if amount < 0.001:
         return in_geom
 
@@ -9482,13 +9523,13 @@ def build_brick_wall(tree, props, base_x=-1400):
     bd     = props.brick_depth
     mortar = props.brick_mortar_gap
 
-    # â”€â”€ Higgsas path: NTBricks Grid â†’ NTSolidify â†’ orient â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Higgsas path: NTBricks Grid → NTSolidify → orient ─────────────
     higg_bricks = _higg_node(tree, 'NTBricks Grid', (base_x, 0))
     if higg_bricks is not None:
         _higg_input(higg_bricks, 'X Grid Size',        W)
         _higg_input(higg_bricks, 'Y Grid Size',        H)
         _higg_input(higg_bricks, 'Absolute Grid Size', False)
-        # NTBricks Grid outputs a flat (XY) grid â€” solidify for depth
+        # NTBricks Grid outputs a flat (XY) grid — solidify for depth
         higg_solid = _higg_node(tree, 'NTSolidify', (base_x + 400, 0))
         geom_out = higg_bricks.outputs[0]
         if higg_solid is not None:
@@ -9508,7 +9549,7 @@ def build_brick_wall(tree, props, base_x=-1400):
             return rot.outputs['Geometry']
         return geom_out
 
-    # â”€â”€ Native fallback: stagger-grid (original approach) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Native fallback: stagger-grid (original approach) ─────────────
     cols = max(2, int(W / (bw + mortar)))
     rows = max(2, int(H / (bh_ + mortar)))
 
@@ -9610,7 +9651,7 @@ def build_venetian_bridge(tree, props, base_x=-1400):
     tree.links.new(inst.outputs['Instances'], realize.inputs['Geometry'])
     parts.append(realize.outputs['Geometry'])
 
-    # === Pier walls â€” FULL HEIGHT (z=0 â†’ z=H) so the walkway sits directly on top ===
+    # === Pier walls — FULL HEIGHT (z=0 → z=H) so the walkway sits directly on top ===
     pier_depth_y = 1.0  # match walkway depth so piers and deck align in Y
     pier_line = tree.nodes.new('GeometryNodeMeshLine'); pier_line.location = (base_x+3000, 400); color_node(pier_line, "bridge")
     pier_line.mode = 'OFFSET'
@@ -9626,14 +9667,14 @@ def build_venetian_bridge(tree, props, base_x=-1400):
     tree.links.new(pier.outputs['Mesh'], pier_inst.inputs['Instance'])
 
     pier_t = tree.nodes.new('GeometryNodeTranslateInstances'); pier_t.location = (base_x+3600, 400)
-    pier_t.inputs['Translation'].default_value = (0, 0, H / 2)  # centered at H/2 â†’ top at H
+    pier_t.inputs['Translation'].default_value = (0, 0, H / 2)  # centered at H/2 → top at H
     tree.links.new(pier_inst.outputs['Instances'], pier_t.inputs['Instances'])
 
     pier_real = tree.nodes.new('GeometryNodeRealizeInstances'); pier_real.location = (base_x+3900, 400)
     tree.links.new(pier_t.outputs['Instances'], pier_real.inputs['Geometry'])
     parts.append(pier_real.outputs['Geometry'])
 
-    # Spandrel walls â€” fill space between arch tops and walkway bottom (Venetian-style fillets)
+    # Spandrel walls — fill space between arch tops and walkway bottom (Venetian-style fillets)
     spandrel_h = 0.06  # thin band right under the walkway
     spandrel_line = tree.nodes.new('GeometryNodeMeshLine'); spandrel_line.location = (base_x+3000, 1700); color_node(spandrel_line, "bridge")
     spandrel_line.mode = 'OFFSET'
@@ -9652,7 +9693,7 @@ def build_venetian_bridge(tree, props, base_x=-1400):
     tree.links.new(span_inst.outputs['Instances'], span_real.inputs['Geometry'])
     parts.append(span_real.outputs['Geometry'])
 
-    # === Walkway â€” sits directly on top of piers, snap-aligned ===
+    # === Walkway — sits directly on top of piers, snap-aligned ===
     deck_thick = 0.18
     if props.bridge_walkway:
         walkway = tree.nodes.new('GeometryNodeMeshCube'); walkway.location = (base_x+3000, 1000); color_node(walkway, "bridge")
@@ -9662,7 +9703,7 @@ def build_venetian_bridge(tree, props, base_x=-1400):
         tree.links.new(walkway.outputs['Mesh'], walk_t.inputs['Geometry'])
         parts.append(walk_t.outputs['Geometry'])
 
-    # === Side railings â€” sit on TOP of walkway, with tiny inset ===
+    # === Side railings — sit on TOP of walkway, with tiny inset ===
     if props.bridge_railings:
         rail_top = H + deck_thick  # top of walkway
         rail_height = 0.5
@@ -9718,7 +9759,7 @@ def build_escher_path(tree, props, base_x=-1400):
     tree.links.new(circle.outputs['Curve'], set_pos.inputs['Geometry'])
     tree.links.new(ovec.outputs['Vector'], set_pos.inputs['Offset'])
 
-    # Sweep with rectangular profile (path width Ã— thickness)
+    # Sweep with rectangular profile (path width × thickness)
     profile = tree.nodes.new('GeometryNodeCurvePrimitiveCircle'); profile.location = (base_x, 400); color_node(profile, "path")
     profile.mode = 'RADIUS'
     profile.inputs['Resolution'].default_value = 4   # 4 = square-ish
@@ -9775,7 +9816,7 @@ def build_escher_path(tree, props, base_x=-1400):
 
 
 # ----------------------------------------------------------------------
-# MODULAR BUILDING PIECES â€” Window/Door/Balcony/Cornice/Fountain/Tile/Roof/Lantern
+# MODULAR BUILDING PIECES — Window/Door/Balcony/Cornice/Fountain/Tile/Roof/Lantern
 # ----------------------------------------------------------------------
 
 def build_window(tree, props, base_x=-1400):
@@ -9802,7 +9843,7 @@ def build_window(tree, props, base_x=-1400):
     tree.links.new(sill.outputs['Mesh'], st.inputs['Geometry'])
     parts.append(st.outputs['Geometry'])
 
-    # Top â€” either flat header or ogee arch
+    # Top — either flat header or ogee arch
     if props.window_arch_top:
         # Reuse build_ogee_arch with this window's dimensions
         saved = (props.ogee_width, props.ogee_height, props.ogee_swell, props.ogee_finial)
@@ -9896,7 +9937,7 @@ def build_balcony(tree, props, base_x=-1400):
     slab.inputs['Size'].default_value = (W, D, T)
     parts.append(slab.outputs['Mesh'])
 
-    # Front railing (along +X face â€” actually use Y direction: front = +Y/2)
+    # Front railing (along +X face — actually use Y direction: front = +Y/2)
     saved = (props.rail_length, props.rail_baluster_count, props.rail_height)
     props.rail_length = W
     props.rail_baluster_count = props.balcony_baluster_count
@@ -9930,7 +9971,7 @@ def build_balcony(tree, props, base_x=-1400):
 
 
 def build_cornice(tree, props, base_x=-1400):
-    """Layered horizontal molding â€” multiple bands of decreasing depth."""
+    """Layered horizontal molding — multiple bands of decreasing depth."""
     L = props.cornice_length
     H = props.cornice_height
     D = props.cornice_depth
@@ -9947,7 +9988,7 @@ def build_cornice(tree, props, base_x=-1400):
         tree.links.new(b.outputs['Mesh'], bt.inputs['Geometry'])
         parts.append(bt.outputs['Geometry'])
 
-    # Crown molding on top â€” rounded edge cylinder
+    # Crown molding on top — rounded edge cylinder
     crown = tree.nodes.new('GeometryNodeMeshCylinder'); crown.location = (base_x, layers * 200); color_node(crown, "modular")
     crown.inputs['Vertices'].default_value = 16
     crown.inputs['Radius'].default_value = D * 0.4
@@ -10024,7 +10065,7 @@ def build_fountain(tree, props, base_x=-1400):
 
 
 def build_floor_tile(tree, props, base_x=-1400):
-    """Decorative floor tile â€” single, grid, checkerboard, or randomized."""
+    """Decorative floor tile — single, grid, checkerboard, or randomized."""
     s = props.tile_size
     t = props.tile_thickness
     pat = props.tile_pattern
@@ -10069,7 +10110,7 @@ def build_floor_tile(tree, props, base_x=-1400):
         # Random Z rotation per tile
         idx = tree.nodes.new('GeometryNodeInputIndex'); idx.location = (base_x, 600)
         rmul = tree.nodes.new('ShaderNodeMath'); rmul.location = (base_x+200, 600); rmul.operation = 'MULTIPLY'
-        rmul.inputs[1].default_value = 0.78  # ~45Â° per index, irrational ratio
+        rmul.inputs[1].default_value = 0.78  # ~45° per index, irrational ratio
         tree.links.new(idx.outputs['Index'], rmul.inputs[0])
         rvec = tree.nodes.new('ShaderNodeCombineXYZ'); rvec.location = (base_x+400, 600)
         rvec.inputs['X'].default_value = 0; rvec.inputs['Y'].default_value = 0
@@ -10140,7 +10181,7 @@ def build_roof_tiles(tree, props, base_x=-1400):
     realize = tree.nodes.new('GeometryNodeRealizeInstances'); realize.location = (base_x+1500, 0)
     tree.links.new(ti.outputs['Instances'], realize.inputs['Geometry'])
 
-    # Apply pitch â€” rotate around X axis
+    # Apply pitch — rotate around X axis
     pitch_t = tree.nodes.new('GeometryNodeTransform'); pitch_t.location = (base_x+1800, 0); color_node(pitch_t, "roof")
     pitch_t.inputs['Rotation'].default_value = (pitch, 0, 0)
     tree.links.new(realize.outputs['Geometry'], pitch_t.inputs['Geometry'])
@@ -10165,7 +10206,7 @@ def build_lantern_post(tree, props, base_x=-1400):
     tree.links.new(post.outputs['Mesh'], pt.inputs['Geometry'])
     parts.append(pt.outputs['Geometry'])
 
-    # Base â€” wider cylinder
+    # Base — wider cylinder
     base = tree.nodes.new('GeometryNodeMeshCylinder'); base.location = (base_x, -200); color_node(base, "lantern")
     base.inputs['Vertices'].default_value = 12
     base.inputs['Radius'].default_value = pr * 4
@@ -10280,7 +10321,7 @@ def build_piece_prototype(tree, props, kind, base_x=-1400):
 
 # ----------------------------------------------------------------------
 # BUILDER: INSTANCE TO SPLINE
-# Array a chosen piece along a curve â€” input curve is either a scene object
+# Array a chosen piece along a curve — input curve is either a scene object
 # or the modifier's input geometry (set Object Info / Group Input chain).
 # ----------------------------------------------------------------------
 
@@ -10314,7 +10355,7 @@ def build_spline_instance(tree, props, base_x=-1400, curve_socket=None):
     c2p.mode = 'EVALUATED'
     tree.links.new(samp.outputs['Curve'], c2p.inputs['Curve'])
 
-    # Build the prototype piece â€” either from a scene object or a built-in piece
+    # Build the prototype piece — either from a scene object or a built-in piece
     if props.spline_source_object is not None and props.spline_source_object.type == 'MESH':
         oi = tree.nodes.new('GeometryNodeObjectInfo'); oi.location = (base_x-300, -200); color_node(oi, "spline")
         oi.inputs['Object'].default_value = props.spline_source_object
@@ -10364,7 +10405,7 @@ def build_spline_instance(tree, props, base_x=-1400, curve_socket=None):
 # ----------------------------------------------------------------------
 
 def build_radial_array(tree, props, base_x=-1400):
-    """Array a piece around the Z axis at a fixed radius â€” perfect for railings on tower edges."""
+    """Array a piece around the Z axis at a fixed radius — perfect for railings on tower edges."""
     R = props.radial_radius
     n = props.radial_count
     z = props.radial_z
@@ -10385,7 +10426,7 @@ def build_radial_array(tree, props, base_x=-1400):
     c2p.mode = 'EVALUATED'
     tree.links.new(circ_t.outputs['Geometry'], c2p.inputs['Curve'])
 
-    # Piece prototype â€” either from a scene object or a built-in piece
+    # Piece prototype — either from a scene object or a built-in piece
     if props.radial_source_object is not None and props.radial_source_object.type == 'MESH':
         oi = tree.nodes.new('GeometryNodeObjectInfo'); oi.location = (base_x-300, -200); color_node(oi, "radial")
         oi.inputs['Object'].default_value = props.radial_source_object
@@ -10399,13 +10440,13 @@ def build_radial_array(tree, props, base_x=-1400):
     tree.links.new(c2p.outputs['Points'], inst.inputs['Points'])
     tree.links.new(piece, inst.inputs['Instance'])
 
-    # Face outward (use curve's tangent â€” circle tangent is perpendicular to radial dir,
-    # so rotate by 90Â° around Z if face_out is on)
+    # Face outward (use curve's tangent — circle tangent is perpendicular to radial dir,
+    # so rotate by 90° around Z if face_out is on)
     if props.radial_face_out:
         # Use the rotation output of CurveToPoints (which gives tangent-based rotation)
-        # then add a 90Â° Z rotation so pieces face outward instead of along the curve
+        # then add a 90° Z rotation so pieces face outward instead of along the curve
         tree.links.new(c2p.outputs['Rotation'], inst.inputs['Rotation'])
-        # Add an extra 90Â° Z rotation
+        # Add an extra 90° Z rotation
         idx = tree.nodes.new('GeometryNodeInputIndex'); idx.location = (base_x+500, 300)
         ang = tree.nodes.new('ShaderNodeMath'); ang.location = (base_x+700, 300); ang.operation = 'MULTIPLY'
         ang.inputs[1].default_value = math.tau / max(1, n)
@@ -10434,9 +10475,9 @@ def build_tessellation(tree, props, base_x=-1400):
     """
     Escher-style tessellation:
     A grid of small cells where each cell has:
-      â€¢ per-cell sine-wave Z displacement (metamorphosis)
-      â€¢ per-cell rotation variation
-      â€¢ interlocking via slight overlap
+      • per-cell sine-wave Z displacement (metamorphosis)
+      • per-cell rotation variation
+      • interlocking via slight overlap
     Driven by the harmonic params for cohesion with the rest of the system.
     """
     nx = props.tess_grid_x
@@ -10450,7 +10491,7 @@ def build_tessellation(tree, props, base_x=-1400):
     grid.inputs['Vertices X'].default_value = nx
     grid.inputs['Vertices Y'].default_value = ny
 
-    # Tile prototype â€” small box
+    # Tile prototype — small box
     tile = tree.nodes.new('GeometryNodeMeshCube'); tile.location = (base_x, 300); color_node(tile, "tessellation")
     tile.inputs['Size'].default_value = (s * 1.05, s * 1.05, s * 0.4)  # slight overlap
 
@@ -10458,7 +10499,7 @@ def build_tessellation(tree, props, base_x=-1400):
     tree.links.new(grid.outputs['Mesh'], inst.inputs['Points'])
     tree.links.new(tile.outputs['Mesh'], inst.inputs['Instance'])
 
-    # Per-instance Z height variation via sine of (X + Y) â†’ Escher metamorphosis pattern
+    # Per-instance Z height variation via sine of (X + Y) → Escher metamorphosis pattern
     pos = tree.nodes.new('GeometryNodeInputPosition'); pos.location = (base_x, -400); color_node(pos, "input")
     sep = tree.nodes.new('ShaderNodeSeparateXYZ'); sep.location = (base_x+200, -400)
     tree.links.new(pos.outputs['Position'], sep.inputs['Vector'])
@@ -10518,10 +10559,10 @@ def build_tessellation(tree, props, base_x=-1400):
 
 def build_hyperbolic_disk(tree, props, base_x=-1400):
     """
-    PoincarÃ© disk â€” concentric rings of decreasing-arc tiles.
+    Poincaré disk — concentric rings of decreasing-arc tiles.
     True hyperbolic geometry has an infinite tiling that bends toward the boundary.
     Approximated here with: outer ring + N concentric rings + radial spokes.
-    Curvature param mixes flat Euclidean (0) vs PoincarÃ© projection (1).
+    Curvature param mixes flat Euclidean (0) vs Poincaré projection (1).
     """
     R = props.hyperbolic_radius
     n_rings = props.hyperbolic_rings
@@ -10534,7 +10575,7 @@ def build_hyperbolic_disk(tree, props, base_x=-1400):
     profile.inputs['Resolution'].default_value = 6
     profile.inputs['Radius'].default_value = 0.04
 
-    # Concentric rings â€” each smaller and lifted (PoincarÃ© projection: tiles shrink toward boundary)
+    # Concentric rings — each smaller and lifted (Poincaré projection: tiles shrink toward boundary)
     for ring_i in range(n_rings):
         # Hyperbolic distance: r_i = R * (1 - 1/(1 + i*curv*0.5))
         # When curv=0: linear spacing R*i/n_rings. When curv=1: tighter near edge.
@@ -10548,7 +10589,7 @@ def build_hyperbolic_disk(tree, props, base_x=-1400):
         ring.inputs['Resolution'].default_value = max(16, n_spokes * 2)
         ring.inputs['Radius'].default_value = r
 
-        # Lift by PoincarÃ© projection (z = R * curv * (1 - sqrt(1 - (r/R)^2)))
+        # Lift by Poincaré projection (z = R * curv * (1 - sqrt(1 - (r/R)^2)))
         # This gives a lens-like dome shape when curv > 0
         z = R * curv * (1 - math.sqrt(max(0.0, 1 - (r/R)**2)))
         rt = tree.nodes.new('GeometryNodeTransform'); rt.location = (base_x+250, ring_i * 200); color_node(rt, "hyperbolic")
@@ -10561,7 +10602,7 @@ def build_hyperbolic_disk(tree, props, base_x=-1400):
         tree.links.new(profile.outputs['Curve'], sw.inputs['Profile Curve'])
         parts.append(sw.outputs['Mesh'])
 
-    # Radial spokes â€” pieces from center to outer ring
+    # Radial spokes — pieces from center to outer ring
     for spoke_i in range(n_spokes):
         ang = (spoke_i / n_spokes) * math.tau
         # Build a thin cylinder spoke from center to radius R
@@ -10584,7 +10625,7 @@ def build_hyperbolic_disk(tree, props, base_x=-1400):
 
 
 # ----------------------------------------------------------------------
-# LEVEL DESIGN / GREYBOX BUILDERS â€” all snap to props.unit_size grid
+# LEVEL DESIGN / GREYBOX BUILDERS — all snap to props.unit_size grid
 # ----------------------------------------------------------------------
 
 def _wall_baseboard_and_cornice(tree, props, length, base_x):
@@ -10610,7 +10651,7 @@ def _wall_baseboard_and_cornice(tree, props, length, base_x):
 
 
 def build_wall_straight(tree, props, base_x=-1400):
-    """Standard wall segment â€” width = wall_segments Ã— unit_size, height = wall_height."""
+    """Standard wall segment — width = wall_segments × unit_size, height = wall_height."""
     L = props.wall_segments * props.unit_size
     H = props.wall_height
     T = props.wall_thickness
@@ -10631,7 +10672,7 @@ def build_wall_straight(tree, props, base_x=-1400):
 
 
 def build_wall_corner(tree, props, base_x=-1400):
-    """L-shaped corner wall â€” two slabs meeting at 90Â°."""
+    """L-shaped corner wall — two slabs meeting at 90°."""
     L = props.unit_size
     H = props.wall_height
     T = props.wall_thickness
@@ -10668,7 +10709,7 @@ def build_wall_corner(tree, props, base_x=-1400):
 
 
 def build_wall_with_door(tree, props, base_x=-1400):
-    """Wall with a door-shaped opening â€” built as 4 segments (left, top header, right, [no bottom])."""
+    """Wall with a door-shaped opening — built as 4 segments (left, top header, right, [no bottom])."""
     L = props.wall_segments * props.unit_size
     H = props.wall_height
     T = props.wall_thickness
@@ -10749,7 +10790,7 @@ def build_wall_with_window(tree, props, base_x=-1400):
 
 
 def build_ceiling_tile(tree, props, base_x=-1400):
-    """Ceiling tile â€” matches floor unit. Optional decorative coffer pattern."""
+    """Ceiling tile — matches floor unit. Optional decorative coffer pattern."""
     L = props.unit_size
     parts = []
 
@@ -10771,7 +10812,7 @@ def build_ceiling_tile(tree, props, base_x=-1400):
 
 
 def build_corner_pillar(tree, props, base_x=-1400):
-    """Decorative corner column â€” base + fluted shaft + capital. Snaps to wall corners."""
+    """Decorative corner column — base + fluted shaft + capital. Snaps to wall corners."""
     H = props.wall_height
     R = props.wall_thickness * 1.2
     parts = []
@@ -10806,7 +10847,7 @@ def build_corner_pillar(tree, props, base_x=-1400):
 
 
 # ----------------------------------------------------------------------
-# CASCADING BEAMS (Erindale-inspired) â€” N parallel beams with per-step offsets
+# CASCADING BEAMS (Erindale-inspired) — N parallel beams with per-step offsets
 # ----------------------------------------------------------------------
 
 def build_cascading_beams(tree, props, base_x=-1400):
@@ -10826,7 +10867,7 @@ def build_cascading_beams(tree, props, base_x=-1400):
     line.inputs['Start Location'].default_value = (0, -sp * (n - 1) / 2, 0)
     line.inputs['Offset'].default_value = (0, sp, 0)
 
-    # Beam prototype â€” long thin cube
+    # Beam prototype — long thin cube
     beam = tree.nodes.new('GeometryNodeMeshCube'); beam.location = (base_x, 200); color_node(beam, "beams")
     beam.inputs['Size'].default_value = (L, T, T)
 
@@ -10834,7 +10875,7 @@ def build_cascading_beams(tree, props, base_x=-1400):
     tree.links.new(line.outputs['Mesh'], inst.inputs['Points'])
     tree.links.new(beam.outputs['Mesh'], inst.inputs['Instance'])
 
-    # Per-beam Z + X cascade using Index â†’ Translate Instances
+    # Per-beam Z + X cascade using Index → Translate Instances
     idx = tree.nodes.new('GeometryNodeInputIndex'); idx.location = (base_x, 400)
     z_step = tree.nodes.new('ShaderNodeMath'); z_step.location = (base_x+200, 400); z_step.operation = 'MULTIPLY'
     z_step.inputs[1].default_value = -props.beams_z_cascade  # downward cascade
@@ -10852,7 +10893,7 @@ def build_cascading_beams(tree, props, base_x=-1400):
     tree.links.new(inst.outputs['Instances'], ti.inputs['Instances'])
     tree.links.new(ovec.outputs['Vector'], ti.inputs['Translation'])
 
-    # Per-beam twist (rotation around X) â€” accumulates per index
+    # Per-beam twist (rotation around X) — accumulates per index
     if abs(props.beams_twist) > 0.001:
         rot_step = tree.nodes.new('ShaderNodeMath'); rot_step.location = (base_x+200, 800); rot_step.operation = 'MULTIPLY'
         rot_step.inputs[1].default_value = props.beams_twist
@@ -10874,11 +10915,11 @@ def build_cascading_beams(tree, props, base_x=-1400):
 
 
 # ----------------------------------------------------------------------
-# MODULAR HOUSE â€” composite (4 walls + roof + door + windows on a unit grid)
+# MODULAR HOUSE — composite (4 walls + roof + door + windows on a unit grid)
 # ----------------------------------------------------------------------
 
 def build_modular_house(tree, props, base_x=-1400):
-    """Composite house â€” uses unit_size grid. 4 walls (front has door, sides have windows), pitched roof, optional chimney."""
+    """Composite house — uses unit_size grid. 4 walls (front has door, sides have windows), pitched roof, optional chimney."""
     U = props.unit_size
     Wx = props.house_units_x * U
     Wy = props.house_units_y * U
@@ -10894,7 +10935,7 @@ def build_modular_house(tree, props, base_x=-1400):
     for floor in range(floors):
         z_floor = floor * H_per_floor
 
-        # FRONT (-Y face) â€” has door if floor 0
+        # FRONT (-Y face) — has door if floor 0
         props.wall_segments = props.house_units_x
         props.wall_height = H_per_floor
         if floor == 0 and props.house_with_door:
@@ -10906,7 +10947,7 @@ def build_modular_house(tree, props, base_x=-1400):
         tree.links.new(front_geom, ft.inputs['Geometry'])
         parts.append(ft.outputs['Geometry'])
 
-        # BACK (+Y face) â€” plain
+        # BACK (+Y face) — plain
         back_geom = build_wall_straight(tree, props, base_x=base_x + 6000 + floor * 1500)
         bt = tree.nodes.new('GeometryNodeTransform'); bt.location = (base_x+8000, floor * 200); color_node(bt, "house")
         bt.inputs['Translation'].default_value = (0, Wy/2, z_floor)
@@ -10914,7 +10955,7 @@ def build_modular_house(tree, props, base_x=-1400):
         tree.links.new(back_geom, bt.inputs['Geometry'])
         parts.append(bt.outputs['Geometry'])
 
-        # LEFT (-X face) â€” windows on upper floors
+        # LEFT (-X face) — windows on upper floors
         props.wall_segments = props.house_units_y
         if floor > 0 and props.house_with_windows:
             left_geom = build_wall_with_window(tree, props, base_x=base_x + 9000 + floor * 1500)
@@ -10926,7 +10967,7 @@ def build_modular_house(tree, props, base_x=-1400):
         tree.links.new(left_geom, lt.inputs['Geometry'])
         parts.append(lt.outputs['Geometry'])
 
-        # RIGHT (+X face) â€” windows on upper floors
+        # RIGHT (+X face) — windows on upper floors
         if floor > 0 and props.house_with_windows:
             right_geom = build_wall_with_window(tree, props, base_x=base_x + 14000 + floor * 1500)
         else:
@@ -10943,7 +10984,7 @@ def build_modular_house(tree, props, base_x=-1400):
 
     # Roof
     if props.house_with_roof:
-        # Pitched roof â€” two angled cubes meeting at a ridge
+        # Pitched roof — two angled cubes meeting at a ridge
         roof_pitch = math.radians(35)
         roof_h = (Wy / 2) * math.tan(roof_pitch)
         slope_len = (Wy / 2) / math.cos(roof_pitch)
@@ -10981,18 +11022,18 @@ def build_modular_house(tree, props, base_x=-1400):
 
 
 # ----------------------------------------------------------------------
-# CURVED BUILDING â€” palazzo facade following an arc
+# CURVED BUILDING — palazzo facade following an arc
 # ----------------------------------------------------------------------
 
 def build_curved_building(tree, props, base_x=-1400):
-    """Palazzo facade bent along an arc â€” instances arches around the curve."""
+    """Palazzo facade bent along an arc — instances arches around the curve."""
     R = props.curved_radius
     sweep = math.radians(props.curved_arc_deg)
     floors = props.curved_floors
     arches_per_unit = props.curved_arches_per_unit
     floor_h = props.wall_height
 
-    # Total arches = arches_per_unit Ã— ceil(arc_length / unit_size)
+    # Total arches = arches_per_unit × ceil(arc_length / unit_size)
     arc_length = R * sweep
     total_arches = max(1, int(arc_length / props.unit_size * arches_per_unit))
     parts = []
@@ -11046,11 +11087,11 @@ def build_curved_building(tree, props, base_x=-1400):
 
 
 # ----------------------------------------------------------------------
-# RADIAL BUILDING â€” round palazzo (arches around a center axis)
+# RADIAL BUILDING — round palazzo (arches around a center axis)
 # ----------------------------------------------------------------------
 
 def build_radial_building(tree, props, base_x=-1400):
-    """Round palazzo â€” N arches arrayed around a circle of given radius, optional crowning dome."""
+    """Round palazzo — N arches arrayed around a circle of given radius, optional crowning dome."""
     R = props.radial_building_radius
     floors = props.radial_building_floors
     n = props.radial_building_arches
@@ -11107,7 +11148,7 @@ def build_radial_building(tree, props, base_x=-1400):
 
 
 # ----------------------------------------------------------------------
-# TOPOLOGY CLEANUP â€” game-engine friendly final pass
+# TOPOLOGY CLEANUP — game-engine friendly final pass
 # Adds: Merge by Distance + Recalc Normals + Smooth-by-Angle (Blender 5.0+ approach)
 # ----------------------------------------------------------------------
 
@@ -11115,8 +11156,8 @@ def add_auto_align_pass(tree, in_geom, mode, x=14400):
     """
     Auto-align geometry to a consistent origin convention.
     Uses GeometryNodeBoundBox to compute an offset and applies it via Set Position.
-      â€¢ GROUND: center X=Y=0, zmin=0 (sit on the ground â€” best for level design)
-      â€¢ CENTER: center X=Y=Z=0 (decorative pieces, radial instances)
+      • GROUND: center X=Y=0, zmin=0 (sit on the ground — best for level design)
+      • CENTER: center X=Y=Z=0 (decorative pieces, radial instances)
     Returns the aligned geometry socket.
     """
     if mode == 'NONE':
@@ -11125,12 +11166,12 @@ def add_auto_align_pass(tree, in_geom, mode, x=14400):
     bbox = tree.nodes.new('GeometryNodeBoundBox'); bbox.location = (x, 200); color_node(bbox, "cleanup")
     tree.links.new(in_geom, bbox.inputs['Geometry'])
 
-    # Min + Max â†’ vector
+    # Min + Max → vector
     add_mm = tree.nodes.new('ShaderNodeVectorMath'); add_mm.location = (x+200, 200); add_mm.operation = 'ADD'
     tree.links.new(bbox.outputs['Min'], add_mm.inputs[0])
     tree.links.new(bbox.outputs['Max'], add_mm.inputs[1])
 
-    # Half â†’ -(min+max)/2 (this is the negative of the bbox center)
+    # Half → -(min+max)/2 (this is the negative of the bbox center)
     half = tree.nodes.new('ShaderNodeVectorMath'); half.location = (x+400, 200); half.operation = 'SCALE'
     half.inputs['Scale'].default_value = -0.5
     tree.links.new(add_mm.outputs[0], half.inputs[0])
@@ -11167,13 +11208,13 @@ def add_cleanup_pass(tree, in_geom, props, x=13800):
     Final cleanup for game-engine output.
     Uses edge-angle-based smooth shading (the Blender 5.0+ technique that replaces auto-smooth).
     """
-    # Merge by Distance â€” clean up duplicate verts at seams
+    # Merge by Distance — clean up duplicate verts at seams
     merge = tree.nodes.new('GeometryNodeMergeByDistance'); merge.location = (x, 0); color_node(merge, "cleanup")
     merge.inputs['Distance'].default_value = props.cleanup_merge_distance
     tree.links.new(in_geom, merge.inputs['Geometry'])
     geom = merge.outputs['Geometry']
 
-    # Smooth-by-Angle: select edges sharper than threshold â†’ mark them sharp
+    # Smooth-by-Angle: select edges sharper than threshold → mark them sharp
     # Then Set Shade Smooth on faces. This is the modern Blender 5.0+ technique.
     edge_angle = tree.nodes.new('GeometryNodeInputMeshEdgeAngle'); edge_angle.location = (x, -300); color_node(edge_angle, "cleanup")
 
@@ -11184,14 +11225,14 @@ def add_cleanup_pass(tree, in_geom, props, x=13800):
     cmp.inputs[1].default_value = threshold_rad
     tree.links.new(edge_angle.outputs['Unsigned Angle'], cmp.inputs[0])
 
-    # Set Shade Smooth â€” face mode, no selection (smooth all faces)
+    # Set Shade Smooth — face mode, no selection (smooth all faces)
     smooth_face = tree.nodes.new('GeometryNodeSetShadeSmooth'); smooth_face.location = (x+200, 0); color_node(smooth_face, "cleanup")
     smooth_face.domain = 'FACE'
     smooth_face.inputs['Shade Smooth'].default_value = True
     tree.links.new(geom, smooth_face.inputs['Geometry'])
     geom = smooth_face.outputs['Geometry']
 
-    # Set Shade Smooth â€” edge mode, with the comparison as selection (sharp edges become flat)
+    # Set Shade Smooth — edge mode, with the comparison as selection (sharp edges become flat)
     smooth_edge = tree.nodes.new('GeometryNodeSetShadeSmooth'); smooth_edge.location = (x+500, 0); color_node(smooth_edge, "cleanup")
     smooth_edge.domain = 'EDGE'
     smooth_edge.inputs['Shade Smooth'].default_value = False  # sharp where selected
@@ -11205,8 +11246,8 @@ def add_cleanup_pass(tree, in_geom, props, x=13800):
 def add_procedural_uv_pass(tree, in_geom, props, x=14700):
     """
     Write a UVMap attribute inside the GeoNodes tree (no Apply Modifiers needed).
-    TRIPLANAR â€” normal-weighted blend of YZ / XZ / XY projections (UE tiling).
-    BOX       â€” normalized XZ footprint (good for vertical architecture).
+    TRIPLANAR — normal-weighted blend of YZ / XZ / XY projections (UE tiling).
+    BOX       — normalized XZ footprint (good for vertical architecture).
     """
     mode = getattr(props, 'uv_unwrap_mode', 'TRIPLANAR')
     if not getattr(props, 'auto_uv_unwrap', True) or mode not in ('TRIPLANAR', 'BOX'):
@@ -11359,72 +11400,72 @@ def apply_smart_uv_unwrap(obj, props, context):
 
 
 # ----------------------------------------------------------------------
-# ðŸµ ZEN ARCHITECTURE â€” EXPERT RESEARCH GLOSSARY (v2.56)
+# 🍵 ZEN ARCHITECTURE — EXPERT RESEARCH GLOSSARY (v2.56)
 # Sources: JAANUS, NAJGA, Wikipedia tÅrÅ/torii/pagoda, Goshuin Meguri.
-# Geometry-only reference for builders â€” materials assigned in UE.
+# Geometry-only reference for builders — materials assigned in UE.
 # ----------------------------------------------------------------------
 
 ZEN_ARCHITECTURE_GLOSSARY = {
-    # â”€â”€ TÅrÅ çŸ³ç¯ç±  / ishi-dÅrÅ (stone lantern) bottom â†’ top â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-    'kidan':    ('åŸºå£‡', 'Base platform slab under foundation â€” chi (earth)'),
-    'kiso':     ('åŸºç¤Ž', 'Foundation disc â€” earth element with sao and kidan'),
-    'sao':      ('ç«¿',   'Vertical shaft/post â€” may be circular, square, or absent in yukimi'),
-    'chudai':   ('ä¸­å°', 'Middle platform under fire box â€” sui (water)'),
+    # ── Tōrō 石灯籠 / ishi-dōrō (stone lantern) bottom → top ──────────
+    'kidan':    ('基壇', 'Base platform slab under foundation — chi (earth)'),
+    'kiso':     ('基礎', 'Foundation disc — earth element with sao and kidan'),
+    'sao':      ('竿',   'Vertical shaft/post — may be circular, square, or absent in yukimi'),
+    'chudai':   ('中台', 'Middle platform under fire box — sui (water)'),
     'hibukuro': ('ç«è¢‹', 'Fire chamber; higuchi (ç«å£) openings face sun/moon'),
-    'kasa':     ('ç¬ ',   'Umbrella roof; warabide (è•¨æ‰‹) curl at corners â€” fuu (wind)'),
-    'ukebana':  ('è«‹èŠ±', 'Lotus seat under finial â€” kuu (void/aether) with hoju'),
-    'hoju':     ('å®ç ', 'Jewel finial â€” cintamani at apex'),
+    'kasa':     ('笠',   'Umbrella roof; warabide (蕨手) curl at corners — fuu (wind)'),
+    'ukebana':  ('請花', 'Lotus seat under finial — kuu (void/aether) with hoju'),
+    'hoju':     ('宝珠', 'Jewel finial — cintamani at apex'),
     # Styles
-    'kasuga_doro':  ('æ˜¥æ—¥ç¯ç± ', 'Hex hibukuro, deer motifs, tall sao â€” Kasuga Taisha'),
-    'yukimi_doro':  ('é›ªè¦‹ç¯ç± ', 'Wide kasa for snow viewing; tachi or oki variants'),
-    'oribe_gata':   ('ç¹”éƒ¨å½¢', 'Square hibukuro â€” tea master Furuta Oribe'),
+    'kasuga_doro':  ('春日灯籠', 'Hex hibukuro, deer motifs, tall sao — Kasuga Taisha'),
+    'yukimi_doro':  ('雪見灯籠', 'Wide kasa for snow viewing; tachi or oki variants'),
+    'oribe_gata':   ('織部形', 'Square hibukuro — tea master Furuta Oribe'),
     'misaki_doro':  ('å²¬ç¯ç± ', 'Low cape/oki lantern at water edge'),
-    # â”€â”€ Torii é³¥å±… â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-    'hashira':  ('æŸ±',   'Vertical posts; slight uchikorobi inward tilt on myojin'),
-    'kasagi':   ('ç¬ æœ¨', 'Top lintel â€” upswept curve on myojin style'),
+    # ── Torii 鳥居 ────────────────────────────────────────────────────
+    'hashira':  ('柱',   'Vertical posts; slight uchikorobi inward tilt on myojin'),
+    'kasagi':   ('笠木', 'Top lintel — upswept curve on myojin style'),
     'shimaki':  ('å³¶æœ¨', 'Secondary lintel under kasagi'),
     'nuki':     ('è²«',   'Penetrating tie beam through hashira'),
-    'gakuzuka': ('é¡æŸ', 'Center tablet strut; may bear shrine name'),
-    'kusabi':   ('æ¥”',   'Wedges securing nuki in hashira'),
-    'shimenawa':('æ³¨é€£ç¸„', 'Sacred rope â€” archaic shime-torii form'),
-    # â”€â”€ Pagoda tÅ å¡” â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-    'maku':     ('é–“',   'Bay between pillars on each story'),
+    'gakuzuka': ('額束', 'Center tablet strut; may bear shrine name'),
+    'kusabi':   ('楔',   'Wedges securing nuki in hashira'),
+    'shimenawa':('注連縄', 'Sacred rope — archaic shime-torii form'),
+    # ── Pagoda tō 塔 ──────────────────────────────────────────────────
+    'maku':     ('間',   'Bay between pillars on each story'),
     'noki':     ('è»’',   'Deep eave overhang per tier'),
-    'kibana':   ('æœ¨é¼»', 'Eave-tip upturn beam â€” corner ornament'),
-    'shinbashira': ('å¿ƒæŸ±', 'Central heart column through all stories'),
-    'sorin':    ('ç›¸è¼ª', 'Spire assembly: roban, fukubachi, kurin, suien, hoju'),
-    'mokoshi':  ('è£³éšŽ', 'Skirt pent roof wrapping lower story'),
-    # â”€â”€ Chashitsu èŒ¶å®¤ â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    'kibana':   ('木鼻', 'Eave-tip upturn beam — corner ornament'),
+    'shinbashira': ('心柱', 'Central heart column through all stories'),
+    'sorin':    ('相輪', 'Spire assembly: roban, fukubachi, kurin, suien, hoju'),
+    'mokoshi':  ('裳階', 'Skirt pent roof wrapping lower story'),
+    # ── Chashitsu 茶室 ────────────────────────────────────────────────
     'roji':     ('éœ²åœ°', 'Dewy-path garden approach; soto/uchi roji'),
     'chumon':   ('ä¸­é–€', 'Inner roji gate'),
     'engawa':   ('ç¸å´', 'Perimeter veranda buffer to garden'),
-    'tokonoma': ('åºŠã®é–“', 'Alcove â€” tokobashira, otoshigake, kakejiku'),
-    'nijiriguchi': ('èº™å£', 'Crawl entrance â€” strips social rank'),
+    'tokonoma': ('床の間', 'Alcove — tokobashira, otoshigake, kakejiku'),
+    'nijiriguchi': ('躙口', 'Crawl entrance — strips social rank'),
     'ro':       ('ç‚‰',   'Sunken winter hearth in tatami'),
     'furo':     ('é¢¨ç‚‰', 'Summer portable brazier'),
     'tsukubai': ('è¹²è¸ž', 'Stone water basin for roji purification'),
-    # â”€â”€ ShÅji éšœå­ â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-    'kumiko':   ('çµ„å­', 'Lattice joinery â€” asanoha, yukitsubaki, etc.'),
-    'shamoji':  ('éšœå­æž ', 'Outer frame holding shÅji panels'),
-    # â”€â”€ Bridge & garden â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-    'taikobashi': ('å¤ªé¼“æ©‹', 'Drum bridge â€” steep arc, reflection = full moon'),
-    'soribashi':  ('åæ©‹',   'Arched bridge â€” gentler curve'),
-    'giboshi':    ('æ“¬å®ç ', 'Railing finial â€” onion-shaped post cap'),
-    'karesansui': ('æž¯å±±æ°´', 'Dry landscape â€” raked gravel, ishigumi'),
-    'sanzon_ishigumi': ('ä¸‰å°ŠçŸ³çµ„', 'Buddha triad: chushu + waki/soe stones'),
+    # ── Shōji 隝子 ────────────────────────────────────────────────────
+    'kumiko':   ('組子', 'Lattice joinery — asanoha, yukitsubaki, etc.'),
+    'shamoji':  ('隝子枠', 'Outer frame holding shōji panels'),
+    # ── Bridge & garden ───────────────────────────────────────────────
+    'taikobashi': ('太鼓橋', 'Drum bridge — steep arc, reflection = full moon'),
+    'soribashi':  ('反橋',   'Arched bridge — gentler curve'),
+    'giboshi':    ('擬宝珠', 'Railing finial — onion-shaped post cap'),
+    'karesansui': ('枯山水', 'Dry landscape — raked gravel, ishigumi'),
+    'sanzon_ishigumi': ('三尊石組', 'Buddha triad: chushu + waki/soe stones'),
 }
 
 
 
 
 # ----------------------------------------------------------------------
-# STYLE ARCHITECTURE GLOSSARIES (v2.58) â€” geometry only, materials in UE
+# STYLE ARCHITECTURE GLOSSARIES (v2.58) — geometry only, materials in UE
 # ----------------------------------------------------------------------
 
 BAROQUE_ARCHITECTURE_GLOSSARY = {
     'barrel_vault': ('barrel vault', 'Semicircular ceiling extruded along the long axis'),
     'groin_vault': ('groin vault', 'Intersection of two barrel vaults at right angles'),
-    'rib': ('rib', 'Projecting vault frame member â€” structural and ornamental'),
+    'rib': ('rib', 'Projecting vault frame member — structural and ornamental'),
     'keystone': ('keystone', 'Central wedge at vault apex'),
     'coffer': ('coffer', 'Recessed ceiling panel in a grid'),
     'pilaster': ('pilaster', 'Flat engaged column on a wall plane'),
@@ -11433,18 +11474,18 @@ BAROQUE_ARCHITECTURE_GLOSSARY = {
     'cartouche': ('cartouche', 'Ornamental scrolled frame for coat of arms or inscription'),
     'balustrade': ('balustrade', 'Railing of balusters with handrail and base'),
     'volute': ('volute', 'Spiral scroll on Ionic/Corinthian capital or stair newel'),
-    'niche': ('niche', 'Recessed wall cavity â€” aedicula when framed'),
+    'niche': ('niche', 'Recessed wall cavity — aedicula when framed'),
     'aedicula': ('aedicula', 'Miniature temple frame around a niche or statue'),
     'corinthian': ('Corinthian order', 'Slender column with acanthus leaf capital'),
     'ionic': ('Ionic order', 'Column with volute capital and fluted shaft'),
     'doric': ('Doric order', 'Robust column with plain capital and no base'),
-    'tuscan': ('Tuscan order', 'Plain Roman Doric variant â€” simplest classical order'),
-    'facade_bay': ('facade bay', 'Vertical module between pilasters â€” window rhythm unit'),
-    'piano_nobile': ('piano nobile', 'Principal upper storey â€” tallest windows and main rooms'),
-    'piano_rustica': ('piano rustica', 'Ground floor â€” smaller openings, service or shop use'),
-    'rustica': ('rustica', 'Rough-hewn ground-storey treatment â€” contrast to upper orders'),
+    'tuscan': ('Tuscan order', 'Plain Roman Doric variant — simplest classical order'),
+    'facade_bay': ('facade bay', 'Vertical module between pilasters — window rhythm unit'),
+    'piano_nobile': ('piano nobile', 'Principal upper storey — tallest windows and main rooms'),
+    'piano_rustica': ('piano rustica', 'Ground floor — smaller openings, service or shop use'),
+    'rustica': ('rustica', 'Rough-hewn ground-storey treatment — contrast to upper orders'),
     'architrave': ('architrave', 'Lowest entablature band resting directly on column capitals'),
-    'frieze': ('frieze', 'Middle entablature band â€” plain or sculpted horizontal panel'),
+    'frieze': ('frieze', 'Middle entablature band — plain or sculpted horizontal panel'),
 }
 
 GOTHIC_ARCHITECTURE_GLOSSARY = {
@@ -11452,7 +11493,7 @@ GOTHIC_ARCHITECTURE_GLOSSARY = {
     'mullion': ('mullion', 'Vertical bar dividing window lights'),
     'transom': ('transom', 'Horizontal bar across window'),
     'cusps': ('cusps', 'Pointed lobes in Gothic arch or tracery'),
-    'ogee': ('ogee', 'S-curved profile â€” Venetian Gothic signature'),
+    'ogee': ('ogee', 'S-curved profile — Venetian Gothic signature'),
     'rose_petal': ('rose petal', 'Radial spoke in rose window tracery'),
     'flying_buttress': ('flying buttress', 'Arched brace transferring nave thrust to pier'),
     'pendentive': ('pendentive', 'Triangular transition from square base to dome'),
@@ -11489,29 +11530,29 @@ GREYBOX_GLOSSARY = {
     'play_space': ('play space', 'Interior volume players traverse'),
     'sightline': ('sightline', 'Designer sight corridor for combat/readability'),
     'cover_height': ('cover height', 'Waist vs full cover blockout height'),
-    'mullion': ('mullion', 'Window frame divider â€” blockout thickness'),
+    'mullion': ('mullion', 'Window frame divider — blockout thickness'),
     'sill': ('sill', 'Bottom horizontal window frame member'),
     'cutter_depth': ('cutter depth', 'Boolean cutter extent into wall to prevent clipping'),
     'window_boolean': ('window boolean', 'Optional circular/rect cutter subtracted from greybox shell'),
     'arc_sector': ('arc sector', 'Curved inner-wall ring segment swept over a hub angle'),
-    'gallery_ring': ('gallery ring', 'Upper rotunda annulus â€” outer-wall window booleans per floor'),
-    'shaft_panel': ('shaft panel', 'Elevator tube wall segment â€” per-floor window booleans on N/E/W'),
+    'gallery_ring': ('gallery ring', 'Upper rotunda annulus — outer-wall window booleans per floor'),
+    'shaft_panel': ('shaft panel', 'Elevator tube wall segment — per-floor window booleans on N/E/W'),
     'host_shell': ('host shell', 'Rectangular core building that parasite volumes attach to'),
     'parasite_volume': ('parasite volume', 'Angled bolt-on room colonizing a host shell (Lebbeus Woods)'),
     'parasite_opening': ('parasite opening', 'Host-facing doorway boolean on each bolt-on volume'),
     'freespace_void': ('freespace void', 'Inhabitable gap between two interpenetrating volumes'),
     'structural_rib': ('structural rib', 'Exposed diagonal floor-to-ceiling rib frame'),
-    'blade_fin': ('blade fin', 'Angled lateral fin on tower level â€” harp-string silhouette'),
+    'blade_fin': ('blade fin', 'Angled lateral fin on tower level — harp-string silhouette'),
     'stratigraphic_cut': ('stratigraphic cut', 'Diagonal facade slice exposing interior habitation layers'),
     'tileable': ('tileable', 'Segment repeats along axis for chaining corridors'),
     'combat_room': ('combat room', 'FPS tactical volume with cover + elevated flank'),
     'elevated_area': ('elevated area', 'Raised platform for height advantage in blockout'),
-    'waist_cover': ('waist cover', 'Cover block ~28% room height â€” shooter waist line'),
+    'waist_cover': ('waist cover', 'Cover block ~28% room height — shooter waist line'),
     'nave': ('nave', 'Rectangular main vessel of a basilica plan'),
-    'apse': ('apse', 'Semicircular termination of the nave â€” choir or altar end'),
+    'apse': ('apse', 'Semicircular termination of the nave — choir or altar end'),
     'stair_landing': ('stair landing', 'Top platform slab after the final tread'),
     'landing_back_wall': ('landing back wall', '+Y wall slab at stair landing with optional door boolean'),
-    'trim_recess': ('trim recess', 'Shallow inset for lintel/jamb â€” avoids coplanar z-fight'),
+    'trim_recess': ('trim recess', 'Shallow inset for lintel/jamb — avoids coplanar z-fight'),
     'trim_mode': ('trim mode', 'Recess, offset, or none for doorway/corridor trim'),
     'snap_point': ('snap point', 'Typed connection marker for kit assembly (WALL/DOOR/FLOOR)'),
 }
@@ -11533,22 +11574,22 @@ WOODS_ARCHITECTURE_GLOSSARY = {
 }
 
 ASIAN_ARCHITECTURE_GLOSSARY = {
-    # â”€â”€ Chinese ä¸­å›½ â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-    'dougong': ('æ–—æ ±', 'Bracket cluster â€” cap-block, arms, and tiered cantilevers'),
-    'pailou': ('ç‰Œæ¥¼', 'Memorial archway with tiered roofs spanning a road'),
+    # ── Chinese 中国 ──────────────────────────────────────────────────
+    'dougong': ('斗栱', 'Bracket cluster — cap-block, arms, and tiered cantilevers'),
+    'pailou': ('牌楼', 'Memorial archway with tiered roofs spanning a road'),
     'moon_gate': ('æœˆäº®é—¨', 'Circular garden doorway in a garden wall'),
     'ting_pavilion': ('äº­', 'Open hexagonal garden pavilion with curved roof'),
-    'tiered_pagoda': ('å¡”', 'Multi-tier pagoda â€” flared eaves, finial spire'),
+    'tiered_pagoda': ('塔', 'Multi-tier pagoda — flared eaves, finial spire'),
     'flared_eaves': ('é£žæª', 'Upward-curving roof corners on Chinese tiers'),
-    # â”€â”€ Korean í•œêµ­ â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Korean 핝국 ───────────────────────────────────────────────────
     'hanok': ('í•œì˜¥', 'Timber frame dwelling with low-pitched roof'),
-    'ondol': ('ì˜¨ëŒ', 'Heated floor system under raised wooden platform'),
+    'ondol': ('온돌', 'Heated floor system under raised wooden platform'),
     'maru': ('ë§ˆë£¨', 'Open wooden floor zone between rooms'),
     'jangseung': ('ìž¥ìŠ¹', 'Village guardian totem pole with carved face'),
-    'hongsalmun': ('í™ì‚´ë¬¸', 'Red-arrow gate â€” two posts with diagonal arms'),
-    # â”€â”€ Japanese æ—¥æœ¬ (non-Zen vernacular) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-    'kura': ('è”µ', 'Fire-resistant storehouse â€” thick walls, whitewashed plaster'),
-    'dozo': ('åœŸè”µ', 'Earthen-walled kura construction'),
+    'hongsalmun': ('홍살문', 'Red-arrow gate — two posts with diagonal arms'),
+    # ── Japanese 日杬 (non-Zen vernacular) ────────────────────────────
+    'kura': ('蔵', 'Fire-resistant storehouse — thick walls, whitewashed plaster'),
+    'dozo': ('坟蔵', 'Earthen-walled kura construction'),
     'namako_kabe': ('æµ·é¼ å£', 'Black-and-white tiled kura wall pattern'),
 }
 
@@ -11602,7 +11643,7 @@ def _match_asian_arch(t):
 
 
 def _zen_lantern_element_mask(layers, show_kidan, show_ukebana):
-    """Return active element keys bottomâ†’top for a tÅrÅ stack."""
+    """Return active element keys bottom→top for a tōrō stack."""
     full = ['kidan', 'kiso', 'sao', 'chudai', 'hibukuro', 'kasa', 'ukebana', 'hoju']
     if not show_kidan and 'kidan' in full:
         full.remove('kidan')
@@ -11622,9 +11663,9 @@ def _curved_roof(tree, loc, size_x, size_y, ridge_h, base_z=0.0,
                  label="roof", res=24):
     """Reusable East-Asian curved roof built from a deformed Grid.
 
-    hip=True  â†’ 4-way hip/pyramid roof (square level-sets, Chebyshev),
+    hip=True  → 4-way hip/pyramid roof (square level-sets, Chebyshev),
                 tips sweep up uniformly (Japanese/Chinese irimoya feel).
-    hip=False â†’ gable roof: ridge runs along X, slopes fall off in Y,
+    hip=False → gable roof: ridge runs along X, slopes fall off in Y,
                 the four corners flip up (Korean cheoma / Chinese pailou).
 
     The (1-n)^pitch profile is concave when pitch>1 so the eaves sweep.
@@ -11703,10 +11744,10 @@ def _curved_roof(tree, loc, size_x, size_y, ridge_h, base_z=0.0,
 
 def build_zen_pagoda(tree, props, base_x=-1400):
     """Multi-tier pagoda following Japanese pagoda principles:
-       â€¢ Each tier ~85% of the previous (yon-juu = 4-tier rule)
-       â€¢ Overhanging eaves on each tier (deep noki)
-       â€¢ Curved Bezier roof beams for kibana (corner upturn)
-       â€¢ Crowning sÅrin (ringed spire) of 9 rings.
+       • Each tier ~85% of the previous (yon-juu = 4-tier rule)
+       • Overhanging eaves on each tier (deep noki)
+       • Curved Bezier roof beams for kibana (corner upturn)
+       • Crowning sōrin (ringed spire) of 9 rings.
     """
     tiers = props.pagoda_tiers
     R = props.pagoda_base_radius
@@ -11720,7 +11761,7 @@ def build_zen_pagoda(tree, props, base_x=-1400):
     cur_R = R
     cur_z = 0
 
-    # Mokoshi (è£³éšŽ) â€” decorative skirt story at pagoda base
+    # Mokoshi (裳階) — decorative skirt story at pagoda base
     if show_mokoshi:
         mok_r = R * 1.35
         mok_circ = _safe_node(tree, 'GeometryNodeCurvePrimitiveCircle', (base_x - 200, -200))
@@ -11749,7 +11790,7 @@ def build_zen_pagoda(tree, props, base_x=-1400):
                     parts.append(mok_ext.outputs['Mesh'])
 
     for i in range(tiers):
-        # â”€â”€ Body: octagonal column via CurvePrimitiveCircle(8) + FillCurve + ExtrudeMesh â”€â”€
+        # ── Body: octagonal column via CurvePrimitiveCircle(8) + FillCurve + ExtrudeMesh ──
         body_h = th * 0.72
         body_circ = _safe_node(tree, 'GeometryNodeCurvePrimitiveCircle', (base_x, i * 400))
         if body_circ:
@@ -11777,7 +11818,7 @@ def build_zen_pagoda(tree, props, base_x=-1400):
             color_node(body_tr, "house")
             parts.append(body_tr.outputs['Geometry'])
 
-        # â”€â”€ Roof: octagonal eave disc (FillCurve + ExtrudeMesh thin) â”€â”€â”€â”€â”€â”€
+        # ── Roof: octagonal eave disc (FillCurve + ExtrudeMesh thin) ──────
         roof_h  = th * 0.40
         eave_r  = cur_R + overhang
         eave_z  = cur_z + body_h
@@ -11828,7 +11869,7 @@ def build_zen_pagoda(tree, props, base_x=-1400):
                 color_node(eave_rim, "roof"); color_node(eave_rim_tr, "roof")
                 parts.append(eave_rim_tr.outputs['Geometry'])
 
-        # â”€â”€ 8 curved corner kibana beams â€” bezier swept with thin tube â”€â”€â”€â”€â”€â”€
+        # ── 8 curved corner kibana beams — bezier swept with thin tube ──────
         # Start at octagonal body edge, curve outward+upward to eave tip (upturn)
         body_edge_r = cur_R * 0.90   # match the octagonal body radius
         beam_prof_pag = _safe_node(tree, 'GeometryNodeCurvePrimitiveCircle',
@@ -11876,7 +11917,7 @@ def build_zen_pagoda(tree, props, base_x=-1400):
         cur_z += th
         cur_R *= taper
 
-    # Shinbashira (å¿ƒæŸ±) â€” central heart column through all tiers
+    # Shinbashira (心柱) — central heart column through all tiers
     if show_shinbashira:
         col_h = cur_z * 0.92
         shin_line = _safe_node(tree, 'GeometryNodeCurvePrimitiveLine', (base_x - 400, tiers * 400 + 50))
@@ -11904,7 +11945,7 @@ def build_zen_pagoda(tree, props, base_x=-1400):
                     color_node(shin_sw, "house")
                     parts.append(shin_sw.outputs['Geometry'])
 
-    # â”€â”€ SÅrin (crowning spire) â€” thin swept rod + kurin rings â”€â”€â”€â”€â”€
+    # ── Sōrin (crowning spire) — thin swept rod + kurin rings ─────
     spire_h = th * 1.25
     spire_line = _safe_node(tree, 'GeometryNodeCurvePrimitiveLine',
                             (base_x, tiers * 400 + 100))
@@ -11968,7 +12009,7 @@ def build_zen_pagoda(tree, props, base_x=-1400):
                 color_node(k_ring, "ornament"); color_node(k_tr, "ornament")
                 parts.append(k_tr.outputs['Geometry'])
 
-    # HÅju (å®ç ) â€” wish-granting jewel at sÅrin apex
+    # Hōju (宝珠) — wish-granting jewel at sōrin apex
     hoju = _safe_node(tree, 'GeometryNodeMeshUVSphere', (base_x, tiers * 400 + 800))
     if hoju:
         try:
@@ -11994,15 +12035,15 @@ def build_zen_pagoda(tree, props, base_x=-1400):
 
 
 def build_zen_torii(tree, props, base_x=-1400):
-    """Japanese MyÅjin torii gate â€” v2.49 AAA overhaul.
+    """Japanese Myōjin torii gate — v2.49 AAA overhaul.
 
     All beams are swept curve profiles; posts are fluted sweep tubes.
-    â€¢ 2 vertical posts: CurvePrimitiveLine + round/fluted profile sweep
-    â€¢ Nuki (tie beam): horizontal CurvePrimitiveLine + rect-oval profile sweep
-    â€¢ Shimaki (straight upper beam): horizontal sweep, wider and taller than nuki
-    â€¢ Kasagi (curved top beam): BezierSegment + round profile sweep (already AAA)
-    â€¢ Gakuzuka (center vertical brace): line sweep
-    â€¢ Post caps (kibashira cap rings): small torus at top of each post
+    • 2 vertical posts: CurvePrimitiveLine + round/fluted profile sweep
+    • Nuki (tie beam): horizontal CurvePrimitiveLine + rect-oval profile sweep
+    • Shimaki (straight upper beam): horizontal sweep, wider and taller than nuki
+    • Kasagi (curved top beam): BezierSegment + round profile sweep (already AAA)
+    • Gakuzuka (center vertical brace): line sweep
+    • Post caps (kibashira cap rings): small torus at top of each post
     """
     W     = props.torii_width
     H     = props.torii_height
@@ -12016,7 +12057,7 @@ def build_zen_torii(tree, props, base_x=-1400):
     is_shinmei = style in ('SHINMEI', 'ISE')
     parts = []
 
-    # â”€â”€ Shared post profile (round, 16-vert) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Shared post profile (round, 16-vert) ────────────────────────────
     post_prof = _safe_node(tree, 'GeometryNodeCurvePrimitiveCircle', (base_x - 300, 0))
     if post_prof:
         try:
@@ -12025,7 +12066,7 @@ def build_zen_torii(tree, props, base_x=-1400):
         except Exception: pass
         color_node(post_prof, "house")
 
-    # â”€â”€ 2 vertical posts â€” CurvePrimitiveLine swept with post_prof â”€â”€â”€â”€â”€â”€â”€
+    # ── 2 vertical posts — CurvePrimitiveLine swept with post_prof ───────
     for i, x_off in enumerate((-W / 2, W / 2)):
         post_line = _safe_node(tree, 'GeometryNodeCurvePrimitiveLine', (base_x, i * 200))
         if post_line:
@@ -12044,7 +12085,7 @@ def build_zen_torii(tree, props, base_x=-1400):
                     color_node(sw, "house")
                     parts.append(sw.outputs['Mesh'])
 
-        # Post cap ring (kibashira cap) â€” torus at top of post
+        # Post cap ring (kibashira cap) — torus at top of post
         cap_ring = _safe_node(tree, 'GeometryNodeMeshTorus', (base_x, 500 + i * 100))
         if cap_ring:
             try:
@@ -12061,7 +12102,7 @@ def build_zen_torii(tree, props, base_x=-1400):
                 color_node(cap_ring, "ornament"); color_node(cap_tr, "ornament")
                 parts.append(cap_tr.outputs['Geometry'])
 
-    # â”€â”€ Shared horizontal beam profile (oval/rectangle cross-section) â”€â”€â”€â”€
+    # ── Shared horizontal beam profile (oval/rectangle cross-section) ────
     beam_prof = _safe_node(tree, 'GeometryNodeCurvePrimitiveQuadrilateral', (base_x - 300, -400))
     if beam_prof:
         try:
@@ -12072,7 +12113,7 @@ def build_zen_torii(tree, props, base_x=-1400):
             beam_prof = None
     color_node(beam_prof, "house") if beam_prof else None
 
-    # â”€â”€ Nuki (horizontal tie beam at 70% height) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Nuki (horizontal tie beam at 70% height) ─────────────────────────
     nuki_span = W + pr * 2.4
     nuki_line = _safe_node(tree, 'GeometryNodeCurvePrimitiveLine', (base_x, 800))
     if nuki_line:
@@ -12091,7 +12132,7 @@ def build_zen_torii(tree, props, base_x=-1400):
                 color_node(nuki_sw, "house")
                 parts.append(nuki_sw.outputs['Mesh'])
 
-    # â”€â”€ Shimaki (å³¶æœ¨) â€” secondary lintel; myÅjin / ise only â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Shimaki (島杨) — secondary lintel; myōjin / ise only ─────────────
     if not is_shinmei:
         shimaki_span = W + pr * 3.2
         shimaki_prof = _safe_node(tree, 'GeometryNodeCurvePrimitiveQuadrilateral', (base_x - 300, -700))
@@ -12122,7 +12163,7 @@ def build_zen_torii(tree, props, base_x=-1400):
                     color_node(shim_sw, "house")
                     parts.append(shim_sw.outputs['Mesh'])
 
-    # â”€â”€ Kasagi (ç¬ æœ¨) â€” top lintel; straight on shinmei, curved on myÅjin â”€
+    # ── Kasagi (笠杨) — top lintel; straight on shinmei, curved on myōjin ─
     overhang = W * (0.12 if is_shinmei else 0.20)
     kas_z = H + pr * (0.6 if is_shinmei else 0.9)
     bez = _safe_node(tree, 'GeometryNodeCurvePrimitiveBezierSegment', (base_x, 1300))
@@ -12153,7 +12194,7 @@ def build_zen_torii(tree, props, base_x=-1400):
                 color_node(kas_sw, "ornament")
                 parts.append(kas_sw.outputs['Mesh'])
 
-    # â”€â”€ Gakuzuka (é¡æŸ) â€” center tablet strut â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Gakuzuka (額束) — center tablet strut ─────────────────────────────
     if show_gz and not is_shinmei:
         gz_line = _safe_node(tree, 'GeometryNodeCurvePrimitiveLine', (base_x, 1500))
         if gz_line:
@@ -12177,7 +12218,7 @@ def build_zen_torii(tree, props, base_x=-1400):
                     color_node(gz_sw, "ornament")
                     parts.append(gz_sw.outputs['Mesh'])
 
-    # â”€â”€ Kusabi (æ¥”) â€” wedges at hashira/nuki junction â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Kusabi (楔) — wedges at hashira/nuki junction ───────────────────
     if show_kusabi:
         for x_off in (-W / 2, W / 2):
             wedge = _safe_node(tree, 'GeometryNodeMeshCube', (base_x, 1700))
@@ -12195,7 +12236,7 @@ def build_zen_torii(tree, props, base_x=-1400):
                     color_node(wtr, "ornament")
                     parts.append(wtr.outputs['Geometry'])
 
-    # Shimenawa (æ³¨é€£ç¸„) â€” sacred rope between hashira
+    # Shimenawa (注連縄) — sacred rope between hashira
     if show_shimenawa:
         rope_y = 0.0
         for seg in range(5):
@@ -12236,7 +12277,7 @@ def build_zen_torii(tree, props, base_x=-1400):
 
 
 def build_zen_shoji(tree, props, base_x=-1400):
-    """ShÅji (éšœå­) â€” shamoji frame + kumiko lattice + paper panel."""
+    """Shōji (隝子) — shamoji frame + kumiko lattice + paper panel."""
     W = props.shoji_width
     H = props.shoji_height
     nx = props.shoji_grid_x
@@ -12313,7 +12354,7 @@ def build_zen_shoji(tree, props, base_x=-1400):
         tree.links.new(bar.outputs['Mesh'], bt.inputs['Geometry'])
         parts.append(bt.outputs['Geometry'])
 
-    # Paper backing â€” a thin plane recessed slightly
+    # Paper backing — a thin plane recessed slightly
     paper = tree.nodes.new('GeometryNodeMeshCube'); paper.location = (base_x, 1000); color_node(paper, "ornament")
     paper.inputs['Size'].default_value = (W - frame_thick * 2, m * 0.5, H - frame_thick * 2)
     pt = tree.nodes.new('GeometryNodeTransform'); pt.location = (base_x+200, 1000)
@@ -12327,12 +12368,12 @@ def build_zen_shoji(tree, props, base_x=-1400):
 
 
 def build_zen_lantern(tree, props, base_x=-1400):
-    """Ishi-dÅrÅ (çŸ³ç¯ç± ) â€” v2.56 research-backed tÅrÅ assembly.
+    """Ishi-dōrō (石灯籠) — v2.56 research-backed tōrō assembly.
 
-    Eight named elements (bottom â†’ top), per JAANUS / NAJGA / Wikipedia:
-      kidan åŸºå£‡, kiso åŸºç¤Ž, sao ç«¿, chÅ«dai ä¸­å°, hibukuro ç«è¢‹,
-      kasa ç¬  (+ warabide è•¨æ‰‹), ukebana è«‹èŠ±, hÅju å®ç 
-    Geometry only â€” assign stone/wood materials in UE.
+    Eight named elements (bottom → top), per JAANUS / NAJGA / Wikipedia:
+      kidan 基壇, kiso 基礎, sao 竿, chūdai 中台, hibukuro 火袋,
+      kasa 笠 (+ warabide 蕨手), ukebana 請花, hōju 宝珠
+    Geometry only — assign stone/wood materials in UE.
     """
     import math
     H = getattr(props, 'zen_lantern_height', 2.0)
@@ -12647,14 +12688,14 @@ def build_zen_lantern(tree, props, base_x=-1400):
 
 
 def build_zen_teahouse(tree, props, base_x=-1400):
-    """Tea house â€” square pavilion with steeply-pitched curved roof + raised platform."""
+    """Tea house — square pavilion with steeply-pitched curved roof + raised platform."""
     W = props.teahouse_width
     D = props.teahouse_depth
     H = props.teahouse_height
     pitch = props.teahouse_pitch_factor
     parts = []
 
-    # Raised platform â€” extended outward for engawa if enabled
+    # Raised platform — extended outward for engawa if enabled
     engawa_width = props.teahouse_engawa_width if props.teahouse_engawa else 0.0
     platform_W = W + engawa_width * 2
     platform_D = D + engawa_width * 2
@@ -12776,7 +12817,7 @@ def build_zen_teahouse(tree, props, base_x=-1400):
     tree.links.new(rthick.outputs['Mesh'], rt.inputs['Geometry'])
     parts.append(rt.outputs['Geometry'])
 
-    # Corner hip ridge beams â€” bezier sweeps from apex down to each eave tip
+    # Corner hip ridge beams — bezier sweeps from apex down to each eave tip
     ridge_prof = _make_circle_profile(tree, 0.05, 6, (base_x, 1100), props)
     apex_z = roof_base_z + roof_h + roof_h * 0.16
     for x_s, y_s in [(-1, -1), (1, -1), (1, 1), (-1, 1)]:
@@ -12800,7 +12841,7 @@ def build_zen_teahouse(tree, props, base_x=-1400):
     tree.links.new(fin.outputs['Mesh'], fint.inputs['Geometry'])
     parts.append(fint.outputs['Geometry'])
 
-    # Tokonoma (åºŠã®é–“) â€” recessed alcove with tokobashira pillar
+    # Tokonoma (床の間) — recessed alcove with tokobashira pillar
     if getattr(props, 'teahouse_tokonoma', True):
         alcove_w = W * 0.28
         alcove_d = 0.18
@@ -12811,7 +12852,7 @@ def build_zen_teahouse(tree, props, base_x=-1400):
         alct.inputs['Translation'].default_value = (-W * 0.22, D / 2 - alcove_d * 0.6, 0.27 + alcove_h / 2)
         tree.links.new(alc.outputs['Mesh'], alct.inputs['Geometry'])
         parts.append(alct.outputs['Geometry'])
-        # Tokobashira (åºŠæŸ±) â€” alcove pillar
+        # Tokobashira (床柱) — alcove pillar
         tbp = tree.nodes.new('GeometryNodeMeshCylinder'); tbp.location = (base_x, 1600); color_node(tbp, "ornament")
         tbp.inputs['Vertices'].default_value = 8
         tbp.inputs['Radius'].default_value = 0.045
@@ -12821,7 +12862,7 @@ def build_zen_teahouse(tree, props, base_x=-1400):
         tree.links.new(tbp.outputs['Mesh'], tbpt.inputs['Geometry'])
         parts.append(tbpt.outputs['Geometry'])
 
-    # Ro (ç‚‰) â€” sunken hearth in tatami floor
+    # Ro (炉) — sunken hearth in tatami floor
     if getattr(props, 'teahouse_ro', True):
         ro = tree.nodes.new('GeometryNodeMeshCube'); ro.location = (base_x, 1700); color_node(ro, "house")
         ro.inputs['Size'].default_value = (W * 0.22, D * 0.22, 0.08)
@@ -12830,7 +12871,7 @@ def build_zen_teahouse(tree, props, base_x=-1400):
         tree.links.new(ro.outputs['Mesh'], rot.inputs['Geometry'])
         parts.append(rot.outputs['Geometry'])
 
-    # Nijiriguchi (èº™å£) â€” low crawl entrance opening
+    # Nijiriguchi (躙口) — low crawl entrance opening
     if getattr(props, 'teahouse_nijiriguchi', False):
         niw = W * 0.35
         nih = H * 0.38
@@ -12841,7 +12882,7 @@ def build_zen_teahouse(tree, props, base_x=-1400):
         tree.links.new(niche.outputs['Mesh'], nit.inputs['Geometry'])
         parts.append(nit.outputs['Geometry'])
 
-    # Chumon (ä¸­é–€) â€” roji inner gate posts on engawa approach
+    # Chumon (中門) — roji inner gate posts on engawa approach
     if getattr(props, 'teahouse_chumon', False) and props.teahouse_engawa:
         gate_w = platform_W * 0.55
         for gx in (-gate_w / 2, gate_w / 2):
@@ -12866,7 +12907,7 @@ def build_zen_teahouse(tree, props, base_x=-1400):
 
 
 def build_zen_bridge(tree, props, base_x=-1400):
-    """Taikobashi / soribashi (å¤ªé¼“æ©‹ / åæ©‹) â€” moon drum garden bridge."""
+    """Taikobashi / soribashi (太鼓橋 / 反橋) — moon drum garden bridge."""
     span = props.zen_bridge_span
     rise = props.zen_bridge_rise
     width = props.zen_bridge_width
@@ -12900,7 +12941,7 @@ def build_zen_bridge(tree, props, base_x=-1400):
     deck.inputs['Fill Caps'].default_value = True
     parts.append(deck.outputs['Mesh'])
 
-    # Plank cross-pieces â€” resampled ALONG the arc so they ride the curve,
+    # Plank cross-pieces — resampled ALONG the arc so they ride the curve,
     # rotation-aligned to the tangent so each plank tilts with the slope.
     plank_arc = tree.nodes.new('GeometryNodeCurvePrimitiveBezierSegment'); plank_arc.location = (base_x, 300); color_node(plank_arc, "house")
     plank_arc.inputs['Resolution'].default_value = 32
@@ -12986,7 +13027,7 @@ def build_zen_bridge(tree, props, base_x=-1400):
             tree.links.new(binst.outputs['Instances'], brz.inputs['Geometry'])
             parts.append(brz.outputs['Geometry'])
 
-            # Giboshi (æ“¬å®ç ) finials on railing ends
+            # Giboshi (擬宝珠) finials on railing ends
             if show_giboshi:
                 for ex in (-span / 2, span / 2):
                     gb = tree.nodes.new('GeometryNodeMeshUVSphere'); gb.location = (base_x, 1500)
@@ -13004,7 +13045,7 @@ def build_zen_bridge(tree, props, base_x=-1400):
 
 
 def build_zen_stone_garden(tree, props, base_x=-1400):
-    """Karesansui (æž¯å±±æ°´) â€” samon (ç ‚ç´‹) ripples + ishigumi stone groups."""
+    """Karesansui (枯山水) — samon (砂紋) ripples + ishigumi stone groups."""
     size = props.stone_garden_size
     n_stones = props.stone_garden_stones
     n_ripples = props.stone_garden_ripples
@@ -13018,7 +13059,7 @@ def build_zen_stone_garden(tree, props, base_x=-1400):
     tree.links.new(base.outputs['Mesh'], bt.inputs['Geometry'])
     parts.append(bt.outputs['Geometry'])
 
-    # Tsukubai (è¹²è¸ž) â€” stone washbasin at roji edge
+    # Tsukubai (蹲踞) — stone washbasin at roji edge
     if getattr(props, 'stone_garden_tsukubai', False):
         bx = size * 0.38
         by = -size * 0.32
@@ -13041,7 +13082,7 @@ def build_zen_stone_garden(tree, props, base_x=-1400):
         tree.links.new(rim.outputs['Mesh'], rt.inputs['Geometry'])
         parts.append(rt.outputs['Geometry'])
 
-    # Concentric ripple rings â€” built as torus-like tubes
+    # Concentric ripple rings — built as torus-like tubes
     for i in range(n_ripples):
         r = (i + 1) / max(1, n_ripples) * (size * 0.45)
         ring = tree.nodes.new('GeometryNodeCurvePrimitiveCircle'); ring.location = (base_x, 200 + i * 80); color_node(ring, "ornament")
@@ -13068,16 +13109,16 @@ def build_zen_stone_garden(tree, props, base_x=-1400):
     rng = random.Random(getattr(props, 'sv_seed', 42))
 
     placed_count = 0
-    # Sanzon-ishigumi (ä¸‰å°ŠçŸ³çµ„) â€” Buddha triad: chÅ«shu + waki/soe stones
+    # Sanzon-ishigumi (三尊石組) — Buddha triad: chūshu + waki/soe stones
     if props.stone_garden_sansonseki:
-        # chÅ«shu (ä¸­ä¸») master, waki-ishi (è„‡çŸ³) attendant, soe-ishi (æ·»çŸ³) companion
+        # chūshu (中主) master, waki-ishi (脇石) attendant, soe-ishi (添石) companion
         ctr_x = rng.uniform(-size * 0.15, size * 0.15)
         ctr_y = rng.uniform(-size * 0.15, size * 0.15)
         triad = [
             # (offset_x, offset_y, radius, scale_xyz)
-            (0.0,            0.0,              size * 0.10, (1.0, 0.9, 1.5)),    # master â€” tall vertical
-            (size * 0.20,    size * 0.10,      size * 0.07, (1.2, 0.8, 0.6)),    # attendant â€” flat low
-            (-size * 0.12,   size * 0.18,      size * 0.05, (1.0, 0.9, 0.8)),    # companion â€” medium
+            (0.0,            0.0,              size * 0.10, (1.0, 0.9, 1.5)),    # master — tall vertical
+            (size * 0.20,    size * 0.10,      size * 0.07, (1.2, 0.8, 0.6)),    # attendant — flat low
+            (-size * 0.12,   size * 0.18,      size * 0.05, (1.0, 0.9, 0.8)),    # companion — medium
         ]
         for j, (dx, dy, r, sc) in enumerate(triad):
             stone = tree.nodes.new('GeometryNodeMeshIcoSphere'); stone.location = (base_x, 1500 + placed_count * 100); color_node(stone, "house")
@@ -13123,7 +13164,7 @@ def build_zen_stone_garden(tree, props, base_x=-1400):
 # ----------------------------------------------------------------------
 
 def build_wall_multi_window(tree, props, base_x=-1400):
-    """Wall with grid of mullioned windows â€” adjustable rows Ã— cols."""
+    """Wall with grid of mullioned windows — adjustable rows × cols."""
     L = props.wall_segments * props.unit_size
     H = props.wall_height
     T = props.wall_thickness
@@ -13204,7 +13245,7 @@ def build_wall_multi_window(tree, props, base_x=-1400):
 
 
 def build_wall_arched_window(tree, props, base_x=-1400):
-    """Wall with an arched-top window â€” round arch above rectangular opening."""
+    """Wall with an arched-top window — round arch above rectangular opening."""
     L = props.wall_segments * props.unit_size
     H = props.wall_height
     T = props.wall_thickness
@@ -13232,7 +13273,7 @@ def build_wall_arched_window(tree, props, base_x=-1400):
     tree.links.new(sill_block.outputs['Mesh'], sb_t.inputs['Geometry'])
     parts.append(sb_t.outputs['Geometry'])
 
-    # Arched top â€” half circle filling the top portion
+    # Arched top — half circle filling the top portion
     arc = tree.nodes.new('GeometryNodeCurveArc'); arc.location = (base_x, 800); color_node(arc, "wall")
     arc.mode = 'RADIUS'
     arc.inputs['Resolution'].default_value = 24
@@ -13274,7 +13315,7 @@ def build_wall_arched_window(tree, props, base_x=-1400):
 
 
 def build_wall_bay_window(tree, props, base_x=-1400):
-    """Wall with projecting bay window â€” trapezoidal projection forward from main wall."""
+    """Wall with projecting bay window — trapezoidal projection forward from main wall."""
     L = props.wall_segments * props.unit_size
     H = props.wall_height
     T = props.wall_thickness
@@ -13295,7 +13336,7 @@ def build_wall_bay_window(tree, props, base_x=-1400):
         tree.links.new(slab.outputs['Mesh'], s_t.inputs['Geometry'])
         parts.append(s_t.outputs['Geometry'])
 
-    # Bay projection â€” a 5-sided box that sticks forward
+    # Bay projection — a 5-sided box that sticks forward
     # Front face (parallel to wall, offset bay_D forward)
     front_W = bay_W * (1.0 - 0.2 * sides / 3)
     front = tree.nodes.new('GeometryNodeMeshCube'); front.location = (base_x, 500); color_node(front, "wall")
@@ -13348,7 +13389,7 @@ def build_wall_bay_window(tree, props, base_x=-1400):
 
 
 # ----------------------------------------------------------------------
-# UNIVERSAL POST-PASS â€” make ANY type respond to musical params
+# UNIVERSAL POST-PASS — make ANY type respond to musical params
 # ----------------------------------------------------------------------
 
 def add_universal_music_pass(tree, in_geom, props, x=10500):
@@ -13381,7 +13422,7 @@ def add_universal_music_pass(tree, in_geom, props, x=10500):
     sine_a = tree.nodes.new('ShaderNodeMath'); sine_a.location = (x+800, 0); sine_a.operation = 'SINE'
     tree.links.new(a_freq.outputs['Value'], sine_a.inputs[0])
 
-    # Sum harmonics, scale by universal_music_influence Ã— musical_amplitude
+    # Sum harmonics, scale by universal_music_influence × musical_amplitude
     add = tree.nodes.new('ShaderNodeMath'); add.location = (x+800, 100); add.operation = 'ADD'
     tree.links.new(sine_z.outputs['Value'], add.inputs[0])
     tree.links.new(sine_a.outputs['Value'], add.inputs[1])
@@ -13412,7 +13453,7 @@ def add_universal_music_pass(tree, in_geom, props, x=10500):
 
 # ======================================================================
 # Baroque / Classical architecture builders (v2.58)
-# Ported from BAROQUE_COMPONENT_LIBRARY.py â€” uses main-addon GN helpers.
+# Ported from BAROQUE_COMPONENT_LIBRARY.py — uses main-addon GN helpers.
 # ======================================================================
 
 def _baroque_barrel_vault(tree, span, depth, rise, base_x=-1400):
@@ -13623,8 +13664,8 @@ def build_baroque_balustrade(tree, props, base_x=-1400):
 
 
 # ======================================================================
-# ðŸ‡¨ðŸ‡³ Chinese & ðŸ‡°ðŸ‡· Korean traditional architecture builders
-# Distinct from the Japanese ZEN_* builders â€” derived from the Xie & Wang
+# 🇨🇳 Chinese & 🇰🇷 Korean traditional architecture builders
+# Distinct from the Japanese ZEN_* builders — derived from the Xie & Wang
 # (2023) modular system for Chinese carpentry and Hanok references.
 # ======================================================================
 
@@ -13642,12 +13683,12 @@ def build_cn_dougong(tree, props):
     cur_z = 0.0
     import math
     for tier in range(tiers):
-        # Cap block (dou): square prism via curveâ†’fillâ†’extrude
+        # Cap block (dou): square prism via curve→fill→extrude
         rect = _node(tree, 'GeometryNodeCurvePrimitiveCircle', (base_x, 200 + tier * 250))
         rect.inputs['Resolution'].default_value = 4
         rect.inputs['Radius'].default_value = cap_size
         rrot = _node(tree, 'GeometryNodeTransform', (base_x + 200, 200 + tier * 250))
-        rrot.inputs['Rotation'].default_value = (0, 0, 0.7854)  # 45Â° â†’ square
+        rrot.inputs['Rotation'].default_value = (0, 0, 0.7854)  # 45° → square
         _link(tree, rect.outputs['Curve'], rrot.inputs['Geometry'])
         fill = _safe_node(tree, 'GeometryNodeFillCurve', (base_x + 400, 200 + tier * 250))
         if fill:
@@ -13668,7 +13709,7 @@ def build_cn_dougong(tree, props):
         cur_z += cap_size * 0.7
         # 4 (or 8 alternating) bracket arms radiating outward
         # v2.49: arms are CurvePrimitiveLine sweeps with rectangular profile
-        # (ogee/round cross-section) instead of MeshCubes â€” real AAA bracket beams
+        # (ogee/round cross-section) instead of MeshCubes — real AAA bracket beams
         n_arms = 4 if (tier % 2 == 0) else 8
         arm_rect_prof = _safe_node(tree, 'GeometryNodeCurvePrimitiveQuadrilateral',
                                    (base_x - 300, -200 - tier * 300))
@@ -13760,7 +13801,7 @@ def build_cn_tiered_pagoda(tree, props):
     cur_z = 0.0
     cur_r = base_r
     for tier in range(tiers):
-        # Octagonal column (body of this tier) â€” curveâ†’fillâ†’extrude
+        # Octagonal column (body of this tier) — curve→fill→extrude
         oct_c = _node(tree, 'GeometryNodeCurvePrimitiveCircle', (base_x, 200 + tier * 220))
         oct_c.inputs['Resolution'].default_value = 8
         oct_c.inputs['Radius'].default_value = cur_r
@@ -13780,7 +13821,7 @@ def build_cn_tiered_pagoda(tree, props):
         color_node(oct_c, "tower"); color_node(body_tr, "tower")
         if oct_ext: color_node(oct_ext, "tower")
         pieces.append(body_tr.outputs['Geometry'])
-        # Flared eave: bezier arch swept around â€” approximate with a torus
+        # Flared eave: bezier arch swept around — approximate with a torus
         # rotated horizontally + scaled. Use a torus knot mesh for richness.
         eave_r = cur_r + overhang
         eave = _safe_node(tree, 'GeometryNodeMeshTorus', (base_x, -250 - tier * 220))
@@ -13794,7 +13835,7 @@ def build_cn_tiered_pagoda(tree, props):
                 pass
             etr = _node(tree, 'GeometryNodeTransform', (base_x + 250, -250 - tier * 220))
             etr.inputs['Translation'].default_value = (0, 0, cur_z + tier_h)
-            etr.inputs['Scale'].default_value = (1.0, 1.0, 0.35)  # squash â†’ flat-flared
+            etr.inputs['Scale'].default_value = (1.0, 1.0, 0.35)  # squash → flat-flared
             _link(tree, eave.outputs['Mesh'], etr.inputs['Geometry'])
             color_node(eave, "ornament"); color_node(etr, "ornament")
             pieces.append(etr.outputs['Geometry'])
@@ -13881,7 +13922,7 @@ def build_kr_hanok(tree, props):
     _link(tree, plat.outputs['Mesh'], ptr.inputs['Geometry'])
     color_node(plat, "input"); color_node(ptr, "input")
     pieces.append(ptr.outputs['Geometry'])
-    # === Body: column-and-wall â€” 4 corner columns + plastered wall fills ===
+    # === Body: column-and-wall — 4 corner columns + plastered wall fills ===
     col_r = 0.12
     col_h = H
     import math
@@ -13896,7 +13937,7 @@ def build_kr_hanok(tree, props):
         _link(tree, col.outputs['Mesh'], ctr.inputs['Geometry'])
         color_node(col, "tower"); color_node(ctr, "tower")
         pieces.append(ctr.outputs['Geometry'])
-    # Plastered wall slabs â€” thin boxes between corners (front/back/sides)
+    # Plastered wall slabs — thin boxes between corners (front/back/sides)
     wall_thk = 0.08
     for orient, (sx, sy, tx, ty) in enumerate([
         (W - col_r * 4, wall_thk, 0, -D/2),  # front (will be split for door)
@@ -13911,7 +13952,7 @@ def build_kr_hanok(tree, props):
         _link(tree, wall.outputs['Mesh'], wtr.inputs['Geometry'])
         color_node(wall, "input"); color_node(wtr, "input")
         pieces.append(wtr.outputs['Geometry'])
-    # === Low-pitched gable roof â€” two slanted slabs meeting at ridge ===
+    # === Low-pitched gable roof — two slanted slabs meeting at ridge ===
     roof_z_base = 0.45 + col_h
     ridge_h = pitch * (D * 0.5)   # low pitch
     # Build roof from a bezier ridge curve swept with a wide profile
@@ -13919,7 +13960,7 @@ def build_kr_hanok(tree, props):
     overhang = 0.55  # extended eaves Korean-style, mid between China & Japan
     slab_l = W + overhang * 2.0          # ridge length (X)
     half_y = D / 2 + overhang            # eave reach (Y)
-    # Curved gable roof from a deformed grid â€” ridge along X, concave slopes
+    # Curved gable roof from a deformed grid — ridge along X, concave slopes
     # in Y, with the four corners sweeping up (cheoma curve).
     gres = 28
     rgrid = _node(tree, 'GeometryNodeMeshGrid', (base_x, -1600))
@@ -13984,7 +14025,7 @@ def build_kr_hanok(tree, props):
     _link(tree, roof_geo_out, rtr.inputs['Geometry'])
     color_node(rsetp, "ornament"); color_node(rtr, "ornament")
     pieces.append(rtr.outputs['Geometry'])
-    # Gable end triangles (front/back) â€” extruded filled triangle curves
+    # Gable end triangles (front/back) — extruded filled triangle curves
     for sign_y in (-1, 1):
         tri = _node(tree, 'GeometryNodeCurvePrimitiveLine', (base_x, -2200 + (sign_y + 1) * 80))
         # Use a 3-resolution curve circle = triangle, then extrude
@@ -14017,7 +14058,7 @@ def build_kr_hanok(tree, props):
 
 
 # ======================================================================
-# ðŸ° CASTLE / CITY PIECE LIBRARY (v2.23) â€” Layer 1 additions
+# 🏰 CASTLE / CITY PIECE LIBRARY (v2.23) — Layer 1 additions
 # Composable architectural pieces designed to feed the procedural city /
 # castle system. Geometry is built from curve-fill-extrude or curve sweeps
 # so every silhouette is real beveled mesh, not cones.
@@ -14029,10 +14070,10 @@ def _make_spiral_staircase_mesh(name, stairwell_size, total_height,
     """Build a real spiral staircase as a Blender mesh object.
     Steps wedge around a center pole inside a `stairwell_size`-wide hole.
 
-    `stairwell_size` â€” outer diameter of the staircase (the hole width)
-    `total_height` â€” full vertical reach of the staircase
-    `storey_height` â€” vertical distance per ~270Â° rotation
-    `center_pole_radius` â€” radius of the central support column
+    `stairwell_size` — outer diameter of the staircase (the hole width)
+    `total_height` — full vertical reach of the staircase
+    `storey_height` — vertical distance per ~270° rotation
+    `center_pole_radius` — radius of the central support column
     """
     import bmesh, math
     from mathutils import Vector
@@ -14048,10 +14089,10 @@ def _make_spiral_staircase_mesh(name, stairwell_size, total_height,
     bmesh.ops.translate(bm, vec=Vector((0, 0, total_height / 2)),
                         verts=bm.verts)
     pole_verts = list(bm.verts)
-    # 2) Steps â€” rotate around Z, climbing
+    # 2) Steps — rotate around Z, climbing
     outer_r = stairwell_size * 0.42   # leave a little gap inside the hole
     inner_r = center_pole_radius * 1.05
-    # Steps per storey Ã— number of storeys
+    # Steps per storey × number of storeys
     steps_per_storey = 14
     total_steps = max(1, int(total_height / storey_height * steps_per_storey))
     rotation_per_storey = math.radians(270)
@@ -14071,7 +14112,7 @@ def _make_spiral_staircase_mesh(name, stairwell_size, total_height,
             bm.verts.new((outer_r * math.cos(a1), outer_r * math.sin(a1), z + step_rise)),
             bm.verts.new((inner_r * math.cos(a1), inner_r * math.sin(a1), z + step_rise)),
         ]
-        # Bottom face â€” same XY, z minus step_thickness
+        # Bottom face — same XY, z minus step_thickness
         v_bot = [bm.verts.new((v.co.x, v.co.y, z + step_rise - step_thickness))
                  for v in v_top]
         # Create faces
@@ -14119,7 +14160,7 @@ def _make_spire_mesh_obj(name, base_radius, height, segments=24, bulge=0.4):
         t = i / (n_silhouette - 1)
         # Quadratic bezier: P(t) = (1-t)^2 * P0 + 2(1-t)t * P1 + t^2 * P2
         # P0 = (base_radius, 0), P1 = (base_radius*(1+bulge), height*0.5),
-        # P2 = (0, height) â€” apex
+        # P2 = (0, height) — apex
         r = (1-t)**2 * base_radius + \
             2*(1-t)*t * (base_radius * (1 + bulge * 0.4)) + \
             t**2 * 0
@@ -14167,11 +14208,11 @@ def _conical_roof_swept(tree, loc, base_radius, height, segments=20, label="hous
     Returns a Mesh output socket. Replaces basic MeshCone for crisper shading.
 
     The silhouette goes from (base_radius, 0) at the bottom to (0, height)
-    at the apex with a slight bow inward â€” gives a witch-hat curve."""
-    # Silhouette: a 3-point bezier going outsideâ†’upâ†’apex
+    at the apex with a slight bow inward — gives a witch-hat curve."""
+    # Silhouette: a 3-point bezier going outside→up→apex
     qb = _safe_node(tree, 'GeometryNodeCurveQuadraticBezier', loc)
     if qb is None:
-        # Fallback â€” basic cone
+        # Fallback — basic cone
         cone = _safe_node(tree, 'GeometryNodeMeshCone', loc)
         if cone is None:
             return None
@@ -14195,10 +14236,10 @@ def _conical_roof_swept(tree, loc, base_radius, height, segments=20, label="hous
     # Sweep this silhouette around Z by curve-to-mesh with a tiny tangent
     # circle profile. But we actually need a SURFACE OF REVOLUTION here. The
     # cleanest way: convert the silhouette into a mesh by extruding along Z
-    # rotationally â€” using Curve to Mesh with a Curve Circle profile won't
+    # rotationally — using Curve to Mesh with a Curve Circle profile won't
     # revolve. Use a different approach: instance the silhouette around Z.
-    # Even simpler: convert silhouette â†’ points â†’ instance the silhouette N
-    # times rotated around Z â†’ realize â†’ bridge edge loops.
+    # Even simpler: convert silhouette → points → instance the silhouette N
+    # times rotated around Z → realize → bridge edge loops.
     # For now, the cleanest practical result: spin via Curve to Mesh with
     # a circle profile gives a torus, not a cone. So fall back to high-res cone.
     cone = _safe_node(tree, 'GeometryNodeMeshCone', (loc[0] + 250, loc[1]))
@@ -14228,7 +14269,7 @@ def _cv_circle(tree, loc, radius, resolution=32):
 
 
 def _fill_extrude(tree, curve_out, loc_fill, loc_ext, height, label="tower"):
-    """Curve â†’ Fill â†’ Extrude â†’ returns extruded mesh socket."""
+    """Curve → Fill → Extrude → returns extruded mesh socket."""
     f = _safe_node(tree, 'GeometryNodeFillCurve', loc_fill)
     if f is None or curve_out is None:
         return None
@@ -14283,7 +14324,7 @@ def _join_all(tree, pieces, loc=(0, 0), label="output", weld=0.01):
 
 
 def _finalize_building(tree, pieces, loc=(0, 0), label="output"):
-    """Heavier weld for monolithic buildings â€” fuses touching tops/finials
+    """Heavier weld for monolithic buildings — fuses touching tops/finials
     to their bodies (weld=0.3). Use as the last step of a building builder."""
     return _join_all(tree, pieces, loc=loc, label=label, weld=0.3)
 
@@ -14311,7 +14352,7 @@ def _crenel_top(tree, length, width, height, n_merlons, gap_ratio,
     return _join_all(tree, pieces, (loc[0] + 480, loc[1]), label=label)
 
 
-# â”€â”€â”€ WATCHTOWER â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ─── WATCHTOWER ─────────────────────────────────────────────────────
 def build_watchtower(tree, props, base_x=-1400):
     """Cylindrical watchtower with battlements + conical roof."""
     r = max(0.6, getattr(props, 'base_radius', 1.0)) * 0.9
@@ -14335,7 +14376,7 @@ def build_watchtower(tree, props, base_x=-1400):
         color_node(mach, "ornament")
         pieces.append(_move(tree, mach.outputs['Mesh'], (base_x + 200, -200),
                             translation=(0, 0, h - r * 0.18), label="ornament"))
-    # Battlements above machicolation â€” narrow ring of merlons
+    # Battlements above machicolation — narrow ring of merlons
     n_merlons = 12
     import math
     for i in range(n_merlons):
@@ -14385,7 +14426,7 @@ def build_watchtower(tree, props, base_x=-1400):
     return _finalize_building(tree, pieces, (base_x + 1100, 0))
 
 
-# â”€â”€â”€ GATEHOUSE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ─── GATEHOUSE ──────────────────────────────────────────────────────
 def build_gatehouse(tree, props, base_x=-1400):
     """Twin towers flanking an arched gateway with a portcullis grid."""
     r = max(0.6, getattr(props, 'base_radius', 1.0)) * 0.8
@@ -14444,9 +14485,9 @@ def build_gatehouse(tree, props, base_x=-1400):
     return _finalize_building(tree, pieces, (base_x + 1400, 0))
 
 
-# â”€â”€â”€ KEEP / DONJON â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ─── KEEP / DONJON ──────────────────────────────────────────────────
 def build_keep(tree, props, base_x=-1400):
-    """Rectangular keep â€” body + 4 corner turrets + battlements."""
+    """Rectangular keep — body + 4 corner turrets + battlements."""
     W = max(2.5, getattr(props, 'base_radius', 1.0) * 3.5)
     H = max(5.0, getattr(props, 'height', 5.0)) * 1.6
     D = W * 0.85
@@ -14462,7 +14503,7 @@ def build_keep(tree, props, base_x=-1400):
                             loc=(base_x, -400), label="ornament")
     pieces.append(_move(tree, crenel_x, (base_x + 700, -400),
                         translation=(0, 0, H + H * 0.035), label="ornament"))
-    # 4 corner turrets â€” small extruded octagons
+    # 4 corner turrets — small extruded octagons
     import math
     turret_r = W * 0.13
     turret_h = H * 1.15
@@ -14513,7 +14554,7 @@ def build_keep(tree, props, base_x=-1400):
     return _finalize_building(tree, pieces, (base_x + 1400, 0))
 
 
-# â”€â”€â”€ CURTAIN WALL â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ─── CURTAIN WALL ───────────────────────────────────────────────────
 def build_curtain_wall(tree, props, base_x=-1400):
     """Crenellated curtain wall section with battlement walkway."""
     L = max(3.0, getattr(props, 'rail_length', 4.0)) * 1.8
@@ -14541,7 +14582,7 @@ def build_curtain_wall(tree, props, base_x=-1400):
     return _finalize_building(tree, pieces, (base_x + 1100, 0))
 
 
-# â”€â”€â”€ BARBICAN â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ─── BARBICAN ───────────────────────────────────────────────────────
 def build_barbican(tree, props, base_x=-1400):
     """Outer fortified gatehouse: 2 small flanking towers + connecting wall
     with passageway, ahead of where a main gatehouse would sit."""
@@ -14577,13 +14618,13 @@ def build_barbican(tree, props, base_x=-1400):
     return _finalize_building(tree, pieces, (base_x + 1200, 0))
 
 
-# â”€â”€â”€ DRAWBRIDGE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ─── DRAWBRIDGE ─────────────────────────────────────────────────────
 def build_drawbridge(tree, props, base_x=-1400):
     """Hinged drawbridge: deck + side rails + chains to upper hinge."""
     L = max(1.5, getattr(props, 'bridge_length', 4.0)) * 0.6
     W = max(1.0, getattr(props, 'bridge_height', 2.0)) * 0.8
     pieces = []
-    # Deck â€” tilted at user-control angle (use sv_complexity as tilt 0..1)
+    # Deck — tilted at user-control angle (use sv_complexity as tilt 0..1)
     tilt = min(1.0, getattr(props, 'sv_complexity', 0.5)) * 1.2  # rad
     deck = _node(tree, 'GeometryNodeMeshCube', (base_x, 200))
     deck.inputs['Size'].default_value = (W, L, 0.12)
@@ -14638,7 +14679,7 @@ def build_drawbridge(tree, props, base_x=-1400):
     return _finalize_building(tree, pieces, (base_x + 1200, 0))
 
 
-# â”€â”€â”€ STONE BRIDGE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ─── STONE BRIDGE ───────────────────────────────────────────────────
 def build_stone_bridge(tree, props, base_x=-1400):
     """Multi-arch stone bridge with railings."""
     n = max(1, getattr(props, 'bridge_arches', 3))
@@ -14708,7 +14749,7 @@ def build_stone_bridge(tree, props, base_x=-1400):
     return _finalize_building(tree, pieces, (base_x + 1400, 0))
 
 
-# â”€â”€â”€ WINDMILL â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ─── WINDMILL ───────────────────────────────────────────────────────
 def build_windmill(tree, props, base_x=-1400):
     """Tower windmill: cylindrical body + cap + 4 rotating blades."""
     r = max(0.7, getattr(props, 'base_radius', 1.0)) * 1.0
@@ -14761,7 +14802,7 @@ def build_windmill(tree, props, base_x=-1400):
     return _finalize_building(tree, pieces, (base_x + 1200, 0))
 
 
-# â”€â”€â”€ CHAPEL â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ─── CHAPEL ─────────────────────────────────────────────────────────
 def build_chapel(tree, props, base_x=-1400):
     """Small chapel: nave + apse + single bell tower at front."""
     W = max(2.0, getattr(props, 'base_radius', 1.0) * 2.4)
@@ -14774,7 +14815,7 @@ def build_chapel(tree, props, base_x=-1400):
     pieces.append(_move(tree, nave.outputs['Mesh'], (base_x + 200, 200),
                         translation=(0, 0, H / 2), label="tower"))
     color_node(nave, "tower")
-    # Gabled roof â€” two slanted slabs
+    # Gabled roof — two slanted slabs
     import math
     pitch = math.atan2(H * 0.5, W * 0.5)
     for sx in (-1, 1):
@@ -14840,7 +14881,7 @@ def build_chapel(tree, props, base_x=-1400):
     return _finalize_building(tree, pieces, (base_x + 1300, 0))
 
 
-# â”€â”€â”€ VILLAGE WELL â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ─── VILLAGE WELL ───────────────────────────────────────────────────
 def build_village_well(tree, props, base_x=-1400):
     """Stone village well: cylindrical wall + crossbar with bucket + roof."""
     r = max(0.4, getattr(props, 'base_radius', 1.0)) * 0.7
@@ -14849,7 +14890,7 @@ def build_village_well(tree, props, base_x=-1400):
     ring_outer = _cv_circle(tree, (base_x, 200), r * 1.15, 24)
     ring_inner = _cv_circle(tree, (base_x, 0), r * 0.85, 24)
     # Easier: an extruded thick ring built by 2 set positions
-    # Use a fill-extrude of outer circle, subtract conceptually â€” for now,
+    # Use a fill-extrude of outer circle, subtract conceptually — for now,
     # build as a single extruded annulus via Mesh Boolean: skip, use torus
     well = _safe_node(tree, 'GeometryNodeMeshTorus', (base_x, 200))
     if well:
@@ -14906,14 +14947,14 @@ def build_village_well(tree, props, base_x=-1400):
     return _finalize_building(tree, pieces, (base_x + 1100, 0))
 
 
-# â”€â”€â”€ MARKET STALL â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ─── MARKET STALL ───────────────────────────────────────────────────
 def build_market_stall(tree, props, base_x=-1400):
     """Merchant stall with awning + counter + hanging sign."""
     W = max(1.0, getattr(props, 'base_radius', 1.0) * 1.6)
     D = W * 0.6
     H = max(2.0, getattr(props, 'height', 3.0)) * 0.9
     pieces = []
-    # Counter â€” extruded rectangle
+    # Counter — extruded rectangle
     counter = _node(tree, 'GeometryNodeMeshCube', (base_x, 200))
     counter.inputs['Size'].default_value = (W, D, H * 0.4)
     pieces.append(_move(tree, counter.outputs['Mesh'], (base_x + 200, 200),
@@ -14960,7 +15001,7 @@ def build_market_stall(tree, props, base_x=-1400):
     return _finalize_building(tree, pieces, (base_x + 1100, 0))
 
 
-# â”€â”€â”€ OBELISK â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ─── OBELISK ────────────────────────────────────────────────────────
 def build_obelisk(tree, props, base_x=-1400):
     """Tall narrow obelisk: 4-sided tapered shaft + pyramidion top + plinth."""
     base = max(0.5, getattr(props, 'base_radius', 1.0)) * 0.7
@@ -14973,7 +15014,7 @@ def build_obelisk(tree, props, base_x=-1400):
     pieces.append(_move(tree, plinth.outputs['Mesh'], (base_x + 200, 200),
                         translation=(0, 0, base * 0.4), label="house"))
     color_node(plinth, "house")
-    # Shaft â€” tapered: 8 verts at base + 8 at top, joined as a frustum
+    # Shaft — tapered: 8 verts at base + 8 at top, joined as a frustum
     # Build via 2 stacked rectangles using bmesh-equivalent: easiest is
     # a cube transformed with Set Position via Spline Parameter on a line,
     # but simplest is two Mesh Cubes scaled + a custom connecting via
@@ -14981,7 +15022,7 @@ def build_obelisk(tree, props, base_x=-1400):
     # extruding a square curve with `Taper Curve`.
     sq = _cv_circle(tree, (base_x, -400), base, 4)   # 4-vert "circle" = square
     if sq:
-        # Set rotation 45Â° so square edges are axis-aligned
+        # Set rotation 45° so square edges are axis-aligned
         sq_rot = _move(tree, sq.outputs['Curve'], (base_x + 200, -400),
                        rotation=(0, 0, 0.7854), label="tower")
         # Fill the square
@@ -14999,7 +15040,7 @@ def build_obelisk(tree, props, base_x=-1400):
                 sx.mode = 'FACES'
                 sx.inputs['Offset Scale'].default_value = h
                 _link(tree, sf.outputs['Mesh'], sx.inputs['Mesh'])
-                # Now scale TOP face only â€” approximate taper by scaling
+                # Now scale TOP face only — approximate taper by scaling
                 # whole mesh with a Z-dependent factor via Set Position
                 pos = _node(tree, 'GeometryNodeInputPosition',
                             (base_x + 600, -700))
@@ -15062,7 +15103,7 @@ def build_obelisk(tree, props, base_x=-1400):
 
 
 # ======================================================================
-# ðŸ˜ TOWN / CIVIC / ASIAN PIECE LIBRARY (v2.24) â€” Layer 1 additions
+# 🏘 TOWN / CIVIC / ASIAN PIECE LIBRARY (v2.24) — Layer 1 additions
 # ======================================================================
 # All use the vector Size socket on MeshCube (Blender 5.1 API).
 # Geometry composed from curve-fill-extrude and curve sweeps where possible.
@@ -15075,9 +15116,9 @@ def _cube(tree, loc, sx, sy, sz, label="tower"):
     return c.outputs['Mesh']
 
 
-# â”€â”€â”€ TOWN HOUSE (Tudor) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ─── TOWN HOUSE (Tudor) ─────────────────────────────────────────────
 def build_town_house(tree, props, base_x=-1400):
-    """Multi-story Tudor town house â€” stone base, jettied upper floor, gable roof."""
+    """Multi-story Tudor town house — stone base, jettied upper floor, gable roof."""
     W = max(2.0, getattr(props, 'base_radius', 1.0) * 2.4)
     D = W * 0.7
     floor_h = max(1.5, getattr(props, 'height', 4.0) * 0.45)
@@ -15106,7 +15147,7 @@ def build_town_house(tree, props, base_x=-1400):
             pieces.append(_move(tree, beam, (base_x + 220, -800 - fi * 200 - (sd + 1) * 60),
                                  translation=(0, -dd / 2 - 0.025, zb + floor_h / 2),
                                  rotation=(sd * tilt, 0, 0), label="ornament"))
-    # Steep gable roof â€” 2 slabs
+    # Steep gable roof — 2 slabs
     roof_h = floor_h * 0.9
     pitch = math.atan2(roof_h, W * 0.55)
     for sx in (-1, 1):
@@ -15123,7 +15164,7 @@ def build_town_house(tree, props, base_x=-1400):
     return _finalize_building(tree, pieces, (base_x + 1200, 0))
 
 
-# â”€â”€â”€ TAVERN â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ─── TAVERN ─────────────────────────────────────────────────────────
 def build_tavern(tree, props, base_x=-1400):
     """Tavern: 2-story half-timber + hanging sign + chimney."""
     W = max(2.5, getattr(props, 'base_radius', 1.0) * 3.0)
@@ -15185,7 +15226,7 @@ def build_tavern(tree, props, base_x=-1400):
     return _finalize_building(tree, pieces, (base_x + 1200, 0))
 
 
-# â”€â”€â”€ BLACKSMITH â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ─── BLACKSMITH ────────────────────────────────────────────────────
 def build_blacksmith(tree, props, base_x=-1400):
     """Forge with open front, large brick chimney, anvil silhouette inside."""
     W = max(2.0, getattr(props, 'base_radius', 1.0) * 2.6)
@@ -15221,7 +15262,7 @@ def build_blacksmith(tree, props, base_x=-1400):
     return _finalize_building(tree, pieces, (base_x + 1100, 0))
 
 
-# â”€â”€â”€ STABLE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ─── STABLE ─────────────────────────────────────────────────────────
 def build_stable(tree, props, base_x=-1400):
     """Long low building with N stall doors along the front."""
     n_stalls = max(3, getattr(props, 'recursion_depth', 4))
@@ -15233,7 +15274,7 @@ def build_stable(tree, props, base_x=-1400):
     # Body
     pieces.append(_move(tree, _cube(tree, (base_x, 200), W, D, H, "tower"),
                          (base_x + 200, 200), translation=(0, 0, H / 2), label="tower"))
-    # Gable roof â€” single ridge
+    # Gable roof — single ridge
     import math
     roof_h = H * 0.5
     pitch = math.atan2(roof_h, D * 0.5)
@@ -15259,7 +15300,7 @@ def build_stable(tree, props, base_x=-1400):
     return _finalize_building(tree, pieces, (base_x + 1200, 0))
 
 
-# â”€â”€â”€ BELL TOWER (Campanile) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ─── BELL TOWER (Campanile) ─────────────────────────────────────────
 def build_bell_tower(tree, props, base_x=-1400):
     """Tall square stone bell tower with louvres + pyramidal cap."""
     side = max(1.5, getattr(props, 'base_radius', 1.0) * 1.8)
@@ -15268,13 +15309,13 @@ def build_bell_tower(tree, props, base_x=-1400):
     # Shaft
     pieces.append(_move(tree, _cube(tree, (base_x, 200), side, side, H, "tower"),
                          (base_x + 200, 200), translation=(0, 0, H / 2), label="tower"))
-    # Belfry â€” wider band near top
+    # Belfry — wider band near top
     belfry_h = H * 0.18
     pieces.append(_move(tree, _cube(tree, (base_x, -200),
                                       side * 1.15, side * 1.15, belfry_h, "house"),
                          (base_x + 200, -200),
                          translation=(0, 0, H - belfry_h / 2), label="house"))
-    # 4 louvred arches (one per face) â€” curve quad bezier + circular profile
+    # 4 louvred arches (one per face) — curve quad bezier + circular profile
     import math
     for face in range(4):
         ang = face * math.pi / 2
@@ -15322,7 +15363,7 @@ def build_bell_tower(tree, props, base_x=-1400):
     return _finalize_building(tree, pieces, (base_x + 1200, 0))
 
 
-# â”€â”€â”€ MONASTERY CLOISTER â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ─── MONASTERY CLOISTER ─────────────────────────────────────────────
 def build_monastery(tree, props, base_x=-1400):
     """Square cloister: 4 walls forming a courtyard, each with a colonnade."""
     side = max(3.5, getattr(props, 'base_radius', 1.0) * 5.0)
@@ -15340,7 +15381,7 @@ def build_monastery(tree, props, base_x=-1400):
                              translation=(math.cos(ang + math.pi / 2) * (side / 2),
                                           math.sin(ang + math.pi / 2) * (side / 2), H / 2),
                              rotation=(0, 0, ang), label="tower"))
-        # Inner colonnade â€” 6 columns per side
+        # Inner colonnade — 6 columns per side
         n_cols = 6
         for c in range(n_cols):
             t = -side / 2 + (c + 0.5) * (side / n_cols)
@@ -15365,7 +15406,7 @@ def build_monastery(tree, props, base_x=-1400):
                                           math.sin(ang + math.pi / 2) * (side / 2 - cor_w / 2),
                                           H + 0.05),
                              rotation=(0, 0, ang), label="house"))
-    # Open courtyard floor â€” walk plane top at Z=0 (v2.60.1)
+    # Open courtyard floor — walk plane top at Z=0 (v2.60.1)
     court = max(1.0, side - cor_w * 2.2)
     floor_t = 0.25
     pieces.append(_move(tree, _cube(tree, (base_x, -3000), court, court, floor_t, "level"),
@@ -15373,7 +15414,7 @@ def build_monastery(tree, props, base_x=-1400):
     return _finalize_building(tree, pieces, (base_x + 1400, 0))
 
 
-# â”€â”€â”€ WATERMILL â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ─── WATERMILL ──────────────────────────────────────────────────────
 def build_watermill(tree, props, base_x=-1400):
     """Mill house with large waterwheel on one side."""
     W = max(2.0, getattr(props, 'base_radius', 1.0) * 2.4)
@@ -15431,7 +15472,7 @@ def build_watermill(tree, props, base_x=-1400):
     return _finalize_building(tree, pieces, (base_x + 1300, 0))
 
 
-# â”€â”€â”€ LIGHTHOUSE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ─── LIGHTHOUSE ─────────────────────────────────────────────────────
 def build_lighthouse(tree, props, base_x=-1400):
     """Tall tapered maritime tower: stone shaft + gallery + lantern room + spire."""
     r_base = max(0.8, getattr(props, 'base_radius', 1.0) * 1.0)
@@ -15487,7 +15528,7 @@ def build_lighthouse(tree, props, base_x=-1400):
     return _finalize_building(tree, pieces, (base_x + 1300, 0))
 
 
-# â”€â”€â”€ CN MOON GATE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ─── CN MOON GATE ───────────────────────────────────────────────────
 def build_cn_moon_gate(tree, props, base_x=-1400):
     """Circular Chinese garden doorway set in a wall."""
     r = max(1.0, getattr(props, 'base_radius', 1.0) * 1.8)
@@ -15498,7 +15539,7 @@ def build_cn_moon_gate(tree, props, base_x=-1400):
     # Wall slab
     pieces.append(_move(tree, _cube(tree, (base_x, 200), W, T, H, "tower"),
                          (base_x + 200, 200), translation=(0, 0, H / 2), label="tower"))
-    # The circle "frame" â€” torus rotated to face camera
+    # The circle "frame" — torus rotated to face camera
     frame = _safe_node(tree, 'GeometryNodeMeshTorus', (base_x, -400))
     if frame:
         try:
@@ -15523,7 +15564,7 @@ def build_cn_moon_gate(tree, props, base_x=-1400):
     return _join_all(tree, pieces, (base_x + 1100, 0))
 
 
-# â”€â”€â”€ CN PAILOU â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ─── CN PAILOU ──────────────────────────────────────────────────────
 def build_cn_pailou(tree, props, base_x=-1400):
     """Chinese memorial archway: 4 pillars + 3 stacked decorative roofs."""
     W = max(3.5, getattr(props, 'base_radius', 1.0) * 4.0)
@@ -15538,7 +15579,7 @@ def build_cn_pailou(tree, props, base_x=-1400):
                              _cube(tree, (base_x, 200 - i * 100), pillar_w, pillar_w, H, "tower"),
                              (base_x + 200, 200 - i * 100),
                              translation=(x, 0, H / 2), label="tower"))
-    # 3 stacked curved roofs (decreasing width going up) â€” real swept eaves
+    # 3 stacked curved roofs (decreasing width going up) — real swept eaves
     roof_z = H + 0.1
     for tier in range(3):
         rw = W * (1.0 - tier * 0.15)
@@ -15557,7 +15598,7 @@ def build_cn_pailou(tree, props, base_x=-1400):
     return _join_all(tree, pieces, (base_x + 1300, 0))
 
 
-# â”€â”€â”€ STREET LAMP â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ─── STREET LAMP ────────────────────────────────────────────────────
 def build_street_lamp(tree, props, base_x=-1400):
     """Period street lamp: tapered post + bracket + glass lantern + finial."""
     H = max(2.5, getattr(props, 'height', 3.5) * 1.0)
@@ -15600,13 +15641,13 @@ def build_street_lamp(tree, props, base_x=-1400):
     return _join_all(tree, pieces, (base_x + 1100, 0))
 
 
-# â”€â”€â”€ PUBLIC FOUNTAIN â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ─── PUBLIC FOUNTAIN ────────────────────────────────────────────────
 def build_public_fountain(tree, props, base_x=-1400):
     """Plaza fountain: large round basin + central tiered cup + finial spout."""
     R = max(1.0, getattr(props, 'base_radius', 1.0) * 1.6)
     tiers = max(2, getattr(props, 'fountain_tiers', 3))
     pieces = []
-    # Outer basin (extruded circle ring â€” approximate with torus + disc)
+    # Outer basin (extruded circle ring — approximate with torus + disc)
     outer = _cv_circle(tree, (base_x, 200), R, 48)
     outer_m = _fill_extrude(tree, outer.outputs['Curve'] if outer else None,
                               (base_x + 200, 200), (base_x + 400, 200), 0.3, "tower")
@@ -15657,10 +15698,10 @@ def build_public_fountain(tree, props, base_x=-1400):
 
 
 # ======================================================================
-# ðŸŒ ASIAN + ðŸ› CIVIC + ðŸŒ³ LANDSCAPE + ðŸ›¡ DECOR (v2.25) â€” Layer 1 additions
+# 🌏 ASIAN + 🏛 CIVIC + 🌳 LANDSCAPE + 🛡 DECOR (v2.25) — Layer 1 additions
 # ======================================================================
 
-# â”€â”€â”€ CN TING PAVILION (hexagonal garden pavilion) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ─── CN TING PAVILION (hexagonal garden pavilion) ───────────────────
 def build_cn_ting_pavilion(tree, props, base_x=-1400):
     """Chinese garden pavilion (äº­): hexagonal stone base + 6 columns +
     upturned hex roof + finial."""
@@ -15696,7 +15737,7 @@ def build_cn_ting_pavilion(tree, props, base_x=-1400):
                             (base_x + 200, -900), (base_x + 400, -900), 0.1, "house")
     pieces.append(_move(tree, eave_m, (base_x + 600, -900),
                          translation=(0, 0, roof_base_z), label="house"))
-    # Mid hex tier (raised, narrower) â†’ stepped concave silhouette
+    # Mid hex tier (raised, narrower) → stepped concave silhouette
     mid_c = _cv_circle(tree, (base_x, -1150), eave_R * 0.62, 6)
     mid_m = _fill_extrude(tree, mid_c.outputs['Curve'] if mid_c else None,
                            (base_x + 200, -1150), (base_x + 400, -1150), 0.1, "house")
@@ -15735,7 +15776,7 @@ def build_cn_ting_pavilion(tree, props, base_x=-1400):
     return _join_all(tree, pieces, (base_x + 1300, 0))
 
 
-# â”€â”€â”€ JP KURA STOREHOUSE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ─── JP KURA STOREHOUSE ─────────────────────────────────────────────
 def build_jp_kura_storehouse(tree, props, base_x=-1400):
     """Whitewashed kura: thick rectangular box, small high windows, heavy door,
     grey-tile hipped roof."""
@@ -15777,7 +15818,7 @@ def build_jp_kura_storehouse(tree, props, base_x=-1400):
     return _join_all(tree, pieces, (base_x + 1200, 0))
 
 
-# â”€â”€â”€ KR JANGSEUNG (Korean totem) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ─── KR JANGSEUNG (Korean totem) ────────────────────────────────────
 def build_kr_jangseung(tree, props, base_x=-1400):
     """Wooden guardian pole: tall log + carved-face block on top + hat."""
     H = max(2.5, getattr(props, 'height', 4.0) * 1.0)
@@ -15815,7 +15856,7 @@ def build_kr_jangseung(tree, props, base_x=-1400):
     return _finalize_building(tree, pieces, (base_x + 1100, 0))
 
 
-# â”€â”€â”€ KR HONGSALMUN (Red arrow gate) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ─── KR HONGSALMUN (Red arrow gate) ─────────────────────────────────
 def build_kr_hong_sal_mun(tree, props, base_x=-1400):
     """Hongsalmun: 2 red posts + horizontal beam + arrowhead pole at top."""
     H = max(3.5, getattr(props, 'height', 5.0))
@@ -15862,7 +15903,7 @@ def build_kr_hong_sal_mun(tree, props, base_x=-1400):
     return _join_all(tree, pieces, (base_x + 1100, 0))
 
 
-# â”€â”€â”€ TOWN HALL â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ─── TOWN HALL ──────────────────────────────────────────────────────
 def build_town_hall(tree, props, base_x=-1400):
     """Civic building with central clock tower."""
     W = max(4.0, getattr(props, 'base_radius', 1.0) * 4.5)
@@ -15925,7 +15966,7 @@ def build_town_hall(tree, props, base_x=-1400):
     return _finalize_building(tree, pieces, (base_x + 1300, 0))
 
 
-# â”€â”€â”€ GUILD HALL â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ─── GUILD HALL ─────────────────────────────────────────────────────
 def build_guild_hall(tree, props, base_x=-1400):
     """Imposing meeting hall with portico, large arched door, banner."""
     W = max(3.5, getattr(props, 'base_radius', 1.0) * 4.0)
@@ -15978,7 +16019,7 @@ def build_guild_hall(tree, props, base_x=-1400):
     return _finalize_building(tree, pieces, (base_x + 1200, 0))
 
 
-# â”€â”€â”€ CRYPT ENTRANCE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ─── CRYPT ENTRANCE ─────────────────────────────────────────────────
 def build_crypt_entrance(tree, props, base_x=-1400):
     """Sunken stairs descending to an arched doorway in stonework."""
     W = max(1.6, getattr(props, 'base_radius', 1.0) * 2.0)
@@ -16025,7 +16066,7 @@ def build_crypt_entrance(tree, props, base_x=-1400):
     return _finalize_building(tree, pieces, (base_x + 1200, 0))
 
 
-# â”€â”€â”€ WAYSIDE SHRINE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ─── WAYSIDE SHRINE ─────────────────────────────────────────────────
 def build_wayside_shrine(tree, props, base_x=-1400):
     """Small roadside shrine: plinth + niche + peaked roof + cross/finial."""
     W = max(0.6, getattr(props, 'base_radius', 1.0) * 0.7)
@@ -16037,7 +16078,7 @@ def build_wayside_shrine(tree, props, base_x=-1400):
     # Tall narrow shrine body
     pieces.append(_move(tree, _cube(tree, (base_x, -100), W, W * 0.7, H, "tower"),
                          (base_x + 200, -100), translation=(0, 0, 0.4 + H / 2), label="tower"))
-    # Niche cutout (smaller recessed box on front â€” visual depth)
+    # Niche cutout (smaller recessed box on front — visual depth)
     pieces.append(_move(tree, _cube(tree, (base_x, -400), W * 0.7, 0.1, H * 0.55, "ornament"),
                          (base_x + 200, -400),
                          translation=(0, -W * 0.4, 0.4 + H * 0.5), label="ornament"))
@@ -16060,7 +16101,7 @@ def build_wayside_shrine(tree, props, base_x=-1400):
     return _finalize_building(tree, pieces, (base_x + 1100, 0))
 
 
-# â”€â”€â”€ STYLIZED TREE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ─── STYLIZED TREE ──────────────────────────────────────────────────
 def build_stylized_tree(tree, props, base_x=-1400):
     """Stylized low-poly tree: trunk + 3 foliage icosphere clumps."""
     H = max(2.0, getattr(props, 'height', 4.0))
@@ -16088,7 +16129,7 @@ def build_stylized_tree(tree, props, base_x=-1400):
     return _join_all(tree, pieces, (base_x + 1100, 0))
 
 
-# â”€â”€â”€ BOULDER PILE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ─── BOULDER PILE ───────────────────────────────────────────────────
 def build_boulder_pile(tree, props, base_x=-1400):
     """Cluster of weathered boulders (5 irregular icospheres)."""
     R = max(0.4, getattr(props, 'base_radius', 1.0) * 0.7)
@@ -16115,7 +16156,7 @@ def build_boulder_pile(tree, props, base_x=-1400):
     return _join_all(tree, pieces, (base_x + 1100, 0))
 
 
-# â”€â”€â”€ HERALDIC BANNER â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ─── HERALDIC BANNER ────────────────────────────────────────────────
 def build_heraldic_banner(tree, props, base_x=-1400):
     """Hanging vertical banner on a horizontal pole with bracket."""
     H = max(1.5, getattr(props, 'height', 2.5))
@@ -16148,7 +16189,7 @@ def build_heraldic_banner(tree, props, base_x=-1400):
     return _join_all(tree, pieces, (base_x + 1100, 0))
 
 
-# â”€â”€â”€ TORCH SCONCE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ─── TORCH SCONCE ───────────────────────────────────────────────────
 def build_torch_sconce(tree, props, base_x=-1400):
     """Wall-mounted iron torch with brazier-cup + curved bracket + flame."""
     H = max(1.0, getattr(props, 'height', 1.5))
@@ -16195,7 +16236,7 @@ def build_torch_sconce(tree, props, base_x=-1400):
 
 
 # ==============================================================================
-# ðŸš  RUINS / DESTRUCTION  (v2.51)
+# 🏚  RUINS / DESTRUCTION  (v2.51)
 # ==============================================================================
 
 def build_wall_ruined(tree, props, base_x=-1400):
@@ -16285,7 +16326,7 @@ def build_arch_broken(tree, props, base_x=-1400):
                         (base_x + 200, -100),
                         translation=(hw + pier_w / 2, 0, r_pier_h / 2), label="tower"))
 
-    # Arch voussoir ring â€” only surviving portion (left side)
+    # Arch voussoir ring — only surviving portion (left side)
     n_vouss = 8
     survive_count = max(3, int(n_vouss * (1.0 - damage * 0.5)))
     for i in range(survive_count):
@@ -16357,7 +16398,7 @@ def build_collapsed_floor(tree, props, base_x=-1400):
 
 
 # ==============================================================================
-# ðŸšª  MODULAR FRAMES & STRUCTURAL GAP-FILL  (v2.51)
+# 🚪  MODULAR FRAMES & STRUCTURAL GAP-FILL  (v2.51)
 # ==============================================================================
 
 def build_door_frame(tree, props, base_x=-1400):
@@ -16533,7 +16574,7 @@ def build_wall_arrow_slits(tree, props, base_x=-1400):
 
 def build_retaining_wall(tree, props, base_x=-1400):
     """Battered stone retaining wall with stepped terraces and coping.
-    Steps down from raised terrain to grade â€” UE5 landscape seam piece."""
+    Steps down from raised terrain to grade — UE5 landscape seam piece."""
     W       = max(4.0, getattr(props, 'wall_segments', 3) * getattr(props, 'unit_size', 1.0) * 1.5)
     n_steps = getattr(props, 'retaining_steps', 3)
     batter  = getattr(props, 'retaining_batter', 0.08)
@@ -16563,7 +16604,7 @@ def build_retaining_wall(tree, props, base_x=-1400):
 
 
 # ==============================================================================
-# ðŸ“¦  ENVIRONMENT PROPS  (v2.51)
+# 📦  ENVIRONMENT PROPS  (v2.51)
 # ==============================================================================
 
 def build_barrel_stack(tree, props, base_x=-1400):
@@ -16721,7 +16762,7 @@ def build_half_timber_wall(tree, props, base_x=-1400):
         pieces.append(_move(tree, _cube(tree, (base_x, -800 - si * 60), bt, T + 0.04, H, "ornament"),
                             (base_x + 200, -800 - si * 60),
                             translation=(sx, 0, H / 2), label="ornament"))
-    # X-brace diagonals in each bay Ã— 2 floor rows
+    # X-brace diagonals in each bay × 2 floor rows
     for row in range(2):
         bz = row * H / 2
         for bi in range(n_bays):
@@ -16741,7 +16782,7 @@ def build_half_timber_wall(tree, props, base_x=-1400):
 
 
 # ==============================================================================
-# ðŸ”Œ  HIGGSAS-POWERED BUILDERS  (v2.52)
+# 🔌  HIGGSAS-POWERED BUILDERS  (v2.52)
 #   Builders that showcase specific Higgsas node groups.
 #   Each builder falls back gracefully when Higgsas is not loaded.
 # ==============================================================================
@@ -16749,10 +16790,10 @@ def build_half_timber_wall(tree, props, base_x=-1400):
 def build_higgsas_surface_wall(tree, props, base_x=-1400):
     """Higgsas Surface Wall: a tall wall whose face is overlaid with one of four
     Higgsas procedural patterns, selectable via `higgsas_surface_style`.
-      BRICK  â†’ NTBricks Grid (staggered courses, custom mortar)
-      HEX    â†’ NTHexagon Grid (hexagonal tiles, great for dungeon floors)
-      VORONOIâ†’ NTDistance to Edge Voronoi (natural stone cell pattern)
-      CAIRO  â†’ NTCairo Tile Grid (Islamic decorative tiling)
+      BRICK  → NTBricks Grid (staggered courses, custom mortar)
+      HEX    → NTHexagon Grid (hexagonal tiles, great for dungeon floors)
+      VORONOI→ NTDistance to Edge Voronoi (natural stone cell pattern)
+      CAIRO  → NTCairo Tile Grid (Islamic decorative tiling)
     The wall body is a solidified flat grid. UV mapping via NTTriplanar.
     Falls back to a plain brick wall when Higgsas is not available."""
     W  = getattr(props, 'brick_wall_width',  4.0)
@@ -16761,7 +16802,7 @@ def build_higgsas_surface_wall(tree, props, base_x=-1400):
     style = getattr(props, 'higgsas_surface_style', 'BRICK')
     parts = []
 
-    # â”€â”€ Base wall slab (flat grid to drive patterns) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Base wall slab (flat grid to drive patterns) ──────────────────
     grid = _safe_node(tree, 'GeometryNodeMeshGrid', (base_x, 0))
     if grid:
         try:
@@ -16775,7 +16816,7 @@ def build_higgsas_surface_wall(tree, props, base_x=-1400):
     else:
         return None
 
-    # â”€â”€ Surface pattern overlay via Higgsas â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Surface pattern overlay via Higgsas ──────────────────────────
     node_name_map = {
         'BRICK':   'NTBricks Grid',
         'HEX':     'NTHexagon Grid',
@@ -16832,7 +16873,7 @@ def build_higgsas_surface_wall(tree, props, base_x=-1400):
         else:
             parts.append(base_geom)
 
-    # â”€â”€ Orient: rotate XY grid to stand up as a wall (XZ plane) â”€â”€â”€â”€â”€
+    # ── Orient: rotate XY grid to stand up as a wall (XZ plane) ─────
     rot = _safe_node(tree, 'GeometryNodeTransform', (base_x + 1600, 0))
     if rot and parts:
         try:
@@ -16857,7 +16898,7 @@ def build_higgsas_colonnade(tree, props, base_x=-1400):
 
 
 def _build_colonnade_fallback(tree, props, base_x=-1400):
-    """Simple cylinder colonnade â€” used when the Higgsas path fails."""
+    """Simple cylinder colonnade — used when the Higgsas path fails."""
     n_cols  = max(2, getattr(props, 'gb_cols_x', 6))
     spacing = getattr(props, 'gb_spacing',    3.0)
     R       = getattr(props, 'pillar_radius', 0.3)
@@ -16887,7 +16928,7 @@ def _build_higgsas_colonnade_inner(tree, props, base_x=-1400):
     mode     = getattr(props, 'higgsas_array_mode', 'LINEAR')  # LINEAR or RADIAL
     parts    = []
 
-    # â”€â”€ Single column template â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Single column template ─────────────────────────────────────────
     # Try NTRounded Cube for a more detailed Doric-like profile
     col_body = _higg_node(tree, 'NTRounded Cube', (base_x - 400, 0))
     col_geom = None
@@ -16924,7 +16965,7 @@ def _build_higgsas_colonnade_inner(tree, props, base_x=-1400):
     if col_geom is None:
         return None
 
-    # â”€â”€ Array the column â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Array the column ────────────────────────────────────────────────
     if mode == 'RADIAL':
         arr_node = _higg_node(tree, 'NTCircular Array', (base_x + 200, 0))
         if arr_node is not None:
@@ -16958,7 +16999,7 @@ def _build_higgsas_colonnade_inner(tree, props, base_x=-1400):
             try:
                 _link(tree, col_geom, arr_node.inputs['Geometry'])
                 arr_geom = arr_node.outputs['Geometry']
-                # NTArray outputs instances â€” realize
+                # NTArray outputs instances — realize
                 real = _safe_node(tree, 'GeometryNodeRealizeInstances', (base_x + 500, 0))
                 if real:
                     _link(tree, arr_geom, real.inputs['Geometry'])
@@ -16988,7 +17029,7 @@ def _build_higgsas_colonnade_inner(tree, props, base_x=-1400):
                         color_node(real, "pillar")
                         parts.append(real.outputs['Geometry'])
 
-    # â”€â”€ Entablature beam across the top â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Entablature beam across the top ──────────────────────────────
     total_span = spacing * (n_cols - 1) + R * 4
     entab = _cube(tree, (base_x, -400), total_span, R * 2.5, R * 1.2, "pillar")
     entab_t = _move(tree, entab, (base_x + 200, -400), translation=(total_span * 0.5 - R * 2, 0, H + R * 0.6), label="pillar")
@@ -16998,8 +17039,8 @@ def _build_higgsas_colonnade_inner(tree, props, base_x=-1400):
 
 
 # ==============================================================================
-# ðŸ›  ADVANCED ARCHWAY / BRIDGE / FENCE GENERATORS  (v2.50)
-#   Multi-style parametric pieces â€” all built from curve sweeps + fill-extrude.
+# 🏛  ADVANCED ARCHWAY / BRIDGE / FENCE GENERATORS  (v2.50)
+#   Multi-style parametric pieces — all built from curve sweeps + fill-extrude.
 #   Styles selectable via props.archway_style / bridge_style / fence_style.
 # ==============================================================================
 
@@ -17021,13 +17062,13 @@ def _rect_profile(tree, loc, width, height, label="arch"):
 
 def _arch_spine(tree, style, hw, spring_z, loc, base_x):
     """Return list of curve output sockets forming the arch-head centreline
-    in the X-Z plane, springing at (Â±hw, 0, spring_z).
+    in the X-Z plane, springing at (±hw, 0, spring_z).
     Each curve socket is positioned/rotated into world space already."""
     curves = []
     bx, by = loc
 
     if style == 'ROMAN':
-        # True semicircle via CurveArc â€” rotate into X-Z plane
+        # True semicircle via CurveArc — rotate into X-Z plane
         a = _safe_node(tree, 'GeometryNodeCurveArc', (bx, by))
         if a:
             a.mode = 'RADIUS'
@@ -17042,7 +17083,7 @@ def _arch_spine(tree, style, hw, spring_z, loc, base_x):
             curves.append(t)
 
     elif style == 'SEGMENTAL':
-        # Shallow bezier arc â€” rise â‰ˆ 42% of half-width
+        # Shallow bezier arc — rise ≈ 42% of half-width
         rise = hw * 0.42
         bz = _safe_node(tree, 'GeometryNodeCurvePrimitiveBezierSegment', (bx, by))
         if bz:
@@ -17054,7 +17095,7 @@ def _arch_spine(tree, style, hw, spring_z, loc, base_x):
             color_node(bz, "arch"); curves.append(bz.outputs['Curve'])
 
     elif style == 'HORSESHOE':
-        # Moorish / Islamic horseshoe â€” arc exceeds 180Â°, legs tuck inward
+        # Moorish / Islamic horseshoe — arc exceeds 180°, legs tuck inward
         a = _safe_node(tree, 'GeometryNodeCurveArc', (bx, by))
         if a:
             a.mode = 'RADIUS'
@@ -17069,7 +17110,7 @@ def _arch_spine(tree, style, hw, spring_z, loc, base_x):
             curves.append(t)
 
     elif style == 'GOTHIC':
-        # Two bezier arcs meeting at pointed apex (â‰ˆ1.4 Ã— hw above spring)
+        # Two bezier arcs meeting at pointed apex (≈1.4 × hw above spring)
         apex_z = spring_z + hw * 1.4
         for i, sgn in enumerate((-1, 1)):
             bz = _safe_node(tree, 'GeometryNodeCurvePrimitiveBezierSegment',
@@ -17083,7 +17124,7 @@ def _arch_spine(tree, style, hw, spring_z, loc, base_x):
                 color_node(bz, "gothic"); curves.append(bz.outputs['Curve'])
 
     elif style == 'TUDOR':
-        # Four-centred Tudor arch â€” low pointed apex, flat-topped silhouette
+        # Four-centred Tudor arch — low pointed apex, flat-topped silhouette
         apex_z = spring_z + hw * 0.62
         for i, sgn in enumerate((-1, 1)):
             bz = _safe_node(tree, 'GeometryNodeCurvePrimitiveBezierSegment',
@@ -17097,7 +17138,7 @@ def _arch_spine(tree, style, hw, spring_z, loc, base_x):
                 color_node(bz, "arch"); curves.append(bz.outputs['Curve'])
 
     elif style == 'OGEE':
-        # S-curve ogee â€” convex below, concave above, meeting at tall apex
+        # S-curve ogee — convex below, concave above, meeting at tall apex
         apex_z = spring_z + hw * 1.55
         midz   = spring_z + hw * 0.75
         for i, sgn in enumerate((-1, 1)):
@@ -17111,7 +17152,7 @@ def _arch_spine(tree, style, hw, spring_z, loc, base_x):
                 bz.inputs['End'].default_value           = (0, 0, apex_z)
                 color_node(bz, "ogee"); curves.append(bz.outputs['Curve'])
 
-    else:  # LINTEL â€” flat horizontal head
+    else:  # LINTEL — flat horizontal head
         ln = _safe_node(tree, 'GeometryNodeCurvePrimitiveLine', (bx, by))
         if ln:
             ln.inputs['Start'].default_value = (-hw, 0, spring_z)
@@ -17124,7 +17165,7 @@ def _arch_spine(tree, style, hw, spring_z, loc, base_x):
 def build_archway(tree, props, base_x=-1400):
     """Advanced multi-style archway generator (v2.50).
 
-    Styles: ROMAN Â· SEGMENTAL Â· HORSESHOE Â· GOTHIC Â· TUDOR Â· OGEE Â· LINTEL
+    Styles: ROMAN · SEGMENTAL · HORSESHOE · GOTHIC · TUDOR · OGEE · LINTEL
     Anatomy: arch ring (swept rect profile) + piers + impost bands +
              optional keystone + optional voussoir lines.
     """
@@ -17141,7 +17182,7 @@ def build_archway(tree, props, base_x=-1400):
     hw = W / 2.0
     parts = []
 
-    # â”€â”€ arch ring (spine + rectangular sweep) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── arch ring (spine + rectangular sweep) ──────────────────────────
     spine_curves = _arch_spine(tree, style, hw, spring_z, (base_x, 200), base_x)
     prof = _rect_profile(tree, (base_x, -250), depth, band, "arch")
 
@@ -17162,7 +17203,7 @@ def build_archway(tree, props, base_x=-1400):
         color_node(sweep, "arch")
         parts.append(sweep.outputs['Mesh'])
 
-    # â”€â”€ piers / legs â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── piers / legs ───────────────────────────────────────────────────
     if want_piers:
         for i, sgn in enumerate((-1, 1)):
             pier = _cube(tree, (base_x, -700 + i * 60), pier_w, depth, spring_z, "pillar")
@@ -17177,7 +17218,7 @@ def build_archway(tree, props, base_x=-1400):
                                translation=(sgn * (hw + pier_w * 0.5), 0, spring_z),
                                label="ornament"))
 
-    # â”€â”€ keystone at apex â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── keystone at apex ───────────────────────────────────────────────
     if want_ks and style != 'LINTEL':
         apex_lifts = {
             'ROMAN': hw, 'SEGMENTAL': hw * 0.42, 'HORSESHOE': hw * 1.15,
@@ -17188,7 +17229,7 @@ def build_archway(tree, props, base_x=-1400):
         parts.append(_move(tree, ks, (base_x + 230, -1350),
                            translation=(0, 0, spring_z + lift), label="ornament"))
 
-    # â”€â”€ voussoir joint lines (instanced thin slabs along the arch ring) â”€
+    # ── voussoir joint lines (instanced thin slabs along the arch ring) ─
     if n_vouss >= 3 and sweep is not None and len(spine_curves) > 0:
         rs = _safe_node(tree, 'GeometryNodeResampleCurve', (base_x + 520, 600))
         if rs is not None:
@@ -17222,19 +17263,19 @@ def build_archway(tree, props, base_x=-1400):
 
 
 # ==============================================================================
-# ðŸŒ‰  ADVANCED BRIDGE GENERATOR  (v2.50)
+# 🌉  ADVANCED BRIDGE GENERATOR  (v2.50)
 # ==============================================================================
 
 def build_bridge_advanced(tree, props, base_x=-1400):
     """Advanced multi-style parametric bridge generator (v2.50).
 
     Styles:
-      STONE_ARCH     â€” N semicircular masonry arches + spandrel walls + parapet
-      ROMAN_AQUEDUCT â€” Two-tier stone arch bridge with water channel on top
-      SUSPENSION     â€” Two pylons + catenary main cables + vertical hangers + deck
-      TRUSS          â€” Deck + triangular truss frames on each side
-      BEAM           â€” Simple I-beam/girder deck on cylinder piers
-      COVERED        â€” Timber deck + side walls + curved roof
+      STONE_ARCH     — N semicircular masonry arches + spandrel walls + parapet
+      ROMAN_AQUEDUCT — Two-tier stone arch bridge with water channel on top
+      SUSPENSION     — Two pylons + catenary main cables + vertical hangers + deck
+      TRUSS          — Deck + triangular truss frames on each side
+      BEAM           — Simple I-beam/girder deck on cylinder piers
+      COVERED        — Timber deck + side walls + curved roof
     """
     import math
     style       = getattr(props, 'bridge_style',         'STONE_ARCH')
@@ -17247,7 +17288,7 @@ def build_bridge_advanced(tree, props, base_x=-1400):
     base_z      = 0.0
     parts       = []
 
-    # â”€â”€ helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── helpers ────────────────────────────────────────────────────────
     def _swept_circle(radius, loc_arc, loc_sweep, y_off=0.0):
         """Tube arch: circle arc swept with a round profile."""
         a = _safe_node(tree, 'GeometryNodeCurveArc', loc_arc)
@@ -17281,7 +17322,7 @@ def build_bridge_advanced(tree, props, base_x=-1400):
         color_node(sw, "bridge")
         return sw.outputs['Mesh']
 
-    # â”€â”€ deck slab (shared by most styles) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── deck slab (shared by most styles) ──────────────────────────────
     def _deck_slab(y_off=0.0, z_off=0.0):
         """Flat deck: a box spanning the full length, width, deck_thick."""
         d = _cube(tree, (base_x, -400 + int(y_off * 10)),
@@ -17289,7 +17330,7 @@ def build_bridge_advanced(tree, props, base_x=-1400):
         return _move(tree, d, (base_x + 230, -400 + int(y_off * 10)),
                      translation=(0, y_off, z_off + deck_thick * 0.5), label="bridge")
 
-    # â”€â”€ railing helper â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── railing helper ──────────────────────────────────────────────────
     def _side_railing(y_edge, z_base, label="railing"):
         """Low parapet: a thin box along the deck edge."""
         r = _cube(tree, (base_x, -2200 + int(y_edge * 20)),
@@ -17297,7 +17338,7 @@ def build_bridge_advanced(tree, props, base_x=-1400):
         return _move(tree, r, (base_x + 230, -2200 + int(y_edge * 20)),
                      translation=(0, y_edge, z_base + 0.28), label=label)
 
-    # â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    # ══════════════════════════════════════════════════════════════════
     if style == 'STONE_ARCH':
         arch_span = span / n_arches
         hw = arch_span / 2.0
@@ -17500,7 +17541,7 @@ def build_bridge_advanced(tree, props, base_x=-1400):
                               thickness=-0.1, label="roof")
         parts.append(roof_g)
 
-    else:  # BEAM â€” simple girder on piers
+    else:  # BEAM — simple girder on piers
         deck_z = rise
         n_piers = max(0, n_arches - 1)
         # Piers
@@ -17530,20 +17571,20 @@ def build_bridge_advanced(tree, props, base_x=-1400):
 
 
 # ==============================================================================
-# ðŸªµ  ADVANCED FENCE GENERATOR  (v2.50)
+# 🪵  ADVANCED FENCE GENERATOR  (v2.50)
 # ==============================================================================
 
 def build_fence(tree, props, base_x=-1400):
     """Advanced multi-style fence / barrier generator (v2.50).
 
     Styles:
-      PICKET   â€” pointed picket fence, posts + 2 rails + vertical pickets
-      IRON     â€” wrought-iron posts + rails + spear-tipped balusters
-      RANCH    â€” 3-rail ranch / post-and-rail fence (thick timber)
-      STONE    â€” low dry-stone wall with coping cap
-      LATTICE  â€” diagonal crisscross slats in a perimeter frame
-      BAMBOO   â€” vertical bamboo poles + horizontal lashings
-      MODERN   â€” steel post + horizontal slat panels
+      PICKET   — pointed picket fence, posts + 2 rails + vertical pickets
+      IRON     — wrought-iron posts + rails + spear-tipped balusters
+      RANCH    — 3-rail ranch / post-and-rail fence (thick timber)
+      STONE    — low dry-stone wall with coping cap
+      LATTICE  — diagonal crisscross slats in a perimeter frame
+      BAMBOO   — vertical bamboo poles + horizontal lashings
+      MODERN   — steel post + horizontal slat panels
     """
     import math
     style    = getattr(props, 'fence_style',        'PICKET')
@@ -17557,7 +17598,7 @@ def build_fence(tree, props, base_x=-1400):
     n_posts = max(2, int(length / spacing) + 1)
     actual_spacing = length / max(1, n_posts - 1)
 
-    # â”€â”€ shared post helper (CurveLine swept with a circle profile) â”€â”€â”€â”€â”€â”€
+    # ── shared post helper (CurveLine swept with a circle profile) ──────
     def _post_tube(radius, height, loc, tx, label="fence"):
         ln = _safe_node(tree, 'GeometryNodeCurvePrimitiveLine', loc)
         if ln is None:
@@ -17584,13 +17625,13 @@ def build_fence(tree, props, base_x=-1400):
         color_node(sw, label)
         return sw.outputs['Mesh']
 
-    # â”€â”€ shared horizontal rail helper â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── shared horizontal rail helper ────────────────────────────────────
     def _rail_bar(y_thick, z_thick, z_pos, loc, label="fence"):
         r = _cube(tree, loc, length, y_thick, z_thick, label)
         return _move(tree, r, (loc[0] + 230, loc[1]),
                      translation=(0, 0, z_pos), label=label)
 
-    # â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    # ══════════════════════════════════════════════════════════════════
     if style == 'PICKET':
         post_r   = 0.045
         rail_t   = 0.04
@@ -17831,7 +17872,7 @@ def build_fence(tree, props, base_x=-1400):
                         _link(tree, rp.outputs['Curve'], rsw.inputs['Profile Curve'])
                         color_node(rsw, "fence"); parts.append(rsw.outputs['Mesh'])
 
-    else:  # MODERN â€” steel post + horizontal slat panels
+    else:  # MODERN — steel post + horizontal slat panels
         post_r = 0.04
         slat_h = fh / max(1, n_rails + 1)
         for pi in range(n_posts):
@@ -17944,7 +17985,7 @@ def apply_geometry_nodes_to_object(obj, props):
         'KEEP':             build_keep,
         'CURTAIN_WALL':     build_curtain_wall,
         'CURVED_WALL':      build_curved_wall,
-        # â”€â”€ Greybox / level-design library (v2.49) â”€â”€
+        # ── Greybox / level-design library (v2.49) ──
         'GREYBOX_ROOM':        build_greybox_room,
         'GREYBOX_CORRIDOR':    build_greybox_corridor,
         'GREYBOX_RAMP':        build_greybox_ramp,
@@ -17993,7 +18034,7 @@ def apply_geometry_nodes_to_object(obj, props):
         'WALL_MULTI_WINDOW':  build_wall_multi_window,
         'WALL_ARCHED_WINDOW': build_wall_arched_window,
         'WALL_BAY_WINDOW':    build_wall_bay_window,
-        # âš— Advanced GN / Blender 5.1
+        # ⚗ Advanced GN / Blender 5.1
         'RAYCAST_FACADE':     build_raycast_facade,
         'VOLUME_CLOUD':       build_volume_cloud,
         'GEODESIC_VORONOI':   build_geodesic_voronoi,
@@ -18007,38 +18048,38 @@ def apply_geometry_nodes_to_object(obj, props):
         'COSMIC_WEB':         build_cosmic_web,
         'SPIDERWEB_DOME':     build_spiderweb_dome,
         'AUTO_BUILDING':      build_auto_building,
-        # â”€â”€ New v2.50 generators â”€â”€
+        # ── New v2.50 generators ──
         'ARCHWAY_ADV':        build_archway,
         'BRIDGE_ADV':         build_bridge_advanced,
         'FENCE':              build_fence,
-        # â”€â”€ v2.55 Curved Room greybox â”€â”€
+        # ── v2.55 Curved Room greybox ──
         'GB_ROOM_CIRCULAR':   build_gb_room_circular,
         'GB_ROOM_APSIDAL':    build_gb_room_apsidal,
         'GB_CORRIDOR_ARC':    build_gb_corridor_arc,
         'GB_ROOM_ROTUNDA':    build_gb_room_rotunda,
         'GB_CORRIDOR_ARC_CROSS': build_gb_corridor_arc_cross,
-        # â”€â”€ v2.53 Lebbeus Woods greybox â”€â”€
+        # ── v2.53 Lebbeus Woods greybox ──
         'GB_WOODS_PARASITE':  build_gb_woods_parasite,
         'GB_WOODS_FREESPACE': build_gb_woods_freespace,
         'GB_WOODS_RIBS':      build_gb_woods_ribs,
         'GB_WOODS_HARPSICHORD':build_gb_woods_harpsichord,
         'GB_WOODS_WAR_SCAR':  build_gb_woods_war_scar,
-        # â”€â”€ v2.53 David Umemoto greybox â”€â”€
+        # ── v2.53 David Umemoto greybox ──
         'GB_UMEMOTO_TERRACE': build_gb_umemoto_terrace,
         'GB_UMEMOTO_VAULT':   build_gb_umemoto_vault_cluster,
         'GB_UMEMOTO_LATTICE': build_gb_umemoto_lattice_block,
         'GB_UMEMOTO_FORTRESS':build_gb_umemoto_fortress_room,
-        # â”€â”€ v2.52 Higgsas-powered builders â”€â”€
+        # ── v2.52 Higgsas-powered builders ──
         'HIGG_SURFACE_WALL':  build_higgsas_surface_wall,
         'HIGG_COLONNADE':     build_higgsas_colonnade,
-        # â”€â”€ v2.52 Escher greybox â”€â”€
+        # ── v2.52 Escher greybox ──
         'GB_ESCHER_RELATIVITY':   build_gb_escher_relativity,
         'GB_ESCHER_PENROSE_LOOP': build_gb_escher_penrose_loop,
         'GB_ESCHER_GRAVITY_SHIFT':build_gb_escher_gravity_shift,
         'GB_ESCHER_BELVEDERE':    build_gb_escher_belvedere,
         'GB_ESCHER_WATERFALL':    build_gb_escher_waterfall,
         'GB_ESCHER_RECURSIVE':    build_gb_escher_recursive_room,
-        # â”€â”€ New v2.52 greybox extensions â”€â”€
+        # ── New v2.52 greybox extensions ──
         'GB_CORRIDOR_BEND':   build_greybox_corridor_bend,
         'GB_CORRIDOR_CROSS':  build_greybox_corridor_cross,
         'GB_CORRIDOR_T':      build_greybox_corridor_t,
@@ -18057,7 +18098,7 @@ def apply_geometry_nodes_to_object(obj, props):
         'GB_BRUTALIST_PANEL_WALL': build_brutalist_panel_wall,
         'GB_VENETIAN_LOGGIA': build_venetian_loggia_bay,
         'GB_SCIFI_PRESSURE_DOOR': build_scifi_pressure_door,
-        # â”€â”€ New v2.51 generators â”€â”€
+        # ── New v2.51 generators ──
         'WALL_RUINED':        build_wall_ruined,
         'ARCH_BROKEN':        build_arch_broken,
         'COLLAPSED_FLOOR':    build_collapsed_floor,
@@ -18080,7 +18121,7 @@ def apply_geometry_nodes_to_object(obj, props):
     try:
         geom = builder(tree, props)
     except Exception as _builder_err:
-        # Builder itself threw â€” return a placeholder cube so the GN tree is valid
+        # Builder itself threw — return a placeholder cube so the GN tree is valid
         import traceback as _tb
         _tb.print_exc()
         _fb = tree.nodes.new('GeometryNodeMeshCube')
@@ -18101,7 +18142,7 @@ def apply_geometry_nodes_to_object(obj, props):
                               props.flow_amount,
                               props.bulge_amount,
                               x=10300, y=-400)
-    # Universal music influence â€” radial pulse driven by harmonics
+    # Universal music influence — radial pulse driven by harmonics
     geom = add_universal_music_pass(tree, geom, props, x=10500)
 
     # Venetian deformation passes (after Boscarino et al.)
@@ -18116,7 +18157,7 @@ def apply_geometry_nodes_to_object(obj, props):
                                   seed=props.seed * 7,
                                   x=11500, y=600)
 
-    # Bevel pass â€” only the SUBDIV mode happens inside the geometry tree
+    # Bevel pass — only the SUBDIV mode happens inside the geometry tree
     # EDGE mode adds a real Bevel modifier OUTSIDE the GN tree (after dispatch)
     if props.bevel_mode == 'SUBDIV' and props.bevel_amount > 0.001 and props.bevel_subdiv_level > 0:
         subd = tree.nodes.new('GeometryNodeSubdivisionSurface')
@@ -18147,14 +18188,14 @@ def apply_geometry_nodes_to_object(obj, props):
         _link(tree, geom, smooth.inputs['Geometry'])
         geom = smooth.outputs['Geometry']
 
-    # Final topology cleanup â€” Blender 5.0+ smooth-by-angle technique (game-engine friendly)
+    # Final topology cleanup — Blender 5.0+ smooth-by-angle technique (game-engine friendly)
     if getattr(props, "cleanup_apply_pass", True):
         geom = add_cleanup_pass(tree, geom, props, x=13800)
 
-    # Auto-align â€” snap every preset to a consistent origin convention
+    # Auto-align — snap every preset to a consistent origin convention
     geom = add_auto_align_pass(tree, geom, getattr(props, "auto_align_mode", 'GROUND'), x=14400)
 
-    # Procedural UV (Triplanar / Box) â€” lives in GeoNodes for live UE export
+    # Procedural UV (Triplanar / Box) — lives in GeoNodes for live UE export
     geom = add_procedural_uv_pass(tree, geom, props, x=14700)
 
     _link(tree, geom, out_node.inputs['Geometry'])
@@ -18164,7 +18205,7 @@ def apply_geometry_nodes_to_object(obj, props):
     if getattr(props, "auto_frame_nodes", True):
         organize_node_tree(tree, props.arch_type)
 
-    # Edge Bevel modifier â€” runs *after* the GN modifier in the stack
+    # Edge Bevel modifier — runs *after* the GN modifier in the stack
     apply_edge_bevel_modifier(obj, props)
 
     # Auto-apply material from library
@@ -18183,19 +18224,19 @@ def apply_geometry_nodes_to_object(obj, props):
 
 
 # ======================================================================
-# â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•—  â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•— â–ˆâ–ˆâ•—   â–ˆâ–ˆâ•— â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•— â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•— â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•—â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•—
-# â–ˆâ–ˆâ•”â•â•â–ˆâ–ˆâ•—â–ˆâ–ˆâ•”â•â•â–ˆâ–ˆâ•—â•šâ–ˆâ–ˆâ•— â–ˆâ–ˆâ•”â•â–ˆâ–ˆâ•”â•â•â•â•â•â–ˆâ–ˆâ•”â•â•â–ˆâ–ˆâ•—â–ˆâ–ˆâ•”â•â•â•â•â•â•šâ•â•â–ˆâ–ˆâ•”â•â•â•
-# â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•”â•â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•‘ â•šâ–ˆâ–ˆâ–ˆâ–ˆâ•”â• â–ˆâ–ˆâ•‘     â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•‘â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•—   â–ˆâ–ˆâ•‘
-# â–ˆâ–ˆâ•”â•â•â–ˆâ–ˆâ•—â–ˆâ–ˆâ•”â•â•â–ˆâ–ˆâ•‘  â•šâ–ˆâ–ˆâ•”â•  â–ˆâ–ˆâ•‘     â–ˆâ–ˆâ•”â•â•â–ˆâ–ˆâ•‘â•šâ•â•â•â•â–ˆâ–ˆâ•‘   â–ˆâ–ˆâ•‘
-# â–ˆâ–ˆâ•‘  â–ˆâ–ˆâ•‘â–ˆâ–ˆâ•‘  â–ˆâ–ˆâ•‘   â–ˆâ–ˆâ•‘   â•šâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•—â–ˆâ–ˆâ•‘  â–ˆâ–ˆâ•‘â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•‘   â–ˆâ–ˆâ•‘
-# ADVANCED GEOMETRY NODES  â€”  Blender 5.1 node API
-# Raycast Â· Volume Â· UV Surface Â· Field at Index Â· Edge Angle
-# Simulation Zones Â· Distribute Points Â· Named Attributes
+# ██████╗  █████╗ ██╗   ██╗ ██████╗ █████╗ ███████╗████████╗
+# ██╔══██╗██╔══██╗╚██╗ ██╔╝██╔════╝██╔══██╗██╔════╝╚══██╔══╝
+# ██████╔╝███████║ ╚████╔╝ ██║     ███████║███████╗   ██║
+# ██╔══██╗██╔══██║  ╚██╔╝  ██║     ██╔══██║╚════██║   ██║
+# ██║  ██║██║  ██║   ██║   ╚██████╗██║  ██║███████║   ██║
+# ADVANCED GEOMETRY NODES  —  Blender 5.1 node API
+# Raycast · Volume · UV Surface · Field at Index · Edge Angle
+# Simulation Zones · Distribute Points · Named Attributes
 # ======================================================================
 
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ──────────────────────────────────────────────────────────────────────
 # HELPER: safe node link (skips mismatched socket types silently)
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ──────────────────────────────────────────────────────────────────────
 def _link(tree, src, dst):
     try:
         tree.links.new(src, dst)
@@ -18217,11 +18258,11 @@ def _node(tree, bl_idname, loc=(0, 0), **kwargs):
     return n
 
 
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ──────────────────────────────────────────────────────────────────────
 # ADVANCED BUILDER: RAYCAST FACADE
 # Uses Raycast node to project panel windows onto a curved surface,
 # creating a parametric glass curtain-wall facade.
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ──────────────────────────────────────────────────────────────────────
 def build_raycast_facade(tree, props):
     """
     Curtain-wall facade: distribute points on a grid, cast rays outward
@@ -18232,7 +18273,7 @@ def build_raycast_facade(tree, props):
     in_node = tree.nodes.get("Group Input") or tree.nodes.new('NodeGroupInput')
     in_node.location = (-600, 0)
 
-    # Base curved surface â€” use cylinder as facade backing
+    # Base curved surface — use cylinder as facade backing
     cyl = _node(tree, 'GeometryNodeMeshCylinder', (x, 200))
     cyl.inputs['Vertices'].default_value    = max(6, props.complexity_level * 6)
     cyl.inputs['Radius'].default_value      = props.base_radius
@@ -18263,7 +18304,7 @@ def build_raycast_facade(tree, props):
     # Raycast from each point toward the cylinder
     raycast = _node(tree, 'GeometryNodeRaycast', (x+700, -200))
     raycast.data_type      = 'FLOAT_VECTOR'
-    # `.mapping` was renamed in newer Blender â€” set defensively
+    # `.mapping` was renamed in newer Blender — set defensively
     try: raycast.mapping = 'INTERPOLATED'
     except (AttributeError, TypeError): pass
     raycast.inputs['Ray Length'].default_value = props.base_radius * 3.0
@@ -18301,11 +18342,11 @@ def build_raycast_facade(tree, props):
     return join.outputs['Geometry']
 
 
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ──────────────────────────────────────────────────────────────────────
 # ADVANCED BUILDER: VOLUME CLOUD PALACE
-# Converts a subdivided mesh to volume, then back â€” producing puffy
-# volumetric-style architecture. Uses Meshâ†’Volumeâ†’Mesh pipeline.
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# Converts a subdivided mesh to volume, then back — producing puffy
+# volumetric-style architecture. Uses Mesh→Volume→Mesh pipeline.
+# ──────────────────────────────────────────────────────────────────────
 def build_volume_cloud(tree, props):
     """
     Cloud palace: inflate base mesh through Mesh-to-Volume,
@@ -18346,7 +18387,7 @@ def build_volume_cloud(tree, props):
     except (AttributeError, TypeError): pass
     m2v.inputs['Voxel Size'].default_value   = 0.15 / max(0.5, props.complexity_level * 0.5)
     m2v.inputs['Density'].default_value      = 1.0
-    # `Exterior Band Width` was removed in newer Blender â€” try both names
+    # `Exterior Band Width` was removed in newer Blender — try both names
     for w_name, w_val in (('Interior Band Width', props.base_radius * 0.35),
                           ('Exterior Band Width', props.bulge_amount * 0.4 + 0.1)):
         try:
@@ -18392,11 +18433,11 @@ def build_volume_cloud(tree, props):
     return join2.outputs['Geometry']
 
 
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ──────────────────────────────────────────────────────────────────────
 # ADVANCED BUILDER: GEODESIC VORONOI DOME
 # Uses Edge Angle node for structural analysis, Named Attribute for
 # per-edge thickness, Distribute Points on Faces for rivet decoration.
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ──────────────────────────────────────────────────────────────────────
 def build_geodesic_voronoi(tree, props):
     """
     Geodesic dome with Voronoi cell patterning using:
@@ -18443,7 +18484,7 @@ def build_geodesic_voronoi(tree, props):
     # _safe_node returns None and we pass through if so)
     wf = _safe_node(tree, 'GeometryNodeWireframe', (x+1000, 200))
     if wf is None:
-        # Fallback â€” just return the unwireframed faces
+        # Fallback — just return the unwireframed faces
         return del_faces.outputs['Geometry']
     wf.inputs['Thickness'].default_value = 0.04 + props.arch_thickness * 0.3
     try: wf.use_replace_wire = True
@@ -18451,7 +18492,7 @@ def build_geodesic_voronoi(tree, props):
     _link(tree, del_faces.outputs['Geometry'], wf.inputs['Mesh'])
     color_node(wf, "gothic")
 
-    # Edge angle node â€” find flat vs sharp edges for decorative treatment
+    # Edge angle node — find flat vs sharp edges for decorative treatment
     edge_ang = _node(tree, 'GeometryNodeInputMeshEdgeAngle', (x+600, -700))
     color_node(edge_ang, "input")
 
@@ -18464,7 +18505,7 @@ def build_geodesic_voronoi(tree, props):
     _link(tree, edge_ang.outputs['Unsigned Angle'], store_attr.inputs['Value'])
     color_node(store_attr, "input")
 
-    # Glass panel â€” keep voronoi cells as flat panels with solidify
+    # Glass panel — keep voronoi cells as flat panels with solidify
     uvsph2 = _node(tree, 'GeometryNodeMeshUVSphere', (x, -200))
     uvsph2.inputs['Segments'].default_value  = segs * 4
     uvsph2.inputs['Rings'].default_value     = segs * 2
@@ -18508,11 +18549,11 @@ def build_geodesic_voronoi(tree, props):
     return join3.outputs['Geometry']
 
 
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ──────────────────────────────────────────────────────────────────────
 # ADVANCED BUILDER: DNA HELIX TOWER
-# Procedural double helix using Curve nodes â€” two intertwined spirals
+# Procedural double helix using Curve nodes — two intertwined spirals
 # with cross-rungs, swept with a circular profile.
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ──────────────────────────────────────────────────────────────────────
 def build_dna_helix(tree, props):
     """
     DNA double helix: two Curve Line nodes swept into helices via
@@ -18543,7 +18584,7 @@ def build_dna_helix(tree, props):
         spline_p = _node(tree, 'GeometryNodeSplineParameter', (x+300, strand*500 - 300))
         color_node(spline_p, "input")
 
-        # Convert t â†’ angle
+        # Convert t → angle
         mul_ang = _node(tree, 'ShaderNodeMath', (x+550, strand*500 - 300))
         mul_ang.operation = 'MULTIPLY'
         mul_ang.inputs[1].default_value = props.recursion_depth * math.tau
@@ -18598,7 +18639,7 @@ def build_dna_helix(tree, props):
         color_node(c2m, "stair")
         pieces.append(c2m.outputs['Mesh'])
 
-    # Cross rungs â€” Sample UV Surface to place rungs between strands
+    # Cross rungs — Sample UV Surface to place rungs between strands
     rung_count = max(4, props.recursion_depth * 4)
     line_r = _node(tree, 'GeometryNodeCurvePrimitiveLine', (x+2200, -400))
     line_r.inputs['Start'].default_value = (-props.base_radius, 0, 0)
@@ -18635,15 +18676,15 @@ def build_dna_helix(tree, props):
     return join_h.outputs['Geometry']
 
 
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ──────────────────────────────────────────────────────────────────────
 # ADVANCED BUILDER: IMPOSSIBLE KLEIN BOTTLE ARCHITECTURE
-# A self-intersecting Klein bottle mesh â€” mathematically impossible
+# A self-intersecting Klein bottle mesh — mathematically impossible
 # in 3D but beautiful as a sculptural form.
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ──────────────────────────────────────────────────────────────────────
 def build_klein_bottle(tree, props):
     """
     Klein bottle: parametric surface built using Index of Nearest
-    and trigonometric math nodes â€” two components joined with twist.
+    and trigonometric math nodes — two components joined with twist.
     """
     import bmesh as _bkb
 
@@ -18735,11 +18776,11 @@ def build_klein_bottle(tree, props):
     return set_k.outputs['Geometry']
 
 
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ──────────────────────────────────────────────────────────────────────
 # ADVANCED BUILDER: SPIDER WEB DOME
 # Polar spiral curve + Curve to Mesh + instanced radial struts
 # using the Curve Circle + Trim Curve + Resample pipeline.
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ──────────────────────────────────────────────────────────────────────
 def build_spiderweb_dome(tree, props):
     x = -200
     rings = max(4, props.recursion_depth + 2)
@@ -18748,7 +18789,7 @@ def build_spiderweb_dome(tree, props):
 
     pieces_sw = []
 
-    # Radial spokes â€” lines from centre to edge, bent upward
+    # Radial spokes — lines from centre to edge, bent upward
     for si in range(spokes):
         ang = 2 * math.pi * si / spokes
         ex = R * math.cos(ang); ey = R * math.sin(ang)
@@ -18800,11 +18841,11 @@ def build_spiderweb_dome(tree, props):
     return join_sw.outputs['Geometry']
 
 
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ──────────────────────────────────────────────────────────────────────
 # ADVANCED BUILDER: COSMIC WEB FILAMENT
 # Uses Distribute Points in Volume + Connect Point Lines to simulate
-# the large-scale cosmic web â€” used as a surreal architectural skeleton.
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# the large-scale cosmic web — used as a surreal architectural skeleton.
+# ──────────────────────────────────────────────────────────────────────
 def build_cosmic_web(tree, props):
     x = -200
     R = props.base_radius
@@ -18862,7 +18903,7 @@ def build_cosmic_web(tree, props):
     real_cw = _node(tree, 'GeometryNodeRealizeInstances', (x+1700, 0))
     _link(tree, inst_cw.outputs['Instances'], real_cw.inputs['Geometry'])
 
-    # Filaments â€” nearest-neighbour lines between nodes using Edge Paths
+    # Filaments — nearest-neighbour lines between nodes using Edge Paths
     # Use Mesh Line with noise-offset positions as proxy filament network
     line_cw = _node(tree, 'GeometryNodeMeshLine', (x+1200, 400))
     line_cw.mode = 'OFFSET'
@@ -18885,7 +18926,7 @@ def build_cosmic_web(tree, props):
     circ_fil = _node(tree, 'GeometryNodeCurvePrimitiveCircle', (x+2000, 100))
     circ_fil.inputs['Radius'].default_value = 0.012
     circ_fil.inputs['Resolution'].default_value = 5
-    # Mesh line already IS a mesh â€” convert to curve then sweep
+    # Mesh line already IS a mesh — convert to curve then sweep
     m2c_fil = _node(tree, 'GeometryNodeMeshToCurve', (x+2200, 400))
     _link(tree, set_fil.outputs['Geometry'], m2c_fil.inputs['Mesh'])
     c2m_fil = _node(tree, 'GeometryNodeCurveToMesh', (x+2400, 400))
@@ -18901,11 +18942,11 @@ def build_cosmic_web(tree, props):
     return join_cw.outputs['Geometry']
 
 
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-# ADVANCED BUILDER: MÃ–BIUS CATHEDRAL
-# Full MÃ¶bius strip cathedral â€” single-sided surface, extruded into
+# ──────────────────────────────────────────────────────────────────────
+# ADVANCED BUILDER: MÖBIUS CATHEDRAL
+# Full Möbius strip cathedral — single-sided surface, extruded into
 # a thick band with gothic arches instanced along the loop.
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ──────────────────────────────────────────────────────────────────────
 def build_mobius_cathedral(tree, props):
     import bmesh as _bmc
 
@@ -18921,7 +18962,7 @@ def build_mobius_cathedral(tree, props):
     for i in range(segs_m + 1):
         t = i / segs_m
         angle = t * 2 * math.pi
-        twist = t * math.pi  # half-twist for MÃ¶bius
+        twist = t * math.pi  # half-twist for Möbius
 
         cx = R_m * math.cos(angle)
         cy = R_m * math.sin(angle)
@@ -18944,14 +18985,14 @@ def build_mobius_cathedral(tree, props):
             ring_m.append(bm_m.verts.new((px, py, pz)))
         rings_m.append(ring_m)
 
-    # Stitch (note: last ring connects back to first with flip for MÃ¶bius)
+    # Stitch (note: last ring connects back to first with flip for Möbius)
     for i in range(segs_m):
         r0 = rings_m[i]; r1 = rings_m[i+1]
         if i < segs_m - 1:
             bm_m.faces.new([r0[0], r0[1], r1[1], r1[0]])
             bm_m.faces.new([r0[1], r0[2], r1[2], r1[1]])
         else:
-            # MÃ¶bius closure: flip the end ring
+            # Möbius closure: flip the end ring
             bm_m.faces.new([r0[0], r0[1], rings_m[0][1], rings_m[0][2]])
             bm_m.faces.new([r0[1], r0[2], rings_m[0][0], rings_m[0][1]])
 
@@ -18973,7 +19014,7 @@ def build_mobius_cathedral(tree, props):
     subd_m.inputs['Level'].default_value = min(2, props.complexity_level - 1)
     _link(tree, obj_info_m.outputs['Geometry'], subd_m.inputs['Mesh'])
 
-    # Distribute arch instances along the MÃ¶bius band
+    # Distribute arch instances along the Möbius band
     pts_m = _node(tree, 'GeometryNodeDistributePointsOnFaces', (x+600, 0))
     pts_m.distribute_method = 'POISSON'
     pts_m.inputs['Distance Min'].default_value  = 0.5
@@ -19001,11 +19042,11 @@ def build_mobius_cathedral(tree, props):
     return join_m.outputs['Geometry']
 
 
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ──────────────────────────────────────────────────────────────────────
 # ADVANCED BUILDER: SEIFERT SURFACE (knot complement)
-# Seifert surface of the trefoil knot â€” orientable surface bounded
+# Seifert surface of the trefoil knot — orientable surface bounded
 # by the knot, built parametrically.
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ──────────────────────────────────────────────────────────────────────
 def build_seifert_surface(tree, props):
     import bmesh as _bks
 
@@ -19019,8 +19060,8 @@ def build_seifert_surface(tree, props):
     verts_s = {}
 
     def seifert_pos(u, v):
-        # Trefoil Seifert surface â€” Milnor fibre parametrization
-        # (u = fiber angle 0..2Ï€, v = radial 0..1)
+        # Trefoil Seifert surface — Milnor fibre parametrization
+        # (u = fiber angle 0..2π, v = radial 0..1)
         phi = u * 3  # three-fold symmetry for trefoil
         r_f = R_s * (0.3 + v * 0.7)
         # Embed: fiber bundle over S1, fiber = disk
@@ -19078,11 +19119,11 @@ def build_seifert_surface(tree, props):
     return set_s.outputs['Geometry']
 
 
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ──────────────────────────────────────────────────────────────────────
 # ADVANCED BUILDER: FIELD SCULPTURE (Field at Index + proximity field)
 # Uses Index of Nearest + Field at Index to create a distance-driven
 # sculptural displacement based on control point attraction.
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ──────────────────────────────────────────────────────────────────────
 def build_field_sculpture(tree, props):
     x = -200
     R_f = props.base_radius
@@ -19099,7 +19140,7 @@ def build_field_sculpture(tree, props):
     subd_f.inputs['Level'].default_value = min(2, props.complexity_level - 1)
     _link(tree, uv_f.outputs['Mesh'], subd_f.inputs['Mesh'])
 
-    # Control points â€” a small set of attractor points
+    # Control points — a small set of attractor points
     ctrl_line = _node(tree, 'GeometryNodeMeshLine', (x, -500))
     ctrl_line.mode = 'OFFSET'
     ctrl_line.inputs['Count'].default_value          = max(3, props.recursion_depth)
@@ -19122,7 +19163,7 @@ def build_field_sculpture(tree, props):
     _link(tree, mul_ctrl.outputs['Vector'], set_ctrl.inputs['Offset'])
     color_node(set_ctrl, "deform")
 
-    # Index of Nearest â€” find nearest control point for each sphere vertex
+    # Index of Nearest — find nearest control point for each sphere vertex
     idx_near = _node(tree, 'GeometryNodeIndexOfNearest', (x+700, 0))
     # We use Position as the element to search with
     pos_sphere = _node(tree, 'GeometryNodeInputPosition', (x+500, -200))
@@ -19130,7 +19171,7 @@ def build_field_sculpture(tree, props):
     # (Index Of Nearest needs the target's positions; feed ctrl geometry)
     color_node(idx_near, "input")
 
-    # Field at Index â€” retrieve the control point position for the nearest
+    # Field at Index — retrieve the control point position for the nearest
     fai = _node(tree, 'GeometryNodeFieldAtIndex', (x+1000, 0))
     fai.domain    = 'POINT'
     fai.data_type = 'FLOAT_VECTOR'
@@ -19159,10 +19200,10 @@ def build_field_sculpture(tree, props):
     return set_f.outputs['Geometry']
 
 
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ──────────────────────────────────────────────────────────────────────
 # ADVANCED BUILDER: WEAVE SURFACE (UV Surface sampling + curve sweep)
 # Uses Sample UV Surface + Curve to Mesh for an architectural weave.
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ──────────────────────────────────────────────────────────────────────
 def build_weave_surface(tree, props):
     x = -200
     R_w = props.base_radius
@@ -19170,7 +19211,7 @@ def build_weave_surface(tree, props):
 
     pieces_w = []
 
-    # Base surface â€” cylinder
+    # Base surface — cylinder
     cyl_w = _node(tree, 'GeometryNodeMeshCylinder', (x, 0))
     cyl_w.inputs['Vertices'].default_value  = 32
     cyl_w.inputs['Radius'].default_value    = R_w
@@ -19253,10 +19294,10 @@ def build_weave_surface(tree, props):
     return join_w.outputs['Geometry']
 
 
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ──────────────────────────────────────────────────────────────────────
 # ADVANCED BUILDER: TESSELLATION TOWER (Penrose-like tiling extrusion)
 # Named attributes mark tile type; per-face height driven by voronoi.
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ──────────────────────────────────────────────────────────────────────
 def build_tessellation_tower(tree, props):
     x = -200
     R_tt = props.base_radius
@@ -19325,9 +19366,9 @@ def build_tessellation_tower(tree, props):
     return join_tt.outputs['Geometry']
 
 
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ──────────────────────────────────────────────────────────────────────
 # ONE-CLICK "COOL RANDOM STUFF" OPERATORS
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ──────────────────────────────────────────────────────────────────────
 
 def _cool_setup(context, arch_type):
     """Helper: create a new cube, assign arch type, run generate."""
@@ -19342,7 +19383,7 @@ def _cool_setup(context, arch_type):
 
 class SURREAL_ARCH_OT_cool_dna(bpy.types.Operator):
     """Spawn a procedural DNA Helix Tower."""
-    bl_idname = "surreal_arch.cool_dna"; bl_label = "ðŸ§¬ DNA Helix Tower"
+    bl_idname = "surreal_arch.cool_dna"; bl_label = "🧬 DNA Helix Tower"
     bl_options = {'REGISTER', 'UNDO'}
     def execute(self, context):
         obj = _cool_setup(context, 'DNA_HELIX')
@@ -19351,7 +19392,7 @@ class SURREAL_ARCH_OT_cool_dna(bpy.types.Operator):
 
 class SURREAL_ARCH_OT_cool_klein(bpy.types.Operator):
     """Spawn a Klein Bottle architectural sculpture."""
-    bl_idname = "surreal_arch.cool_klein"; bl_label = "âˆž Klein Bottle"
+    bl_idname = "surreal_arch.cool_klein"; bl_label = "∞ Klein Bottle"
     bl_options = {'REGISTER', 'UNDO'}
     def execute(self, context):
         obj = _cool_setup(context, 'KLEIN_BOTTLE')
@@ -19360,7 +19401,7 @@ class SURREAL_ARCH_OT_cool_klein(bpy.types.Operator):
 
 class SURREAL_ARCH_OT_cool_geodome(bpy.types.Operator):
     """Spawn a Geodesic Voronoi Dome."""
-    bl_idname = "surreal_arch.cool_geodome"; bl_label = "ðŸ”® Geodesic Voronoi Dome"
+    bl_idname = "surreal_arch.cool_geodome"; bl_label = "🔮 Geodesic Voronoi Dome"
     bl_options = {'REGISTER', 'UNDO'}
     def execute(self, context):
         obj = _cool_setup(context, 'GEODESIC_VORONOI')
@@ -19369,7 +19410,7 @@ class SURREAL_ARCH_OT_cool_geodome(bpy.types.Operator):
 
 class SURREAL_ARCH_OT_cool_cosmic(bpy.types.Operator):
     """Spawn a Cosmic Web Filament structure."""
-    bl_idname = "surreal_arch.cool_cosmic"; bl_label = "ðŸŒŒ Cosmic Web"
+    bl_idname = "surreal_arch.cool_cosmic"; bl_label = "🌌 Cosmic Web"
     bl_options = {'REGISTER', 'UNDO'}
     def execute(self, context):
         obj = _cool_setup(context, 'COSMIC_WEB')
@@ -19377,8 +19418,8 @@ class SURREAL_ARCH_OT_cool_cosmic(bpy.types.Operator):
         return {'FINISHED'}
 
 class SURREAL_ARCH_OT_cool_mobius(bpy.types.Operator):
-    """Spawn a MÃ¶bius Cathedral band structure."""
-    bl_idname = "surreal_arch.cool_mobius"; bl_label = "â™¾ MÃ¶bius Cathedral"
+    """Spawn a Möbius Cathedral band structure."""
+    bl_idname = "surreal_arch.cool_mobius"; bl_label = "♾ Möbius Cathedral"
     bl_options = {'REGISTER', 'UNDO'}
     def execute(self, context):
         obj = _cool_setup(context, 'MOBIUS_CATHEDRAL')
@@ -19387,7 +19428,7 @@ class SURREAL_ARCH_OT_cool_mobius(bpy.types.Operator):
 
 class SURREAL_ARCH_OT_cool_seifert(bpy.types.Operator):
     """Spawn a Seifert Surface (trefoil knot complement)."""
-    bl_idname = "surreal_arch.cool_seifert"; bl_label = "ðŸŽ€ Seifert Surface"
+    bl_idname = "surreal_arch.cool_seifert"; bl_label = "🎀 Seifert Surface"
     bl_options = {'REGISTER', 'UNDO'}
     def execute(self, context):
         obj = _cool_setup(context, 'SEIFERT_SURFACE')
@@ -19396,7 +19437,7 @@ class SURREAL_ARCH_OT_cool_seifert(bpy.types.Operator):
 
 class SURREAL_ARCH_OT_cool_spiderdome(bpy.types.Operator):
     """Spawn a Spider Web Dome."""
-    bl_idname = "surreal_arch.cool_spiderdome"; bl_label = "ðŸ•¸ Spider Web Dome"
+    bl_idname = "surreal_arch.cool_spiderdome"; bl_label = "🕸 Spider Web Dome"
     bl_options = {'REGISTER', 'UNDO'}
     def execute(self, context):
         obj = _cool_setup(context, 'SPIDERWEB_DOME')
@@ -19405,7 +19446,7 @@ class SURREAL_ARCH_OT_cool_spiderdome(bpy.types.Operator):
 
 class SURREAL_ARCH_OT_cool_field(bpy.types.Operator):
     """Spawn a Field Sculpture using Index of Nearest."""
-    bl_idname = "surreal_arch.cool_field"; bl_label = "ðŸ§² Field Sculpture"
+    bl_idname = "surreal_arch.cool_field"; bl_label = "🧲 Field Sculpture"
     bl_options = {'REGISTER', 'UNDO'}
     def execute(self, context):
         obj = _cool_setup(context, 'FIELD_SCULPTURE')
@@ -19414,7 +19455,7 @@ class SURREAL_ARCH_OT_cool_field(bpy.types.Operator):
 
 class SURREAL_ARCH_OT_cool_weave(bpy.types.Operator):
     """Spawn a UV Surface Weave structure."""
-    bl_idname = "surreal_arch.cool_weave"; bl_label = "ðŸ§¶ UV Weave Surface"
+    bl_idname = "surreal_arch.cool_weave"; bl_label = "🧶 UV Weave Surface"
     bl_options = {'REGISTER', 'UNDO'}
     def execute(self, context):
         obj = _cool_setup(context, 'WEAVE_SURFACE')
@@ -19423,7 +19464,7 @@ class SURREAL_ARCH_OT_cool_weave(bpy.types.Operator):
 
 class SURREAL_ARCH_OT_cool_tess_tower(bpy.types.Operator):
     """Spawn a Tessellation Tower (Voronoi-extruded)."""
-    bl_idname = "surreal_arch.cool_tess_tower"; bl_label = "ðŸ”³ Tessellation Tower"
+    bl_idname = "surreal_arch.cool_tess_tower"; bl_label = "🔳 Tessellation Tower"
     bl_options = {'REGISTER', 'UNDO'}
     def execute(self, context):
         obj = _cool_setup(context, 'TESSELLATION_TOWER')
@@ -19432,7 +19473,7 @@ class SURREAL_ARCH_OT_cool_tess_tower(bpy.types.Operator):
 
 class SURREAL_ARCH_OT_cool_volume_palace(bpy.types.Operator):
     """Spawn a Volume Cloud Palace."""
-    bl_idname = "surreal_arch.cool_volume_palace"; bl_label = "â˜ Volume Cloud Palace"
+    bl_idname = "surreal_arch.cool_volume_palace"; bl_label = "☁ Volume Cloud Palace"
     bl_options = {'REGISTER', 'UNDO'}
     def execute(self, context):
         obj = _cool_setup(context, 'VOLUME_CLOUD')
@@ -19441,7 +19482,7 @@ class SURREAL_ARCH_OT_cool_volume_palace(bpy.types.Operator):
 
 class SURREAL_ARCH_OT_cool_raycast_facade(bpy.types.Operator):
     """Spawn a Raycast Curtain Wall Facade."""
-    bl_idname = "surreal_arch.cool_raycast_facade"; bl_label = "ðŸªŸ Raycast Facade"
+    bl_idname = "surreal_arch.cool_raycast_facade"; bl_label = "🪟 Raycast Facade"
     bl_options = {'REGISTER', 'UNDO'}
     def execute(self, context):
         obj = _cool_setup(context, 'RAYCAST_FACADE')
@@ -19449,61 +19490,61 @@ class SURREAL_ARCH_OT_cool_raycast_facade(bpy.types.Operator):
         return {'FINISHED'}
 
 
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ──────────────────────────────────────────────────────────────────────
 # PANEL: Advanced GN / Raycast
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ──────────────────────────────────────────────────────────────────────
 
 class SURREAL_ARCH_PT_advanced_gn(_SubPanelBase, bpy.types.Panel):
-    bl_label  = "âš— Advanced GN / Raycast / Cool Stuff"
+    bl_label  = "⚗ Advanced GN / Raycast / Cool Stuff"
     bl_idname = "SURREAL_ARCH_PT_advanced_gn"
 
     def draw(self, context):
         layout = self.layout
 
-        # â”€â”€ Topology / Math Structures â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-        box = layout.box(); box.label(text="ðŸ”¬ Mathematical Surfaces")
+        # ── Topology / Math Structures ──────────────────────────────────
+        box = layout.box(); box.label(text="🔬 Mathematical Surfaces")
         col = box.column(align=True)
         r = col.row(align=True); r.scale_y = 1.3
-        r.operator("surreal_arch.cool_klein",   text="âˆž Klein",    icon='SURFACE_NTORUS')
-        r.operator("surreal_arch.cool_seifert", text="ðŸŽ€ Seifert",  icon='SURFACE_NCURVE')
-        r.operator("surreal_arch.cool_mobius",  text="â™¾ MÃ¶bius",   icon='FORCE_MAGNETIC')
+        r.operator("surreal_arch.cool_klein",   text="∞ Klein",    icon='SURFACE_NTORUS')
+        r.operator("surreal_arch.cool_seifert", text="🎀 Seifert",  icon='SURFACE_NCURVE')
+        r.operator("surreal_arch.cool_mobius",  text="♾ Möbius",   icon='FORCE_MAGNETIC')
 
-        # â”€â”€ Biology / Science â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-        box = layout.box(); box.label(text="ðŸ”­ Science & Cosmos")
+        # ── Biology / Science ───────────────────────────────────────────
+        box = layout.box(); box.label(text="🔭 Science & Cosmos")
         col = box.column(align=True)
         r = col.row(align=True); r.scale_y = 1.3
-        r.operator("surreal_arch.cool_dna",    text="ðŸ§¬ DNA",      icon='OUTLINER_OB_CURVES')
-        r.operator("surreal_arch.cool_cosmic", text="ðŸŒŒ Cosmic",   icon='SHADERFX')
+        r.operator("surreal_arch.cool_dna",    text="🧬 DNA",      icon='OUTLINER_OB_CURVES')
+        r.operator("surreal_arch.cool_cosmic", text="🌌 Cosmic",   icon='SHADERFX')
 
-        # â”€â”€ Architecture + GN Showcase â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-        box = layout.box(); box.label(text="ðŸ— Advanced GN Architecture")
+        # ── Architecture + GN Showcase ──────────────────────────────────
+        box = layout.box(); box.label(text="🏗 Advanced GN Architecture")
         col = box.column(align=True)
         r = col.row(align=True); r.scale_y = 1.3
-        r.operator("surreal_arch.cool_geodome",        text="ðŸ”® Geodome",   icon='MESH_UVSPHERE')
-        r.operator("surreal_arch.cool_spiderdome",     text="ðŸ•¸ Spider",    icon='FORCE_VORTEX')
+        r.operator("surreal_arch.cool_geodome",        text="🔮 Geodome",   icon='MESH_UVSPHERE')
+        r.operator("surreal_arch.cool_spiderdome",     text="🕸 Spider",    icon='FORCE_VORTEX')
         r = col.row(align=True); r.scale_y = 1.3
-        r.operator("surreal_arch.cool_raycast_facade", text="ðŸªŸ Facade",    icon='MOD_MIRROR')
-        r.operator("surreal_arch.cool_volume_palace",  text="â˜ Volume",    icon='VOLUME_DATA')
+        r.operator("surreal_arch.cool_raycast_facade", text="🪟 Facade",    icon='MOD_MIRROR')
+        r.operator("surreal_arch.cool_volume_palace",  text="☁ Volume",    icon='VOLUME_DATA')
 
-        # â”€â”€ Field & Weave â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-        box = layout.box(); box.label(text="ðŸ§® Field / UV / Weave")
+        # ── Field & Weave ───────────────────────────────────────────────
+        box = layout.box(); box.label(text="🧮 Field / UV / Weave")
         col = box.column(align=True)
         r = col.row(align=True); r.scale_y = 1.3
-        r.operator("surreal_arch.cool_field",     text="ðŸ§² Field Sculpt",icon='FORCE_CHARGE')
-        r.operator("surreal_arch.cool_weave",     text="ðŸ§¶ UV Weave",   icon='MOD_CLOTH')
+        r.operator("surreal_arch.cool_field",     text="🧲 Field Sculpt",icon='FORCE_CHARGE')
+        r.operator("surreal_arch.cool_weave",     text="🧶 UV Weave",   icon='MOD_CLOTH')
         r = col.row(align=True); r.scale_y = 1.3
-        r.operator("surreal_arch.cool_tess_tower",text="ðŸ”³ Tess Tower", icon='MOD_BUILD')
+        r.operator("surreal_arch.cool_tess_tower",text="🔳 Tess Tower", icon='MOD_BUILD')
 
-        # â”€â”€ Node info â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+        # ── Node info ───────────────────────────────────────────────────
         box = layout.box()
-        box.label(text="ðŸ“‹ Blender 5.1 GN Nodes Used:", icon='NODETREE')
+        box.label(text="📋 Blender 5.1 GN Nodes Used:", icon='NODETREE')
         col = box.column(align=False)
         col.scale_y = 0.8
-        col.label(text="â€¢ Raycast  â€¢ Meshâ†’Volume  â€¢ Volumeâ†’Mesh")
-        col.label(text="â€¢ Sample UV Surface  â€¢ Field at Index")
-        col.label(text="â€¢ Index of Nearest  â€¢ Edge Angle")
-        col.label(text="â€¢ Store Named Attr  â€¢ Distribute in Vol")
-        col.label(text="â€¢ Curve to Mesh  â€¢ Wireframe  â€¢ Extrude")
+        col.label(text="• Raycast  • Mesh→Volume  • Volume→Mesh")
+        col.label(text="• Sample UV Surface  • Field at Index")
+        col.label(text="• Index of Nearest  • Edge Angle")
+        col.label(text="• Store Named Attr  • Distribute in Vol")
+        col.label(text="• Curve to Mesh  • Wireframe  • Extrude")
 
 
 # ======================================================================
@@ -19573,7 +19614,7 @@ def build_scifi_greeble(tree, props):
     if rnd_val and pos_p:
         _link(tree, pos_p.outputs['Position'], rnd_val.inputs['Vector'])
 
-    # Scale the panel randomly (0.4 â†’ 1.0)
+    # Scale the panel randomly (0.4 → 1.0)
     scale_map = _node(tree, 'ShaderNodeMapRange', (x+600, -550))
     scale_map.inputs['From Min'].default_value = 0.0
     scale_map.inputs['From Max'].default_value = 1.0
@@ -19631,7 +19672,7 @@ def build_scifi_circuit(tree, props):
     _link(tree, pos_c.outputs['Position'], vor_c.inputs['Vector'])
     color_node(vor_c, "noise")
 
-    # Threshold â†’ only extrude near cell centres (pads)
+    # Threshold → only extrude near cell centres (pads)
     thresh = _node(tree, 'ShaderNodeMath', (x+650, -300))
     thresh.operation = 'LESS_THAN'
     thresh.inputs[1].default_value = 0.25 * (1.0 + props.scifi_randomness * 0.5)
@@ -19675,7 +19716,7 @@ def build_scifi_circuit(tree, props):
 
 def build_scifi_neon_trim(tree, props):
     """
-    Neon trim: find sharp edges â†’ convert to curves â†’ sweep a circular
+    Neon trim: find sharp edges → convert to curves → sweep a circular
     profile to create glowing tube outlines.
     """
     x = 0
@@ -19802,7 +19843,7 @@ def build_scifi_antenna(tree, props):
         _link(tree, cmp_a.outputs['Value'], pts_a.inputs['Selection'])
         color_node(pts_a, "input")
 
-    # Antenna shaft â€” thin cylinder
+    # Antenna shaft — thin cylinder
     shaft = _node(tree, 'GeometryNodeMeshCylinder', (x+300, -450))
     shaft.inputs['Vertices'].default_value = 8
     shaft.inputs['Radius'].default_value   = 0.02 * props.scifi_panel_scale
@@ -19945,7 +19986,7 @@ _SCIFI_BUILDERS = {
 def apply_scifi_effect_gn(obj, props):
     """
     Apply the selected sci-fi effect as a dedicated GN modifier
-    on top of any existing mesh â€” fully non-destructive.
+    on top of any existing mesh — fully non-destructive.
     """
     # Remove old scifi modifier
     for mod in [m for m in obj.modifiers if m.name.startswith("SciFi_")]:
@@ -19984,7 +20025,7 @@ def apply_scifi_effect_gn(obj, props):
 
 
 # ======================================================================
-# AESTHETIC EFFECT BUILDERS â€” Gothic / Vaporwave / Zen / Spiritual
+# AESTHETIC EFFECT BUILDERS — Gothic / Vaporwave / Zen / Spiritual
 # Non-destructive: every builder takes the input geometry and JOINS its
 # output back so the result stacks on top of any selected mesh.
 # ======================================================================
@@ -20012,14 +20053,14 @@ def _aest_val(props, kind):
 def _gothic_arch_curve(tree, width, height, pointiness=0.6, x=0, y=0):
     """Build a pointed-arch silhouette as a bezier curve.
     Returns the curve output socket, or None if quadratic bezier node missing.
-    Uses 3 control points: bottom-left â†’ apex (pointy) â†’ bottom-right."""
+    Uses 3 control points: bottom-left → apex (pointy) → bottom-right."""
     qb = _safe_node(tree, 'GeometryNodeCurveQuadraticBezier', (x, y))
     if qb is None:
         return None
     try:
         qb.inputs['Resolution'].default_value = 32
         qb.inputs['Start'].default_value      = (-width * 0.5, 0, 0)
-        # Middle controls "lift" â€” push it up + slightly outward for Gothic pointy
+        # Middle controls "lift" — push it up + slightly outward for Gothic pointy
         qb.inputs['Middle'].default_value     = (0, 0, height * (1.0 + pointiness * 0.4))
         qb.inputs['End'].default_value        = (width * 0.5, 0, 0)
     except Exception:
@@ -20088,7 +20129,7 @@ def _join_with_input(tree, in_geom, extra_out, x_off=1500):
     return join.outputs['Geometry']
 
 
-# ---- ðŸ¦‡ GOTHIC ---------------------------------------------------------
+# ---- 🦇 GOTHIC ---------------------------------------------------------
 
 def build_aest_goth_tracery(tree, props):
     """Distribute Gothic cross/star ornaments on every face."""
@@ -20226,7 +20267,7 @@ def build_aest_goth_weathered(tree, props):
     return subd.outputs['Mesh']
 
 
-# ---- ðŸŒ´ VAPORWAVE ------------------------------------------------------
+# ---- 🌴 VAPORWAVE ------------------------------------------------------
 
 def build_aest_vap_wire(tree, props):
     """Pastel neon wireframe overlay."""
@@ -20257,7 +20298,7 @@ def build_aest_vap_pixel(tree, props):
             pass
         _link(tree, in_geom, m2v.inputs['Mesh'])
         color_node(m2v, "noise")
-        # Distribute points in volume â†’ cube instances
+        # Distribute points in volume → cube instances
         dpts = _safe_node(tree, 'GeometryNodeDistributePointsInVolume', (300, 0))
         if dpts:
             try: dpts.mode = 'DENSITY_GRID'
@@ -20368,7 +20409,7 @@ def build_aest_vap_palms(tree, props):
     return join.outputs['Geometry']
 
 
-# ---- â›© ZEN ------------------------------------------------------------
+# ---- ⛩ ZEN ------------------------------------------------------------
 
 def build_aest_zen_moss(tree, props):
     """Soft moss spheres on upward-facing surfaces."""
@@ -20527,7 +20568,7 @@ def build_aest_zen_petals(tree, props):
     return in_geom
 
 
-# ---- ðŸ‘ SPIRITUAL ------------------------------------------------------
+# ---- 👁 SPIRITUAL ------------------------------------------------------
 
 def build_aest_spi_aura(tree, props):
     """Iridescent outer shell offset along normals."""
@@ -20726,7 +20767,7 @@ def build_aest_spi_lotus(tree, props):
 
 
 # ======================================================================
-# v2.16 â€” additional procedurally-rich aesthetic effects
+# v2.16 — additional procedurally-rich aesthetic effects
 # Each one uses noise / voronoi / fields / curve sweeps for variation.
 # ======================================================================
 
@@ -20734,7 +20775,7 @@ def _noise_scale_for(props, base):
     return max(0.5, base * props.aest_density)
 
 
-# ---- ðŸ¦‡ GOTHIC â€” extra ------------------------------------------------
+# ---- 🦇 GOTHIC — extra ------------------------------------------------
 
 def build_aest_goth_lattice(tree, props):
     """Fractal Gothic lattice via Wireframe + Subdivide stack."""
@@ -20796,7 +20837,7 @@ def build_aest_goth_niches(tree, props):
         vor.inputs['Scale'].default_value = _noise_scale_for(props, 1.5)
         _link(tree, pos.outputs['Position'], vor.inputs['Vector'])
         color_node(vor, "noise")
-    # Mask: select faces where voronoi distance < threshold â†’ push inward
+    # Mask: select faces where voronoi distance < threshold → push inward
     less = _node(tree, 'ShaderNodeMath', (500, -250))
     less.operation = 'LESS_THAN'
     if vor:
@@ -20879,7 +20920,7 @@ def build_aest_goth_finials(tree, props):
     if spire:
         _link(tree, tr_s.outputs['Geometry'], j.inputs['Geometry'])
     color_node(base, "gothic"); color_node(j, "gothic")
-    # Distribute on faces (will sit on every face â€” for top-bias add manual filter)
+    # Distribute on faces (will sit on every face — for top-bias add manual filter)
     pts = _safe_node(tree, 'GeometryNodeDistributePointsOnFaces', (100, 0))
     if pts and in_geom:
         pts.distribute_method = 'POISSON'
@@ -20988,7 +21029,7 @@ def build_aest_goth_spires(tree, props):
     return _join_with_input(tree, in_geom, real)
 
 
-# ---- ðŸŒ´ VAPORWAVE â€” extra ---------------------------------------------
+# ---- 🌴 VAPORWAVE — extra ---------------------------------------------
 
 def build_aest_vap_slices(tree, props):
     """Horizontal Z-band noise-offset slices: VHS-tracking glitch."""
@@ -21220,7 +21261,7 @@ def build_aest_vap_neon_wrap(tree, props):
     return in_geom
 
 
-# ---- â›© ZEN â€” extra ---------------------------------------------------
+# ---- ⛩ ZEN — extra ---------------------------------------------------
 
 def build_aest_zen_orbit(tree, props):
     """Paper lanterns orbiting in concentric rings."""
@@ -21255,7 +21296,7 @@ def build_aest_zen_orbit(tree, props):
 
 
 def build_aest_zen_smoke(tree, props):
-    """Helical incense smoke trails rising from base â€” sweep cylinder along spiral."""
+    """Helical incense smoke trails rising from base — sweep cylinder along spiral."""
     in_geom = _get_input_geom(tree)
     pieces = []
     import math
@@ -21384,7 +21425,7 @@ def build_aest_zen_ginkgo(tree, props):
         tr_l.inputs['Rotation'].default_value = (1.5708, 0, 0)
         _link(tree, leaf.outputs['Mesh'], tr_l.inputs['Geometry'])
         color_node(leaf, "organic"); color_node(tr_l, "organic")
-    # Point cloud â€” use icosphere as scattered points
+    # Point cloud — use icosphere as scattered points
     cloud = _node(tree, 'GeometryNodeMeshIcoSphere', (-500, 200))
     cloud.inputs['Radius'].default_value = 2.5 * props.aest_scale
     cloud.inputs['Subdivisions'].default_value = max(2, props.aest_layers + 1)
@@ -21434,7 +21475,7 @@ def build_aest_zen_runes(tree, props):
     return _join_with_input(tree, in_geom, real)
 
 
-# ---- ðŸ‘ SPIRITUAL â€” extra ---------------------------------------------
+# ---- 👁 SPIRITUAL — extra ---------------------------------------------
 
 def build_aest_spi_runes(tree, props):
     """Rune circle: large torus at base + radial bar inscriptions."""
@@ -21644,7 +21685,7 @@ def build_aest_spi_portal(tree, props):
         _link(tree, tor.outputs['Mesh'], tr.inputs['Geometry'])
         color_node(tor, "input"); color_node(tr, "input")
         pieces.append(tr.outputs['Geometry'])
-    # Inner swirling disc â€” subdivided + noise warped
+    # Inner swirling disc — subdivided + noise warped
     disc = _safe_node(tree, 'GeometryNodeMeshCircle', (-400, -300))
     if disc:
         try:
@@ -21691,11 +21732,11 @@ def build_aest_spi_portal(tree, props):
 
 
 # ======================================================================
-# v2.17 â€” music-reactive + advanced-GN aesthetic effects
+# v2.17 — music-reactive + advanced-GN aesthetic effects
 # ======================================================================
 
 def _music_mod(props, base, k=1.0):
-    """Return base modulated by universal music influence Ã— aest_music_gain."""
+    """Return base modulated by universal music influence × aest_music_gain."""
     if not getattr(props, 'aest_music_react', False):
         return base
     inf = getattr(props, 'universal_music_influence', 0.0)
@@ -21703,7 +21744,7 @@ def _music_mod(props, base, k=1.0):
     return base * (1.0 + inf * gain * k)
 
 
-# ---- ðŸŽµ MUSIC-REACTIVE ------------------------------------------------
+# ---- 🎵 MUSIC-REACTIVE ------------------------------------------------
 
 def build_aest_mus_pulse(tree, props):
     """Whole-mesh radial sine pulse driven by musical_freq_a."""
@@ -21774,7 +21815,7 @@ def build_aest_mus_eq_bars(tree, props):
 
 
 def build_aest_mus_wave_disp(tree, props):
-    """Noise displacement scaled by universal_music_influence Ã— music_gain."""
+    """Noise displacement scaled by universal_music_influence × music_gain."""
     in_geom = _get_input_geom(tree)
     subd = _node(tree, 'GeometryNodeSubdivisionSurface', (0, 0))
     subd.inputs['Level'].default_value = min(3, props.aest_layers + 1)
@@ -21874,7 +21915,7 @@ def build_aest_mus_harmonic(tree, props):
     return subd.outputs['Mesh']
 
 
-# ---- âš— ADVANCED GN ----------------------------------------------------
+# ---- ⚗ ADVANCED GN ----------------------------------------------------
 
 def build_aest_adv_ray_grow(tree, props):
     """Distribute points on input, raycast outward, instance cones at hit points."""
@@ -21934,7 +21975,7 @@ def build_aest_adv_near_fur(tree, props):
     if inst and m2p and cone:
         _link(tree, m2p.outputs['Points'], inst.inputs['Points'])
         _link(tree, cone.outputs['Mesh'],  inst.inputs['Instance'])
-        # rotate cones to align with normal â€” use Align Rotation to Vector if available
+        # rotate cones to align with normal — use Align Rotation to Vector if available
         align = _safe_node(tree, 'FunctionNodeAlignEulerToVector', (300, -500))
         if align:
             try:
@@ -22012,7 +22053,7 @@ def build_aest_adv_vor_frac(tree, props):
         except Exception:
             pass
         _link(tree, m2v.outputs['Volume'], dpts.inputs['Volume'])
-    # Random octahedron shards: use ico sphere with 1 subdiv â†’ diamond
+    # Random octahedron shards: use ico sphere with 1 subdiv → diamond
     shard = _node(tree, 'GeometryNodeMeshIcoSphere', (250, -300))
     shard.inputs['Radius'].default_value = 0.22 * props.aest_scale
     shard.inputs['Subdivisions'].default_value = 1
@@ -22126,8 +22167,8 @@ def build_aest_adv_field_lat(tree, props):
 
 
 # ======================================================================
-# v2.18 â€” Curve-rich aesthetic effects (no cones/cubes)
-# Built from bezier curves swept with profile curves â†’ real ribbon geometry.
+# v2.18 — Curve-rich aesthetic effects (no cones/cubes)
+# Built from bezier curves swept with profile curves → real ribbon geometry.
 # Music-driven via _aest_val(props, 'INTENSITY'/'DENSITY'/'SCALE').
 # ======================================================================
 
@@ -22143,7 +22184,7 @@ def _make_circle_profile(tree, radius, resolution=8, loc=(-400, -600), props=Non
         def __init__(self, sock):
             self.outputs = {'Curve': sock}
 
-    # CIRCLE â€” default round tube
+    # CIRCLE — default round tube
     if kind == 'CIRCLE':
         prof = _safe_node(tree, 'GeometryNodeCurvePrimitiveCircle', loc)
         if prof is None:
@@ -22156,11 +22197,11 @@ def _make_circle_profile(tree, radius, resolution=8, loc=(-400, -600), props=Non
         color_node(prof, "input")
         return prof
 
-    # SQUARE â€” quadrilateral via 4-resolution circle (gives a diamond,
+    # SQUARE — quadrilateral via 4-resolution circle (gives a diamond,
     # but a Curve Line ring of 4 points is closer)
     if kind == 'SQUARE':
         # Build a quad as a small bezier closed curve via Curve Line w/4 segments
-        # Easiest: a circle with 4 verts (rotated 45Â° gives diamond â€” fine).
+        # Easiest: a circle with 4 verts (rotated 45° gives diamond — fine).
         prof = _safe_node(tree, 'GeometryNodeCurvePrimitiveCircle', loc)
         if prof is None:
             return None
@@ -22172,7 +22213,7 @@ def _make_circle_profile(tree, radius, resolution=8, loc=(-400, -600), props=Non
         color_node(prof, "input")
         return prof
 
-    # FLUTE â€” multi-lobed circle: build by Set Position on a high-res circle
+    # FLUTE — multi-lobed circle: build by Set Position on a high-res circle
     # using radial sin to perturb the radius
     if kind == 'FLUTE':
         base = _safe_node(tree, 'GeometryNodeCurvePrimitiveCircle', loc)
@@ -22220,7 +22261,7 @@ def _make_circle_profile(tree, radius, resolution=8, loc=(-400, -600), props=Non
             return _ProfileStub(sp.outputs['Geometry'])
         return base
 
-    # OGEE â€” S-curve: two quadratic beziers stitched. Approximate with
+    # OGEE — S-curve: two quadratic beziers stitched. Approximate with
     # a thin tall oval (circle scaled along Y) for now.
     if kind == 'OGEE':
         prof = _safe_node(tree, 'GeometryNodeCurvePrimitiveCircle', loc)
@@ -22238,7 +22279,7 @@ def _make_circle_profile(tree, radius, resolution=8, loc=(-400, -600), props=Non
         color_node(prof, "input"); color_node(tr, "input")
         return _ProfileStub(tr.outputs['Geometry'])
 
-    # LOTUS â€” pointed-petal cross-section (5-pointed)
+    # LOTUS — pointed-petal cross-section (5-pointed)
     if kind == 'LOTUS':
         base = _safe_node(tree, 'GeometryNodeCurvePrimitiveCircle', loc)
         if base is None:
@@ -22359,7 +22400,7 @@ def build_aest_goth_vault(tree, props):
         ang = (i / n_ribs) * 6.283185
         cx = math.cos(ang) * base_r
         cy = math.sin(ang) * base_r
-        # Build arch as quadratic bezier from (cx,cy,0) â†’ apex (0,0,apex_z) â†’ (-cx,-cy,0)
+        # Build arch as quadratic bezier from (cx,cy,0) → apex (0,0,apex_z) → (-cx,-cy,0)
         qb = _safe_node(tree, 'GeometryNodeCurveQuadraticBezier',
                         (-400, -200 - i * 100))
         if qb is None:
@@ -22650,9 +22691,9 @@ def build_aest_spi_metatron(tree, props):
         ang = (i / 6) * 6.283185
         nodes.append((math.cos(ang) * R1, math.sin(ang) * R1))
     for i in range(6):
-        ang = (i / 6) * 6.283185 + 0.5236  # offset by 30Â°
+        ang = (i / 6) * 6.283185 + 0.5236  # offset by 30°
         nodes.append((math.cos(ang) * R2, math.sin(ang) * R2))
-    # Spheres at each node (icosphere â€” actual subdivided geometry)
+    # Spheres at each node (icosphere — actual subdivided geometry)
     for idx, (x, y) in enumerate(nodes):
         sph = _safe_node(tree, 'GeometryNodeMeshIcoSphere',
                          (-400, -200 - idx * 70))
@@ -22698,7 +22739,7 @@ def build_aest_spi_metatron(tree, props):
 
 
 # ======================================================================
-# v2.19 â€” Mechanical aesthetic effects
+# v2.19 — Mechanical aesthetic effects
 # ======================================================================
 
 def build_aest_mech_bolts(tree, props):
@@ -22708,7 +22749,7 @@ def build_aest_mech_bolts(tree, props):
     scale = _aest_val(props, 'SCALE')
     density = _aest_val(props, 'DENSITY')
     mask = _aest_mask_field(tree, props, loc=(-900, 500))
-    # Hex profile â†’ fill â†’ extrude â†’ bolt prism
+    # Hex profile → fill → extrude → bolt prism
     hex_c = _safe_node(tree, 'GeometryNodeCurvePrimitiveCircle', (-800, -300))
     if hex_c:
         try:
@@ -22941,7 +22982,7 @@ def build_aest_mech_pistons(tree, props):
 
 
 def build_aest_mech_panels(tree, props):
-    """Industrial panel inserts: rectangle curve â†’ fill â†’ extrude, distributed on faces."""
+    """Industrial panel inserts: rectangle curve → fill → extrude, distributed on faces."""
     in_geom = _get_input_geom(tree)
     scale = _aest_val(props, 'SCALE')
     density = _aest_val(props, 'DENSITY')
@@ -23058,14 +23099,14 @@ _AESTHETIC_BUILDERS = {
     'ADV_VOR_FRAC':   build_aest_adv_vor_frac,
     'ADV_CRYSTALS':   build_aest_adv_crystals,
     'ADV_FIELD_LAT':  build_aest_adv_field_lat,
-    # v2.18 â€” curve-rich
+    # v2.18 — curve-rich
     'GOTH_VAULT':     build_aest_goth_vault,
     'GOTH_TRACERY2':  build_aest_goth_tracery2,
     'VAP_DOLPHIN':    build_aest_vap_dolphin,
     'ZEN_BONSAI':     build_aest_zen_bonsai,
     'SPI_FLOWER':     build_aest_spi_flower,
     'SPI_METATRON':   build_aest_spi_metatron,
-    # v2.19 â€” mechanical
+    # v2.19 — mechanical
     'MECH_BOLTS':     build_aest_mech_bolts,
     'MECH_PIPES':     build_aest_mech_pipes,
     'MECH_GEARS':     build_aest_mech_gears,
@@ -23085,7 +23126,7 @@ _AEST_ROLE_PREFIX = {
 
 def apply_aesthetic_effect_gn(obj, props):
     """Apply the selected aesthetic effect as a dedicated GN modifier on top
-    of the existing mesh. Non-destructive â€” multiple effects can stack, sorted
+    of the existing mesh. Non-destructive — multiple effects can stack, sorted
     by `aest_stack_role` so BASE displacements run before INSTANCE props etc."""
     effect = props.aesthetic_effect
     role = getattr(props, 'aest_stack_role', 'OVERLAY')
@@ -23133,11 +23174,11 @@ def clear_aesthetic_effects(obj):
 
 
 def _sort_aesthetic_modifiers(obj):
-    """Sort Aest_* modifiers by their role prefix (Aâ†’E) so BASE runs first."""
+    """Sort Aest_* modifiers by their role prefix (A→E) so BASE runs first."""
     aest_mods = [m for m in obj.modifiers if m.name.startswith("Aest_")]
     if len(aest_mods) <= 1:
         return
-    # Build a sort key from the role prefix (Aest_A_X â†’ 'A')
+    # Build a sort key from the role prefix (Aest_A_X → 'A')
     def prefix_key(m):
         parts = m.name.split('_', 2)
         return parts[1] if len(parts) > 1 else 'B'
@@ -23163,7 +23204,7 @@ def _sort_aesthetic_modifiers(obj):
 
 
 class SURREAL_ARCH_OT_aest_sort(bpy.types.Operator):
-    """Sort Aest_* modifiers by stack role (BASEâ†’OVERLAYâ†’INSTANCEâ†’PROPâ†’TOP)."""
+    """Sort Aest_* modifiers by stack role (BASE→OVERLAY→INSTANCE→PROP→TOP)."""
     bl_idname = "surreal_arch.aest_sort"
     bl_label = "Sort Stack by Role"
     bl_options = {'REGISTER', 'UNDO'}
@@ -23238,7 +23279,7 @@ def _snapshot_props_to_dict(props):
 
 
 def _apply_dict_to_props(props, data):
-    """Apply a saved preset dict back onto props (defensive â€” unknown keys ignored)."""
+    """Apply a saved preset dict back onto props (defensive — unknown keys ignored)."""
     global _AUTO_UPDATE_RUNNING
     _AUTO_UPDATE_RUNNING = True
     try:
@@ -23258,7 +23299,7 @@ class SURREAL_ARCH_OT_save_preset(bpy.types.Operator):
     Stored in `<user-config>/surreal_arch/user_presets.json` so it persists
     across Blender sessions. Editable on the fly by re-saving."""
     bl_idname = "surreal_arch.save_preset"
-    bl_label = "ðŸ’¾ Save Current as Preset"
+    bl_label = "💾 Save Current as Preset"
     bl_options = {'REGISTER', 'UNDO'}
 
     preset_name: bpy.props.StringProperty(
@@ -23276,7 +23317,7 @@ class SURREAL_ARCH_OT_save_preset(bpy.types.Operator):
     def draw(self, context):
         layout = self.layout
         layout.prop(self, 'preset_name')
-        layout.label(text="Saves to user config â€” survives restarts.", icon='INFO')
+        layout.label(text="Saves to user config — survives restarts.", icon='INFO')
 
     def execute(self, context):
         obj = context.active_object
@@ -23286,7 +23327,7 @@ class SURREAL_ARCH_OT_save_preset(bpy.types.Operator):
         data = _surreal_load_user_presets()
         data[self.preset_name] = _snapshot_props_to_dict(obj.surreal_arch_props)
         _surreal_save_user_presets(data)
-        self.report({'INFO'}, f"ðŸ’¾ Saved preset '{self.preset_name}' "
+        self.report({'INFO'}, f"💾 Saved preset '{self.preset_name}' "
                               f"({len(data[self.preset_name])} props)")
         return {'FINISHED'}
 
@@ -23367,12 +23408,12 @@ class SURREAL_ARCH_OT_clamp_floating(bpy.types.Operator):
     downward until they touch the highest island below. Helpful when builders
     produce a small floating spire/finial/ornament that didn't get welded.
 
-    Operates on the EVALUATED mesh â€” applies modifiers temporarily on a copy,
+    Operates on the EVALUATED mesh — applies modifiers temporarily on a copy,
     finds floating islands by separate-loose-parts, snaps each down by the
     minimal Z amount needed to touch any island below it, then writes the
     repaired mesh back."""
     bl_idname = "surreal_arch.clamp_floating"
-    bl_label = "ðŸ§² Clamp Floating Pieces"
+    bl_label = "🧲 Clamp Floating Pieces"
     bl_options = {'REGISTER', 'UNDO'}
 
     threshold: bpy.props.FloatProperty(
@@ -23400,7 +23441,7 @@ class SURREAL_ARCH_OT_clamp_floating(bpy.types.Operator):
                     pass
             me = obj.data
         else:
-            # Operate on the evaluated mesh copy â†’ writes back to obj.data
+            # Operate on the evaluated mesh copy → writes back to obj.data
             deps = context.evaluated_depsgraph_get()
             ev = obj.evaluated_get(deps)
             try:
@@ -23475,7 +23516,7 @@ class SURREAL_ARCH_OT_aest_bake_stack(bpy.types.Operator):
     """Apply all Aest_* modifiers (sorted by role), optionally duplicating the
     source object first and optionally marking the result as an Asset."""
     bl_idname = "surreal_arch.aest_bake_stack"
-    bl_label = "ðŸ¥£ Bake Aesthetic Stack"
+    bl_label = "🥣 Bake Aesthetic Stack"
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
@@ -23517,12 +23558,12 @@ class SURREAL_ARCH_OT_aest_bake_stack(bpy.types.Operator):
                 target.asset_generate_preview()
             except Exception:
                 pass
-        self.report({'INFO'}, f"Baked {applied} effects â†’ {target.name}")
+        self.report({'INFO'}, f"Baked {applied} effects → {target.name}")
         return {'FINISHED'}
 
 
 # ======================================================================
-# AESTHETIC EFFECT OPERATORS â€” one-click buttons (work on ANY selected mesh)
+# AESTHETIC EFFECT OPERATORS — one-click buttons (work on ANY selected mesh)
 # ======================================================================
 
 def _apply_aest(context, effect_key):
@@ -23540,20 +23581,20 @@ def _apply_aest(context, effect_key):
     return True
 
 
-# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-# LAYER 2 â€” Procedural City / Castle Composer (v2.27)
+# ══════════════════════════════════════════════════════════════════════
+# LAYER 2 — Procedural City / Castle Composer (v2.27)
 #
 # Workflow:
-#   â‘  Init Library     â€” pre-bake every Layer-1 piece into hidden assets
-#   â‘¡ Spawn Plan       â€” generate a low-poly massing plan (castle/village/city)
-#   â‘¢ Compose World    â€” walk the plan's topology and instance pieces:
-#                          faces â†’ buildings (chosen by area + vertex group)
-#                          boundary edges â†’ walls
-#                          3+ edge corner verts â†’ towers
-#                          gate-tagged verts â†’ gatehouse
+#   ① Init Library     — pre-bake every Layer-1 piece into hidden assets
+#   ② Spawn Plan       — generate a low-poly massing plan (castle/village/city)
+#   ③ Compose World    — walk the plan's topology and instance pieces:
+#                          faces → buildings (chosen by area + vertex group)
+#                          boundary edges → walls
+#                          3+ edge corner verts → towers
+#                          gate-tagged verts → gatehouse
 # Output: one joined mesh per composed world, with a back-reference to the
 # plan so users can re-compose after tweaking the massing.
-# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# ══════════════════════════════════════════════════════════════════════
 
 # Layer 2 library — delegated to surreal_world (v2.68+)
 try:
@@ -23697,8 +23738,8 @@ class SURREAL_ARCH_OT_library_refresh_polish(bpy.types.Operator):
         return {'FINISHED'}
 
 
-# PLAN SPAWNERS â€” generate low-poly massing meshes with vertex-group tags
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# PLAN SPAWNERS — generate low-poly massing meshes with vertex-group tags
+# ───────────────────────────────────────────────────────────────────────
 
 def _create_plan_mesh(name, verts, edges, faces, vgroup_assignments=None,
                        location=(0, 0, 0)):
@@ -23735,7 +23776,7 @@ def _spawn_grid_city_plan(location=(0, 0, 0), grid=4, plot=4.0, street=1.5):
     return _wp.spawn_grid_city_plan(location=location, grid=grid, plot=plot, street=street)
 
 
-# === v2.30 â€” additional plan variants ====================================
+# === v2.30 — additional plan variants ====================================
 
 def _spawn_motte_bailey_plan(location=(0, 0, 0), motte_r=3.0, bailey_r=9.0):
     from surreal_world import plans as _wp
@@ -23797,11 +23838,11 @@ def _spawn_star_fort_plan(location=(0, 0, 0), n_points=5, inner_r=4.0, outer_r=8
 
 
 class SURREAL_ARCH_OT_plan_spawn_castle(bpy.types.Operator):
-    """Spawn a castle massing plan â€” 5 wards + keep + 4 corner-tower
+    """Spawn a castle massing plan — 5 wards + keep + 4 corner-tower
     vertices + gate-tagged south vertex. Edit the verts to shape the castle,
     then click Compose."""
     bl_idname = "surreal_arch.plan_spawn_castle"
-    bl_label = "ðŸ° Spawn Castle Plan"
+    bl_label = "🏰 Spawn Castle Plan"
     bl_options = {'REGISTER', 'UNDO'}
 
     size: bpy.props.FloatProperty(name="Size", default=12.0, min=4.0, max=60.0, update=auto_update_callback)
@@ -23820,14 +23861,14 @@ class SURREAL_ARCH_OT_plan_spawn_castle(bpy.types.Operator):
         except Exception: pass
         obj.select_set(True)
         context.view_layer.objects.active = obj
-        self.report({'INFO'}, f"ðŸ° Castle plan spawned: {obj.name}")
+        self.report({'INFO'}, f"🏰 Castle plan spawned: {obj.name}")
         return {'FINISHED'}
 
 
 class SURREAL_ARCH_OT_plan_spawn_village(bpy.types.Operator):
-    """Spawn a radial village plan â€” central plaza + ring of plot quads."""
+    """Spawn a radial village plan — central plaza + ring of plot quads."""
     bl_idname = "surreal_arch.plan_spawn_village"
-    bl_label = "ðŸ˜ Spawn Village Plan"
+    bl_label = "🏘 Spawn Village Plan"
     bl_options = {'REGISTER', 'UNDO'}
 
     n_plots: bpy.props.IntProperty(name="Plots", default=8, min=3, max=24, update=auto_update_callback)
@@ -23845,14 +23886,14 @@ class SURREAL_ARCH_OT_plan_spawn_village(bpy.types.Operator):
         except Exception: pass
         obj.select_set(True)
         context.view_layer.objects.active = obj
-        self.report({'INFO'}, f"ðŸ˜ Village plan: {obj.name}")
+        self.report({'INFO'}, f"🏘 Village plan: {obj.name}")
         return {'FINISHED'}
 
 
 class SURREAL_ARCH_OT_plan_spawn_city(bpy.types.Operator):
-    """Spawn a grid city plan â€” NÃ—N plot quads with street gaps."""
+    """Spawn a grid city plan — N×N plot quads with street gaps."""
     bl_idname = "surreal_arch.plan_spawn_city"
-    bl_label = "ðŸŒ† Spawn Grid City Plan"
+    bl_label = "🌆 Spawn Grid City Plan"
     bl_options = {'REGISTER', 'UNDO'}
 
     grid:   bpy.props.IntProperty(name="Grid", default=4, min=2, max=10, update=auto_update_callback)
@@ -23871,15 +23912,15 @@ class SURREAL_ARCH_OT_plan_spawn_city(bpy.types.Operator):
         except Exception: pass
         obj.select_set(True)
         context.view_layer.objects.active = obj
-        self.report({'INFO'}, f"ðŸŒ† City plan: {obj.name}")
+        self.report({'INFO'}, f"🌆 City plan: {obj.name}")
         return {'FINISHED'}
 
 
 class SURREAL_ARCH_OT_plan_spawn_motte(bpy.types.Operator):
-    """Motte & Bailey castle plan â€” elevated central motte (keep) inside
+    """Motte & Bailey castle plan — elevated central motte (keep) inside
     a larger bailey ring (wards). Corner-tower verts at 4 bailey points."""
     bl_idname = "surreal_arch.plan_spawn_motte"
-    bl_label = "â›° Spawn Motte & Bailey Plan"
+    bl_label = "⛰ Spawn Motte & Bailey Plan"
     bl_options = {'REGISTER', 'UNDO'}
 
     motte_r:  bpy.props.FloatProperty(name="Motte Radius",  default=3.0, min=1.0, max=15.0, update=auto_update_callback)
@@ -23895,15 +23936,15 @@ class SURREAL_ARCH_OT_plan_spawn_motte(bpy.types.Operator):
         try: bpy.ops.object.select_all(action='DESELECT')
         except Exception: pass
         obj.select_set(True); context.view_layer.objects.active = obj
-        self.report({'INFO'}, f"â›° Motte & Bailey: {obj.name}")
+        self.report({'INFO'}, f"⛰ Motte & Bailey: {obj.name}")
         return {'FINISHED'}
 
 
 class SURREAL_ARCH_OT_plan_spawn_coastal(bpy.types.Operator):
-    """Linear coastal village plan â€” long strip of plot quads along Y, with
+    """Linear coastal village plan — long strip of plot quads along Y, with
     corner towers at the ends and a gate on the inland (south) edge."""
     bl_idname = "surreal_arch.plan_spawn_coastal"
-    bl_label = "ðŸŒŠ Spawn Linear Coastal Plan"
+    bl_label = "🌊 Spawn Linear Coastal Plan"
     bl_options = {'REGISTER', 'UNDO'}
 
     length: bpy.props.FloatProperty(name="Length", default=20.0, min=4.0, max=80.0, update=auto_update_callback)
@@ -23921,15 +23962,15 @@ class SURREAL_ARCH_OT_plan_spawn_coastal(bpy.types.Operator):
         try: bpy.ops.object.select_all(action='DESELECT')
         except Exception: pass
         obj.select_set(True); context.view_layer.objects.active = obj
-        self.report({'INFO'}, f"ðŸŒŠ Coastal: {obj.name}")
+        self.report({'INFO'}, f"🌊 Coastal: {obj.name}")
         return {'FINISHED'}
 
 
 class SURREAL_ARCH_OT_plan_spawn_starfort(bpy.types.Operator):
-    """Star Fort plan â€” N-pointed star with bastions at each star point.
+    """Star Fort plan — N-pointed star with bastions at each star point.
     Bastion verts get corner towers, center vert is the keep."""
     bl_idname = "surreal_arch.plan_spawn_starfort"
-    bl_label = "âœ¦ Spawn Star Fort Plan"
+    bl_label = "✦ Spawn Star Fort Plan"
     bl_options = {'REGISTER', 'UNDO'}
 
     n_points: bpy.props.IntProperty(name="Star Points", default=5, min=3, max=8, update=auto_update_callback)
@@ -23947,11 +23988,11 @@ class SURREAL_ARCH_OT_plan_spawn_starfort(bpy.types.Operator):
         try: bpy.ops.object.select_all(action='DESELECT')
         except Exception: pass
         obj.select_set(True); context.view_layer.objects.active = obj
-        self.report({'INFO'}, f"âœ¦ Star Fort: {obj.name}")
+        self.report({'INFO'}, f"✦ Star Fort: {obj.name}")
         return {'FINISHED'}
 
 
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ───────────────────────────────────────────────────────────────────────
 # COMPOSER — delegated to surreal_world.compose (v2.68+)
 
 def _compose_world(context, plan_obj, style_key='WESTERN_CASTLE',
@@ -23966,7 +24007,7 @@ class SURREAL_ARCH_OT_compose_world(bpy.types.Operator):
     """Walk the active plan mesh's topology and instance Layer-1 library
     pieces into a complete world. Requires the library to be initialized."""
     bl_idname = "surreal_arch.compose_world"
-    bl_label = "ðŸ— Compose World"
+    bl_label = "🏗 Compose World"
     bl_options = {'REGISTER', 'UNDO'}
 
     style: bpy.props.EnumProperty(
@@ -24013,7 +24054,7 @@ class SURREAL_ARCH_OT_compose_world(bpy.types.Operator):
             return {'CANCELLED'}
         # v2.37: Auto-init library if missing
         if _surreal_library_collection(create=False) is None:
-            self.report({'INFO'}, "Library not found â€” auto-initializing 26 piecesâ€¦")
+            self.report({'INFO'}, "Library not found — auto-initializing 26 pieces…")
             try:
                 bpy.ops.surreal_arch.library_init(force_refresh=False)
                 # Re-select the plan since library_init switches active obj
@@ -24032,7 +24073,7 @@ class SURREAL_ARCH_OT_compose_world(bpy.types.Operator):
         return {'FINISHED'}
 
 
-# â”€â”€â”€ v2.39: Plan-mesh editing tools â€” quick vertex-group tagging â”€â”€â”€â”€â”€â”€
+# ─── v2.39: Plan-mesh editing tools — quick vertex-group tagging ──────
 
 def _tag_selected_verts(obj, vgroup_name):
     """Add currently-selected verts (in Edit Mode) to the named vertex group.
@@ -24089,23 +24130,23 @@ def _make_tag_operator(suffix, vgroup_name, label, icon):
     return _TagOp
 
 
-SURREAL_ARCH_OT_tag_keep   = _make_tag_operator('keep',   'is_keep',          "ðŸ° Tag as Keep",   "ðŸ°")
-SURREAL_ARCH_OT_tag_tower  = _make_tag_operator('tower',  'is_corner_tower',  "ðŸ—¼ Tag as Tower",  "ðŸ—¼")
-SURREAL_ARCH_OT_tag_gate   = _make_tag_operator('gate',   'is_gate',          "ðŸšª Tag as Gate",   "ðŸšª")
-SURREAL_ARCH_OT_tag_plaza  = _make_tag_operator('plaza',  'is_plaza',         "ðŸŒ³ Tag as Plaza",  "ðŸŒ³")
-SURREAL_ARCH_OT_tag_sacred = _make_tag_operator('sacred', 'is_sacred',        "â›ª Tag as Sacred", "â›ª")
+SURREAL_ARCH_OT_tag_keep   = _make_tag_operator('keep',   'is_keep',          "🏰 Tag as Keep",   "🏰")
+SURREAL_ARCH_OT_tag_tower  = _make_tag_operator('tower',  'is_corner_tower',  "🗼 Tag as Tower",  "🗼")
+SURREAL_ARCH_OT_tag_gate   = _make_tag_operator('gate',   'is_gate',          "🚪 Tag as Gate",   "🚪")
+SURREAL_ARCH_OT_tag_plaza  = _make_tag_operator('plaza',  'is_plaza',         "🌳 Tag as Plaza",  "🌳")
+SURREAL_ARCH_OT_tag_sacred = _make_tag_operator('sacred', 'is_sacred',        "⛪ Tag as Sacred", "⛪")
 
 
-# v2.41: Plan vertex-color visualizer â€” paint a `surreal_plan_role` vertex
+# v2.41: Plan vertex-color visualizer — paint a `surreal_plan_role` vertex
 # color attribute based on each vertex's dominant tag, so the user can SEE
 # which verts are tagged what while editing in Vertex Paint preview mode.
 
 _PLAN_TAG_COLORS = {
-    'is_keep':         (0.95, 0.45, 0.30, 1.0),   # warm orange-red â€” central/important
-    'is_corner_tower': (0.40, 0.65, 0.95, 1.0),   # cool blue â€” defensive
-    'is_gate':         (0.95, 0.85, 0.30, 1.0),   # gold-yellow â€” entrance
-    'is_plaza':        (0.60, 0.90, 0.40, 1.0),   # green â€” open ground
-    'is_sacred':       (0.85, 0.55, 0.95, 1.0),   # purple â€” sacred
+    'is_keep':         (0.95, 0.45, 0.30, 1.0),   # warm orange-red — central/important
+    'is_corner_tower': (0.40, 0.65, 0.95, 1.0),   # cool blue — defensive
+    'is_gate':         (0.95, 0.85, 0.30, 1.0),   # gold-yellow — entrance
+    'is_plaza':        (0.60, 0.90, 0.40, 1.0),   # green — open ground
+    'is_sacred':       (0.85, 0.55, 0.95, 1.0),   # purple — sacred
 }
 
 
@@ -24113,7 +24154,7 @@ class SURREAL_ARCH_PT_plan_edit_floating(bpy.types.Panel):
     """v2.42: Floating N-panel that only appears in 3D View Edit Mode when
     a SurrealArch plan mesh is active. Gives quick access to tagging ops
     + visualize + recompose without leaving Edit Mode."""
-    bl_label = "ðŸ° SurrealArch Plan"
+    bl_label = "🏰 SurrealArch Plan"
     bl_idname = "SURREAL_ARCH_PT_plan_edit_floating"
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
@@ -24144,23 +24185,23 @@ class SURREAL_ARCH_PT_plan_edit_floating(bpy.types.Panel):
         tb = layout.box()
         tb.label(text="Tag selected as:", icon='GROUP_VERTEX')
         r1 = tb.row(align=True)
-        r1.operator("surreal_arch.tag_keep",   text="ðŸ° Keep")
-        r1.operator("surreal_arch.tag_tower",  text="ðŸ—¼ Tower")
-        r1.operator("surreal_arch.tag_gate",   text="ðŸšª Gate")
+        r1.operator("surreal_arch.tag_keep",   text="🏰 Keep")
+        r1.operator("surreal_arch.tag_tower",  text="🗼 Tower")
+        r1.operator("surreal_arch.tag_gate",   text="🚪 Gate")
         r2 = tb.row(align=True)
-        r2.operator("surreal_arch.tag_plaza",  text="ðŸŒ³ Plaza")
-        r2.operator("surreal_arch.tag_sacred", text="â›ª Sacred")
+        r2.operator("surreal_arch.tag_plaza",  text="🌳 Plaza")
+        r2.operator("surreal_arch.tag_sacred", text="⛪ Sacred")
 
         # Visualize + Recompose shortcut
         vis = layout.box()
         vis.label(text="Preview", icon='HIDE_OFF')
         vis.operator("surreal_arch.visualize_plan",
-                     text="ðŸŽ¨ Visualize Tags", icon='COLOR')
+                     text="🎨 Visualize Tags", icon='COLOR')
 
         # Recompose (only if a paired world exists)
         layout.separator()
         layout.operator("surreal_arch.recompose",
-                         text="ðŸ”„ Re-Compose World",
+                         text="🔄 Re-Compose World",
                          icon='FILE_REFRESH')
 
 
@@ -24169,7 +24210,7 @@ class SURREAL_ARCH_OT_visualize_plan(bpy.types.Operator):
     vertex gets a colour for its role. View in Material Preview or with
     a Vertex Color material to see Keep/Tower/Gate/Plaza/Sacred at a glance."""
     bl_idname = "surreal_arch.visualize_plan"
-    bl_label = "ðŸŽ¨ Visualize Plan Tags"
+    bl_label = "🎨 Visualize Plan Tags"
     bl_options = {'REGISTER', 'UNDO'}
 
     untagged_color: bpy.props.FloatVectorProperty(
@@ -24186,7 +24227,7 @@ class SURREAL_ARCH_OT_visualize_plan(bpy.types.Operator):
 
     def draw(self, context):
         layout = self.layout
-        layout.label(text="Tagâ†’Color mapping:", icon='COLOR')
+        layout.label(text="Tag→Color mapping:", icon='COLOR')
         for tag, col in _PLAN_TAG_COLORS.items():
             row = layout.row(align=True)
             row.label(text=f"  {tag}", icon='GROUP_VERTEX')
@@ -24253,7 +24294,7 @@ class SURREAL_ARCH_OT_visualize_plan(bpy.types.Operator):
                             pass
                 break
         self.report({'INFO'},
-                    f"ðŸŽ¨ Painted '{attr_name}' â€” {n_tagged}/{len(me.vertices)} verts tagged. "
+                    f"🎨 Painted '{attr_name}' — {n_tagged}/{len(me.vertices)} verts tagged. "
                     f"Viewport shading set to Vertex color.")
         return {'FINISHED'}
 
@@ -24266,7 +24307,7 @@ class SURREAL_ARCH_OT_visualize_plan(bpy.types.Operator):
 
 def _ensure_surreal_asset_catalog():
     """Find the user's primary asset library, ensure a 'SurrealArch' catalog
-    exists in its blender_assets.cats.txt, return (uuid, library_path) â€” or
+    exists in its blender_assets.cats.txt, return (uuid, library_path) — or
     (None, None) if there's no usable library."""
     import os, uuid as uuid_mod
     prefs = bpy.context.preferences
@@ -24324,7 +24365,7 @@ class SURREAL_ARCH_OT_bake_world_asset(bpy.types.Operator):
     Adds catalog metadata, auto-generates a thumbnail, and tags the asset
     with the compose style + plan source for searchability."""
     bl_idname = "surreal_arch.bake_world_asset"
-    bl_label = "ðŸ· Bake World to Asset Browser"
+    bl_label = "🏷 Bake World to Asset Browser"
     bl_options = {'REGISTER', 'UNDO'}
 
     asset_name: bpy.props.StringProperty(name="Asset Name", default="", update=auto_update_callback)
@@ -24369,7 +24410,7 @@ class SURREAL_ARCH_OT_bake_world_asset(bpy.types.Operator):
         except Exception as e:
             self.report({'ERROR'}, f"Asset mark failed: {e}")
             return {'CANCELLED'}
-        # Metadata â€” description + tags
+        # Metadata — description + tags
         try:
             md = obj.asset_data
             md.description = self.asset_description
@@ -24389,7 +24430,7 @@ class SURREAL_ARCH_OT_bake_world_asset(bpy.types.Operator):
                       f"(library: {lib_path})")
         except Exception as e:
             print(f"[SurrealArch] asset metadata failed: {e}")
-        # Auto-generate thumbnail â€” needs the object selected + active in
+        # Auto-generate thumbnail — needs the object selected + active in
         # the proper context. We override with a window-area-temp_override.
         try:
             bpy.ops.object.select_all(action='DESELECT')
@@ -24407,7 +24448,7 @@ class SURREAL_ARCH_OT_bake_world_asset(bpy.types.Operator):
         except Exception as e:
             print(f"[SurrealArch] preview gen skipped: {e}")
         self.report({'INFO'},
-                    f"ðŸ· Marked '{obj.name}' as Asset Browser entry "
+                    f"🏷 Marked '{obj.name}' as Asset Browser entry "
                     f"(open the Asset Browser to see it)")
         return {'FINISHED'}
 
@@ -24417,7 +24458,7 @@ class SURREAL_ARCH_OT_split_world(bpy.types.Operator):
     individual pieces by loose parts, so they can be edited independently.
     Pieces are dropped into a new `<world>_Pieces` collection."""
     bl_idname = "surreal_arch.split_world"
-    bl_label = "ðŸ§© Split Composed World into Pieces"
+    bl_label = "🧩 Split Composed World into Pieces"
     bl_options = {'REGISTER', 'UNDO'}
 
     keep_original: bpy.props.BoolProperty(
@@ -24489,24 +24530,24 @@ class SURREAL_ARCH_OT_split_world(bpy.types.Operator):
                     if pieces_coll.name not in [cc.name for cc in o.users_collection]:
                         pieces_coll.objects.link(o)
             n_pieces += 1
-        self.report({'INFO'}, f"ðŸ§© Split into {n_pieces} pieces â†’ {pieces_coll.name}")
+        self.report({'INFO'}, f"🧩 Split into {n_pieces} pieces → {pieces_coll.name}")
         return {'FINISHED'}
 
 
 class SURREAL_ARCH_OT_one_click_castle(bpy.types.Operator):
-    """One-click playable castle: Library init â†’ Castle plan â†’ Compose â†’
-    Terrain â†’ EasyTree scatter â†’ Lighting â†’ Make Walkable on the keep â†’
+    """One-click playable castle: Library init → Castle plan → Compose →
+    Terrain → EasyTree scatter → Lighting → Make Walkable on the keep →
     Player Start. All sensible defaults."""
     bl_idname = "surreal_arch.one_click_castle"
-    bl_label = "ðŸŽ® One-Click Playable Castle"
+    bl_label = "🎮 One-Click Playable Castle"
     bl_options = {'REGISTER', 'UNDO'}
 
     style: bpy.props.EnumProperty(
         name="Style",
         items=[
-            ('WESTERN_CASTLE',  "ðŸ° Western Castle", ""),
-            ('ASIAN_CITY',      "ðŸ¯ Asian City", ""),
-            ('WESTERN_VILLAGE', "ðŸ˜ Western Village", ""),
+            ('WESTERN_CASTLE',  "🏰 Western Castle", ""),
+            ('ASIAN_CITY',      "🏯 Asian City", ""),
+            ('WESTERN_VILLAGE', "🏘 Western Village", ""),
         ],
         default='WESTERN_CASTLE', update=auto_update_callback)
     plan_size: bpy.props.FloatProperty(name="Plan Size", default=12.0, min=4.0, max=40.0, update=auto_update_callback)
@@ -24602,14 +24643,14 @@ class SURREAL_ARCH_OT_one_click_castle(bpy.types.Operator):
         # Re-select world to leave a sensible active object
         bpy.ops.object.select_all(action='DESELECT')
         world.select_set(True); context.view_layer.objects.active = world
-        self.report({'INFO'}, f"ðŸŽ® One-click {self.style} world ready: {world.name}")
+        self.report({'INFO'}, f"🎮 One-click {self.style} world ready: {world.name}")
         return {'FINISHED'}
 
 
 class SURREAL_ARCH_OT_recompose(bpy.types.Operator):
     """Re-compose a world from its source plan after editing the plan."""
     bl_idname = "surreal_arch.recompose"
-    bl_label = "ðŸ”„ Re-Compose World"
+    bl_label = "🔄 Re-Compose World"
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
@@ -24638,17 +24679,17 @@ class SURREAL_ARCH_OT_recompose(bpy.types.Operator):
 
 
 class SURREAL_ARCH_PT_compose(_SubPanelBase, bpy.types.Panel):
-    bl_label  = "ðŸ° Procedural Worlds (Layer 2)"
+    bl_label  = "🏰 Procedural Worlds (Layer 2)"
     bl_idname = "SURREAL_ARCH_PT_compose"
 
     def draw(self, context):
         layout = self.layout
-        layout.label(text="Layer 2 â€” topology-driven city/castle composer",
+        layout.label(text="Layer 2 — topology-driven city/castle composer",
                      icon='WORLD_DATA')
 
         # Step 1: Library status
         s1 = layout.box()
-        s1.label(text="â‘  Library", icon='ASSET_MANAGER')
+        s1.label(text="① Library", icon='ASSET_MANAGER')
         coll = _surreal_library_collection(create=False)
         if coll is None:
             s1.alert = True
@@ -24659,33 +24700,33 @@ class SURREAL_ARCH_PT_compose(_SubPanelBase, bpy.types.Panel):
         row = s1.row(align=True)
         row.scale_y = 1.2
         row.operator("surreal_arch.library_init",
-                     text="ðŸ“š Initialize", icon='IMPORT')
+                     text="📚 Initialize", icon='IMPORT')
         force_op = row.operator("surreal_arch.library_init",
-                     text="ðŸ”¥ Force Re-Bake (use latest builders)",
+                     text="🔥 Force Re-Bake (use latest builders)",
                      icon='FILE_REFRESH')
         # set the force_refresh field on the operator instance
         force_op.force_refresh = True
         row2 = s1.row(align=True)
         row2.operator("surreal_arch.library_refresh_polish",
-                      text="âœ¨ Polish Library", icon='SHADERFX')
+                      text="✨ Polish Library", icon='SHADERFX')
 
         # Step 2: Spawn a plan
         s2 = layout.box()
-        s2.label(text="â‘¡ Spawn a massing plan", icon='MESH_GRID')
+        s2.label(text="② Spawn a massing plan", icon='MESH_GRID')
         col = s2.column(align=True)
         col.scale_y = 1.15
-        col.operator("surreal_arch.plan_spawn_castle",  text="ðŸ° Castle Plan")
-        col.operator("surreal_arch.plan_spawn_village", text="ðŸ˜ Village Plan")
-        col.operator("surreal_arch.plan_spawn_city",    text="ðŸŒ† Grid City Plan")
-        col.operator("surreal_arch.plan_spawn_motte",   text="â›° Motte & Bailey")
-        col.operator("surreal_arch.plan_spawn_coastal", text="ðŸŒŠ Linear Coastal Village")
-        col.operator("surreal_arch.plan_spawn_starfort",text="âœ¦ Star Fort")
+        col.operator("surreal_arch.plan_spawn_castle",  text="🏰 Castle Plan")
+        col.operator("surreal_arch.plan_spawn_village", text="🏘 Village Plan")
+        col.operator("surreal_arch.plan_spawn_city",    text="🌆 Grid City Plan")
+        col.operator("surreal_arch.plan_spawn_motte",   text="⛰ Motte & Bailey")
+        col.operator("surreal_arch.plan_spawn_coastal", text="🌊 Linear Coastal Village")
+        col.operator("surreal_arch.plan_spawn_starfort",text="✦ Star Fort")
         s2.label(text="Then edit the plan in Edit Mode to shape your world.",
                  icon='EDITMODE_HLT')
 
         # Step 3: Compose
         s3 = layout.box()
-        s3.label(text="â‘¢ Compose world", icon='WORLD')
+        s3.label(text="③ Compose world", icon='WORLD')
         obj = context.active_object
         if obj is None:
             s3.label(text="Select a plan mesh first.", icon='INFO')
@@ -24694,54 +24735,54 @@ class SURREAL_ARCH_PT_compose(_SubPanelBase, bpy.types.Panel):
         rC = s3.row(align=True)
         rC.scale_y = 1.3
         rC.operator("surreal_arch.compose_world",
-                     text="ðŸ— Compose World", icon='WORLD_DATA')
+                     text="🏗 Compose World", icon='WORLD_DATA')
         s3.operator("surreal_arch.recompose",
-                     text="ðŸ”„ Re-Compose (after editing plan)",
+                     text="🔄 Re-Compose (after editing plan)",
                      icon='FILE_REFRESH')
         s3.operator("surreal_arch.split_world",
-                     text="ðŸ§© Split into Editable Pieces",
+                     text="🧩 Split into Editable Pieces",
                      icon='OUTLINER_OB_GROUP_INSTANCE')
         s3.operator("surreal_arch.bake_world_asset",
-                     text="ðŸ· Bake to Asset Browser",
+                     text="🏷 Bake to Asset Browser",
                      icon='ASSET_MANAGER')
 
-        # â”€â”€ Plan-edit tagging (v2.39): tag selected verts as roles â”€â”€
+        # ── Plan-edit tagging (v2.39): tag selected verts as roles ──
         tag_box = layout.box()
-        tag_box.label(text="ðŸ· Plan tagging (in Edit Mode)", icon='GROUP_VERTEX')
-        tag_box.label(text="Select verts in Edit Mode â†’ click a tag:", icon='INFO')
+        tag_box.label(text="🏷 Plan tagging (in Edit Mode)", icon='GROUP_VERTEX')
+        tag_box.label(text="Select verts in Edit Mode → click a tag:", icon='INFO')
         r1 = tag_box.row(align=True)
-        r1.operator("surreal_arch.tag_keep",   text="ðŸ° Keep")
-        r1.operator("surreal_arch.tag_tower",  text="ðŸ—¼ Tower")
-        r1.operator("surreal_arch.tag_gate",   text="ðŸšª Gate")
+        r1.operator("surreal_arch.tag_keep",   text="🏰 Keep")
+        r1.operator("surreal_arch.tag_tower",  text="🗼 Tower")
+        r1.operator("surreal_arch.tag_gate",   text="🚪 Gate")
         r2 = tag_box.row(align=True)
-        r2.operator("surreal_arch.tag_plaza",  text="ðŸŒ³ Plaza")
-        r2.operator("surreal_arch.tag_sacred", text="â›ª Sacred")
+        r2.operator("surreal_arch.tag_plaza",  text="🌳 Plaza")
+        r2.operator("surreal_arch.tag_sacred", text="⛪ Sacred")
         tag_box.operator("surreal_arch.visualize_plan",
-                          text="ðŸŽ¨ Visualize Tags (color overlay)",
+                          text="🎨 Visualize Tags (color overlay)",
                           icon='COLOR')
         s3.separator()
         rOC = s3.row(align=True)
         rOC.scale_y = 1.4
         rOC.operator("surreal_arch.one_click_castle",
-                       text="ðŸŽ® One-Click Playable Castle",
+                       text="🎮 One-Click Playable Castle",
                        icon='OUTLINER_OB_CAMERA')
 
 
-# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# ══════════════════════════════════════════════════════════════════════
 # END LAYER 2
-# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# ══════════════════════════════════════════════════════════════════════
 
 
-# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-# LAYER 3 â€” Bringing the World to Life (v2.29)
+# ══════════════════════════════════════════════════════════════════════
+# LAYER 3 — Bringing the World to Life (v2.29)
 #
 # Three first-cut deliverables:
-#   â‘  Terrain Generator      â€” contextual hillside/island/cliff under a world
-#   â‘¡ Vegetation Scatter     â€” Poisson tree/bush distribution on a target
-#   â‘¢ Lighting Rig           â€” auto-place point lights at strategic positions
+#   ① Terrain Generator      — contextual hillside/island/cliff under a world
+#   ② Vegetation Scatter     — Poisson tree/bush distribution on a target
+#   ③ Lighting Rig           — auto-place point lights at strategic positions
 #
-# Also: ðŸªž Polish All â€” global bevel/auto-smooth pass on selection.
-# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# Also: 🪞 Polish All — global bevel/auto-smooth pass on selection.
+# ══════════════════════════════════════════════════════════════════════
 
 
 def _world_bbox(obj):
@@ -24762,7 +24803,7 @@ def _world_bbox(obj):
     return (mn, mx, (mn + mx) * 0.5, mx - mn)
 
 
-# â”€â”€â”€ â‘  TERRAIN GENERATOR â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ─── ① TERRAIN GENERATOR ────────────────────────────────────────────
 
 def _spawn_terrain(context, footprint_obj, kind='HILL', subdivisions=4,
                     noise_amp=2.0, padding=4.0, seed=1):
@@ -24799,7 +24840,7 @@ def _spawn_terrain(context, footprint_obj, kind='HILL', subdivisions=4,
         ny = v.co.y * 0.3 + seed * 1.3
         noise = (math.sin(nx) + math.sin(ny * 1.6) + math.sin(nx * 1.7 + ny * 1.1)) / 3.0
         if kind == 'HILL':
-            # Gentle dome â€” high at center, falls off
+            # Gentle dome — high at center, falls off
             h = (1.0 - min(1.0, r)) * noise_amp + noise * noise_amp * 0.3
             v.co.z += h
         elif kind == 'ISLAND':
@@ -24839,16 +24880,16 @@ class SURREAL_ARCH_OT_spawn_terrain(bpy.types.Operator):
     HILL = dome under a castle; ISLAND = water-bound plateau; CLIFF = drop on
     one side; PLAIN = gently rolling base."""
     bl_idname = "surreal_arch.spawn_terrain"
-    bl_label = "ðŸŒ„ Spawn Terrain"
+    bl_label = "🌄 Spawn Terrain"
     bl_options = {'REGISTER', 'UNDO'}
 
     kind: bpy.props.EnumProperty(
         name="Terrain Kind",
         items=[
-            ('HILL',   "ðŸŸ« Hill",   "Dome rises from center, falls off at edges"),
-            ('ISLAND', "ðŸ Island", "Plateau with sharp drop-off perimeter"),
-            ('CLIFF',  "ðŸª¨ Cliff",  "One side drops away vertically"),
-            ('PLAIN',  "ðŸŒ¿ Plain",  "Gentle rolling noise base"),
+            ('HILL',   "🟫 Hill",   "Dome rises from center, falls off at edges"),
+            ('ISLAND', "🏝 Island", "Plateau with sharp drop-off perimeter"),
+            ('CLIFF',  "🪨 Cliff",  "One side drops away vertically"),
+            ('PLAIN',  "🌿 Plain",  "Gentle rolling noise base"),
         ],
         default='HILL', update=auto_update_callback)
     noise_amp: bpy.props.FloatProperty(
@@ -24876,7 +24917,7 @@ class SURREAL_ARCH_OT_spawn_terrain(bpy.types.Operator):
         layout.prop(self, 'seed')
         obj = context.active_object
         if obj is None:
-            layout.label(text="No footprint selected â€” terrain at 3D cursor.", icon='INFO')
+            layout.label(text="No footprint selected — terrain at 3D cursor.", icon='INFO')
         else:
             layout.label(text=f"Footprint: {obj.name}", icon='OUTLINER_OB_MESH')
 
@@ -24889,11 +24930,11 @@ class SURREAL_ARCH_OT_spawn_terrain(bpy.types.Operator):
         bpy.ops.object.select_all(action='DESELECT')
         terrain.select_set(True)
         context.view_layer.objects.active = terrain
-        self.report({'INFO'}, f"ðŸŒ„ Terrain: {terrain.name}")
+        self.report({'INFO'}, f"🌄 Terrain: {terrain.name}")
         return {'FINISHED'}
 
 
-# â”€â”€â”€ â‘¡ VEGETATION SCATTER â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ─── ② VEGETATION SCATTER ──────────────────────────────────────────
 
 def _scatter_vegetation(context, target_obj, n=30, scale_range=(0.6, 1.4),
                          z_jitter=0.0, library_piece='_lib_STYLIZED_TREE',
@@ -24904,7 +24945,7 @@ def _scatter_vegetation(context, target_obj, n=30, scale_range=(0.6, 1.4),
         return None, "Need a mesh target"
     src = bpy.data.objects.get(library_piece)
     if src is None:
-        return None, f"Library piece '{library_piece}' missing â€” run ðŸ“š Initialize"
+        return None, f"Library piece '{library_piece}' missing — run 📚 Initialize"
     rng = random.Random(seed)
     target_me = target_obj.data
     if len(target_me.polygons) == 0:
@@ -24934,7 +24975,7 @@ def _scatter_vegetation(context, target_obj, n=30, scale_range=(0.6, 1.4),
             if u <= c:
                 face_idx = i; break
         face = target_me.polygons[face_idx]
-        # Random barycentric within face center â†’ vertex pull
+        # Random barycentric within face center → vertex pull
         # Simpler: jitter from face center toward a random vertex
         verts = [target_me.vertices[v].co for v in face.vertices]
         w = [rng.random() for _ in verts]
@@ -24993,7 +25034,7 @@ class SURREAL_ARCH_OT_scatter_vegetation(bpy.types.Operator):
     object's faces using Poisson-like distribution. Use on terrain or
     composed worlds to fill empty space."""
     bl_idname = "surreal_arch.scatter_vegetation"
-    bl_label = "ðŸŒ³ Scatter Vegetation"
+    bl_label = "🌳 Scatter Vegetation"
     bl_options = {'REGISTER', 'UNDO'}
 
     n: bpy.props.IntProperty(name="Count", default=40, min=1, max=500, update=auto_update_callback)
@@ -25003,10 +25044,10 @@ class SURREAL_ARCH_OT_scatter_vegetation(bpy.types.Operator):
     library_piece: bpy.props.EnumProperty(
         name="Piece",
         items=[
-            ('_lib_STYLIZED_TREE',   "ðŸŒ³ Stylized Tree",   "Default tree"),
-            ('_lib_BOULDER_PILE',    "ðŸª¨ Boulder Pile",   "Rock cluster"),
-            ('_lib_STREET_LAMP',     "ðŸ”¦ Street Lamp",   "Lamp post"),
-            ('_lib_HERALDIC_BANNER', "ðŸš© Banner",        "Heraldic banner"),
+            ('_lib_STYLIZED_TREE',   "🌳 Stylized Tree",   "Default tree"),
+            ('_lib_BOULDER_PILE',    "🪨 Boulder Pile",   "Rock cluster"),
+            ('_lib_STREET_LAMP',     "🔦 Street Lamp",   "Lamp post"),
+            ('_lib_HERALDIC_BANNER', "🚩 Banner",        "Heraldic banner"),
         ],
         default='_lib_STYLIZED_TREE', update=auto_update_callback)
     seed: bpy.props.IntProperty(name="Seed", default=42, min=0, max=99999, update=auto_update_callback)
@@ -25041,7 +25082,7 @@ class SURREAL_ARCH_OT_scatter_vegetation(bpy.types.Operator):
         return {'FINISHED'}
 
 
-# â”€â”€â”€ â‘¢ LIGHTING RIG â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ─── ③ LIGHTING RIG ────────────────────────────────────────────────
 
 def _spawn_lighting_rig(context, target_obj, palette='WARM', count=6,
                          height_factor=0.7):
@@ -25126,17 +25167,17 @@ class SURREAL_ARCH_OT_lighting_rig(bpy.types.Operator):
     color palette. Wraps the lights in a dedicated collection so you can
     toggle/move them as one."""
     bl_idname = "surreal_arch.lighting_rig"
-    bl_label = "ðŸ’¡ Auto Lighting Rig"
+    bl_label = "💡 Auto Lighting Rig"
     bl_options = {'REGISTER', 'UNDO'}
 
     palette: bpy.props.EnumProperty(
         name="Palette",
         items=[
-            ('WARM',    "ðŸ”¥ Warm",    "Torchlight (1.0, 0.78, 0.55) â€” castles & villages"),
-            ('COLD',    "â„ Cold",    "Moonlight (0.55, 0.75, 1.0) â€” night scenes"),
-            ('GOTHIC',  "ðŸ¦‡ Gothic",  "Dim red (0.8, 0.4, 0.3) â€” crypts & ruins"),
-            ('NEON',    "ðŸ’œ Neon",    "Vaporwave (1.0, 0.3, 0.85) â€” cyberpunk"),
-            ('NATURAL', "â˜€ Natural", "Daylight (1.0, 0.95, 0.85) â€” bright outdoor"),
+            ('WARM',    "🔥 Warm",    "Torchlight (1.0, 0.78, 0.55) — castles & villages"),
+            ('COLD',    "❄ Cold",    "Moonlight (0.55, 0.75, 1.0) — night scenes"),
+            ('GOTHIC',  "🦇 Gothic",  "Dim red (0.8, 0.4, 0.3) — crypts & ruins"),
+            ('NEON',    "💜 Neon",    "Vaporwave (1.0, 0.3, 0.85) — cyberpunk"),
+            ('NATURAL', "☀ Natural", "Daylight (1.0, 0.95, 0.85) — bright outdoor"),
         ],
         default='WARM', update=auto_update_callback)
     count: bpy.props.IntProperty(name="Light Count", default=6, min=1, max=20, update=auto_update_callback)
@@ -25169,14 +25210,14 @@ class SURREAL_ARCH_OT_lighting_rig(bpy.types.Operator):
         return {'FINISHED'}
 
 
-# â”€â”€â”€ ðŸªž POLISH ALL â€” global bevel + auto-smooth pass â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ─── 🪞 POLISH ALL — global bevel + auto-smooth pass ───────────────
 
 class SURREAL_ARCH_OT_polish_all(bpy.types.Operator):
     """Add a consistent SurrealArch_Bevel modifier + smooth shading to every
     selected mesh. Use this on Layer 2 composed worlds for a cohesive AAA
     rounded-edge look across all pieces."""
     bl_idname = "surreal_arch.polish_all"
-    bl_label = "ðŸªž Polish Selected (cohesive bevel)"
+    bl_label = "🪞 Polish Selected (cohesive bevel)"
     bl_options = {'REGISTER', 'UNDO'}
 
     bevel_width: bpy.props.FloatProperty(
@@ -25238,16 +25279,16 @@ class SURREAL_ARCH_OT_polish_all(bpy.types.Operator):
                     bpy.ops.object.modifier_apply(modifier=bv.name)
                 except Exception: pass
             polished += 1
-        self.report({'INFO'}, f"ðŸªž Polished {polished} mesh(es)")
+        self.report({'INFO'}, f"🪞 Polished {polished} mesh(es)")
         return {'FINISHED'}
 
 
-# â”€â”€â”€ PANEL â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ─── PANEL ─────────────────────────────────────────────────────────
 
-# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-# LAYER 3 EXTENSIONS â€” EasyTree integration + Komikaze shader linking
+# ══════════════════════════════════════════════════════════════════════
+# LAYER 3 EXTENSIONS — EasyTree integration + Komikaze shader linking
 # + Walkable / hollow building post-processing (v2.29 polish)
-# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# ══════════════════════════════════════════════════════════════════════
 
 _KOMIKAZE_BLEND_PATH = (
     r"G:\programs\BlenderPlugins\plugins\Komikaze v2 (UNZIP ME) vfxmed\Komikaze v2.blend"
@@ -25289,9 +25330,9 @@ def _komikaze_link(material_name, link=True):
         return None
 
 
-# Auto-mapping from SurrealArch material_choice â†’ Komikaze material name.
-# Selected to pair stylistically: stone â†’ wood (warm bark texture), marble
-# â†’ Voronoi flat (clean cell pattern), etc.
+# Auto-mapping from SurrealArch material_choice → Komikaze material name.
+# Selected to pair stylistically: stone → wood (warm bark texture), marble
+# → Voronoi flat (clean cell pattern), etc.
 _KOMIKAZE_AUTO_MAP = {
     'STONE':       'Wood',
     'MARBLE':      'Voronoi Shader (Flat)',
@@ -25308,9 +25349,9 @@ _KOMIKAZE_AUTO_MAP = {
 
 class SURREAL_ARCH_OT_komikaze_auto_map(bpy.types.Operator):
     """Auto-apply a Komikaze material chosen to match the active object's
-    `material_choice` setting. One click â†’ coherent material across selection."""
+    `material_choice` setting. One click → coherent material across selection."""
     bl_idname = "surreal_arch.komikaze_auto_map"
-    bl_label = "ðŸŽ¨ Auto-Map Komikaze (by material_choice)"
+    bl_label = "🎨 Auto-Map Komikaze (by material_choice)"
     bl_options = {'REGISTER', 'UNDO'}
 
     apply_to_all_selected: bpy.props.BoolProperty(
@@ -25327,7 +25368,7 @@ class SURREAL_ARCH_OT_komikaze_auto_map(bpy.types.Operator):
             mc = obj.surreal_arch_props.material_choice
             mapped = _KOMIKAZE_AUTO_MAP.get(mc, 'Wood')
             layout.label(text=f"Active material_choice: {mc}", icon='MATERIAL')
-            layout.label(text=f"â†’ Will apply: '{mapped}'", icon='FORWARD')
+            layout.label(text=f"→ Will apply: '{mapped}'", icon='FORWARD')
         layout.prop(self, 'apply_to_all_selected')
 
     def execute(self, context):
@@ -25353,7 +25394,7 @@ class SURREAL_ARCH_OT_komikaze_auto_map(bpy.types.Operator):
                 o.data.materials.append(mat)
             n += 1
         self.report({'INFO'},
-                    f"ðŸŽ¨ Komikaze '{mat_name}' ({mc} â†’ auto-mapped) applied to {n} mesh(es)")
+                    f"🎨 Komikaze '{mat_name}' ({mc} → auto-mapped) applied to {n} mesh(es)")
         return {'FINISHED'}
 
 
@@ -25362,7 +25403,7 @@ class SURREAL_ARCH_OT_komikaze_apply(bpy.types.Operator):
     objects. Falls back gracefully if Komikaze v2.blend isn't found at the
     expected path."""
     bl_idname = "surreal_arch.komikaze_apply"
-    bl_label = "ðŸŽ¨ Apply Komikaze Material"
+    bl_label = "🎨 Apply Komikaze Material"
     bl_options = {'REGISTER', 'UNDO'}
 
     palette_key: bpy.props.EnumProperty(
@@ -25378,10 +25419,10 @@ class SURREAL_ARCH_OT_komikaze_apply(bpy.types.Operator):
         layout.prop(self, 'palette_key')
         import os
         if os.path.exists(_KOMIKAZE_BLEND_PATH):
-            layout.label(text="âœ… Komikaze v2.blend located", icon='CHECKMARK')
+            layout.label(text="✅ Komikaze v2.blend located", icon='CHECKMARK')
         else:
             layout.alert = True
-            layout.label(text="âš  Komikaze v2.blend not found at expected path", icon='ERROR')
+            layout.label(text="⚠ Komikaze v2.blend not found at expected path", icon='ERROR')
 
     def execute(self, context):
         mat_name = dict(_KOMIKAZE_PALETTE).get(self.palette_key)
@@ -25393,7 +25434,7 @@ class SURREAL_ARCH_OT_komikaze_apply(bpy.types.Operator):
                         f"Couldn't load Komikaze material '{mat_name}' "
                         f"(file path: {_KOMIKAZE_BLEND_PATH})")
             return {'CANCELLED'}
-        # Assign to every selected mesh â€” replace material slot 0
+        # Assign to every selected mesh — replace material slot 0
         n_applied = 0
         for o in context.selected_objects:
             if o.type != 'MESH': continue
@@ -25402,11 +25443,11 @@ class SURREAL_ARCH_OT_komikaze_apply(bpy.types.Operator):
             else:
                 o.data.materials.append(mat)
             n_applied += 1
-        self.report({'INFO'}, f"ðŸŽ¨ Komikaze '{mat_name}' applied to {n_applied} mesh(es)")
+        self.report({'INFO'}, f"🎨 Komikaze '{mat_name}' applied to {n_applied} mesh(es)")
         return {'FINISHED'}
 
 
-# â”€â”€â”€ EasyTree-powered vegetation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ─── EasyTree-powered vegetation ──────────────────────────────────────
 
 def _easytree_available():
     """Probe whether the EasyTree addon is enabled."""
@@ -25422,7 +25463,7 @@ class SURREAL_ARCH_OT_scatter_easytrees(bpy.types.Operator):
     is a real EasyTree spawn (not a duplicate) so seasons/presets vary per call.
     Trees go into a `SurrealArch_Vegetation` collection."""
     bl_idname = "surreal_arch.scatter_easytrees"
-    bl_label = "ðŸŒ² Scatter EasyTrees"
+    bl_label = "🌲 Scatter EasyTrees"
     bl_options = {'REGISTER', 'UNDO'}
 
     n: bpy.props.IntProperty(name="Tree Count", default=12, min=1, max=80, update=auto_update_callback)
@@ -25467,8 +25508,8 @@ class SURREAL_ARCH_OT_scatter_easytrees(bpy.types.Operator):
         layout = self.layout
         if not _easytree_available():
             layout.alert = True
-            layout.label(text="âš  EasyTree addon not detected", icon='ERROR')
-            layout.label(text="Enable 'Easy Tree' in Preferences â†’ Add-ons")
+            layout.label(text="⚠ EasyTree addon not detected", icon='ERROR')
+            layout.label(text="Enable 'Easy Tree' in Preferences → Add-ons")
         col = layout.column(align=True)
         col.prop(self, 'n')
         row = col.row(align=True)
@@ -25485,7 +25526,7 @@ class SURREAL_ARCH_OT_scatter_easytrees(bpy.types.Operator):
 
     def execute(self, context):
         if not _easytree_available():
-            self.report({'ERROR'}, "EasyTree addon not enabled â€” install/enable it first")
+            self.report({'ERROR'}, "EasyTree addon not enabled — install/enable it first")
             return {'CANCELLED'}
         target = context.active_object
         if target is None or target.type != 'MESH':
@@ -25512,7 +25553,7 @@ class SURREAL_ARCH_OT_scatter_easytrees(bpy.types.Operator):
             vg = target.vertex_groups.get(vg_name)
             if vg is None:
                 self.report({'WARNING'},
-                            f"Vertex group '{vg_name}' not found on {target.name} â€” scattering everywhere")
+                            f"Vertex group '{vg_name}' not found on {target.name} — scattering everywhere")
             else:
                 vg_filter_set = set()
                 for v in target.data.vertices:
@@ -25530,7 +25571,7 @@ class SURREAL_ARCH_OT_scatter_easytrees(bpy.types.Operator):
         ev.to_mesh_clear()
         if vg_filter_set is not None and not face_centers:
             self.report({'WARNING'},
-                        f"No faces matched '{vg_name}' â€” paint that vgroup on at least one face")
+                        f"No faces matched '{vg_name}' — paint that vgroup on at least one face")
             return {'CANCELLED'}
         if self.border_only:
             # Approximate border filter: keep faces whose center is in the
@@ -25581,7 +25622,7 @@ class SURREAL_ARCH_OT_scatter_easytrees(bpy.types.Operator):
             try:
                 sc.tree_preset = preset
             except Exception: pass
-            # Snapshot â€” find what objects get created
+            # Snapshot — find what objects get created
             pre = set(o.name for o in bpy.data.objects)
             try:
                 bpy.ops.object.add_tree_tool()
@@ -25605,11 +25646,11 @@ class SURREAL_ARCH_OT_scatter_easytrees(bpy.types.Operator):
             sc.tree_preset = prev_preset
             sc.season = prev_season
         except Exception: pass
-        self.report({'INFO'}, f"ðŸŒ² Scattered {n_spawned} EasyTrees onto {target.name}")
+        self.report({'INFO'}, f"🌲 Scattered {n_spawned} EasyTrees onto {target.name}")
         return {'FINISHED'}
 
 
-# â”€â”€â”€ Hollow / Walkable building post-processor â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ─── Hollow / Walkable building post-processor ───────────────────────
 
 def _hollow_building_object(obj, wall_thickness=0.2, door_width=1.0,
                               door_height=2.0, keep_solid_below=0.05,
@@ -25621,12 +25662,12 @@ def _hollow_building_object(obj, wall_thickness=0.2, door_width=1.0,
     a door portal.
 
     NEW v2.32:
-      â€¢ If `storey_height > 0`, also adds thin floor planes inside at each
-        storey level (1Ã—storey_height, 2Ã—storey_height, ...) up to ceiling.
-      â€¢ If `stairwell_width > 0`, each floor gets a square hole at the back
+      • If `storey_height > 0`, also adds thin floor planes inside at each
+        storey level (1×storey_height, 2×storey_height, ...) up to ceiling.
+      • If `stairwell_width > 0`, each floor gets a square hole at the back
         corner so the player can ascend through the stairwell column.
 
-    This is intentionally a heavy operation â€” it APPLIES all modifiers first.
+    This is intentionally a heavy operation — it APPLIES all modifiers first.
     """
     import bmesh
     from mathutils import Vector, Matrix
@@ -25647,7 +25688,7 @@ def _hollow_building_object(obj, wall_thickness=0.2, door_width=1.0,
     bbox_min = Vector((min(xs), min(ys), min(zs)))
     bbox_max = Vector((max(xs), max(ys), max(zs)))
     size = bbox_max - bbox_min
-    # Skip very thin / tiny pieces (towers and such â€” the hollow op would just blow them up)
+    # Skip very thin / tiny pieces (towers and such — the hollow op would just blow them up)
     if min(size.x, size.y) < wall_thickness * 4 or size.z < door_height + 0.4:
         return False
     # Build an interior subtraction cube (slightly smaller)
@@ -25659,7 +25700,7 @@ def _hollow_building_object(obj, wall_thickness=0.2, door_width=1.0,
     sz = max(0.1, size.z - wall_thickness * 2)
     bmesh.ops.scale(bm_int, vec=Vector((sx, sy, sz)),
                     verts=bm_int.verts)
-    # Position the interior cube â€” but lift it `keep_solid_below` from the
+    # Position the interior cube — but lift it `keep_solid_below` from the
     # floor so we don't blow through the ground plane
     cx = (bbox_min.x + bbox_max.x) / 2
     cy = (bbox_min.y + bbox_max.y) / 2
@@ -25668,7 +25709,7 @@ def _hollow_building_object(obj, wall_thickness=0.2, door_width=1.0,
     cz = (cz_min + cz_max) / 2
     bmesh.ops.translate(bm_int, vec=Vector((cx, cy, cz)),
                         verts=bm_int.verts)
-    # Convert interior bmesh â†’ temp mesh + object so we can boolean it
+    # Convert interior bmesh → temp mesh + object so we can boolean it
     me_int = bpy.data.meshes.new("__hollow_int__")
     bm_int.to_mesh(me_int)
     bm_int.free()
@@ -25676,7 +25717,7 @@ def _hollow_building_object(obj, wall_thickness=0.2, door_width=1.0,
     bpy.context.scene.collection.objects.link(obj_int)
     obj_int.parent = obj
     obj_int.matrix_parent_inverse = obj.matrix_world.inverted()
-    # Boolean â€” subtract interior
+    # Boolean — subtract interior
     bool_mod = obj.modifiers.new("__SAhollow", 'BOOLEAN')
     bool_mod.operation = 'DIFFERENCE'
     bool_mod.solver = 'EXACT' if hasattr(bool_mod, 'solver') else 'FAST'
@@ -25687,7 +25728,7 @@ def _hollow_building_object(obj, wall_thickness=0.2, door_width=1.0,
         print(f"[SurrealArch] interior boolean failed: {e}")
         try: obj.modifiers.remove(bool_mod)
         except Exception: pass
-    # Cut an ARCHED door on the -Y face (front) â€” v2.33: half-cylinder top
+    # Cut an ARCHED door on the -Y face (front) — v2.33: half-cylinder top
     # over a rectangular bottom for a proper Romanesque arch silhouette.
     bm_door = bmesh.new()
     # Rectangular bottom: rises from floor to (door_height - door_width/2)
@@ -25699,7 +25740,7 @@ def _hollow_building_object(obj, wall_thickness=0.2, door_width=1.0,
     bmesh.ops.translate(bm_door,
                         vec=Vector((0, 0, rect_h / 2)),
                         verts=bm_door.verts)
-    # Semi-cylinder cap on top â€” full cylinder, oriented along Y
+    # Semi-cylinder cap on top — full cylinder, oriented along Y
     arch_verts_before = set(v for v in bm_door.verts)
     bmesh.ops.create_cone(bm_door, cap_ends=True, cap_tris=False,
                           segments=24,
@@ -25743,7 +25784,7 @@ def _hollow_building_object(obj, wall_thickness=0.2, door_width=1.0,
         except Exception:
             pass
 
-    # â”€â”€ v2.32: Multi-storey interior floor planes â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── v2.32: Multi-storey interior floor planes ──────────────────────
     if storey_height > 0.5:
         floor_thk = 0.05
         # Floor planes at storey_height, 2*storey_height, ... up to ceiling
@@ -25767,7 +25808,7 @@ def _hollow_building_object(obj, wall_thickness=0.2, door_width=1.0,
                 hole_cx = bbox_max.x - wall_thickness * 1.5 - stairwell_width / 2
                 hole_cy = bbox_max.y - wall_thickness * 1.5 - stairwell_width / 2
                 # Cut a hole into this floor by removing matching faces
-                # Easiest: use a boolean â€” build hole cube, subtract from floor
+                # Easiest: use a boolean — build hole cube, subtract from floor
                 bm_h = bmesh.new()
                 bmesh.ops.create_cube(bm_h, size=1.0)
                 bmesh.ops.scale(bm_h,
@@ -25878,7 +25919,7 @@ def _hollow_building_object(obj, wall_thickness=0.2, door_width=1.0,
                                 window_specs.append((lateral_axis, face_axis_pos,
                                                      lateral_pos, row_z,
                                                      sz_x, sz_y))
-                # Single boolean per cutter â€” could be slow with many; OK for now
+                # Single boolean per cutter — could be slow with many; OK for now
                 bpy.context.view_layer.objects.active = obj
                 for w_obj in window_cutters:
                     mod_w = obj.modifiers.new("__SAwin", 'BOOLEAN')
@@ -25905,7 +25946,7 @@ def _hollow_building_object(obj, wall_thickness=0.2, door_width=1.0,
                     glass_objs = []
                     for (lat_axis, face_pos, lat_pos, row_z, sz_x, sz_y) in window_specs:
                         win_h = window_height
-                        # SILL â€” thin slab BELOW the window opening
+                        # SILL — thin slab BELOW the window opening
                         sill = bmesh.new()
                         bmesh.ops.create_cube(sill, size=1.0)
                         if lat_axis == 'X':
@@ -25929,7 +25970,7 @@ def _hollow_building_object(obj, wall_thickness=0.2, door_width=1.0,
                         sill_obj = bpy.data.objects.new("__sill__", me_sill)
                         bpy.context.scene.collection.objects.link(sill_obj)
                         sill_objs.append(sill_obj)
-                        # GLASS â€” thin plane filling the window opening
+                        # GLASS — thin plane filling the window opening
                         glass = bmesh.new()
                         bmesh.ops.create_cube(glass, size=1.0)
                         if lat_axis == 'X':
@@ -26018,7 +26059,7 @@ class SURREAL_ARCH_OT_player_start(bpy.types.Operator):
     the scene camera so you can press F12 / Numpad-0 for an instant interior
     view."""
     bl_idname = "surreal_arch.player_start"
-    bl_label = "ðŸŽ® Place Player Start (Door + Camera)"
+    bl_label = "🎮 Place Player Start (Door + Camera)"
     bl_options = {'REGISTER', 'UNDO'}
 
     set_active_camera: bpy.props.BoolProperty(
@@ -26086,16 +26127,16 @@ class SURREAL_ARCH_OT_player_start(bpy.types.Operator):
         empty["surreal_player_start_for"] = obj.name
         cam["surreal_player_start_for"] = obj.name
         self.report({'INFO'},
-                    f"ðŸŽ® Player Start placed at door of {obj.name}"
+                    f"🎮 Player Start placed at door of {obj.name}"
                     + (" (set as scene camera)" if self.set_active_camera else ""))
         return {'FINISHED'}
 
 
 class SURREAL_ARCH_OT_make_walkable(bpy.types.Operator):
-    """Hollow out the selected building(s) â€” subtract an interior cavity and
+    """Hollow out the selected building(s) — subtract an interior cavity and
     cut a door on the front face, so you can walk inside in first-person."""
     bl_idname = "surreal_arch.make_walkable"
-    bl_label = "ðŸšª Make Walkable (Hollow + Door)"
+    bl_label = "🚪 Make Walkable (Hollow + Door)"
     bl_options = {'REGISTER', 'UNDO'}
 
     wall_thickness: bpy.props.FloatProperty(name="Wall Thickness", default=0.25, min=0.05, max=2.0, update=auto_update_callback)
@@ -26167,93 +26208,93 @@ class SURREAL_ARCH_OT_make_walkable(bpy.types.Operator):
             except Exception as e:
                 self.report({'WARNING'}, f"{o.name}: {e}")
                 skipped += 1
-        self.report({'INFO'}, f"ðŸšª Hollowed {hollowed}, skipped {skipped} (too thin)")
+        self.report({'INFO'}, f"🚪 Hollowed {hollowed}, skipped {skipped} (too thin)")
         return {'FINISHED'}
 
 
 class SURREAL_ARCH_PT_layer3(_SubPanelBase, bpy.types.Panel):
-    bl_label  = "ðŸŒ World Atmosphere (Layer 3)"
+    bl_label  = "🌍 World Atmosphere (Layer 3)"
     bl_idname = "SURREAL_ARCH_PT_layer3"
 
     def draw(self, context):
         layout = self.layout
-        layout.label(text="Layer 3 â€” bringing the world to life", icon='WORLD')
+        layout.label(text="Layer 3 — bringing the world to life", icon='WORLD')
 
-        # â‘  Terrain
+        # ① Terrain
         s1 = layout.box()
-        s1.label(text="â‘  Terrain", icon='MESH_PLANE')
+        s1.label(text="① Terrain", icon='MESH_PLANE')
         row = s1.row(align=True)
         row.scale_y = 1.25
-        row.operator("surreal_arch.spawn_terrain", text="ðŸŒ„ Spawn Terrain",
+        row.operator("surreal_arch.spawn_terrain", text="🌄 Spawn Terrain",
                      icon='MESH_GRID')
 
-        # â‘¡ Vegetation
+        # ② Vegetation
         s2 = layout.box()
-        s2.label(text="â‘¡ Vegetation / Scatter", icon='OUTLINER_OB_GREASEPENCIL')
+        s2.label(text="② Vegetation / Scatter", icon='OUTLINER_OB_GREASEPENCIL')
         col = s2.column(align=True)
         col.scale_y = 1.2
         if _easytree_available():
             col.operator("surreal_arch.scatter_easytrees",
-                         text="ðŸŒ² Scatter EasyTrees", icon='OUTLINER_OB_GREASEPENCIL')
+                         text="🌲 Scatter EasyTrees", icon='OUTLINER_OB_GREASEPENCIL')
             col.label(text="(uses installed Easy Tree addon)", icon='INFO')
         else:
-            col.label(text="âš  EasyTree not detected", icon='ERROR')
+            col.label(text="⚠ EasyTree not detected", icon='ERROR')
         col.separator()
         col.operator("surreal_arch.scatter_vegetation",
-                     text="ðŸ“š Scatter Library Pieces", icon='SCULPTMODE_HLT')
+                     text="📚 Scatter Library Pieces", icon='SCULPTMODE_HLT')
 
-        # â‘¢ Lighting
+        # ③ Lighting
         s3 = layout.box()
-        s3.label(text="â‘¢ Lighting", icon='LIGHT')
+        s3.label(text="③ Lighting", icon='LIGHT')
         row = s3.row(align=True)
         row.scale_y = 1.25
-        row.operator("surreal_arch.lighting_rig", text="ðŸ’¡ Auto Lighting Rig",
+        row.operator("surreal_arch.lighting_rig", text="💡 Auto Lighting Rig",
                      icon='OUTLINER_OB_LIGHT')
 
-        # â‘£ Walkable buildings
+        # ④ Walkable buildings
         s4 = layout.box()
-        s4.label(text="â‘£ Walkable interiors", icon='HOME')
+        s4.label(text="④ Walkable interiors", icon='HOME')
         s4.label(text="Hollows the selected buildings and cuts a front door.", icon='INFO')
         row = s4.row(align=True)
         row.scale_y = 1.25
         row.operator("surreal_arch.make_walkable",
-                     text="ðŸšª Make Walkable", icon='OUTLINER_OB_GROUP_INSTANCE')
+                     text="🚪 Make Walkable", icon='OUTLINER_OB_GROUP_INSTANCE')
         row2 = s4.row(align=True)
         row2.scale_y = 1.15
         row2.operator("surreal_arch.player_start",
-                       text="ðŸŽ® Place Player Start", icon='CAMERA_DATA')
+                       text="🎮 Place Player Start", icon='CAMERA_DATA')
 
-        # â‘¤ Komikaze shader linking
+        # ⑤ Komikaze shader linking
         s5 = layout.box()
-        s5.label(text="â‘¤ Komikaze materials", icon='MATERIAL')
+        s5.label(text="⑤ Komikaze materials", icon='MATERIAL')
         import os
         if os.path.exists(_KOMIKAZE_BLEND_PATH):
-            s5.label(text="âœ… Komikaze v2.blend detected", icon='CHECKMARK')
+            s5.label(text="✅ Komikaze v2.blend detected", icon='CHECKMARK')
         else:
             s5.alert = True
-            s5.label(text="âš  Komikaze v2.blend not found", icon='ERROR')
+            s5.label(text="⚠ Komikaze v2.blend not found", icon='ERROR')
         row = s5.row(align=True)
         row.scale_y = 1.25
         row.operator("surreal_arch.komikaze_apply",
-                     text="ðŸŽ¨ Apply Komikaze Shader", icon='MATERIAL_DATA')
+                     text="🎨 Apply Komikaze Shader", icon='MATERIAL_DATA')
         row2 = s5.row(align=True)
         row2.scale_y = 1.1
         row2.operator("surreal_arch.komikaze_auto_map",
-                       text="âœ¨ Auto-Map (by material_choice)", icon='LINKED')
+                       text="✨ Auto-Map (by material_choice)", icon='LINKED')
 
-        # â‘¥ Polish
+        # ⑥ Polish
         s6 = layout.box()
-        s6.label(text="â‘¥ Polish (cohesive bevel)", icon='MOD_BEVEL')
+        s6.label(text="⑥ Polish (cohesive bevel)", icon='MOD_BEVEL')
         s6.label(text="Run on Layer 2 worlds for AAA edges.", icon='INFO')
         row = s6.row(align=True)
         row.scale_y = 1.25
         row.operator("surreal_arch.polish_all",
-                     text="ðŸªž Polish Selected", icon='MOD_BEVEL')
+                     text="🪞 Polish Selected", icon='MOD_BEVEL')
 
 
-# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# ══════════════════════════════════════════════════════════════════════
 # END LAYER 3
-# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# ══════════════════════════════════════════════════════════════════════
 
 
 def _make_aest_op(suffix, effect_key, label, descr):
@@ -26276,83 +26317,83 @@ def _make_aest_op(suffix, effect_key, label, descr):
 
 
 # Gothic one-click ops
-SURREAL_ARCH_OT_aest_goth_tracery   = _make_aest_op('goth_tracery',   'GOTH_TRACERY',   "ðŸ•¯ Gothic Tracery",    "Distribute Gothic cross ornaments on any mesh")
-SURREAL_ARCH_OT_aest_goth_drip      = _make_aest_op('goth_drip',      'GOTH_DRIP',      "ðŸ©¸ Dripping Wax",      "Vertical wax/blood drips")
-SURREAL_ARCH_OT_aest_goth_spikes    = _make_aest_op('goth_spikes',    'GOTH_SPIKES',    "âš” Gargoyle Spikes",   "Sharp spikes pointing outward")
-SURREAL_ARCH_OT_aest_goth_ribs      = _make_aest_op('goth_ribs',      'GOTH_RIBS',      "ðŸ¦´ Cathedral Ribs",    "Vertical Gothic rib pillars")
-SURREAL_ARCH_OT_aest_goth_weathered = _make_aest_op('goth_weathered', 'GOTH_WEATHERED', "ðŸª¦ Weathered Stone",   "Eroded, cracked stone surface")
+SURREAL_ARCH_OT_aest_goth_tracery   = _make_aest_op('goth_tracery',   'GOTH_TRACERY',   "🕯 Gothic Tracery",    "Distribute Gothic cross ornaments on any mesh")
+SURREAL_ARCH_OT_aest_goth_drip      = _make_aest_op('goth_drip',      'GOTH_DRIP',      "🩸 Dripping Wax",      "Vertical wax/blood drips")
+SURREAL_ARCH_OT_aest_goth_spikes    = _make_aest_op('goth_spikes',    'GOTH_SPIKES',    "⚔ Gargoyle Spikes",   "Sharp spikes pointing outward")
+SURREAL_ARCH_OT_aest_goth_ribs      = _make_aest_op('goth_ribs',      'GOTH_RIBS',      "🦴 Cathedral Ribs",    "Vertical Gothic rib pillars")
+SURREAL_ARCH_OT_aest_goth_weathered = _make_aest_op('goth_weathered', 'GOTH_WEATHERED', "🪦 Weathered Stone",   "Eroded, cracked stone surface")
 # Vaporwave one-click ops
-SURREAL_ARCH_OT_aest_vap_wire       = _make_aest_op('vap_wire',       'VAP_WIRE',       "ðŸ’œ Neon Wireframe",    "Pastel neon wireframe overlay")
-SURREAL_ARCH_OT_aest_vap_pixel      = _make_aest_op('vap_pixel',      'VAP_PIXEL',      "ðŸŸª Pixel Shatter",     "Voxelized cube-shatter look")
-SURREAL_ARCH_OT_aest_vap_chromatic  = _make_aest_op('vap_chromatic',  'VAP_CHROMATIC',  "ðŸŒˆ Chromatic Ghost",   "RGB-offset ghost copies")
-SURREAL_ARCH_OT_aest_vap_grid       = _make_aest_op('vap_grid',       'VAP_GRID',       "ðŸŸ¦ Tron Grid",         "Glowing surface grid lines")
-SURREAL_ARCH_OT_aest_vap_palms      = _make_aest_op('vap_palms',      'VAP_PALMS',      "ðŸŒ´ Palm Plaza",        "Pink/teal palm trees around base")
+SURREAL_ARCH_OT_aest_vap_wire       = _make_aest_op('vap_wire',       'VAP_WIRE',       "💜 Neon Wireframe",    "Pastel neon wireframe overlay")
+SURREAL_ARCH_OT_aest_vap_pixel      = _make_aest_op('vap_pixel',      'VAP_PIXEL',      "🟪 Pixel Shatter",     "Voxelized cube-shatter look")
+SURREAL_ARCH_OT_aest_vap_chromatic  = _make_aest_op('vap_chromatic',  'VAP_CHROMATIC',  "🌈 Chromatic Ghost",   "RGB-offset ghost copies")
+SURREAL_ARCH_OT_aest_vap_grid       = _make_aest_op('vap_grid',       'VAP_GRID',       "🟦 Tron Grid",         "Glowing surface grid lines")
+SURREAL_ARCH_OT_aest_vap_palms      = _make_aest_op('vap_palms',      'VAP_PALMS',      "🌴 Palm Plaza",        "Pink/teal palm trees around base")
 # Zen one-click ops
-SURREAL_ARCH_OT_aest_zen_moss       = _make_aest_op('zen_moss',       'ZEN_MOSS',       "ðŸŒ¿ Moss Blanket",      "Soft moss on upward surfaces")
-SURREAL_ARCH_OT_aest_zen_ripple     = _make_aest_op('zen_ripple',     'ZEN_RIPPLE',     "ðŸŒŠ Stone Ripple",      "Concentric ripple displacements")
-SURREAL_ARCH_OT_aest_zen_sand       = _make_aest_op('zen_sand',       'ZEN_SAND',       "ðŸ– Sand Patterns",     "Karesansui raked sand")
-SURREAL_ARCH_OT_aest_zen_bamboo     = _make_aest_op('zen_bamboo',     'ZEN_BAMBOO',     "ðŸŽ‹ Bamboo Guard",      "Vertical bamboo around perimeter")
-SURREAL_ARCH_OT_aest_zen_petals     = _make_aest_op('zen_petals',     'ZEN_PETALS',     "ðŸŒ¸ Floating Petals",   "Cherry blossom petals drifting")
+SURREAL_ARCH_OT_aest_zen_moss       = _make_aest_op('zen_moss',       'ZEN_MOSS',       "🌿 Moss Blanket",      "Soft moss on upward surfaces")
+SURREAL_ARCH_OT_aest_zen_ripple     = _make_aest_op('zen_ripple',     'ZEN_RIPPLE',     "🌊 Stone Ripple",      "Concentric ripple displacements")
+SURREAL_ARCH_OT_aest_zen_sand       = _make_aest_op('zen_sand',       'ZEN_SAND',       "🏖 Sand Patterns",     "Karesansui raked sand")
+SURREAL_ARCH_OT_aest_zen_bamboo     = _make_aest_op('zen_bamboo',     'ZEN_BAMBOO',     "🎋 Bamboo Guard",      "Vertical bamboo around perimeter")
+SURREAL_ARCH_OT_aest_zen_petals     = _make_aest_op('zen_petals',     'ZEN_PETALS',     "🌸 Floating Petals",   "Cherry blossom petals drifting")
 # Spiritual one-click ops
-SURREAL_ARCH_OT_aest_spi_aura       = _make_aest_op('spi_aura',       'SPI_AURA',       "âœ¨ Aura Shell",        "Iridescent outer shell")
-SURREAL_ARCH_OT_aest_spi_mandala    = _make_aest_op('spi_mandala',    'SPI_MANDALA',    "ðŸ•‰ Mandala Base",      "Radial mandala beneath")
-SURREAL_ARCH_OT_aest_spi_chakra     = _make_aest_op('spi_chakra',     'SPI_CHAKRA',     "ðŸŒˆ Chakra Orbs",       "Seven vertical chakra orbs")
-SURREAL_ARCH_OT_aest_spi_beam       = _make_aest_op('spi_beam',       'SPI_BEAM',       "ðŸ”† Pillar of Light",   "Vertical light beam")
-SURREAL_ARCH_OT_aest_spi_ring       = _make_aest_op('spi_ring',       'SPI_RING',       "ðŸ’« Sacred Ring",       "Orbiting rings around object")
-SURREAL_ARCH_OT_aest_spi_astral     = _make_aest_op('spi_astral',     'SPI_ASTRAL',     "ðŸ‘» Astral Echo",       "Floating ghost duplicate")
-SURREAL_ARCH_OT_aest_spi_eye        = _make_aest_op('spi_eye',        'SPI_EYE',        "ðŸ‘ Third Eye",         "Single inset eye on front")
-SURREAL_ARCH_OT_aest_spi_lotus      = _make_aest_op('spi_lotus',      'SPI_LOTUS',      "ðŸª· Lotus Bloom",       "Lotus petals around base")
-# v2.16 â€” additional procedurally-rich effects
-SURREAL_ARCH_OT_aest_goth_lattice   = _make_aest_op('goth_lattice',   'GOTH_LATTICE',   "ðŸ”² Gothic Lattice",    "Fractal Gothic lattice + finial nodes")
-SURREAL_ARCH_OT_aest_goth_niches    = _make_aest_op('goth_niches',    'GOTH_NICHES',    "ðŸ•³ Arched Niches",     "Voronoi-masked inset arched niches")
-SURREAL_ARCH_OT_aest_goth_fans      = _make_aest_op('goth_fans',      'GOTH_FANS',      "ðŸª­ Buttress Fans",     "Radial fan ribs from base")
-SURREAL_ARCH_OT_aest_goth_finials   = _make_aest_op('goth_finials',   'GOTH_FINIALS',   "ðŸ‘‘ Finial Crown",      "Pointed finials clustered along top")
-SURREAL_ARCH_OT_aest_goth_leadwork  = _make_aest_op('goth_leadwork',  'GOTH_LEADWORK',  "ðŸªŸ Lead Glasswork",    "Stained-glass voronoi lead lines")
-SURREAL_ARCH_OT_aest_goth_spires    = _make_aest_op('goth_spires',    'GOTH_SPIRES',    "ðŸ° Spire Forest",      "Procedural spires from peaks")
-SURREAL_ARCH_OT_aest_vap_slices     = _make_aest_op('vap_slices',     'VAP_SLICES',     "ðŸ“¼ Glitch Slices",     "VHS-style Z-band glitch")
-SURREAL_ARCH_OT_aest_vap_scanlines  = _make_aest_op('vap_scanlines',  'VAP_SCANLINES',  "ðŸ“º CRT Scanlines",     "Raised horizontal scanlines")
-SURREAL_ARCH_OT_aest_vap_busts      = _make_aest_op('vap_busts',      'VAP_BUSTS',      "ðŸ—¿ Marble Busts",      "Classical bust columns around base")
-SURREAL_ARCH_OT_aest_vap_slabs      = _make_aest_op('vap_slabs',      'VAP_SLABS',      "ðŸª© Holo Slabs",        "Orbiting holographic slabs")
-SURREAL_ARCH_OT_aest_vap_sun        = _make_aest_op('vap_sun',        'VAP_SUN',        "ðŸŒ… Retro Sun",         "Banded retro sun half-disc")
-SURREAL_ARCH_OT_aest_vap_neon_wrap  = _make_aest_op('vap_neon_wrap',  'VAP_NEON_WRAP',  "ðŸ’« Neon Wrap",         "Spiraling neon tube around mesh")
-SURREAL_ARCH_OT_aest_zen_orbit      = _make_aest_op('zen_orbit',      'ZEN_ORBIT',      "ðŸ® Lantern Orbit",     "Paper lanterns in orbit rings")
-SURREAL_ARCH_OT_aest_zen_smoke      = _make_aest_op('zen_smoke',      'ZEN_SMOKE',      "ðŸŒ« Incense Smoke",     "Helical smoke trails rising")
-SURREAL_ARCH_OT_aest_zen_pond       = _make_aest_op('zen_pond',       'ZEN_POND',       "ðŸ  Carp Pond",         "Water disc + lily pads beneath")
-SURREAL_ARCH_OT_aest_zen_terrace    = _make_aest_op('zen_terrace',    'ZEN_TERRACE',    "ðŸª¨ Stone Terraces",    "Stepped rock terraces around bbox")
-SURREAL_ARCH_OT_aest_zen_ginkgo     = _make_aest_op('zen_ginkgo',     'ZEN_GINKGO',     "ðŸ‚ Ginkgo Drift",      "Ginkgo leaves drifting around")
-SURREAL_ARCH_OT_aest_zen_runes      = _make_aest_op('zen_runes',      'ZEN_RUNES',      "ðŸˆ Calligraphy",       "Kanji-style raised marks on faces")
-SURREAL_ARCH_OT_aest_spi_runes      = _make_aest_op('spi_runes',      'SPI_RUNES',      "ðŸ”¯ Rune Circle",       "Glyphic rune circle on floor")
-SURREAL_ARCH_OT_aest_spi_halo       = _make_aest_op('spi_halo',       'SPI_HALO',       "ðŸ’  Fractal Halo",      "Fractal subdivided halo above")
-SURREAL_ARCH_OT_aest_spi_triangles  = _make_aest_op('spi_triangles',  'SPI_TRIANGLES',  "â–³ Sacred Triangles", "Overlapping sacred-geometry triangles")
-SURREAL_ARCH_OT_aest_spi_flames     = _make_aest_op('spi_flames',     'SPI_FLAMES',     "ðŸ”¥ Soul Flames",       "Wisps of flame around base")
-SURREAL_ARCH_OT_aest_spi_ouroboros  = _make_aest_op('spi_ouroboros',  'SPI_OUROBOROS',  "ðŸ Ouroboros",         "Snake-ring of segmented spheres")
-SURREAL_ARCH_OT_aest_spi_portal     = _make_aest_op('spi_portal',     'SPI_PORTAL',     "ðŸŒ€ Portal Gate",       "Large ring portal behind object")
-# v2.17 â€” music-reactive + advanced GN
-SURREAL_ARCH_OT_aest_mus_pulse      = _make_aest_op('mus_pulse',      'MUS_PULSE',      "ðŸ’“ Music Pulse",       "Radial sine pulse driven by musical_freq_a")
-SURREAL_ARCH_OT_aest_mus_eq_bars    = _make_aest_op('mus_eq_bars',    'MUS_EQ_BARS',    "ðŸ“Š EQ Bars",           "Vertical EQ bars (heights = pseudo-spectrum)")
-SURREAL_ARCH_OT_aest_mus_wave_disp  = _make_aest_op('mus_wave_disp',  'MUS_WAVE_DISP',  "ðŸŽ¶ Sound Wave Disp",   "Noise displacement scaled by music influence")
-SURREAL_ARCH_OT_aest_mus_beat_ring  = _make_aest_op('mus_beat_ring',  'MUS_BEAT_RING',  "â­• Beat Ring",         "Pulsing orbital ring of orbs")
-SURREAL_ARCH_OT_aest_mus_harmonic   = _make_aest_op('mus_harmonic',   'MUS_HARMONIC',   "ðŸŽ¼ Harmonic Lattice",  "Stacked sine grooves at freq_a + freq_b")
-SURREAL_ARCH_OT_aest_adv_ray_grow   = _make_aest_op('adv_ray_grow',   'ADV_RAY_GROW',   "ðŸ“¡ Raycast Growth",    "Distribute + raycast outward growth")
-SURREAL_ARCH_OT_aest_adv_near_fur   = _make_aest_op('adv_near_fur',   'ADV_NEAR_FUR',   "ðŸ¦” Nearest Fur",       "Normal-aligned fur cones at every vertex")
-SURREAL_ARCH_OT_aest_adv_edge_tubes = _make_aest_op('adv_edge_tubes', 'ADV_EDGE_TUBES', "ðŸŸ¦ Edge Tubes",        "Tube highlights along edges")
-SURREAL_ARCH_OT_aest_adv_dual_mesh  = _make_aest_op('adv_dual_mesh',  'ADV_DUAL_MESH',  "ðŸ”· Dual Mesh",         "Dual mesh + outward cell offset")
-SURREAL_ARCH_OT_aest_adv_vor_frac   = _make_aest_op('adv_vor_frac',   'ADV_VOR_FRAC',   "ðŸ’Ž Voronoi Fracture",  "Voronoi cell shards filling the volume")
-SURREAL_ARCH_OT_aest_adv_crystals   = _make_aest_op('adv_crystals',   'ADV_CRYSTALS',   "ðŸ§Š Crystal Cluster",   "Pointy octahedra grown from surface")
-SURREAL_ARCH_OT_aest_adv_field_lat  = _make_aest_op('adv_field_lat',  'ADV_FIELD_LAT',  "ðŸ•¸ Field Lattice",     "Vec3 noise lattice + wireframe overlay")
-# v2.18 â€” curve-rich
-SURREAL_ARCH_OT_aest_goth_vault     = _make_aest_op('goth_vault',     'GOTH_VAULT',     "ðŸ› Bezier Rib Vault",  "Real bezier-swept rib vault")
-SURREAL_ARCH_OT_aest_goth_tracery2  = _make_aest_op('goth_tracery2',  'GOTH_TRACERY2',  "ðŸŒ¿ Branching Tracery", "Nested bezier arches with quatrefoil")
-SURREAL_ARCH_OT_aest_vap_dolphin    = _make_aest_op('vap_dolphin',    'VAP_DOLPHIN',    "ðŸ¬ Dolphin Arcs",      "Bezier dolphin-jump arcs swept neon")
-SURREAL_ARCH_OT_aest_zen_bonsai     = _make_aest_op('zen_bonsai',     'ZEN_BONSAI',     "ðŸŒ³ Bonsai Branching",  "Procedural bezier bonsai")
-SURREAL_ARCH_OT_aest_spi_flower     = _make_aest_op('spi_flower',     'SPI_FLOWER',     "ðŸŒ¸ Flower of Life",    "Bezier flower-of-life lattice")
-SURREAL_ARCH_OT_aest_spi_metatron   = _make_aest_op('spi_metatron',   'SPI_METATRON',   "âœ¡ Metatron's Cube",   "13-node Metatron cube + lines")
-# v2.19 â€” mechanical
-SURREAL_ARCH_OT_aest_mech_bolts     = _make_aest_op('mech_bolts',     'MECH_BOLTS',     "ðŸ”© Hex Bolts",         "Hex bolt instances (mask-gated)")
-SURREAL_ARCH_OT_aest_mech_pipes     = _make_aest_op('mech_pipes',     'MECH_PIPES',     "ðŸ”§ Pipe Network",      "Bezier pipes with flange joints")
-SURREAL_ARCH_OT_aest_mech_gears     = _make_aest_op('mech_gears',     'MECH_GEARS',     "âš™ Gears",             "Distribute cog gears on faces")
-SURREAL_ARCH_OT_aest_mech_pistons   = _make_aest_op('mech_pistons',   'MECH_PISTONS',   "ðŸ›  Pistons",           "Shaft + bell piston rings")
-SURREAL_ARCH_OT_aest_mech_panels    = _make_aest_op('mech_panels',    'MECH_PANELS',    "ðŸŸ« Panels",            "Extruded panel inserts (mask-gated)")
+SURREAL_ARCH_OT_aest_spi_aura       = _make_aest_op('spi_aura',       'SPI_AURA',       "✨ Aura Shell",        "Iridescent outer shell")
+SURREAL_ARCH_OT_aest_spi_mandala    = _make_aest_op('spi_mandala',    'SPI_MANDALA',    "🕉 Mandala Base",      "Radial mandala beneath")
+SURREAL_ARCH_OT_aest_spi_chakra     = _make_aest_op('spi_chakra',     'SPI_CHAKRA',     "🌈 Chakra Orbs",       "Seven vertical chakra orbs")
+SURREAL_ARCH_OT_aest_spi_beam       = _make_aest_op('spi_beam',       'SPI_BEAM',       "🔆 Pillar of Light",   "Vertical light beam")
+SURREAL_ARCH_OT_aest_spi_ring       = _make_aest_op('spi_ring',       'SPI_RING',       "💫 Sacred Ring",       "Orbiting rings around object")
+SURREAL_ARCH_OT_aest_spi_astral     = _make_aest_op('spi_astral',     'SPI_ASTRAL',     "👻 Astral Echo",       "Floating ghost duplicate")
+SURREAL_ARCH_OT_aest_spi_eye        = _make_aest_op('spi_eye',        'SPI_EYE',        "👁 Third Eye",         "Single inset eye on front")
+SURREAL_ARCH_OT_aest_spi_lotus      = _make_aest_op('spi_lotus',      'SPI_LOTUS',      "🪷 Lotus Bloom",       "Lotus petals around base")
+# v2.16 — additional procedurally-rich effects
+SURREAL_ARCH_OT_aest_goth_lattice   = _make_aest_op('goth_lattice',   'GOTH_LATTICE',   "🔲 Gothic Lattice",    "Fractal Gothic lattice + finial nodes")
+SURREAL_ARCH_OT_aest_goth_niches    = _make_aest_op('goth_niches',    'GOTH_NICHES',    "🕳 Arched Niches",     "Voronoi-masked inset arched niches")
+SURREAL_ARCH_OT_aest_goth_fans      = _make_aest_op('goth_fans',      'GOTH_FANS',      "🪭 Buttress Fans",     "Radial fan ribs from base")
+SURREAL_ARCH_OT_aest_goth_finials   = _make_aest_op('goth_finials',   'GOTH_FINIALS',   "👑 Finial Crown",      "Pointed finials clustered along top")
+SURREAL_ARCH_OT_aest_goth_leadwork  = _make_aest_op('goth_leadwork',  'GOTH_LEADWORK',  "🪟 Lead Glasswork",    "Stained-glass voronoi lead lines")
+SURREAL_ARCH_OT_aest_goth_spires    = _make_aest_op('goth_spires',    'GOTH_SPIRES',    "🏰 Spire Forest",      "Procedural spires from peaks")
+SURREAL_ARCH_OT_aest_vap_slices     = _make_aest_op('vap_slices',     'VAP_SLICES',     "📼 Glitch Slices",     "VHS-style Z-band glitch")
+SURREAL_ARCH_OT_aest_vap_scanlines  = _make_aest_op('vap_scanlines',  'VAP_SCANLINES',  "📺 CRT Scanlines",     "Raised horizontal scanlines")
+SURREAL_ARCH_OT_aest_vap_busts      = _make_aest_op('vap_busts',      'VAP_BUSTS',      "🗿 Marble Busts",      "Classical bust columns around base")
+SURREAL_ARCH_OT_aest_vap_slabs      = _make_aest_op('vap_slabs',      'VAP_SLABS',      "🪩 Holo Slabs",        "Orbiting holographic slabs")
+SURREAL_ARCH_OT_aest_vap_sun        = _make_aest_op('vap_sun',        'VAP_SUN',        "🌅 Retro Sun",         "Banded retro sun half-disc")
+SURREAL_ARCH_OT_aest_vap_neon_wrap  = _make_aest_op('vap_neon_wrap',  'VAP_NEON_WRAP',  "💫 Neon Wrap",         "Spiraling neon tube around mesh")
+SURREAL_ARCH_OT_aest_zen_orbit      = _make_aest_op('zen_orbit',      'ZEN_ORBIT',      "🏮 Lantern Orbit",     "Paper lanterns in orbit rings")
+SURREAL_ARCH_OT_aest_zen_smoke      = _make_aest_op('zen_smoke',      'ZEN_SMOKE',      "🌫 Incense Smoke",     "Helical smoke trails rising")
+SURREAL_ARCH_OT_aest_zen_pond       = _make_aest_op('zen_pond',       'ZEN_POND',       "🐠 Carp Pond",         "Water disc + lily pads beneath")
+SURREAL_ARCH_OT_aest_zen_terrace    = _make_aest_op('zen_terrace',    'ZEN_TERRACE',    "🪨 Stone Terraces",    "Stepped rock terraces around bbox")
+SURREAL_ARCH_OT_aest_zen_ginkgo     = _make_aest_op('zen_ginkgo',     'ZEN_GINKGO',     "🍂 Ginkgo Drift",      "Ginkgo leaves drifting around")
+SURREAL_ARCH_OT_aest_zen_runes      = _make_aest_op('zen_runes',      'ZEN_RUNES',      "🈁 Calligraphy",       "Kanji-style raised marks on faces")
+SURREAL_ARCH_OT_aest_spi_runes      = _make_aest_op('spi_runes',      'SPI_RUNES',      "🔯 Rune Circle",       "Glyphic rune circle on floor")
+SURREAL_ARCH_OT_aest_spi_halo       = _make_aest_op('spi_halo',       'SPI_HALO',       "💠 Fractal Halo",      "Fractal subdivided halo above")
+SURREAL_ARCH_OT_aest_spi_triangles  = _make_aest_op('spi_triangles',  'SPI_TRIANGLES',  "△ Sacred Triangles", "Overlapping sacred-geometry triangles")
+SURREAL_ARCH_OT_aest_spi_flames     = _make_aest_op('spi_flames',     'SPI_FLAMES',     "🔥 Soul Flames",       "Wisps of flame around base")
+SURREAL_ARCH_OT_aest_spi_ouroboros  = _make_aest_op('spi_ouroboros',  'SPI_OUROBOROS',  "🐍 Ouroboros",         "Snake-ring of segmented spheres")
+SURREAL_ARCH_OT_aest_spi_portal     = _make_aest_op('spi_portal',     'SPI_PORTAL',     "🌀 Portal Gate",       "Large ring portal behind object")
+# v2.17 — music-reactive + advanced GN
+SURREAL_ARCH_OT_aest_mus_pulse      = _make_aest_op('mus_pulse',      'MUS_PULSE',      "💓 Music Pulse",       "Radial sine pulse driven by musical_freq_a")
+SURREAL_ARCH_OT_aest_mus_eq_bars    = _make_aest_op('mus_eq_bars',    'MUS_EQ_BARS',    "📊 EQ Bars",           "Vertical EQ bars (heights = pseudo-spectrum)")
+SURREAL_ARCH_OT_aest_mus_wave_disp  = _make_aest_op('mus_wave_disp',  'MUS_WAVE_DISP',  "🎶 Sound Wave Disp",   "Noise displacement scaled by music influence")
+SURREAL_ARCH_OT_aest_mus_beat_ring  = _make_aest_op('mus_beat_ring',  'MUS_BEAT_RING',  "⭕ Beat Ring",         "Pulsing orbital ring of orbs")
+SURREAL_ARCH_OT_aest_mus_harmonic   = _make_aest_op('mus_harmonic',   'MUS_HARMONIC',   "🎼 Harmonic Lattice",  "Stacked sine grooves at freq_a + freq_b")
+SURREAL_ARCH_OT_aest_adv_ray_grow   = _make_aest_op('adv_ray_grow',   'ADV_RAY_GROW',   "📡 Raycast Growth",    "Distribute + raycast outward growth")
+SURREAL_ARCH_OT_aest_adv_near_fur   = _make_aest_op('adv_near_fur',   'ADV_NEAR_FUR',   "🦔 Nearest Fur",       "Normal-aligned fur cones at every vertex")
+SURREAL_ARCH_OT_aest_adv_edge_tubes = _make_aest_op('adv_edge_tubes', 'ADV_EDGE_TUBES', "🟦 Edge Tubes",        "Tube highlights along edges")
+SURREAL_ARCH_OT_aest_adv_dual_mesh  = _make_aest_op('adv_dual_mesh',  'ADV_DUAL_MESH',  "🔷 Dual Mesh",         "Dual mesh + outward cell offset")
+SURREAL_ARCH_OT_aest_adv_vor_frac   = _make_aest_op('adv_vor_frac',   'ADV_VOR_FRAC',   "💎 Voronoi Fracture",  "Voronoi cell shards filling the volume")
+SURREAL_ARCH_OT_aest_adv_crystals   = _make_aest_op('adv_crystals',   'ADV_CRYSTALS',   "🧊 Crystal Cluster",   "Pointy octahedra grown from surface")
+SURREAL_ARCH_OT_aest_adv_field_lat  = _make_aest_op('adv_field_lat',  'ADV_FIELD_LAT',  "🕸 Field Lattice",     "Vec3 noise lattice + wireframe overlay")
+# v2.18 — curve-rich
+SURREAL_ARCH_OT_aest_goth_vault     = _make_aest_op('goth_vault',     'GOTH_VAULT',     "🏛 Bezier Rib Vault",  "Real bezier-swept rib vault")
+SURREAL_ARCH_OT_aest_goth_tracery2  = _make_aest_op('goth_tracery2',  'GOTH_TRACERY2',  "🌿 Branching Tracery", "Nested bezier arches with quatrefoil")
+SURREAL_ARCH_OT_aest_vap_dolphin    = _make_aest_op('vap_dolphin',    'VAP_DOLPHIN',    "🐬 Dolphin Arcs",      "Bezier dolphin-jump arcs swept neon")
+SURREAL_ARCH_OT_aest_zen_bonsai     = _make_aest_op('zen_bonsai',     'ZEN_BONSAI',     "🌳 Bonsai Branching",  "Procedural bezier bonsai")
+SURREAL_ARCH_OT_aest_spi_flower     = _make_aest_op('spi_flower',     'SPI_FLOWER',     "🌸 Flower of Life",    "Bezier flower-of-life lattice")
+SURREAL_ARCH_OT_aest_spi_metatron   = _make_aest_op('spi_metatron',   'SPI_METATRON',   "✡ Metatron's Cube",   "13-node Metatron cube + lines")
+# v2.19 — mechanical
+SURREAL_ARCH_OT_aest_mech_bolts     = _make_aest_op('mech_bolts',     'MECH_BOLTS',     "🔩 Hex Bolts",         "Hex bolt instances (mask-gated)")
+SURREAL_ARCH_OT_aest_mech_pipes     = _make_aest_op('mech_pipes',     'MECH_PIPES',     "🔧 Pipe Network",      "Bezier pipes with flange joints")
+SURREAL_ARCH_OT_aest_mech_gears     = _make_aest_op('mech_gears',     'MECH_GEARS',     "⚙ Gears",             "Distribute cog gears on faces")
+SURREAL_ARCH_OT_aest_mech_pistons   = _make_aest_op('mech_pistons',   'MECH_PISTONS',   "🛠 Pistons",           "Shaft + bell piston rings")
+SURREAL_ARCH_OT_aest_mech_panels    = _make_aest_op('mech_panels',    'MECH_PANELS',    "🟫 Panels",            "Extruded panel inserts (mask-gated)")
 
 
 class SURREAL_ARCH_OT_aest_apply(bpy.types.Operator):
@@ -26386,7 +26427,7 @@ class SURREAL_ARCH_OT_aest_clear(bpy.types.Operator):
 
 
 class SURREAL_ARCH_PT_aesthetic_effects(_EffectsSubPanelBase, bpy.types.Panel):
-    bl_label = "ðŸŽ­ Aesthetic Effects (Any Mesh)"
+    bl_label = "🎭 Aesthetic Effects (Any Mesh)"
     bl_idname = "SURREAL_ARCH_PT_aesthetic_effects"
     bl_order = 5
 
@@ -26433,91 +26474,91 @@ class SURREAL_ARCH_PT_aesthetic_effects(_EffectsSubPanelBase, bpy.types.Panel):
 
         # Categorized one-click buttons
         cat_specs = [
-            ("ðŸ¦‡ Gothic", [
-                ('surreal_arch.aest_goth_tracery',   "ðŸ•¯ Tracery"),
-                ('surreal_arch.aest_goth_drip',      "ðŸ©¸ Drip"),
-                ('surreal_arch.aest_goth_spikes',    "âš” Spikes"),
-                ('surreal_arch.aest_goth_ribs',      "ðŸ¦´ Ribs"),
-                ('surreal_arch.aest_goth_weathered', "ðŸª¦ Weathered"),
-                ('surreal_arch.aest_goth_lattice',   "ðŸ”² Lattice"),
-                ('surreal_arch.aest_goth_niches',    "ðŸ•³ Niches"),
-                ('surreal_arch.aest_goth_fans',      "ðŸª­ Fans"),
-                ('surreal_arch.aest_goth_finials',   "ðŸ‘‘ Finials"),
-                ('surreal_arch.aest_goth_leadwork',  "ðŸªŸ Leadwork"),
-                ('surreal_arch.aest_goth_spires',    "ðŸ° Spires"),
+            ("🦇 Gothic", [
+                ('surreal_arch.aest_goth_tracery',   "🕯 Tracery"),
+                ('surreal_arch.aest_goth_drip',      "🩸 Drip"),
+                ('surreal_arch.aest_goth_spikes',    "⚔ Spikes"),
+                ('surreal_arch.aest_goth_ribs',      "🦴 Ribs"),
+                ('surreal_arch.aest_goth_weathered', "🪦 Weathered"),
+                ('surreal_arch.aest_goth_lattice',   "🔲 Lattice"),
+                ('surreal_arch.aest_goth_niches',    "🕳 Niches"),
+                ('surreal_arch.aest_goth_fans',      "🪭 Fans"),
+                ('surreal_arch.aest_goth_finials',   "👑 Finials"),
+                ('surreal_arch.aest_goth_leadwork',  "🪟 Leadwork"),
+                ('surreal_arch.aest_goth_spires',    "🏰 Spires"),
             ]),
-            ("ðŸŒ´ Vaporwave", [
-                ('surreal_arch.aest_vap_wire',      "ðŸ’œ Wireframe"),
-                ('surreal_arch.aest_vap_pixel',     "ðŸŸª Pixel"),
-                ('surreal_arch.aest_vap_chromatic', "ðŸŒˆ Chromatic"),
-                ('surreal_arch.aest_vap_grid',      "ðŸŸ¦ Grid"),
-                ('surreal_arch.aest_vap_palms',     "ðŸŒ´ Palms"),
-                ('surreal_arch.aest_vap_slices',    "ðŸ“¼ Slices"),
-                ('surreal_arch.aest_vap_scanlines', "ðŸ“º Scanlines"),
-                ('surreal_arch.aest_vap_busts',     "ðŸ—¿ Busts"),
-                ('surreal_arch.aest_vap_slabs',     "ðŸª© Slabs"),
-                ('surreal_arch.aest_vap_sun',       "ðŸŒ… Sun"),
-                ('surreal_arch.aest_vap_neon_wrap', "ðŸ’« Neon Wrap"),
+            ("🌴 Vaporwave", [
+                ('surreal_arch.aest_vap_wire',      "💜 Wireframe"),
+                ('surreal_arch.aest_vap_pixel',     "🟪 Pixel"),
+                ('surreal_arch.aest_vap_chromatic', "🌈 Chromatic"),
+                ('surreal_arch.aest_vap_grid',      "🟦 Grid"),
+                ('surreal_arch.aest_vap_palms',     "🌴 Palms"),
+                ('surreal_arch.aest_vap_slices',    "📼 Slices"),
+                ('surreal_arch.aest_vap_scanlines', "📺 Scanlines"),
+                ('surreal_arch.aest_vap_busts',     "🗿 Busts"),
+                ('surreal_arch.aest_vap_slabs',     "🪩 Slabs"),
+                ('surreal_arch.aest_vap_sun',       "🌅 Sun"),
+                ('surreal_arch.aest_vap_neon_wrap', "💫 Neon Wrap"),
             ]),
-            ("â›© Zen", [
-                ('surreal_arch.aest_zen_moss',    "ðŸŒ¿ Moss"),
-                ('surreal_arch.aest_zen_ripple',  "ðŸŒŠ Ripple"),
-                ('surreal_arch.aest_zen_sand',    "ðŸ– Sand"),
-                ('surreal_arch.aest_zen_bamboo',  "ðŸŽ‹ Bamboo"),
-                ('surreal_arch.aest_zen_petals',  "ðŸŒ¸ Petals"),
-                ('surreal_arch.aest_zen_orbit',   "ðŸ® Lanterns"),
-                ('surreal_arch.aest_zen_smoke',   "ðŸŒ« Smoke"),
-                ('surreal_arch.aest_zen_pond',    "ðŸ  Pond"),
-                ('surreal_arch.aest_zen_terrace', "ðŸª¨ Terraces"),
-                ('surreal_arch.aest_zen_ginkgo',  "ðŸ‚ Ginkgo"),
-                ('surreal_arch.aest_zen_runes',   "ðŸˆ Calligraphy"),
+            ("⛩ Zen", [
+                ('surreal_arch.aest_zen_moss',    "🌿 Moss"),
+                ('surreal_arch.aest_zen_ripple',  "🌊 Ripple"),
+                ('surreal_arch.aest_zen_sand',    "🏖 Sand"),
+                ('surreal_arch.aest_zen_bamboo',  "🎋 Bamboo"),
+                ('surreal_arch.aest_zen_petals',  "🌸 Petals"),
+                ('surreal_arch.aest_zen_orbit',   "🏮 Lanterns"),
+                ('surreal_arch.aest_zen_smoke',   "🌫 Smoke"),
+                ('surreal_arch.aest_zen_pond',    "🐠 Pond"),
+                ('surreal_arch.aest_zen_terrace', "🪨 Terraces"),
+                ('surreal_arch.aest_zen_ginkgo',  "🍂 Ginkgo"),
+                ('surreal_arch.aest_zen_runes',   "🈁 Calligraphy"),
             ]),
-            ("ðŸ‘ Spiritual", [
-                ('surreal_arch.aest_spi_aura',      "âœ¨ Aura"),
-                ('surreal_arch.aest_spi_mandala',   "ðŸ•‰ Mandala"),
-                ('surreal_arch.aest_spi_chakra',    "ðŸŒˆ Chakra"),
-                ('surreal_arch.aest_spi_beam',      "ðŸ”† Beam"),
-                ('surreal_arch.aest_spi_ring',      "ðŸ’« Ring"),
-                ('surreal_arch.aest_spi_astral',    "ðŸ‘» Astral"),
-                ('surreal_arch.aest_spi_eye',       "ðŸ‘ Third Eye"),
-                ('surreal_arch.aest_spi_lotus',     "ðŸª· Lotus"),
-                ('surreal_arch.aest_spi_runes',     "ðŸ”¯ Runes"),
-                ('surreal_arch.aest_spi_halo',      "ðŸ’  Halo"),
-                ('surreal_arch.aest_spi_triangles', "â–³ Triangles"),
-                ('surreal_arch.aest_spi_flames',    "ðŸ”¥ Flames"),
-                ('surreal_arch.aest_spi_ouroboros', "ðŸ Ouroboros"),
-                ('surreal_arch.aest_spi_portal',   "ðŸŒ€ Portal"),
+            ("👁 Spiritual", [
+                ('surreal_arch.aest_spi_aura',      "✨ Aura"),
+                ('surreal_arch.aest_spi_mandala',   "🕉 Mandala"),
+                ('surreal_arch.aest_spi_chakra',    "🌈 Chakra"),
+                ('surreal_arch.aest_spi_beam',      "🔆 Beam"),
+                ('surreal_arch.aest_spi_ring',      "💫 Ring"),
+                ('surreal_arch.aest_spi_astral',    "👻 Astral"),
+                ('surreal_arch.aest_spi_eye',       "👁 Third Eye"),
+                ('surreal_arch.aest_spi_lotus',     "🪷 Lotus"),
+                ('surreal_arch.aest_spi_runes',     "🔯 Runes"),
+                ('surreal_arch.aest_spi_halo',      "💠 Halo"),
+                ('surreal_arch.aest_spi_triangles', "△ Triangles"),
+                ('surreal_arch.aest_spi_flames',    "🔥 Flames"),
+                ('surreal_arch.aest_spi_ouroboros', "🐍 Ouroboros"),
+                ('surreal_arch.aest_spi_portal',   "🌀 Portal"),
             ]),
-            ("ðŸŽµ Music-Reactive", [
-                ('surreal_arch.aest_mus_pulse',     "ðŸ’“ Pulse"),
-                ('surreal_arch.aest_mus_eq_bars',   "ðŸ“Š EQ Bars"),
-                ('surreal_arch.aest_mus_wave_disp', "ðŸŽ¶ Wave Disp"),
-                ('surreal_arch.aest_mus_beat_ring', "â­• Beat Ring"),
-                ('surreal_arch.aest_mus_harmonic',  "ðŸŽ¼ Harmonic"),
+            ("🎵 Music-Reactive", [
+                ('surreal_arch.aest_mus_pulse',     "💓 Pulse"),
+                ('surreal_arch.aest_mus_eq_bars',   "📊 EQ Bars"),
+                ('surreal_arch.aest_mus_wave_disp', "🎶 Wave Disp"),
+                ('surreal_arch.aest_mus_beat_ring', "⭕ Beat Ring"),
+                ('surreal_arch.aest_mus_harmonic',  "🎼 Harmonic"),
             ]),
-            ("âš— Advanced GN", [
-                ('surreal_arch.aest_adv_ray_grow',   "ðŸ“¡ Ray Grow"),
-                ('surreal_arch.aest_adv_near_fur',   "ðŸ¦” Fur"),
-                ('surreal_arch.aest_adv_edge_tubes', "ðŸŸ¦ Edge Tubes"),
-                ('surreal_arch.aest_adv_dual_mesh',  "ðŸ”· Dual Mesh"),
-                ('surreal_arch.aest_adv_vor_frac',   "ðŸ’Ž Vor Fracture"),
-                ('surreal_arch.aest_adv_crystals',   "ðŸ§Š Crystals"),
-                ('surreal_arch.aest_adv_field_lat',  "ðŸ•¸ Field Lattice"),
+            ("⚗ Advanced GN", [
+                ('surreal_arch.aest_adv_ray_grow',   "📡 Ray Grow"),
+                ('surreal_arch.aest_adv_near_fur',   "🦔 Fur"),
+                ('surreal_arch.aest_adv_edge_tubes', "🟦 Edge Tubes"),
+                ('surreal_arch.aest_adv_dual_mesh',  "🔷 Dual Mesh"),
+                ('surreal_arch.aest_adv_vor_frac',   "💎 Vor Fracture"),
+                ('surreal_arch.aest_adv_crystals',   "🧊 Crystals"),
+                ('surreal_arch.aest_adv_field_lat',  "🕸 Field Lattice"),
             ]),
-            ("ðŸŒ¿ Curve-Rich (Bezier Sweeps)", [
-                ('surreal_arch.aest_goth_vault',    "ðŸ› Rib Vault"),
-                ('surreal_arch.aest_goth_tracery2', "ðŸŒ¿ Branching Tracery"),
-                ('surreal_arch.aest_vap_dolphin',   "ðŸ¬ Dolphin Arcs"),
-                ('surreal_arch.aest_zen_bonsai',    "ðŸŒ³ Bonsai"),
-                ('surreal_arch.aest_spi_flower',    "ðŸŒ¸ Flower of Life"),
-                ('surreal_arch.aest_spi_metatron',  "âœ¡ Metatron"),
+            ("🌿 Curve-Rich (Bezier Sweeps)", [
+                ('surreal_arch.aest_goth_vault',    "🏛 Rib Vault"),
+                ('surreal_arch.aest_goth_tracery2', "🌿 Branching Tracery"),
+                ('surreal_arch.aest_vap_dolphin',   "🐬 Dolphin Arcs"),
+                ('surreal_arch.aest_zen_bonsai',    "🌳 Bonsai"),
+                ('surreal_arch.aest_spi_flower',    "🌸 Flower of Life"),
+                ('surreal_arch.aest_spi_metatron',  "✡ Metatron"),
             ]),
-            ("âš™ Mechanical", [
-                ('surreal_arch.aest_mech_bolts',   "ðŸ”© Bolts"),
-                ('surreal_arch.aest_mech_pipes',   "ðŸ”§ Pipes"),
-                ('surreal_arch.aest_mech_gears',   "âš™ Gears"),
-                ('surreal_arch.aest_mech_pistons', "ðŸ›  Pistons"),
-                ('surreal_arch.aest_mech_panels',  "ðŸŸ« Panels"),
+            ("⚙ Mechanical", [
+                ('surreal_arch.aest_mech_bolts',   "🔩 Bolts"),
+                ('surreal_arch.aest_mech_pipes',   "🔧 Pipes"),
+                ('surreal_arch.aest_mech_gears',   "⚙ Gears"),
+                ('surreal_arch.aest_mech_pistons', "🛠 Pistons"),
+                ('surreal_arch.aest_mech_panels',  "🟫 Panels"),
             ]),
         ]
         for cat_label, ops in cat_specs:
@@ -26530,8 +26571,8 @@ class SURREAL_ARCH_PT_aesthetic_effects(_EffectsSubPanelBase, bpy.types.Panel):
 
         # Stack management
         row = layout.row(align=True)
-        row.operator("surreal_arch.aest_apply", text="ðŸ” Re-apply Current", icon='FILE_REFRESH')
-        row.operator("surreal_arch.aest_clear", text="ðŸ—‘ Clear All", icon='TRASH')
+        row.operator("surreal_arch.aest_apply", text="🔁 Re-apply Current", icon='FILE_REFRESH')
+        row.operator("surreal_arch.aest_clear", text="🗑 Clear All", icon='TRASH')
 
 
 # ======================================================================
@@ -26596,7 +26637,7 @@ def build_auto_building(tree, props):
             _link(tree, inst_w.outputs['Instances'], real_w.inputs['Geometry'])
             pieces_b.append(real_w.outputs['Geometry'])
 
-    # â”€â”€ Main body â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Main body ──────────────────────────────────────────────────────
     if style == 'SKYSCRAPER' and props.bld_setbacks and Fc > 10:
         # Stacked setback volumes
         thirds = Fc // 3
@@ -26642,7 +26683,7 @@ def build_auto_building(tree, props):
         color_node(b_main, "tower"); color_node(t_main, "tower")
         pieces_b.append(t_main.outputs['Geometry'])
 
-    # â”€â”€ Window grid â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Window grid ────────────────────────────────────────────────────
     win_start = 1 if props.bld_ground_retail else 0
     for fi in range(win_start, Fc):
         floor_z = fi * Fh
@@ -26650,7 +26691,7 @@ def build_auto_building(tree, props):
             row_z = floor_z + Fh * 0.15 + row_i * (Fh * 0.7 / max(1, wr))
             window_array(row_z, Fh * 0.7 / max(1, wr), fi * wr + row_i)
 
-    # â”€â”€ Ground floor retail windows (taller) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Ground floor retail windows (taller) ──────────────────────────
     if props.bld_ground_retail and style in ('COMMERCIAL', 'CYBERPUNK', 'BRUTALIST'):
         retail_win = _node(tree, 'GeometryNodeMeshCube', (x+1000, -1800))
         retail_win.inputs['Size'].default_value = (W * 0.85 / max(1, wc) * 0.9, D * 0.06, Fh * 0.65)
@@ -26669,7 +26710,7 @@ def build_auto_building(tree, props):
             _link(tree, ri_inst.outputs['Instances'], ri_real.inputs['Geometry'])
             pieces_b.append(ri_real.outputs['Geometry'])
 
-    # â”€â”€ Balconies â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Balconies ─────────────────────────────────────────────────────
     if props.bld_balconies and Fc > 2:
         bal = _node(tree, 'GeometryNodeMeshCube', (x+1700, -400))
         bal.inputs['Size'].default_value = (W * 0.9, 0.9, 0.12)
@@ -26689,7 +26730,7 @@ def build_auto_building(tree, props):
             _link(tree, bi_inst.outputs['Instances'], bi_real.inputs['Geometry'])
             pieces_b.append(bi_real.outputs['Geometry'])
 
-    # â”€â”€ Cornices: thin protruding string course at each floor boundary â”€â”€
+    # ── Cornices: thin protruding string course at each floor boundary ──
     # Skip for SKYSCRAPER + CYBERPUNK (those don't have classical cornices)
     if style not in ('SKYSCRAPER', 'CYBERPUNK', 'SCIFI_STATION'):
         for fi in range(1, Fc):
@@ -26701,7 +26742,7 @@ def build_auto_building(tree, props):
             color_node(corn, "ornament"); color_node(corn_t, "ornament")
             pieces_b.append(corn_t.outputs['Geometry'])
 
-    # â”€â”€ Rooftop â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Rooftop ───────────────────────────────────────────────────────
     if props.bld_rooftop:
         if style == 'SKYSCRAPER':
             # Spire
@@ -26724,7 +26765,7 @@ def build_auto_building(tree, props):
                 _link(tree, ac.outputs['Mesh'], ac_t.inputs['Geometry'])
                 pieces_b.append(ac_t.outputs['Geometry'])
         elif style in ('RESIDENTIAL', 'COMMERCIAL', 'GOTHIC_MANOR'):
-            # === Proper hipped roof â€” 4 triangular slopes meeting at a ridge ===
+            # === Proper hipped roof — 4 triangular slopes meeting at a ridge ===
             import math as _m
             rise = Fh * 0.85   # roof apex height
             overhang = 0.4
@@ -26753,7 +26794,7 @@ def build_auto_building(tree, props):
                 _link(tree, slab.outputs['Mesh'], slab_t.inputs['Geometry'])
                 color_node(slab, "house"); color_node(slab_t, "house")
                 pieces_b.append(slab_t.outputs['Geometry'])
-            # Gable ends (front/back triangles) â€” extruded 3-vertex curve
+            # Gable ends (front/back triangles) — extruded 3-vertex curve
             for sy in (-1, 1):
                 tri_c = _safe_node(tree, 'GeometryNodeCurvePrimitiveCircle',
                                     (x+2200, 1500 + (sy + 1) * 100))
@@ -26794,18 +26835,18 @@ def build_auto_building(tree, props):
                 _link(tree, par.outputs['Mesh'], par_t.inputs['Geometry'])
                 pieces_b.append(par_t.outputs['Geometry'])
 
-    # â”€â”€ Join all (with welding so pieces fuse properly) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Join all (with welding so pieces fuse properly) ────────────────
     return _finalize_building(tree, pieces_b, (x+3200, 0))
 
 
 # ======================================================================
-# OPERATORS â€” Sci-Fi Effect
+# OPERATORS — Sci-Fi Effect
 # ======================================================================
 
 class SURREAL_ARCH_OT_scifi_apply(bpy.types.Operator):
     """Apply the selected Sci-Fi effect non-destructively to the active object."""
     bl_idname = "surreal_arch.scifi_apply"
-    bl_label  = "âš¡ Apply Sci-Fi Effect"
+    bl_label  = "⚡ Apply Sci-Fi Effect"
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
@@ -26831,36 +26872,36 @@ def _scifi_one_click(effect):
 
 
 class SURREAL_ARCH_OT_scifi_greeble(bpy.types.Operator):
-    bl_idname="surreal_arch.scifi_greeble"; bl_label="â¬› Greeble"; bl_options={'REGISTER','UNDO'}
+    bl_idname="surreal_arch.scifi_greeble"; bl_label="⬛ Greeble"; bl_options={'REGISTER','UNDO'}
     execute=_scifi_one_click('GREEBLE')
 
 class SURREAL_ARCH_OT_scifi_circuit(bpy.types.Operator):
-    bl_idname="surreal_arch.scifi_circuit"; bl_label="ðŸ”Œ Circuit"; bl_options={'REGISTER','UNDO'}
+    bl_idname="surreal_arch.scifi_circuit"; bl_label="🔌 Circuit"; bl_options={'REGISTER','UNDO'}
     execute=_scifi_one_click('CIRCUIT')
 
 class SURREAL_ARCH_OT_scifi_neon(bpy.types.Operator):
-    bl_idname="surreal_arch.scifi_neon"; bl_label="ðŸ’¡ Neon Trim"; bl_options={'REGISTER','UNDO'}
+    bl_idname="surreal_arch.scifi_neon"; bl_label="💡 Neon Trim"; bl_options={'REGISTER','UNDO'}
     execute=_scifi_one_click('NEON_TRIM')
 
 class SURREAL_ARCH_OT_scifi_panel_lines(bpy.types.Operator):
-    bl_idname="surreal_arch.scifi_panel_lines"; bl_label="â–¬ Panel Lines"; bl_options={'REGISTER','UNDO'}
+    bl_idname="surreal_arch.scifi_panel_lines"; bl_label="▬ Panel Lines"; bl_options={'REGISTER','UNDO'}
     execute=_scifi_one_click('PANEL_LINES')
 
 class SURREAL_ARCH_OT_scifi_antenna(bpy.types.Operator):
-    bl_idname="surreal_arch.scifi_antenna"; bl_label="ðŸ“¡ Antenna"; bl_options={'REGISTER','UNDO'}
+    bl_idname="surreal_arch.scifi_antenna"; bl_label="📡 Antenna"; bl_options={'REGISTER','UNDO'}
     execute=_scifi_one_click('ANTENNA')
 
 class SURREAL_ARCH_OT_scifi_damage(bpy.types.Operator):
-    bl_idname="surreal_arch.scifi_damage"; bl_label="ðŸ’¥ Damage"; bl_options={'REGISTER','UNDO'}
+    bl_idname="surreal_arch.scifi_damage"; bl_label="💥 Damage"; bl_options={'REGISTER','UNDO'}
     execute=_scifi_one_click('DAMAGE')
 
 class SURREAL_ARCH_OT_scifi_hex(bpy.types.Operator):
-    bl_idname="surreal_arch.scifi_hex"; bl_label="â¬¡ Hex Armour"; bl_options={'REGISTER','UNDO'}
+    bl_idname="surreal_arch.scifi_hex"; bl_label="⬡ Hex Armour"; bl_options={'REGISTER','UNDO'}
     execute=_scifi_one_click('HEX_ARMOUR')
 
 class SURREAL_ARCH_OT_scifi_clear(bpy.types.Operator):
     """Remove all SciFi_ modifiers from active object."""
-    bl_idname="surreal_arch.scifi_clear"; bl_label="ðŸ—‘ Clear Effects"; bl_options={'REGISTER','UNDO'}
+    bl_idname="surreal_arch.scifi_clear"; bl_label="🗑 Clear Effects"; bl_options={'REGISTER','UNDO'}
     def execute(self, context):
         obj = context.active_object
         if obj and obj.type=='MESH':
@@ -26870,13 +26911,13 @@ class SURREAL_ARCH_OT_scifi_clear(bpy.types.Operator):
 
 
 # ======================================================================
-# OPERATORS â€” Auto Building
+# OPERATORS — Auto Building
 # ======================================================================
 
 class SURREAL_ARCH_OT_auto_building(bpy.types.Operator):
     """Generate a complete parametric building from the current settings."""
     bl_idname = "surreal_arch.auto_building"
-    bl_label  = "ðŸ¢ Generate Building"
+    bl_label  = "🏢 Generate Building"
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
@@ -26891,7 +26932,7 @@ class SURREAL_ARCH_OT_auto_building(bpy.types.Operator):
 
 
 def _safe_set_arch_type(props, value, fallback='BUILDING'):
-    """Set arch_type defensively â€” falls back when the enum doesn't include
+    """Set arch_type defensively — falls back when the enum doesn't include
     the requested value (e.g. when an older addon registration is cached)."""
     try:
         props.arch_type = value
@@ -26918,40 +26959,40 @@ def _bld_one_click(style, floors=None, width=None, depth=None):
     return execute
 
 class SURREAL_ARCH_OT_bld_residential(bpy.types.Operator):
-    bl_idname="surreal_arch.bld_residential"; bl_label="ðŸ  Residential"; bl_options={'REGISTER','UNDO'}
+    bl_idname="surreal_arch.bld_residential"; bl_label="🏠 Residential"; bl_options={'REGISTER','UNDO'}
     execute=_bld_one_click('RESIDENTIAL', floors=5, width=12, depth=9)
 
 class SURREAL_ARCH_OT_bld_commercial(bpy.types.Operator):
-    bl_idname="surreal_arch.bld_commercial"; bl_label="ðŸ¢ Commercial"; bl_options={'REGISTER','UNDO'}
+    bl_idname="surreal_arch.bld_commercial"; bl_label="🏢 Commercial"; bl_options={'REGISTER','UNDO'}
     execute=_bld_one_click('COMMERCIAL', floors=10, width=16, depth=12)
 
 class SURREAL_ARCH_OT_bld_skyscraper(bpy.types.Operator):
-    bl_idname="surreal_arch.bld_skyscraper"; bl_label="ðŸ™ Skyscraper"; bl_options={'REGISTER','UNDO'}
+    bl_idname="surreal_arch.bld_skyscraper"; bl_label="🏙 Skyscraper"; bl_options={'REGISTER','UNDO'}
     execute=_bld_one_click('SKYSCRAPER', floors=40, width=20, depth=16)
 
 class SURREAL_ARCH_OT_bld_warehouse(bpy.types.Operator):
-    bl_idname="surreal_arch.bld_warehouse"; bl_label="ðŸ­ Warehouse"; bl_options={'REGISTER','UNDO'}
+    bl_idname="surreal_arch.bld_warehouse"; bl_label="🏭 Warehouse"; bl_options={'REGISTER','UNDO'}
     execute=_bld_one_click('WAREHOUSE', floors=1, width=25, depth=18)
 
 class SURREAL_ARCH_OT_bld_cyberpunk(bpy.types.Operator):
-    bl_idname="surreal_arch.bld_cyberpunk"; bl_label="ðŸŒƒ Cyberpunk"; bl_options={'REGISTER','UNDO'}
+    bl_idname="surreal_arch.bld_cyberpunk"; bl_label="🌃 Cyberpunk"; bl_options={'REGISTER','UNDO'}
     execute=_bld_one_click('CYBERPUNK', floors=15, width=14, depth=10)
 
 class SURREAL_ARCH_OT_bld_scifi(bpy.types.Operator):
-    bl_idname="surreal_arch.bld_scifi"; bl_label="ðŸš€ Sci-Fi Station"; bl_options={'REGISTER','UNDO'}
+    bl_idname="surreal_arch.bld_scifi"; bl_label="🚀 Sci-Fi Station"; bl_options={'REGISTER','UNDO'}
     execute=_bld_one_click('SCIFI_STATION', floors=8, width=18, depth=14)
 
 class SURREAL_ARCH_OT_bld_gothic_manor(bpy.types.Operator):
-    bl_idname="surreal_arch.bld_gothic_manor"; bl_label="ðŸ° Gothic Manor"; bl_options={'REGISTER','UNDO'}
+    bl_idname="surreal_arch.bld_gothic_manor"; bl_label="🏰 Gothic Manor"; bl_options={'REGISTER','UNDO'}
     execute=_bld_one_click('GOTHIC_MANOR', floors=4, width=14, depth=10)
 
 class SURREAL_ARCH_OT_bld_brutalist(bpy.types.Operator):
-    bl_idname="surreal_arch.bld_brutalist"; bl_label="ðŸ§± Brutalist"; bl_options={'REGISTER','UNDO'}
+    bl_idname="surreal_arch.bld_brutalist"; bl_label="🧱 Brutalist"; bl_options={'REGISTER','UNDO'}
     execute=_bld_one_click('BRUTALIST', floors=20, width=22, depth=15)
 
 class SURREAL_ARCH_OT_bld_randomize(bpy.types.Operator):
     """Randomize the building seed and regenerate."""
-    bl_idname="surreal_arch.bld_randomize"; bl_label="ðŸŽ² Randomize"; bl_options={'REGISTER','UNDO'}
+    bl_idname="surreal_arch.bld_randomize"; bl_label="🎲 Randomize"; bl_options={'REGISTER','UNDO'}
     def execute(self, context):
         import random
         obj = context.active_object
@@ -26963,11 +27004,11 @@ class SURREAL_ARCH_OT_bld_randomize(bpy.types.Operator):
 
 
 # ======================================================================
-# PANELS â€” Sci-Fi Effect Generator + Auto Building
+# PANELS — Sci-Fi Effect Generator + Auto Building
 # ======================================================================
 
 class SURREAL_ARCH_PT_scifi(_EffectsSubPanelBase, bpy.types.Panel):
-    bl_label  = "ðŸ”¬ Sci-Fi / Cyberpunk Effect Generator"
+    bl_label  = "🔬 Sci-Fi / Cyberpunk Effect Generator"
     bl_idname = "SURREAL_ARCH_PT_scifi"
     bl_order = 3
 
@@ -26979,29 +27020,29 @@ class SURREAL_ARCH_PT_scifi(_EffectsSubPanelBase, bpy.types.Panel):
             return
         props = obj.surreal_arch_props
 
-        # One-click effects â€” big buttons like market product
+        # One-click effects — big buttons like market product
         box = layout.box()
-        box.label(text="âš¡ One-Click Effects  (works on any mesh)", icon='SHADERFX')
+        box.label(text="⚡ One-Click Effects  (works on any mesh)", icon='SHADERFX')
         col = box.column(align=True)
 
         r = col.row(align=True); r.scale_y = 1.5
-        r.operator("surreal_arch.scifi_greeble",      text="â¬› Greeble",    icon='MESH_GRID')
-        r.operator("surreal_arch.scifi_circuit",      text="ðŸ”Œ Circuit",    icon='NODETREE')
-        r.operator("surreal_arch.scifi_neon",         text="ðŸ’¡ Neon Trim",  icon='LIGHT_SUN')
+        r.operator("surreal_arch.scifi_greeble",      text="⬛ Greeble",    icon='MESH_GRID')
+        r.operator("surreal_arch.scifi_circuit",      text="🔌 Circuit",    icon='NODETREE')
+        r.operator("surreal_arch.scifi_neon",         text="💡 Neon Trim",  icon='LIGHT_SUN')
 
         r = col.row(align=True); r.scale_y = 1.5
-        r.operator("surreal_arch.scifi_panel_lines",  text="â–¬ Panel Lines", icon='MESH_PLANE')
-        r.operator("surreal_arch.scifi_antenna",      text="ðŸ“¡ Antenna",    icon='OUTLINER_OB_CURVES')
-        r.operator("surreal_arch.scifi_damage",       text="ðŸ’¥ Damage",     icon='FORCE_TURBULENCE')
+        r.operator("surreal_arch.scifi_panel_lines",  text="▬ Panel Lines", icon='MESH_PLANE')
+        r.operator("surreal_arch.scifi_antenna",      text="📡 Antenna",    icon='OUTLINER_OB_CURVES')
+        r.operator("surreal_arch.scifi_damage",       text="💥 Damage",     icon='FORCE_TURBULENCE')
 
         r = col.row(align=True); r.scale_y = 1.5
-        r.operator("surreal_arch.scifi_hex",          text="â¬¡ Hex Armour", icon='MESH_ICOSPHERE')
-        r.operator("surreal_arch.scifi_apply",        text="âœ¨ Apply Custom",icon='CHECKMARK')
-        r.operator("surreal_arch.scifi_clear",        text="ðŸ—‘ Clear",      icon='TRASH')
+        r.operator("surreal_arch.scifi_hex",          text="⬡ Hex Armour", icon='MESH_ICOSPHERE')
+        r.operator("surreal_arch.scifi_apply",        text="✨ Apply Custom",icon='CHECKMARK')
+        r.operator("surreal_arch.scifi_clear",        text="🗑 Clear",      icon='TRASH')
 
         # Fine controls
         box2 = layout.box()
-        box2.label(text="ðŸ”§ Effect Parameters")
+        box2.label(text="🔧 Effect Parameters")
         col2 = box2.column(align=True)
         col2.prop(props, "scifi_effect",      text="Effect")
         col2.separator()
@@ -27011,14 +27052,14 @@ class SURREAL_ARCH_PT_scifi(_EffectsSubPanelBase, bpy.types.Panel):
         col2.prop(props, "scifi_randomness",  text="Randomness")
         col2.prop(props, "scifi_layers",      text="Subdivision Layers")
         if props.scifi_effect == 'NEON_TRIM':
-            col2.prop(props, "scifi_edge_angle",  text="Edge Angle Â°")
+            col2.prop(props, "scifi_edge_angle",  text="Edge Angle °")
             col2.prop(props, "scifi_tube_radius", text="Tube Radius")
         col2.prop(props, "scifi_inset",       text="Inset Amount")
         col2.prop(props, "scifi_on_input")
 
 
 class SURREAL_ARCH_PT_auto_building(_SubPanelBase, bpy.types.Panel):
-    bl_label  = "ðŸ¢ Auto Building Generator"
+    bl_label  = "🏢 Auto Building Generator"
     bl_idname = "SURREAL_ARCH_PT_auto_building"
 
     def draw(self, context):
@@ -27026,23 +27067,23 @@ class SURREAL_ARCH_PT_auto_building(_SubPanelBase, bpy.types.Panel):
 
         # Preset buttons
         box = layout.box()
-        box.label(text="ðŸ™ One-Click Building Presets", icon='HOME')
+        box.label(text="🏙 One-Click Building Presets", icon='HOME')
         col = box.column(align=True)
 
         r = col.row(align=True); r.scale_y = 1.4
-        r.operator("surreal_arch.bld_residential", text="ðŸ  House",      icon='HOME')
-        r.operator("surreal_arch.bld_commercial",  text="ðŸ¢ Office",     icon='OBJECT_DATA')
-        r.operator("surreal_arch.bld_skyscraper",  text="ðŸ™ Tower",      icon='MESH_CAPSULE')
+        r.operator("surreal_arch.bld_residential", text="🏠 House",      icon='HOME')
+        r.operator("surreal_arch.bld_commercial",  text="🏢 Office",     icon='OBJECT_DATA')
+        r.operator("surreal_arch.bld_skyscraper",  text="🏙 Tower",      icon='MESH_CAPSULE')
 
         r = col.row(align=True); r.scale_y = 1.4
-        r.operator("surreal_arch.bld_warehouse",   text="ðŸ­ Factory",    icon='MESH_CUBE')
-        r.operator("surreal_arch.bld_cyberpunk",   text="ðŸŒƒ Cyberpunk",  icon='LIGHT_POINT')
-        r.operator("surreal_arch.bld_scifi",       text="ðŸš€ Sci-Fi",     icon='FORCE_MAGNETIC')
+        r.operator("surreal_arch.bld_warehouse",   text="🏭 Factory",    icon='MESH_CUBE')
+        r.operator("surreal_arch.bld_cyberpunk",   text="🌃 Cyberpunk",  icon='LIGHT_POINT')
+        r.operator("surreal_arch.bld_scifi",       text="🚀 Sci-Fi",     icon='FORCE_MAGNETIC')
 
         r = col.row(align=True); r.scale_y = 1.4
-        r.operator("surreal_arch.bld_gothic_manor",text="ðŸ° Gothic",     icon='MESH_TORUS')
-        r.operator("surreal_arch.bld_brutalist",   text="ðŸ§± Brutalist",  icon='SNAP_FACE')
-        r.operator("surreal_arch.bld_randomize",   text="ðŸŽ² Randomize!", icon='FILE_REFRESH')
+        r.operator("surreal_arch.bld_gothic_manor",text="🏰 Gothic",     icon='MESH_TORUS')
+        r.operator("surreal_arch.bld_brutalist",   text="🧱 Brutalist",  icon='SNAP_FACE')
+        r.operator("surreal_arch.bld_randomize",   text="🎲 Randomize!", icon='FILE_REFRESH')
 
         # Parameters
         obj = context.active_object
@@ -27051,7 +27092,7 @@ class SURREAL_ARCH_PT_auto_building(_SubPanelBase, bpy.types.Panel):
         props = obj.surreal_arch_props
 
         box2 = layout.box()
-        box2.label(text="ðŸ“ Dimensions")
+        box2.label(text="📐 Dimensions")
         col2 = box2.column(align=True)
         col2.prop(props, "bld_style",         text="Style")
         col2.prop(props, "bld_width",         text="Width")
@@ -27060,7 +27101,7 @@ class SURREAL_ARCH_PT_auto_building(_SubPanelBase, bpy.types.Panel):
         col2.prop(props, "bld_floor_height_b",text="Floor Height")
 
         box3 = layout.box()
-        box3.label(text="ðŸªŸ Windows")
+        box3.label(text="🪟 Windows")
         col3 = box3.column(align=True)
         col3.prop(props, "bld_win_cols", text="Columns")
         col3.prop(props, "bld_win_rows", text="Rows / Floor")
@@ -27068,7 +27109,7 @@ class SURREAL_ARCH_PT_auto_building(_SubPanelBase, bpy.types.Panel):
         col3.prop(props, "bld_win_h",   text="Window Height")
 
         box4 = layout.box()
-        box4.label(text="ðŸ— Features")
+        box4.label(text="🏗 Features")
         col4 = box4.column(align=True)
         col4.prop(props, "bld_facade_style",  text="Facade")
         col4.prop(props, "bld_rooftop",       text="Rooftop Detail")
@@ -27077,11 +27118,11 @@ class SURREAL_ARCH_PT_auto_building(_SubPanelBase, bpy.types.Panel):
         col4.prop(props, "bld_ground_retail", text="Ground Floor Retail")
 
         row = layout.row(align=True); row.scale_y = 1.6
-        row.operator("surreal_arch.auto_building", text="ðŸ¢ Generate Building!", icon='HOME')
+        row.operator("surreal_arch.auto_building", text="🏢 Generate Building!", icon='HOME')
 
 
 def apply_edge_bevel_modifier(obj, props):
-    """Add (or update) a Bevel modifier on the object â€” edge-only via angle
+    """Add (or update) a Bevel modifier on the object — edge-only via angle
     threshold. v2.29 also flips all polygons to smooth-shade for the AAA
     rounded-edge highlight that a bevel alone can't produce on flat shading."""
     # Remove any existing SurrealArch bevel modifier
@@ -27155,7 +27196,7 @@ def apply_material_to_object(obj, props):
         return
 
     choice = props.material_choice
-    # ðŸŽ€ Genshin override â€” applies the toon shader regardless of arch_type
+    # 🎀 Genshin override — applies the toon shader regardless of arch_type
     if getattr(props, "genshin_style", False):
         choice = 'GENSHIN'
     elif choice == 'AUTO':
@@ -27167,7 +27208,7 @@ def apply_material_to_object(obj, props):
 
     mat = bpy.data.materials.get(mat_name)
     if not mat:
-        # Library not built yet â€” build it
+        # Library not built yet — build it
         build_shader_library()
         mat = bpy.data.materials.get(mat_name)
         if not mat:
@@ -27375,7 +27416,7 @@ SURREAL_ARCH_OT_preset_staff = _make_preset_op(
 # === Gothic presets ===
 SURREAL_ARCH_OT_preset_gothic = _make_preset_op(
     "SURREAL_ARCH_OT_preset_gothic", "surreal_arch.preset_gothic", "Gothic",
-    # bevel_amount fixed: 0.5â†’0.04 (was crushing fine 0.12m tracery geometry)
+    # bevel_amount fixed: 0.5→0.04 (was crushing fine 0.12m tracery geometry)
     dict(arch_type='GOTHIC_ARCH', gothic_width=2.0, gothic_radius=1.5, gothic_thickness=0.12,
          bevel_amount=0.04, bevel_subdiv_level=2, auto_smooth=True, material_choice='STONE'),
 )
@@ -27402,7 +27443,7 @@ SURREAL_ARCH_OT_preset_lancet = _make_preset_op(
          bevel_amount=0.03, bevel_subdiv_level=2, auto_smooth=True, material_choice='STONE'),
 )
 
-# === Venetian Gothic presets (after Boscarino et al.) â€” bevel fixed ===
+# === Venetian Gothic presets (after Boscarino et al.) — bevel fixed ===
 SURREAL_ARCH_OT_preset_ogee = _make_preset_op(
     "SURREAL_ARCH_OT_preset_ogee", "surreal_arch.preset_ogee", "Ogee",
     dict(arch_type='OGEE_ARCH',
@@ -27441,7 +27482,7 @@ SURREAL_ARCH_OT_preset_palazzo = _make_preset_op(
          material_choice='MARBLE'),
 )
 
-# === Escher Ã— Venetian combo presets â€” bevel fixed ===
+# === Escher × Venetian combo presets — bevel fixed ===
 SURREAL_ARCH_OT_preset_brick = _make_preset_op(
     "SURREAL_ARCH_OT_preset_brick", "surreal_arch.preset_brick", "Brick",
     dict(arch_type='BRICK_WALL',
@@ -27462,7 +27503,7 @@ SURREAL_ARCH_OT_preset_bridge = _make_preset_op(
          material_choice='MARBLE'),
 )
 
-# === v2.50 â€” Advanced Archway / Bridge / Fence presets ==================
+# === v2.50 — Advanced Archway / Bridge / Fence presets ==================
 SURREAL_ARCH_OT_preset_archway_roman = _make_preset_op(
     "SURREAL_ARCH_OT_preset_archway_roman", "surreal_arch.preset_archway_roman",
     "Roman Archway",
@@ -27558,7 +27599,7 @@ SURREAL_ARCH_OT_preset_fence_stone = _make_preset_op(
          material_choice='STONE'),
 )
 
-# === v2.55 â€” Curved Room presets ===
+# === v2.55 — Curved Room presets ===
 SURREAL_ARCH_OT_preset_gb_room_circular = _make_preset_op(
     "SURREAL_ARCH_OT_preset_gb_room_circular", "surreal_arch.preset_gb_room_circular",
     "Circular Room",
@@ -27601,7 +27642,7 @@ SURREAL_ARCH_OT_preset_gb_arc_cross = _make_preset_op(
          auto_smooth=True, material_choice='STONE'),
 )
 
-# === v2.60 â€” Playable architecture presets (research-backed metres) ===
+# === v2.60 — Playable architecture presets (research-backed metres) ===
 SURREAL_ARCH_OT_preset_basilica_nave = _make_preset_op(
     "SURREAL_ARCH_OT_preset_basilica_nave", "surreal_arch.preset_basilica_nave",
     "Basilica Nave",
@@ -27710,7 +27751,7 @@ SURREAL_ARCH_OT_preset_greybox_basilica_block = _make_preset_op(
          auto_smooth=True, material_choice='STONE'),
 )
 
-# === v2.60.1 â€” tick 61: four more metre-scale presets ===
+# === v2.60.1 — tick 61: four more metre-scale presets ===
 SURREAL_ARCH_OT_preset_japanese_temple_compound = _make_preset_op(
     "SURREAL_ARCH_OT_preset_japanese_temple_compound",
     "surreal_arch.preset_japanese_temple_compound", "Temple Compound",
@@ -27741,7 +27782,7 @@ SURREAL_ARCH_OT_preset_gothic_cloister_walk = _make_preset_op(
          material_choice='GOTHIC_DARK'),
 )
 
-# === v2.60.1 â€” tick 63: six architecturally accurate gap-fill presets ===
+# === v2.60.1 — tick 63: six architecturally accurate gap-fill presets ===
 SURREAL_ARCH_OT_preset_escher_courtyard = _make_preset_op(
     "SURREAL_ARCH_OT_preset_escher_courtyard", "surreal_arch.preset_escher_courtyard",
     "Escher Courtyard",
@@ -27785,7 +27826,7 @@ SURREAL_ARCH_OT_preset_scifi_atrium = _make_preset_op(
          auto_smooth=True, material_choice='MARBLE'),
 )
 
-# === v2.60.2 â€” tick 64: five more metre-scale presets ===
+# === v2.60.2 — tick 64: five more metre-scale presets ===
 SURREAL_ARCH_OT_preset_zen_teahouse_pavilion = _make_preset_op(
     "SURREAL_ARCH_OT_preset_zen_teahouse_pavilion",
     "surreal_arch.preset_zen_teahouse_pavilion", "Tea Pavilion",
@@ -27829,7 +27870,7 @@ SURREAL_ARCH_OT_preset_castle_gatehouse = _make_preset_op(
          material_choice='STONE'),
 )
 
-# === v2.60.2 â€” tick 64b: four more playable presets ===
+# === v2.60.2 — tick 64b: four more playable presets ===
 SURREAL_ARCH_OT_preset_guild_hall_blockout = _make_preset_op(
     "SURREAL_ARCH_OT_preset_guild_hall_blockout",
     "surreal_arch.preset_guild_hall_blockout", "Guild Hall",
@@ -27861,7 +27902,7 @@ SURREAL_ARCH_OT_preset_corner_watchtower = _make_preset_op(
          material_choice='STONE'),
 )
 
-# === v2.60.3 â€” tick 67â€“68: civic gap-fill presets ===
+# === v2.60.3 — tick 67–68: civic gap-fill presets ===
 SURREAL_ARCH_OT_preset_roman_bath = _make_preset_op(
     "SURREAL_ARCH_OT_preset_roman_bath", "surreal_arch.preset_roman_bath",
     "Roman Bath",
@@ -27885,14 +27926,14 @@ SURREAL_ARCH_OT_preset_lighthouse_tower = _make_preset_op(
          material_choice='MARBLE'),
 )
 
-# === v2.60.4 â€” tick 70â€“79: amphitheatre + covered bazaar ===
-# v2.60.5 â€” tick 86: amphitheatre + covered bazaar metre-scale playable descriptions
+# === v2.60.4 — tick 70–79: amphitheatre + covered bazaar ===
+# v2.60.5 — tick 86: amphitheatre + covered bazaar metre-scale playable descriptions
 SURREAL_ARCH_OT_preset_amphitheatre = _make_preset_op(
     "SURREAL_ARCH_OT_preset_amphitheatre", "surreal_arch.preset_amphitheatre",
     "Amphitheatre",
     dict(arch_type='GREYBOX_ARENA', gb_radius=20.0, gb_tiers=6, gb_sides=32,
          gb_rise=0.38, gb_run=1.0, auto_smooth=True, material_choice='STONE'),
-    description='~40 m dia GREYBOX_ARENA â€” 6 tiers, r=20 m pit; walkable centre floor top at Z=0',
+    description='~40 m dia GREYBOX_ARENA — 6 tiers, r=20 m pit; walkable centre floor top at Z=0',
 )
 SURREAL_ARCH_OT_preset_covered_bazaar = _make_preset_op(
     "SURREAL_ARCH_OT_preset_covered_bazaar",
@@ -27900,210 +27941,210 @@ SURREAL_ARCH_OT_preset_covered_bazaar = _make_preset_op(
     dict(arch_type='MONASTERY', base_radius=14.0, height=6.5,
          bevel_amount=0.02, bevel_subdiv_level=2, auto_smooth=True,
          material_choice='GOLD'),
-    description='~28 m square souk â€” MONASTERY cloister (r=14 m), ~6.5 m arcaded wings + courtyard',
+    description='~28 m square souk — MONASTERY cloister (r=14 m), ~6.5 m arcaded wings + courtyard',
 )
 
-# Curated playable presets â€” group, label, operator id, short description
+# Curated playable presets — group, label, operator id, short description
 _ARCH_PRESETS = {
     'BASILICA_NAVE': {
-        'group': 'GREYBOX', 'label': 'â›ª Basilica Nave',
-        'desc': '~28 m apsidal nave â€” Romanesque/Gothic hall blockout',
+        'group': 'GREYBOX', 'label': '⛪ Basilica Nave',
+        'desc': '~28 m apsidal nave — Romanesque/Gothic hall blockout',
         'op_id': 'surreal_arch.preset_basilica_nave',
     },
     'TOWN_SQUARE': {
-        'group': 'CIVIC', 'label': 'ðŸ› Town Square',
-        'desc': '~28 m dia stepped arena â€” civic plaza massing',
+        'group': 'CIVIC', 'label': '🏛 Town Square',
+        'desc': '~28 m dia stepped arena — civic plaza massing',
         'op_id': 'surreal_arch.preset_town_square',
     },
     'GOTHIC_CHAPEL': {
-        'group': 'GOTHIC', 'label': 'â›ª Gothic Chapel',
+        'group': 'GOTHIC', 'label': '⛪ Gothic Chapel',
         'desc': '~18 m nave + apse + bell tower',
         'op_id': 'surreal_arch.preset_gothic_chapel',
     },
     'GOTHIC_CLOISTER': {
-        'group': 'GOTHIC', 'label': 'ðŸŒ™ Gothic Cloister',
+        'group': 'GOTHIC', 'label': '🌙 Gothic Cloister',
         'desc': '~20 m square monastery cloister walk',
         'op_id': 'surreal_arch.preset_gothic_cloister_walk',
     },
     'JAPANESE_GATE': {
-        'group': 'ASIAN', 'label': 'â›© Japanese Temple Gate',
-        'desc': '~5.5 m Myojin torii â€” kasagi curve, nuki, gakuzuka + shimenawa',
+        'group': 'ASIAN', 'label': '⛩ Japanese Temple Gate',
+        'desc': '~5.5 m Myojin torii — kasagi curve, nuki, gakuzuka + shimenawa',
         'op_id': 'surreal_arch.preset_japanese_gate_compound',
     },
     'TEMPLE_COMPOUND': {
-        'group': 'ASIAN', 'label': 'ðŸ›• Temple Compound',
+        'group': 'ASIAN', 'label': '🛕 Temple Compound',
         'desc': '~22 m Chinese tiered pagoda compound',
         'op_id': 'surreal_arch.preset_japanese_temple_compound',
     },
     'BAROQUE_PLAZA': {
-        'group': 'CIVIC', 'label': 'â›² Baroque Plaza',
+        'group': 'CIVIC', 'label': '⛲ Baroque Plaza',
         'desc': '~14 m dia tiered plaza fountain',
         'op_id': 'surreal_arch.preset_baroque_plaza',
     },
     'BAROQUE_PIAZZA': {
-        'group': 'CIVIC', 'label': 'ðŸ› Baroque Piazza',
+        'group': 'CIVIC', 'label': '🏛 Baroque Piazza',
         'desc': '~14 m seven-bay Baroque facade frontage',
         'op_id': 'surreal_arch.preset_baroque_piazza_facade',
     },
     'CIVIC_TOWN_HALL': {
-        'group': 'CIVIC', 'label': 'ðŸ› Civic Town Hall',
+        'group': 'CIVIC', 'label': '🏛 Civic Town Hall',
         'desc': '~14 m hall + clock tower + portico',
         'op_id': 'surreal_arch.preset_civic_town_hall',
     },
     'COMBAT_ARENA': {
-        'group': 'GREYBOX', 'label': 'ðŸŽ¯ Combat Arena',
-        'desc': '~22Ã—18 m FPS arena with cover + elevated zone',
+        'group': 'GREYBOX', 'label': '🎯 Combat Arena',
+        'desc': '~22×18 m FPS arena with cover + elevated zone',
         'op_id': 'surreal_arch.preset_combat_arena',
     },
     'PANTHEON_ROTUNDA': {
-        'group': 'CIVIC', 'label': 'ðŸ› Pantheon Rotunda',
+        'group': 'CIVIC', 'label': '🏛 Pantheon Rotunda',
         'desc': '~18 m dia two-storey drum + oculus gallery',
         'op_id': 'surreal_arch.preset_pantheon_rotunda',
     },
     'ARC_CROSS': {
-        'group': 'GREYBOX', 'label': 'âœ› Arc Cross',
+        'group': 'GREYBOX', 'label': '✛ Arc Cross',
         'desc': '~16 m curved four-arm junction hub',
         'op_id': 'surreal_arch.preset_arc_cross_junction',
     },
     'ZEN_COURTYARD': {
-        'group': 'ASIAN', 'label': 'ðŸª¨ Zen Courtyard',
-        'desc': '~12 m karesansui â€” ishigumi, tsukubai + raked ripple bands',
+        'group': 'ASIAN', 'label': '🪨 Zen Courtyard',
+        'desc': '~12 m karesansui — ishigumi, tsukubai + raked ripple bands',
         'op_id': 'surreal_arch.preset_zen_courtyard',
     },
     'CASTLE_BAILEY': {
-        'group': 'CASTLE', 'label': 'ðŸ° Castle Bailey',
+        'group': 'CASTLE', 'label': '🏰 Castle Bailey',
         'desc': '~25 m crenellated curtain wall segment',
         'op_id': 'surreal_arch.preset_castle_bailey',
     },
     'MONASTERY_CLOISTER': {
-        'group': 'GOTHIC', 'label': 'â›ª Monastery Cloister',
+        'group': 'GOTHIC', 'label': '⛪ Monastery Cloister',
         'desc': '~20 m four-wing cloister quadrangle',
         'op_id': 'surreal_arch.preset_monastery_cloister',
     },
     'HYPOSTYLE_HALL': {
-        'group': 'CIVIC', 'label': 'ðŸ› Hypostyle Hall',
+        'group': 'CIVIC', 'label': '🏛 Hypostyle Hall',
         'desc': '~24 m colonnaded civic hall grid',
         'op_id': 'surreal_arch.preset_civic_hypostyle',
     },
     'GREYBOX_BASILICA': {
-        'group': 'GREYBOX', 'label': 'ðŸ“¦ Greybox Basilica',
-        'desc': '~14Ã—22 m rectangular nave shell',
+        'group': 'GREYBOX', 'label': '📦 Greybox Basilica',
+        'desc': '~14×22 m rectangular nave shell',
         'op_id': 'surreal_arch.preset_greybox_basilica_block',
     },
-    # v2.60.1 â€” tick 63 gap-fill presets
+    # v2.60.1 — tick 63 gap-fill presets
     'ESCHER_COURTYARD': {
-        'group': 'EXPERIMENTAL', 'label': 'ðŸŒ€ Escher Courtyard',
+        'group': 'EXPERIMENTAL', 'label': '🌀 Escher Courtyard',
         'desc': '~14 m Belvedere-style impossible courtyard',
         'op_id': 'surreal_arch.preset_escher_courtyard',
     },
     'SHINTO_SHRINE': {
-        'group': 'ASIAN', 'label': 'â›© Shinto Shrine',
+        'group': 'ASIAN', 'label': '⛩ Shinto Shrine',
         'desc': '~5 m wayside honden + plinth + finial',
         'op_id': 'surreal_arch.preset_shinto_shrine',
     },
     'MOORISH_COURTYARD': {
-        'group': 'CIVIC', 'label': 'ðŸŒ™ Moorish Courtyard',
-        'desc': '~24 m riyad colonnade â€” four arcaded wings around open court',
+        'group': 'CIVIC', 'label': '🌙 Moorish Courtyard',
+        'desc': '~24 m riyad colonnade — four arcaded wings around open court',
         'op_id': 'surreal_arch.preset_moorish_courtyard',
     },
     'BRUTALIST_PLAZA': {
-        'group': 'CIVIC', 'label': 'ðŸ§± Brutalist Plaza',
+        'group': 'CIVIC', 'label': '🧱 Brutalist Plaza',
         'desc': '~28 m octagonal stepped concrete civic plaza',
         'op_id': 'surreal_arch.preset_brutalist_plaza',
     },
     'MEDIEVAL_KEEP': {
-        'group': 'CASTLE', 'label': 'ðŸ° Medieval Keep',
+        'group': 'CASTLE', 'label': '🏰 Medieval Keep',
         'desc': '~12 m donjon with corner turrets',
         'op_id': 'surreal_arch.preset_medieval_keep',
     },
     'SCIFI_ATRIUM': {
-        'group': 'GREYBOX', 'label': 'ðŸš€ Sci-Fi Atrium',
-        'desc': '~28 m hypostyle atrium â€” 5Ã—5 column grid, 18 m clear height',
+        'group': 'GREYBOX', 'label': '🚀 Sci-Fi Atrium',
+        'desc': '~28 m hypostyle atrium — 5×5 column grid, 18 m clear height',
         'op_id': 'surreal_arch.preset_scifi_atrium',
     },
-    # v2.60.2 â€” tick 64 additions
+    # v2.60.2 — tick 64 additions
     'ZEN_TEAHOUSE': {
-        'group': 'ASIAN', 'label': 'ðŸµ Tea Pavilion',
+        'group': 'ASIAN', 'label': '🍵 Tea Pavilion',
         'desc': '~6 m chashitsu with engawa + tokonoma',
         'op_id': 'surreal_arch.preset_zen_teahouse_pavilion',
     },
     'MODULAR_VILLAGE': {
-        'group': 'GREYBOX', 'label': 'ðŸ  Village House',
-        'desc': '~10Ã—7.5 m modular cottage blockout',
+        'group': 'GREYBOX', 'label': '🏠 Village House',
+        'desc': '~10×7.5 m modular cottage blockout',
         'op_id': 'surreal_arch.preset_modular_village_house',
     },
     'GOTHIC_BELL_TOWER': {
-        'group': 'GOTHIC', 'label': 'ðŸ”” Bell Tower',
+        'group': 'GOTHIC', 'label': '🔔 Bell Tower',
         'desc': '~14 m campanile + belfry stage',
         'op_id': 'surreal_arch.preset_gothic_bell_tower',
     },
     'GREYBOX_STAIR': {
-        'group': 'GREYBOX', 'label': 'ðŸªœ Stair Ascent',
+        'group': 'GREYBOX', 'label': '🪜 Stair Ascent',
         'desc': '~3 m blockout stair + landing (Z=0 walk plane)',
         'op_id': 'surreal_arch.preset_greybox_stair_ascent',
     },
     'CASTLE_GATEHOUSE': {
-        'group': 'CASTLE', 'label': 'ðŸšª Castle Gatehouse',
+        'group': 'CASTLE', 'label': '🚪 Castle Gatehouse',
         'desc': '~10 m barbican gate + machicolation massing',
         'op_id': 'surreal_arch.preset_castle_gatehouse',
     },
-    # v2.60.2 â€” tick 66 additions
+    # v2.60.2 — tick 66 additions
     'GUILD_HALL': {
-        'group': 'CIVIC', 'label': 'âšœ Guild Hall',
+        'group': 'CIVIC', 'label': '⚜ Guild Hall',
         'desc': '~12 m columned guild assembly + portico',
         'op_id': 'surreal_arch.preset_guild_hall_blockout',
     },
     'VENETIAN_PALAZZO': {
-        'group': 'CIVIC', 'label': 'ðŸ› Venetian Palazzo',
+        'group': 'CIVIC', 'label': '🏛 Venetian Palazzo',
         'desc': '~14 m four-storey bifora facade row',
         'op_id': 'surreal_arch.preset_venetian_palazzo',
     },
     'CHINESE_PAILOU': {
-        'group': 'ASIAN', 'label': 'ðŸ® Chinese Pailou',
+        'group': 'ASIAN', 'label': '🏮 Chinese Pailou',
         'desc': '~7.5 m ceremonial arch gate',
         'op_id': 'surreal_arch.preset_chinese_pailou',
     },
     'CORNER_WATCHTOWER': {
-        'group': 'CASTLE', 'label': 'ðŸ—¼ Corner Watchtower',
+        'group': 'CASTLE', 'label': '🗼 Corner Watchtower',
         'desc': '~9 m machicolated corner tower',
         'op_id': 'surreal_arch.preset_corner_watchtower',
     },
-    # v2.60.3 â€” tick 67â€“68
+    # v2.60.3 — tick 67–68
     'ROMAN_BATH': {
-        'group': 'CIVIC', 'label': 'ðŸ› Roman Bath',
-        'desc': '~22 m dia thermae rotunda â€” caldarium blockout',
+        'group': 'CIVIC', 'label': '🛁 Roman Bath',
+        'desc': '~22 m dia thermae rotunda — caldarium blockout',
         'op_id': 'surreal_arch.preset_roman_bath',
     },
     'MARKET_COLONNADE': {
-        'group': 'CIVIC', 'label': 'ðŸ› Market Colonnade',
-        'desc': '~30Ã—11 m stoa â€” open-air market colonnade',
+        'group': 'CIVIC', 'label': '🏛 Market Colonnade',
+        'desc': '~30×11 m stoa — open-air market colonnade',
         'op_id': 'surreal_arch.preset_market_colonnade',
     },
     'LIGHTHOUSE_TOWER': {
-        'group': 'CIVIC', 'label': 'ðŸ—¼ Lighthouse Tower',
-        'desc': '~12 m maritime tower â€” lantern + gallery',
+        'group': 'CIVIC', 'label': '🗼 Lighthouse Tower',
+        'desc': '~12 m maritime tower — lantern + gallery',
         'op_id': 'surreal_arch.preset_lighthouse_tower',
     },
-    # v2.60.4 â€” tick 70â€“79
+    # v2.60.4 — tick 70–79
     'AMPHITHEATRE': {
-        'group': 'CIVIC', 'label': 'ðŸŸ Amphitheatre',
-        'desc': '~40 m arena pit â€” 6 stepped tiers; centre floor top at Z=0',
+        'group': 'CIVIC', 'label': '🏟 Amphitheatre',
+        'desc': '~40 m arena pit — 6 stepped tiers; centre floor top at Z=0',
         'op_id': 'surreal_arch.preset_amphitheatre',
     },
     'COVERED_BAZAAR': {
-        'group': 'CIVIC', 'label': 'ðŸª Covered Bazaar',
-        'desc': '~28 m monastery cloister massing â€” four arcaded wings (covered bazaar blockout)',
+        'group': 'CIVIC', 'label': '🏪 Covered Bazaar',
+        'desc': '~28 m monastery cloister massing — four arcaded wings (covered bazaar blockout)',
         'op_id': 'surreal_arch.preset_covered_bazaar',
     },
 }
 
 _ARCH_PRESET_GROUPS = (
-    ('GREYBOX', 'ðŸ“¦ Greybox', 'MESH_CUBE'),
-    ('CIVIC', 'ðŸ› Civic', 'HOME'),
-    ('GOTHIC', 'â›ª Gothic', 'OUTLINER_DATA_LIGHT'),
-    ('ASIAN', 'ðŸ‡¯ðŸ‡µ Asian', 'OUTLINER_OB_GREASEPENCIL'),
-    ('CASTLE', 'ðŸ° Castle', 'OUTLINER_OB_LATTICE'),
-    ('EXPERIMENTAL', 'ðŸ§ª Experimental', 'EXPERIMENTAL'),
+    ('GREYBOX', '📦 Greybox', 'MESH_CUBE'),
+    ('CIVIC', '🏛 Civic', 'HOME'),
+    ('GOTHIC', '⛪ Gothic', 'OUTLINER_DATA_LIGHT'),
+    ('ASIAN', '🇯🇵 Asian', 'OUTLINER_OB_GREASEPENCIL'),
+    ('CASTLE', '🏰 Castle', 'OUTLINER_OB_LATTICE'),
+    ('EXPERIMENTAL', '🧪 Experimental', 'EXPERIMENTAL'),
 )
 
 _ARCH_PRESET_GROUP_HINTS = {
@@ -28116,22 +28157,22 @@ _ARCH_PRESET_GROUP_HINTS = {
 }
 
 _ARCH_PICKER_STYLE_GROUPS = (
-    ('GREYBOX', 'ðŸ“¦ Greybox', (
+    ('GREYBOX', '📦 Greybox', (
         'GREYBOX', 'CURVED_GB', 'WOODS_GB', 'UMEMOTO_GB', 'HIGGSAS', 'ESCHER_GB',
         'RUINS', 'PROPS', 'FOUNDATIONS', 'ARCH_INFRA',
     )),
-    ('CIVIC', 'ðŸ› Civic', (
+    ('CIVIC', '🏛 Civic', (
         'CIVIC', 'TOWN', 'BAROQUE', 'TOWERS',
     )),
-    ('GOTHIC', 'â›ª Gothic', ('GOTHIC',)),
-    ('ASIAN', 'ðŸ‡¯ðŸ‡µ Asian', ('ASIAN',)),
-    ('CASTLE', 'ðŸ° Castle', ('CASTLE',)),
-    ('EXPERIMENTAL', 'ðŸ§ª Experimental', (
+    ('GOTHIC', '⛪ Gothic', ('GOTHIC',)),
+    ('ASIAN', '🇯🇵 Asian', ('ASIAN',)),
+    ('CASTLE', '🏰 Castle', ('CASTLE',)),
+    ('EXPERIMENTAL', '🧪 Experimental', (
         'ESCHER', 'MUSICAL', 'ADVANCED', 'LANDSCAPE',
     )),
 )
 
-# === v2.53 â€” Lebbeus Woods presets ===
+# === v2.53 — Lebbeus Woods presets ===
 SURREAL_ARCH_OT_preset_gb_woods_parasite = _make_preset_op(
     "SURREAL_ARCH_OT_preset_gb_woods_parasite", "surreal_arch.preset_gb_woods_parasite",
     "Parasite Structure",
@@ -28163,7 +28204,7 @@ SURREAL_ARCH_OT_preset_gb_woods_war_scar = _make_preset_op(
          gb_floors=4, gb_steps=30, auto_smooth=True, material_choice='STONE'),
 )
 
-# === v2.53 â€” David Umemoto presets ===
+# === v2.53 — David Umemoto presets ===
 SURREAL_ARCH_OT_preset_gb_umemoto_terrace = _make_preset_op(
     "SURREAL_ARCH_OT_preset_gb_umemoto_terrace", "surreal_arch.preset_gb_umemoto_terrace",
     "Terraced Tower",
@@ -28192,7 +28233,7 @@ SURREAL_ARCH_OT_preset_gb_umemoto_fortress = _make_preset_op(
          auto_smooth=True, material_choice='STONE'),
 )
 
-# === v2.52 â€” Higgsas-powered presets ===
+# === v2.52 — Higgsas-powered presets ===
 SURREAL_ARCH_OT_preset_higg_brick_wall = _make_preset_op(
     "SURREAL_ARCH_OT_preset_higg_brick_wall", "surreal_arch.preset_higg_brick_wall",
     "Higgsas Brick Wall",
@@ -28223,7 +28264,7 @@ SURREAL_ARCH_OT_preset_higg_colonnade = _make_preset_op(
          bevel_amount=0.015, auto_smooth=True, material_choice='MARBLE'),
 )
 
-# === v2.52 â€” Escher Greybox presets ===
+# === v2.52 — Escher Greybox presets ===
 SURREAL_ARCH_OT_preset_gb_escher_relativity = _make_preset_op(
     "SURREAL_ARCH_OT_preset_gb_escher_relativity",
     "surreal_arch.preset_gb_escher_relativity", "Relativity Room",
@@ -28268,7 +28309,7 @@ SURREAL_ARCH_OT_preset_gb_escher_recursive = _make_preset_op(
          bevel_amount=0.01, auto_smooth=True, material_choice='STONE'),
 )
 
-# === v2.52 â€” Extended Greybox presets ===
+# === v2.52 — Extended Greybox presets ===
 SURREAL_ARCH_OT_preset_gb_corridor_bend = _make_preset_op(
     "SURREAL_ARCH_OT_preset_gb_corridor_bend", "surreal_arch.preset_gb_corridor_bend",
     "Corridor Bend",
@@ -28339,7 +28380,7 @@ SURREAL_ARCH_OT_preset_gb_corridor_rec = _make_preset_op(
          gb_recursive_depth=2, gb_branch_count=2, material_choice='STONE'),
 )
 
-# === v2.51 â€” Ruins / Destruction presets ===
+# === v2.51 — Ruins / Destruction presets ===
 SURREAL_ARCH_OT_preset_wall_ruined = _make_preset_op(
     "SURREAL_ARCH_OT_preset_wall_ruined", "surreal_arch.preset_wall_ruined", "Ruined Wall",
     dict(arch_type='WALL_RUINED', wall_segments=3, unit_size=1.0, wall_height=3.5,
@@ -28366,7 +28407,7 @@ SURREAL_ARCH_OT_preset_collapsed_floor = _make_preset_op(
          bevel_amount=0.015, bevel_subdiv_level=1, material_choice='STONE'),
 )
 
-# === v2.51 â€” Modular frame presets ===
+# === v2.51 — Modular frame presets ===
 SURREAL_ARCH_OT_preset_door_frame = _make_preset_op(
     "SURREAL_ARCH_OT_preset_door_frame", "surreal_arch.preset_door_frame", "Door Frame",
     dict(arch_type='DOOR_FRAME', door_width=1.0, door_height=2.2,
@@ -28410,7 +28451,7 @@ SURREAL_ARCH_OT_preset_half_timber = _make_preset_op(
          bevel_amount=0.015, bevel_subdiv_level=1, auto_smooth=True, material_choice='STONE'),
 )
 
-# === v2.51 â€” Environment prop presets ===
+# === v2.51 — Environment prop presets ===
 SURREAL_ARCH_OT_preset_barrel_stack = _make_preset_op(
     "SURREAL_ARCH_OT_preset_barrel_stack", "surreal_arch.preset_barrel_stack", "Barrel Stack",
     dict(arch_type='BARREL_STACK', base_radius=0.3, height=0.8,
@@ -28443,7 +28484,7 @@ SURREAL_ARCH_OT_preset_singing_palazzo = _make_preset_op(
          palazzo_floors=3, palazzo_width=8.0, palazzo_floor_h=3.0,
          palazzo_arches_per_floor=5, palazzo_arch_style='BIFORA',
          palazzo_string_courses=True,
-         universal_music_influence=0.6,    # â† strong harmonic pulse!
+         universal_music_influence=0.6,    # ← strong harmonic pulse!
          musical_freq_a=0.8, musical_freq_b=1.6, musical_amplitude=0.6,
          note_pattern='EIGHTH', tempo_factor=1.5,
          entropiombo_lean=0.05, survey_imperfection=0.008,
@@ -28471,7 +28512,7 @@ SURREAL_ARCH_OT_preset_penrose_palazzo = _make_preset_op(
          bevel_amount=0.5, bevel_subdiv_level=1, material_choice='MARBLE'),
 )
 
-# === Synthia presets â€” set the preset selection then user clicks ðŸ§® to spawn ===
+# === Synthia presets — set the preset selection then user clicks 🧮 to spawn ===
 def _make_synthia_preset(class_name, op_id, label, synthia_id, preset_type, material):
     def execute(self, context):
         obj = context.active_object
@@ -28501,31 +28542,31 @@ def _make_synthia_preset(class_name, op_id, label, synthia_id, preset_type, mate
 
 SURREAL_ARCH_OT_synthia_lorenz = _make_synthia_preset(
     "SURREAL_ARCH_OT_synthia_lorenz", "surreal_arch.synthia_lorenz",
-    "ðŸŒª Lorenz", 'lorenz', 'EQUATION', 'IRIDESCENT')
+    "🌪 Lorenz", 'lorenz', 'EQUATION', 'IRIDESCENT')
 
 SURREAL_ARCH_OT_synthia_klein = _make_synthia_preset(
     "SURREAL_ARCH_OT_synthia_klein", "surreal_arch.synthia_klein",
-    "ðŸ¶ Klein", 'klein_bottle', 'EQUATION', 'STAINED')
+    "🍶 Klein", 'klein_bottle', 'EQUATION', 'STAINED')
 
 SURREAL_ARCH_OT_synthia_mobius = _make_synthia_preset(
     "SURREAL_ARCH_OT_synthia_mobius", "surreal_arch.synthia_mobius",
-    "â™¾ MÃ¶bius", 'mobius', 'EQUATION', 'IRIDESCENT')
+    "♾ Möbius", 'mobius', 'EQUATION', 'IRIDESCENT')
 
 SURREAL_ARCH_OT_synthia_torus_knot = _make_synthia_preset(
     "SURREAL_ARCH_OT_synthia_torus_knot", "surreal_arch.synthia_torus_knot",
-    "ðŸª¢ Torus Knot", 'torus_knot', 'EQUATION', 'GOLD')
+    "🪢 Torus Knot", 'torus_knot', 'EQUATION', 'GOLD')
 
 SURREAL_ARCH_OT_synthia_lissajous = _make_synthia_preset(
     "SURREAL_ARCH_OT_synthia_lissajous", "surreal_arch.synthia_lissajous",
-    "â™¬ Lissajous", 'lissajous', 'EQUATION', 'CLEF_GLOW')
+    "♬ Lissajous", 'lissajous', 'EQUATION', 'CLEF_GLOW')
 
 SURREAL_ARCH_OT_synthia_golden = _make_synthia_preset(
     "SURREAL_ARCH_OT_synthia_golden", "surreal_arch.synthia_golden",
-    "ðŸŒ€ Golden Spiral", 'golden_ratio', 'GEOMETRY', 'MARBLE')
+    "🌀 Golden Spiral", 'golden_ratio', 'GEOMETRY', 'MARBLE')
 
 SURREAL_ARCH_OT_synthia_platonic = _make_synthia_preset(
     "SURREAL_ARCH_OT_synthia_platonic", "surreal_arch.synthia_platonic",
-    "ðŸ”· Platonic Solids", 'platonic_solids', 'GEOMETRY', 'MARBLE')
+    "🔷 Platonic Solids", 'platonic_solids', 'GEOMETRY', 'MARBLE')
 
 
 # === Modular building piece presets (v1.9) ===
@@ -28669,7 +28710,7 @@ SURREAL_ARCH_OT_preset_curved = _make_preset_op(
          curved_arches_per_unit=1, wall_height=3.0,
          bevel_amount=0.025, bevel_subdiv_level=2, material_choice='MARBLE'),
 )
-# === ðŸµ ZEN ARCHITECTURE PRESETS ===
+# === 🍵 ZEN ARCHITECTURE PRESETS ===
 SURREAL_ARCH_OT_preset_pagoda = _make_preset_op(
     "SURREAL_ARCH_OT_preset_pagoda", "surreal_arch.preset_pagoda", "Pagoda",
     dict(arch_type='ZEN_PAGODA', pagoda_tiers=5, pagoda_base_radius=2.8,
@@ -28857,7 +28898,7 @@ class SURREAL_ARCH_OT_create_water(bpy.types.Operator):
             if obj_ref and hasattr(obj_ref, 'surreal_arch_props'):
                 sync_water_drivers(mat, obj_ref)
 
-            self.report({'INFO'}, "Musical water plane created (drag harmonics â†’ ripples animate)")
+            self.report({'INFO'}, "Musical water plane created (drag harmonics → ripples animate)")
             return {'FINISHED'}
         except Exception as e:
             self.report({'ERROR'}, f"Water creation failed: {e}")
@@ -28911,18 +28952,18 @@ class SURREAL_ARCH_OT_organize(bpy.types.Operator):
 
 
 # ----------------------------------------------------------------------
-# SVERCHOK ESCHER PRESETS  â€”  algorithmic/parametric Escher geometry
+# SVERCHOK ESCHER PRESETS  —  algorithmic/parametric Escher geometry
 # Sverchok is a node-based parametric tool; we build node trees and let
 # SvMeshViewer bake them to real Blender meshes that hook into our pipeline.
 # ----------------------------------------------------------------------
 
 # ==============================================================================
-# ðŸ”Œ  HIGGSAS GEO NODES INTEGRATION  (v2.52)
+# 🔌  HIGGSAS GEO NODES INTEGRATION  (v2.52)
 #   Detects + lazily loads node groups from the user's Higgsas library.
 #   Every usage gracefully falls back to native GN nodes if unavailable.
 # ==============================================================================
 
-# Registered asset library path (from userpref.blend â€” G: drive)
+# Registered asset library path (from userpref.blend — G: drive)
 _HIGGSAS_LIB_PATH = (
     r"G:\programs\BlenderPlugins"
     r"\Higgsas_Geometry_Nodes_Toolset_v1.3 vfxMed"
@@ -28930,7 +28971,7 @@ _HIGGSAS_LIB_PATH = (
     r"\Blender 5.0 Higgsas Geo Node Groups v13.blend"
 )
 
-# Most useful node groups for architecture â€” pre-warmed on first "Load All"
+# Most useful node groups for architecture — pre-warmed on first "Load All"
 _HIGGSAS_ARCH_NODES = [
     # Surface detail / pattern generators
     'NTBricks Grid',       # parametric brick/block wall surface
@@ -28940,14 +28981,14 @@ _HIGGSAS_ARCH_NODES = [
     'NTDistance to Edge Voronoi',  # stone voronoi cell overlay
     'NTScales Texture',    # scale/tile texture for roof/dragon effects
     # Better mesh primitives
-    'NTRounded Cube',      # beveled block â€” replaces raw MeshCube
+    'NTRounded Cube',      # beveled block — replaces raw MeshCube
     'NTPyramid',           # proper pyramid with UV
     'NTSpin',              # lathe/spin for columns, vases, towers
     # Deformers
     'NTTaper',             # column entasis / tapering
     'NTBend',              # curved walls, arcs
     'NTMesh Offset',       # push faces along normals (window depth)
-    'NTSolidify',          # shell thickness â€” better than ExtrudeMesh
+    'NTSolidify',          # shell thickness — better than ExtrudeMesh
     'NTInset Face',        # window/door frame insets on any face
     # Distribution
     'NTCircular Array',    # column colonnades, fence posts in arcs
@@ -28979,7 +29020,7 @@ def _higgsas_available():
 
 def _higg_load(name):
     """Lazily append one Higgsas node group from the library. Returns the
-    NodeGroup or None if unavailable. Idempotent â€” skips if already loaded."""
+    NodeGroup or None if unavailable. Idempotent — skips if already loaded."""
     ng = bpy.data.node_groups.get(name)
     if ng is not None:
         return ng
@@ -29082,15 +29123,15 @@ def _sv_node_or_skip(tree, bl_idname, loc):
 class SURREAL_ARCH_OT_sv_diagnose(bpy.types.Operator):
     """v2.47: Probe the user's Sverchok install and report which preset
     node types are available. Run this when a preset's tree-building feels
-    broken â€” it'll tell you which Sverchok nodes are missing."""
+    broken — it'll tell you which Sverchok nodes are missing."""
     bl_idname = "surreal_arch.sv_diagnose"
-    bl_label = "ðŸ©º Diagnose Sverchok Compatibility"
+    bl_label = "🩺 Diagnose Sverchok Compatibility"
     bl_options = {'REGISTER'}
 
     def execute(self, context):
         if not _sverchok_available():
             self.report({'WARNING'},
-                "Sverchok addon not detected â€” Python-only fallback is used everywhere.")
+                "Sverchok addon not detected — Python-only fallback is used everywhere.")
             return {'FINISHED'}
         # Probe every Sverchok node our presets reference
         probed_nodes = [
@@ -29119,23 +29160,23 @@ class SURREAL_ARCH_OT_sv_diagnose(bpy.types.Operator):
                 try: bpy.data.node_groups.remove(ng)
                 except: pass
         # Print to console
-        print("\nâ•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•")
-        print("ðŸ©º  SVERCHOK COMPATIBILITY DIAGNOSTIC")
-        print("â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•")
-        print(f"\nâœ… Available nodes ({len(avail)}):")
+        print("\n══════════════════════════════════════════════════════")
+        print("🩺  SVERCHOK COMPATIBILITY DIAGNOSTIC")
+        print("══════════════════════════════════════════════════════")
+        print(f"\n✅ Available nodes ({len(avail)}):")
         for nname, descr in avail:
-            print(f"  â€¢ {nname:25s}  â€” {descr}")
+            print(f"  • {nname:25s}  — {descr}")
         if missing:
-            print(f"\nâš  Missing nodes ({len(missing)}):")
+            print(f"\n⚠ Missing nodes ({len(missing)}):")
             for nname, descr in missing:
-                print(f"  â€¢ {nname:25s}  â€” {descr}")
+                print(f"  • {nname:25s}  — {descr}")
             print("\nPresets that need missing nodes still SPAWN MESHES "
-                  "(pure-Python path) â€” only the editable companion tree is skipped.")
+                  "(pure-Python path) — only the editable companion tree is skipped.")
         else:
-            print("\nðŸŽ‰ All preset nodes available!")
+            print("\n🎉 All preset nodes available!")
         print()
         self.report({'INFO'},
-            f"ðŸ©º Sverchok diagnostic: {len(avail)} nodes ok, {len(missing)} missing â€” see Windowâ†’Toggle System Console")
+            f"🩺 Sverchok diagnostic: {len(avail)} nodes ok, {len(missing)} missing — see Window→Toggle System Console")
         return {'FINISHED'}
 
 
@@ -29196,7 +29237,7 @@ def _sverchok_force_evaluate(tree):
                 if old_tree is not None: space.node_tree = old_tree
             except Exception: pass
     else:
-        # No NODE_EDITOR present â€” temporarily switch one area to NODE_EDITOR
+        # No NODE_EDITOR present — temporarily switch one area to NODE_EDITOR
         area = screen.areas[-1]  # use the last area (typically Properties / Outliner)
         old_type = area.type
         try:
@@ -29246,11 +29287,11 @@ def _sv_finish(tree, gen_node, name="SverchokOut"):
 def _sverchok_spawn_via_tree(tree_builder_fn, mesh_name="SverchokEscher"):
     """
     Helper: build a Sverchok tree, trigger it to run, then find the resulting mesh.
-    tree_builder_fn(tree) â†’ builds the tree, returns the SvMeshViewer node.
+    tree_builder_fn(tree) → builds the tree, returns the SvMeshViewer node.
     Returns the new mesh object (or None).
 
     NOTE: This pathway is now legacy. New Sverchok presets compute geometry
-    directly in Python and create the mesh via _spawn_mesh_from_data â€” no tree
+    directly in Python and create the mesh via _spawn_mesh_from_data — no tree
     evaluation happens by default, avoiding duplicate-mesh accumulation.
     """
     if not _sverchok_available():
@@ -29261,7 +29302,7 @@ def _sverchok_spawn_via_tree(tree_builder_fn, mesh_name="SverchokEscher"):
     tree, tree_name = _sv_make_tree(mesh_name)
     viewer = tree_builder_fn(tree)
 
-    # Trigger Sverchok to evaluate the tree â†’ SvMeshViewer bakes a real mesh.
+    # Trigger Sverchok to evaluate the tree → SvMeshViewer bakes a real mesh.
     # Sverchok's tree.force_update() needs an active NODE_EDITOR context loaded
     # with the tree. We temporarily commandeer one area to provide that.
     _sverchok_force_evaluate(tree)
@@ -29338,8 +29379,8 @@ def _spawn_companion_tree(tree_name, builder_fn):
     mesh is unaffected; the user just loses the optional editable tree.
 
     Behavior (when Sverchok IS installed):
-      â€¢ sv_keep_tree=False (default): build a tree, delete it â†’ no scene pollution.
-      â€¢ sv_keep_tree=True: build a FULL WORKING tree with SvMeshViewer
+      • sv_keep_tree=False (default): build a tree, delete it → no scene pollution.
+      • sv_keep_tree=True: build a FULL WORKING tree with SvMeshViewer
         wired in. User can open the Sverchok editor, tweak nodes, and on
         "Update All" Sverchok will spawn/refresh its own mesh (separate
         from our Python-computed one).
@@ -29355,7 +29396,7 @@ def _spawn_companion_tree(tree_name, builder_fn):
             bpy.data.node_groups.remove(tree)
             return None
 
-        # KEEP MODE â€” wire a SvMeshViewer to the first generator output we find,
+        # KEEP MODE — wire a SvMeshViewer to the first generator output we find,
         # so the user can actually EDIT and regenerate via Sverchok.
         gen_node = None
         for n in tree.nodes:
@@ -29380,7 +29421,7 @@ def _sv_params(default_resolution=1.0, default_scale=1.0, default_complexity=1.0
     """
     Read the unified Sverchok properties from the active object's props,
     blended with the universal music influence.
-    Returns (resolution, scale, complexity, music_phase) â€” all multiplicative factors.
+    Returns (resolution, scale, complexity, music_phase) — all multiplicative factors.
     """
     import math
     global _SV_CURRENT_PROPS
@@ -29404,7 +29445,7 @@ def _sv_params(default_resolution=1.0, default_scale=1.0, default_complexity=1.0
         freq_b = getattr(props, 'musical_freq_b', 1.2)
         amp = getattr(props, 'musical_amplitude', 0.4)
         tempo = getattr(props, 'tempo_factor', 1.0)
-        # Harmonic phase: sin(freq_a Ã— tempo) + 0.5 Ã— sin(freq_b Ã— tempo Ã— 2)
+        # Harmonic phase: sin(freq_a × tempo) + 0.5 × sin(freq_b × tempo × 2)
         phase = math.sin(freq_a * tempo * math.pi) + 0.5 * math.sin(freq_b * tempo * math.pi * 2)
         music_kick = music_inf * music_resp * amp * phase
         # Music affects all 3 multiplicatively (capped to safe range)
@@ -29419,7 +29460,7 @@ def _sv_params(default_resolution=1.0, default_scale=1.0, default_complexity=1.0
 
 
 def sverchok_spiral_tower():
-    """ðŸŒ€ Logarithmic ascending spiral â€” Escher's recursive spiral towers."""
+    """🌀 Logarithmic ascending spiral — Escher's recursive spiral towers."""
     import math
     res_mult, scale_mult, complexity_mult, _phase = _sv_params()
     R, r = 2.0 * scale_mult, 0.5 * scale_mult
@@ -29454,11 +29495,11 @@ def sverchok_spiral_tower():
 
 
 def sverchok_torus_knot():
-    """ðŸª¢ (p,q) Torus Knot â€” Escher's interlocking ribbon. Default p=3, q=2 (trefoil)."""
+    """🪢 (p,q) Torus Knot — Escher's interlocking ribbon. Default p=3, q=2 (trefoil)."""
     import math
     res_mult, scale_mult, complexity_mult, _phase = _sv_params()
     R, r = 2.0 * scale_mult, 0.6 * scale_mult
-    # Complexity influences (p, q) â€” higher = more knot crossings
+    # Complexity influences (p, q) — higher = more knot crossings
     p = max(2, int(3 * complexity_mult))
     q = max(1, int(2 * complexity_mult))
     n = max(64, int(256 * res_mult))
@@ -29490,7 +29531,7 @@ def sverchok_torus_knot():
 
 
 def sverchok_tessellation():
-    """ðŸ¦ Hexagonal grid tessellation â€” Escher's reptile/fish tile patterns."""
+    """🐦 Hexagonal grid tessellation — Escher's reptile/fish tile patterns."""
     import math
     res_mult, scale_mult, complexity_mult, _phase = _sv_params()
     cell = 0.5 * scale_mult
@@ -29502,7 +29543,7 @@ def sverchok_tessellation():
         for i in range(nx):
             x_off = (j % 2) * cell * 0.5  # honeycomb offset
             cx = i * cell + x_off
-            cy = j * cell * 0.866   # âˆš3/2 vertical spacing for hex
+            cy = j * cell * 0.866   # √3/2 vertical spacing for hex
             base = len(verts)
             # Hexagon vertices at radius=cell*0.5
             for k in range(6):
@@ -29526,7 +29567,7 @@ def sverchok_tessellation():
 
 
 def sverchok_twisted_cylinder():
-    """ðŸŒª Heavily-twisted cylinder â€” Escher impossible spiral architecture."""
+    """🌪 Heavily-twisted cylinder — Escher impossible spiral architecture."""
     import math
     res_mult, scale_mult, complexity_mult, phase = _sv_params()
     radius_top = 0.3 * scale_mult
@@ -29571,10 +29612,10 @@ def sverchok_twisted_cylinder():
 
 
 def sverchok_fractal_curve():
-    """â„ Koch-snowflake-style fractal curve â€” Escher's recursive self-similar paths."""
+    """❄ Koch-snowflake-style fractal curve — Escher's recursive self-similar paths."""
     import math
     res_mult, scale_mult, complexity_mult, _phase = _sv_params()
-    # Iterations grow with complexity â€” careful, each adds 4Ã— verts
+    # Iterations grow with complexity — careful, each adds 4× verts
     iterations = max(1, min(5, int(round(3 * complexity_mult))))
     sides = max(3, int(6 * scale_mult / scale_mult))  # keep hex base
     radius = 1.5 * scale_mult
@@ -29584,7 +29625,7 @@ def sverchok_fractal_curve():
                 radius * math.sin(i * math.tau / sides))
                for i in range(sides)]
 
-    # Koch subdivision: each segment â†’ 4 segments with a triangular bump out
+    # Koch subdivision: each segment → 4 segments with a triangular bump out
     def koch(points):
         out = []
         for i in range(len(points)):
@@ -29598,11 +29639,11 @@ def sverchok_fractal_curve():
             my = (a[1] + b[1]) / 2
             dx = b[0] - a[0]
             dy = b[1] - a[1]
-            # Perpendicular (rotate 90Â° CCW)
+            # Perpendicular (rotate 90° CCW)
             nx_, ny_ = -dy, dx
             seg_len = math.hypot(dx, dy)
             if seg_len > 0:
-                push = seg_len * 0.288675  # âˆš3/6 â€” equilateral bump height
+                push = seg_len * 0.288675  # √3/6 — equilateral bump height
                 p2 = (mx + nx_ * push / seg_len, my + ny_ * push / seg_len)
             else:
                 p2 = (mx, my)
@@ -29637,7 +29678,7 @@ def sverchok_fractal_curve():
 
 
 # ============================================================
-# ARCHITECTURAL SVERCHOK PRESETS â€” railings, walls, floors, gothic
+# ARCHITECTURAL SVERCHOK PRESETS — railings, walls, floors, gothic
 # ============================================================
 
 def _cube_face(verts, x, y, z, sx, sy, sz):
@@ -29680,7 +29721,7 @@ def _add_cylinder(verts, faces, x, y, z, radius, height, segments=12, axis='Z'):
 
 
 def sverchok_railing():
-    """ðŸ›¡ Architectural railing â€” N balusters + top + bottom rails, grid-snappable."""
+    """🛡 Architectural railing — N balusters + top + bottom rails, grid-snappable."""
     import math
     length = 6.0
     n_balusters = 20
@@ -29702,7 +29743,7 @@ def sverchok_railing():
         _add_cylinder(verts, faces, x, 0, rail_height / 2, baluster_radius, rail_height, segments=8)
 
     # Faces for top/bottom rails (cube faces from _cube_face)
-    # We need to actually capture those â€” let me regen them via from_pydata directly
+    # We need to actually capture those — let me regen them via from_pydata directly
     me_verts = []
     me_faces = []
     # Top rail (cube)
@@ -29757,7 +29798,7 @@ def sverchok_railing():
 
 
 def sverchok_curved_wall():
-    """ðŸŒ™ Curved wall section (arc-shaped) â€” snaps along a grid."""
+    """🌙 Curved wall section (arc-shaped) — snaps along a grid."""
     import math
     radius = 4.0
     sweep_deg = 90.0
@@ -29783,7 +29824,7 @@ def sverchok_curved_wall():
             verts.append(((radius - thickness/2) * math.cos(ang), (radius - thickness/2) * math.sin(ang), z))
 
     stride = (segments + 1) * 2  # verts per layer (outer+inner)
-    # Outer face strip (bottom-outer â†’ top-outer)
+    # Outer face strip (bottom-outer → top-outer)
     for i in range(segments):
         a = i
         b = i + 1
@@ -29832,9 +29873,9 @@ def sverchok_curved_wall():
 
 
 def sverchok_floor_panel():
-    """ðŸŸ« Floor panel â€” quad grid for game-engine snapping."""
+    """🟫 Floor panel — quad grid for game-engine snapping."""
     import math
-    size = 2.0  # 2m Ã— 2m (matches level grid)
+    size = 2.0  # 2m × 2m (matches level grid)
     subdivs = 4
     thickness = 0.05
 
@@ -29911,7 +29952,7 @@ def sverchok_floor_panel():
 
 
 def sverchok_balcony():
-    """ðŸŒ¿ Balcony â€” slab + railing on 3 sides."""
+    """🌿 Balcony — slab + railing on 3 sides."""
     import math
     W, D, T = 2.5, 0.8, 0.12
     rail_h = 0.9
@@ -29982,7 +30023,7 @@ def sverchok_balcony():
 
 
 def sverchok_gothic_arch():
-    """âœŸ Gothic pointed arch â€” two intersecting circle arcs meeting at peak."""
+    """✟ Gothic pointed arch — two intersecting circle arcs meeting at peak."""
     import math
     W = 2.0      # arch width
     R = 1.5      # arc radius (R > W/2 = sharper Gothic peak)
@@ -29996,15 +30037,15 @@ def sverchok_gothic_arch():
     edges = []
     faces = []
 
-    # Right arc â€” center at (-half_W + R, 0), sweep from (half_W, 0) up to peak (0, peak_height)
+    # Right arc — center at (-half_W + R, 0), sweep from (half_W, 0) up to peak (0, peak_height)
     cx_r = -half_W + R
     n = segments
     right_outer_top = []
     right_inner_top = []
     for i in range(n + 1):
         t = i / n
-        ang = math.pi - peak_angle * t  # from Ï€ (left of center) sweeping right to Ï€ - peak_angle (toward peak)
-        # Wait â€” we want from (half_W, 0) to (0, peak_height)
+        ang = math.pi - peak_angle * t  # from π (left of center) sweeping right to π - peak_angle (toward peak)
+        # Wait — we want from (half_W, 0) to (0, peak_height)
         # Let me reparameterize: angle from -peak_angle to 0 around center (cx_r)
         # At angle 0: point is (cx_r + R, 0) = ... that's not quite right.
         # Actually: the right arc starts at (half_W, 0) which from (cx_r, 0) is at angle 0
@@ -30023,13 +30064,13 @@ def sverchok_gothic_arch():
         iy = R_in * math.sin(ang)
         right_inner_top.append((ix, iy))
 
-    # Mirror for left arc â€” center at (half_W - R, 0)
+    # Mirror for left arc — center at (half_W - R, 0)
     cx_l = half_W - R
     left_outer_top = []
     left_inner_top = []
     for i in range(n + 1):
         t = i / n
-        ang = math.pi - peak_angle * t  # from Ï€ to Ï€ - peak_angle
+        ang = math.pi - peak_angle * t  # from π to π - peak_angle
         ox = cx_l + R * math.cos(ang)
         oy = R * math.sin(ang)
         left_outer_top.append((ox, oy))
@@ -30053,7 +30094,7 @@ def sverchok_gothic_arch():
     rbase = push_arc_band(right_outer_top, right_inner_top)
     lbase = push_arc_band(left_outer_top, left_inner_top)
 
-    # Build faces â€” front (outer), back (outer), front (inner), back (inner), top, bottom
+    # Build faces — front (outer), back (outer), front (inner), back (inner), top, bottom
     def make_faces(base, n_pts):
         # Each step has 4 verts; pattern: i*4 + (0:OF, 1:OB, 2:IF, 3:IB)
         for i in range(n_pts - 1):
@@ -30079,7 +30120,7 @@ def sverchok_gothic_arch():
 
 
 def sverchok_rose_window():
-    """â€ Rose window â€” outer ring + N radial petals + inner circle."""
+    """❀ Rose window — outer ring + N radial petals + inner circle."""
     import math
     R_outer = 1.5
     R_inner = 0.3
@@ -30120,7 +30161,7 @@ def sverchok_rose_window():
                 ang = (i / seg_petal) * math.tau
                 verts.append((cx + petal_R * math.cos(ang), z_off, cz + petal_R * math.sin(ang)))
 
-    # Build edges as line strips (decorative â€” won't fill faces for thin ring shapes)
+    # Build edges as line strips (decorative — won't fill faces for thin ring shapes)
     def add_ring_edges(start, count):
         for i in range(count):
             edges.append((start + i, start + (i + 1) % count))
@@ -30147,7 +30188,7 @@ def sverchok_rose_window():
 
 
 def sverchok_spiral_staircase():
-    """ðŸªœ Spiral staircase â€” N steps arrayed helically around a central column."""
+    """🪜 Spiral staircase — N steps arrayed helically around a central column."""
     import math
     n_steps = 16
     step_rise = 0.22
@@ -30172,7 +30213,7 @@ def sverchok_spiral_staircase():
         # Step center
         cx = (inner_radius + step_depth/2) * math.cos(ang)
         cy = (inner_radius + step_depth/2) * math.sin(ang)
-        # Build a small step block â€” rotated cube
+        # Build a small step block — rotated cube
         base = len(verts)
         hx, hy, hz = step_depth / 2, step_width / 2, step_rise * 0.45
         # 8 corners in step-local space
@@ -30207,11 +30248,11 @@ def sverchok_spiral_staircase():
 
 
 # ============================================================
-# DARK SOULS Ã— ESCHER  â€”  filigree, ornament, twisted spires
+# DARK SOULS × ESCHER  —  filigree, ornament, twisted spires
 # ============================================================
 
 def sverchok_filigree_scrollwork():
-    """ðŸŒ¿ Filigree scrollwork â€” pair of opposing spiral curls connected by a stem.
+    """🌿 Filigree scrollwork — pair of opposing spiral curls connected by a stem.
     Classic gothic decorative band motif: ornament that tiles along edges.
     """
     import math
@@ -30298,7 +30339,7 @@ def sverchok_filigree_scrollwork():
 
 
 def sverchok_trefoil_frieze():
-    """â˜˜ Trefoil ornament frieze â€” repeating 3-lobed pattern band.
+    """☘ Trefoil ornament frieze — repeating 3-lobed pattern band.
     Used as decoration along arches, walls, cornices.
     """
     import math
@@ -30348,7 +30389,7 @@ def sverchok_trefoil_frieze():
 
 
 def sverchok_twisted_spire():
-    """ðŸ—¼ Twisted gothic spire â€” Dark Souls' iconic broken pinnacle.
+    """🗼 Twisted gothic spire — Dark Souls' iconic broken pinnacle.
     Multiple twisted cylinders nested with decreasing radius, gradually rotating.
     """
     import math
@@ -30386,7 +30427,7 @@ def sverchok_twisted_spire():
             d = (r + 1) * n_around + k
             faces.append([a, b, c, d])
 
-    # Crowning finial â€” small sphere
+    # Crowning finial — small sphere
     top_base = len(verts)
     finial_segs = 12
     for j in range(finial_segs + 1):
@@ -30412,7 +30453,7 @@ def sverchok_twisted_spire():
 
 
 def sverchok_cathedral_ruin():
-    """ðŸš Cathedral ruin â€” partial gothic structure with broken arches.
+    """🏚 Cathedral ruin — partial gothic structure with broken arches.
     Generates a sequence of pointed arches, some "broken" (missing top half),
     forming a Dark-Souls-style ruined hallway.
     """
@@ -30514,14 +30555,14 @@ def sverchok_cathedral_ruin():
 
 
 def sverchok_branching_buttress():
-    """ðŸŒ³ Branching buttress â€” Y-shaped support that branches like a tree.
+    """🌳 Branching buttress — Y-shaped support that branches like a tree.
     Recursive branching = AAA gothic detail. Each branch can branch again.
     """
     import math
     res_mult, scale_mult, complexity_mult, phase = _sv_params()
     depth = max(1, min(4, int(round(3 * complexity_mult))))
     trunk_h = 2.0 * scale_mult
-    # Music: branch angle modulated â†’ wider/narrower spreads on the beat
+    # Music: branch angle modulated → wider/narrower spreads on the beat
     branch_angle = math.radians(35 * (1.0 + phase * 0.5))
     branch_length_ratio = 0.65
     trunk_r = 0.18 * scale_mult
@@ -30548,7 +30589,7 @@ def sverchok_branching_buttress():
         pz = ux * ay - uy * ax
         pl = math.sqrt(px*px + py*py + pz*pz) or 1
         px, py, pz = px/pl, py/pl, pz/pl
-        # Second perpendicular = u Ã— p
+        # Second perpendicular = u × p
         qx = uy * pz - uz * py
         qy = uz * px - ux * pz
         qz = ux * py - uy * px
@@ -30574,7 +30615,7 @@ def sverchok_branching_buttress():
         add_segment(x, y, z, x1, y1, z1, radius)
         if depth_left <= 0: return
         # Branch into 2 sub-branches
-        # Rotate direction by Â±branch_angle in the XZ plane (for visual planarity)
+        # Rotate direction by ±branch_angle in the XZ plane (for visual planarity)
         c, s = math.cos(branch_angle), math.sin(branch_angle)
         # Branch A: rotate around Y axis
         bdx_a = dx * c - dz * s
@@ -30597,7 +30638,7 @@ def sverchok_branching_buttress():
 
 
 def sverchok_cascading_arches():
-    """ðŸŒŠ Cascading arches â€” Escher's stacked impossible arches descending.
+    """🌊 Cascading arches — Escher's stacked impossible arches descending.
     Each arch is smaller and offset, creating a "stairway in arches" feel.
     """
     import math
@@ -30616,7 +30657,7 @@ def sverchok_cascading_arches():
         n_seg = 18
         for i in range(n_seg + 1):
             t = i / n_seg
-            ang = math.pi * t  # 0..Ï€
+            ang = math.pi * t  # 0..π
             ox = cx + R * math.cos(ang)
             oz = cz + R * math.sin(ang)
             verts.append((ox, -thickness/2, oz))
@@ -30645,7 +30686,7 @@ def sverchok_cascading_arches():
 
 
 def sverchok_iron_gate():
-    """ðŸšª Wrought-iron filigree gate â€” bars + S-curl ornaments.
+    """🚪 Wrought-iron filigree gate — bars + S-curl ornaments.
     Vertical bars + horizontal cross-rails + decorative scrollwork.
     """
     import math
@@ -30718,7 +30759,7 @@ def sverchok_iron_gate():
 
 
 def sverchok_hanging_chandelier():
-    """ðŸ’¡ Hanging chandelier â€” branching arms with candle stubs.
+    """💡 Hanging chandelier — branching arms with candle stubs.
     Dark Souls style: ring with radial arms, candles on top of each.
     """
     import math
@@ -30742,7 +30783,7 @@ def sverchok_hanging_chandelier():
         # Small ring segment as a cylinder
         _add_cylinder(verts, faces, x, y, z_ring, 0.04, 0.25, segments=6)
 
-    # Arms â€” radial small horizontal beams + vertical candle stubs at outer end
+    # Arms — radial small horizontal beams + vertical candle stubs at outer end
     for i in range(n_arms):
         ang = (i / n_arms) * math.tau
         # Outer point where candle sits
@@ -30774,8 +30815,8 @@ def sverchok_hanging_chandelier():
 
 
 def sverchok_mobius_staircase():
-    """â™¾ MÃ¶bius staircase â€” impossible stair that loops back on itself.
-    Generates a MÃ¶bius strip parameterically with stairs sampled along it.
+    """♾ Möbius staircase — impossible stair that loops back on itself.
+    Generates a Möbius strip parameterically with stairs sampled along it.
     """
     import math
     R = 2.0
@@ -30786,7 +30827,7 @@ def sverchok_mobius_staircase():
     verts = []
     faces = []
 
-    # MÃ¶bius strip: P(u,v) = ((R + v*cos(u/2)) cos(u), (R + v*cos(u/2)) sin(u), v*sin(u/2))
+    # Möbius strip: P(u,v) = ((R + v*cos(u/2)) cos(u), (R + v*cos(u/2)) sin(u), v*sin(u/2))
     for j in range(n_steps + 1):
         u = (j / n_steps) * math.tau
         for k in range(2):
@@ -30810,7 +30851,7 @@ def sverchok_mobius_staircase():
         cx = R * math.cos(u)
         cy = R * math.sin(u)
         cz = j * step_h * 0.2
-        # Step block â€” a thin cube near the centerline
+        # Step block — a thin cube near the centerline
         base = len(verts)
         # Local tangent direction
         tx = -math.sin(u)
@@ -30840,7 +30881,7 @@ def sverchok_mobius_staircase():
 
 
 def sverchok_recursive_portal():
-    """ðŸŒŒ Recursive portal â€” pointed Gothic arch frame nested 3 deep (Droste effect)."""
+    """🌌 Recursive portal — pointed Gothic arch frame nested 3 deep (Droste effect)."""
     import math
     W_outer, H_outer = 2.0, 3.5
     thickness = 0.15
@@ -30926,9 +30967,9 @@ def sverchok_recursive_portal():
 
 
 def sverchok_vault_ceiling():
-    """â›ª Gothic cross-vault â€” 4-arch ceiling intersection."""
+    """⛪ Gothic cross-vault — 4-arch ceiling intersection."""
     import math
-    span = 4.0          # ceiling square is span Ã— span
+    span = 4.0          # ceiling square is span × span
     rise = 1.4          # vault peak height above edge
     segments = 16
 
@@ -30936,7 +30977,7 @@ def sverchok_vault_ceiling():
     faces = []
 
     # Build as a grid; each grid vertex's Z is determined by the vault equation:
-    # z = rise * min(sin(Ï€Â·u), sin(Ï€Â·v))  â€” barrel-vault intersection (cross-vault)
+    # z = rise * min(sin(π·u), sin(π·v))  — barrel-vault intersection (cross-vault)
     n = segments
     for j in range(n + 1):
         v = j / n
@@ -30976,13 +31017,13 @@ def _make_sverchok_op(class_name, op_id, label, builder_fn):
     """Factory for Sverchok-spawning operators.
 
     Improvements in v2.22:
-      â€¢ Per-call parameter dialog (invoke_props_dialog) so users tweak
+      • Per-call parameter dialog (invoke_props_dialog) so users tweak
         resolution / scale / complexity / seed BEFORE the mesh spawns.
-      â€¢ Object â†’ companion tree binding via obj["surreal_sv_tree"] custom
+      • Object → companion tree binding via obj["surreal_sv_tree"] custom
         property so Open Editor can jump straight to that object's tree.
-      â€¢ Orphan Sverchok-bake cleanup so the kept-tree path doesn't spawn
+      • Orphan Sverchok-bake cleanup so the kept-tree path doesn't spawn
         a duplicate object alongside the Python-computed mesh.
-      â€¢ Robust error reporting with a traceback printed to console.
+      • Robust error reporting with a traceback printed to console.
     """
 
     def invoke(self, context, event):
@@ -30999,7 +31040,7 @@ def _make_sverchok_op(class_name, op_id, label, builder_fn):
 
     def draw_dialog(self, context):
         layout = self.layout
-        layout.label(text=f"ðŸŒ€ {label}", icon='NODETREE')
+        layout.label(text=f"🌀 {label}", icon='NODETREE')
         col = layout.column(align=True)
         col.prop(self, 'sv_resolution')
         col.prop(self, 'sv_scale')
@@ -31007,7 +31048,7 @@ def _make_sverchok_op(class_name, op_id, label, builder_fn):
         col.prop(self, 'sv_seed')
         col.separator()
         col.prop(self, 'sv_keep_tree', icon='NODETREE')
-        col.label(text="(Keep tree â†’ editable Sverchok preset)", icon='INFO')
+        col.label(text="(Keep tree → editable Sverchok preset)", icon='INFO')
         col.separator()
         col.prop(self, 'sv_weld_after', icon='AUTOMERGE_ON')
         if getattr(self, 'sv_weld_after', True):
@@ -31020,8 +31061,8 @@ def _make_sverchok_op(class_name, op_id, label, builder_fn):
         sverchok_ok = _sverchok_available()
         if not sverchok_ok:
             self.report({'INFO'},
-                "Sverchok not detected â€” spawning Python-only (no editable tree)")
-        # Snapshot pre-existing object names â€” used to detect orphan Sverchok
+                "Sverchok not detected — spawning Python-only (no editable tree)")
+        # Snapshot pre-existing object names — used to detect orphan Sverchok
         # bakes that we should clean up after.
         pre_objs = set(bpy.data.objects.keys())
         # Resolve props source: prefer the active object's. Persist the
@@ -31041,7 +31082,7 @@ def _make_sverchok_op(class_name, op_id, label, builder_fn):
             obj = builder_fn()
             if obj is None:
                 self.report({'WARNING'},
-                            "Sverchok built tree but no mesh appeared â€” "
+                            "Sverchok built tree but no mesh appeared — "
                             "open the Sverchok editor and toggle the viewer")
                 return {'FINISHED'}
             # Stamp dialog params onto the spawned mesh
@@ -31097,14 +31138,14 @@ def _make_sverchok_op(class_name, op_id, label, builder_fn):
                     for poly in obj.data.polygons:
                         poly.use_smooth = True
                     obj.data.update()
-                    print(f"[Sverchok] welded {obj.name}: {pre} â†’ {post} verts")
+                    print(f"[Sverchok] welded {obj.name}: {pre} → {post} verts")
                 except Exception as e:
                     print(f"[Sverchok] weld pass failed: {e}")
             # Final selection
             bpy.ops.object.select_all(action='DESELECT')
             obj.select_set(True)
             context.view_layer.objects.active = obj
-            self.report({'INFO'}, f"ðŸŒ€ Sverchok created: {obj.name}")
+            self.report({'INFO'}, f"🌀 Sverchok created: {obj.name}")
             return {'FINISHED'}
         except Exception as e:
             self.report({'ERROR'}, f"Sverchok preset failed: {e}")
@@ -31148,17 +31189,17 @@ def _make_sverchok_op(class_name, op_id, label, builder_fn):
     return _SvOp
 
 
-# v2.47 NOTE: The module-scope rewrite below was based on a wrong diagnostic â€”
+# v2.47 NOTE: The module-scope rewrite below was based on a wrong diagnostic —
 # the factory pattern ALREADY registers props correctly (verified via
 # `bpy.ops.X.get_rna_type().properties`). The earlier "props missing" finding
 # was caused by querying the wrong RNA struct. Keeping this class commented
 # below so the diff stays visible; the canonical op uses the factory.
 class _SURREAL_ARCH_OT_sv_spiral_DEFERRED(bpy.types.Operator):
-    """ðŸŒ€ Escher-style logarithmic ascending spiral tower.
+    """🌀 Escher-style logarithmic ascending spiral tower.
     Computed in pure Python; companion Sverchok tree (if Sverchok installed)
-    becomes editable. v2.47 â€” first module-scope migration."""
+    becomes editable. v2.47 — first module-scope migration."""
     bl_idname = "surreal_arch.sv_spiral"
-    bl_label  = "ðŸŒ€ Spiral Tower"
+    bl_label  = "🌀 Spiral Tower"
     bl_options = {'REGISTER', 'UNDO'}
 
     sv_resolution: bpy.props.FloatProperty(
@@ -31169,7 +31210,7 @@ class _SURREAL_ARCH_OT_sv_spiral_DEFERRED(bpy.types.Operator):
         description="Overall size multiplier", update=auto_update_callback)
     sv_complexity: bpy.props.FloatProperty(
         name="Complexity (turns)", default=1.0, min=0.3, max=4.0,
-        description="Number of full spiral turns Ã— complexity", update=auto_update_callback)
+        description="Number of full spiral turns × complexity", update=auto_update_callback)
     sv_seed: bpy.props.IntProperty(
         name="Seed", default=42, min=0, max=99999, update=auto_update_callback)
     sv_keep_tree: bpy.props.BoolProperty(
@@ -31196,9 +31237,9 @@ class _SURREAL_ARCH_OT_sv_spiral_DEFERRED(bpy.types.Operator):
 
     def draw(self, context):
         layout = self.layout
-        layout.label(text="ðŸŒ€ Spiral Tower", icon='NODETREE')
+        layout.label(text="🌀 Spiral Tower", icon='NODETREE')
         if not _sverchok_available():
-            layout.label(text="(Sverchok not installed â€” Python-only spawn)",
+            layout.label(text="(Sverchok not installed — Python-only spawn)",
                           icon='INFO')
         col = layout.column(align=True)
         col.prop(self, 'sv_resolution')
@@ -31262,7 +31303,7 @@ class _SURREAL_ARCH_OT_sv_spiral_DEFERRED(bpy.types.Operator):
                 for poly in obj.data.polygons:
                     poly.use_smooth = True
                 obj.data.update()
-                print(f"[Sverchok] welded {obj.name}: {pre} â†’ {post} verts")
+                print(f"[Sverchok] welded {obj.name}: {pre} → {post} verts")
             except Exception as e:
                 print(f"[Sverchok] weld pass failed: {e}")
         # Final selection
@@ -31270,7 +31311,7 @@ class _SURREAL_ARCH_OT_sv_spiral_DEFERRED(bpy.types.Operator):
         obj.select_set(True)
         context.view_layer.objects.active = obj
         sv_note = "" if _sverchok_available() else " (Python-only)"
-        self.report({'INFO'}, f"ðŸŒ€ Spawned {obj.name}{sv_note}")
+        self.report({'INFO'}, f"🌀 Spawned {obj.name}{sv_note}")
         _SV_CURRENT_PROPS = None
         return {'FINISHED'}
 
@@ -31278,96 +31319,96 @@ class _SURREAL_ARCH_OT_sv_spiral_DEFERRED(bpy.types.Operator):
 # v2.47 FIX: Use the factory-built op as the canonical sv_spiral.
 SURREAL_ARCH_OT_sv_spiral = _make_sverchok_op(
     "SURREAL_ARCH_OT_sv_spiral",   "surreal_arch.sv_spiral",
-    "ðŸŒ€ Spiral Tower",  sverchok_spiral_tower)
+    "🌀 Spiral Tower",  sverchok_spiral_tower)
 SURREAL_ARCH_OT_sv_torus_knot   = _make_sverchok_op(
     "SURREAL_ARCH_OT_sv_torus_knot","surreal_arch.sv_torus_knot",
-    "ðŸª¢ Torus Knot",     sverchok_torus_knot)
+    "🪢 Torus Knot",     sverchok_torus_knot)
 SURREAL_ARCH_OT_sv_tessellation = _make_sverchok_op(
     "SURREAL_ARCH_OT_sv_tessellation","surreal_arch.sv_tessellation",
-    "ðŸ¦ Tessellation",   sverchok_tessellation)
+    "🐦 Tessellation",   sverchok_tessellation)
 SURREAL_ARCH_OT_sv_twisted      = _make_sverchok_op(
     "SURREAL_ARCH_OT_sv_twisted",  "surreal_arch.sv_twisted",
-    "ðŸŒª Twisted Tower",  sverchok_twisted_cylinder)
+    "🌪 Twisted Tower",  sverchok_twisted_cylinder)
 SURREAL_ARCH_OT_sv_fractal      = _make_sverchok_op(
     "SURREAL_ARCH_OT_sv_fractal",  "surreal_arch.sv_fractal",
-    "â„ Fractal Curve",   sverchok_fractal_curve)
+    "❄ Fractal Curve",   sverchok_fractal_curve)
 
 # === Architectural Sverchok presets ===
 SURREAL_ARCH_OT_sv_railing       = _make_sverchok_op(
     "SURREAL_ARCH_OT_sv_railing", "surreal_arch.sv_railing",
-    "ðŸ›¡ Railing", sverchok_railing)
+    "🛡 Railing", sverchok_railing)
 SURREAL_ARCH_OT_sv_curved_wall   = _make_sverchok_op(
     "SURREAL_ARCH_OT_sv_curved_wall", "surreal_arch.sv_curved_wall",
-    "ðŸŒ™ Curved Wall", sverchok_curved_wall)
+    "🌙 Curved Wall", sverchok_curved_wall)
 SURREAL_ARCH_OT_sv_floor         = _make_sverchok_op(
     "SURREAL_ARCH_OT_sv_floor", "surreal_arch.sv_floor",
-    "ðŸŸ« Floor Panel", sverchok_floor_panel)
+    "🟫 Floor Panel", sverchok_floor_panel)
 SURREAL_ARCH_OT_sv_balcony       = _make_sverchok_op(
     "SURREAL_ARCH_OT_sv_balcony", "surreal_arch.sv_balcony",
-    "ðŸŒ¿ Balcony", sverchok_balcony)
+    "🌿 Balcony", sverchok_balcony)
 SURREAL_ARCH_OT_sv_gothic_arch   = _make_sverchok_op(
     "SURREAL_ARCH_OT_sv_gothic_arch", "surreal_arch.sv_gothic_arch",
-    "âœŸ Gothic Arch", sverchok_gothic_arch)
+    "✟ Gothic Arch", sverchok_gothic_arch)
 SURREAL_ARCH_OT_sv_rose_window   = _make_sverchok_op(
     "SURREAL_ARCH_OT_sv_rose_window", "surreal_arch.sv_rose_window",
-    "â€ Rose Window", sverchok_rose_window)
+    "❀ Rose Window", sverchok_rose_window)
 SURREAL_ARCH_OT_sv_staircase     = _make_sverchok_op(
     "SURREAL_ARCH_OT_sv_staircase", "surreal_arch.sv_staircase",
-    "ðŸªœ Spiral Stairs", sverchok_spiral_staircase)
+    "🪜 Spiral Stairs", sverchok_spiral_staircase)
 SURREAL_ARCH_OT_sv_vault         = _make_sverchok_op(
     "SURREAL_ARCH_OT_sv_vault", "surreal_arch.sv_vault",
-    "â›ª Vault Ceiling", sverchok_vault_ceiling)
+    "⛪ Vault Ceiling", sverchok_vault_ceiling)
 
-# === Dark Souls Ã— Escher Sverchok operators ===
+# === Dark Souls × Escher Sverchok operators ===
 SURREAL_ARCH_OT_sv_filigree    = _make_sverchok_op(
     "SURREAL_ARCH_OT_sv_filigree", "surreal_arch.sv_filigree",
-    "ðŸŒ¿ Filigree", sverchok_filigree_scrollwork)
+    "🌿 Filigree", sverchok_filigree_scrollwork)
 SURREAL_ARCH_OT_sv_trefoil_frieze = _make_sverchok_op(
     "SURREAL_ARCH_OT_sv_trefoil_frieze", "surreal_arch.sv_trefoil_frieze",
-    "â˜˜ Trefoil Frieze", sverchok_trefoil_frieze)
+    "☘ Trefoil Frieze", sverchok_trefoil_frieze)
 SURREAL_ARCH_OT_sv_twisted_spire = _make_sverchok_op(
     "SURREAL_ARCH_OT_sv_twisted_spire", "surreal_arch.sv_twisted_spire",
-    "ðŸ—¼ Twisted Spire", sverchok_twisted_spire)
+    "🗼 Twisted Spire", sverchok_twisted_spire)
 SURREAL_ARCH_OT_sv_cathedral_ruin = _make_sverchok_op(
     "SURREAL_ARCH_OT_sv_cathedral_ruin", "surreal_arch.sv_cathedral_ruin",
-    "ðŸš Cathedral Ruin", sverchok_cathedral_ruin)
+    "🏚 Cathedral Ruin", sverchok_cathedral_ruin)
 SURREAL_ARCH_OT_sv_branching_buttress = _make_sverchok_op(
     "SURREAL_ARCH_OT_sv_branching_buttress", "surreal_arch.sv_branching_buttress",
-    "ðŸŒ³ Branching Buttress", sverchok_branching_buttress)
+    "🌳 Branching Buttress", sverchok_branching_buttress)
 SURREAL_ARCH_OT_sv_cascading_arches = _make_sverchok_op(
     "SURREAL_ARCH_OT_sv_cascading_arches", "surreal_arch.sv_cascading_arches",
-    "ðŸŒŠ Cascading Arches", sverchok_cascading_arches)
+    "🌊 Cascading Arches", sverchok_cascading_arches)
 SURREAL_ARCH_OT_sv_iron_gate = _make_sverchok_op(
     "SURREAL_ARCH_OT_sv_iron_gate", "surreal_arch.sv_iron_gate",
-    "ðŸšª Iron Gate", sverchok_iron_gate)
+    "🚪 Iron Gate", sverchok_iron_gate)
 SURREAL_ARCH_OT_sv_chandelier = _make_sverchok_op(
     "SURREAL_ARCH_OT_sv_chandelier", "surreal_arch.sv_chandelier",
-    "ðŸ’¡ Chandelier", sverchok_hanging_chandelier)
+    "💡 Chandelier", sverchok_hanging_chandelier)
 SURREAL_ARCH_OT_sv_mobius_stairs = _make_sverchok_op(
     "SURREAL_ARCH_OT_sv_mobius_stairs", "surreal_arch.sv_mobius_stairs",
-    "â™¾ MÃ¶bius Stairs", sverchok_mobius_staircase)
+    "♾ Möbius Stairs", sverchok_mobius_staircase)
 SURREAL_ARCH_OT_sv_recursive_portal = _make_sverchok_op(
     "SURREAL_ARCH_OT_sv_recursive_portal", "surreal_arch.sv_recursive_portal",
-    "ðŸŒŒ Recursive Portal", sverchok_recursive_portal)
+    "🌌 Recursive Portal", sverchok_recursive_portal)
 
 
 # ============================================================
-# PROCEDURAL ENVIRONMENT COMPOSER  â€”  full Dark-Souls/Escher scenes
+# PROCEDURAL ENVIRONMENT COMPOSER  —  full Dark-Souls/Escher scenes
 # Spawns multiple presets with parametric placement & overlap rules
 # ============================================================
 
 class SURREAL_ARCH_OT_compose_scene(bpy.types.Operator):
-    """Procedurally compose an entire Dark-Souls Ã— Escher gothic ruin scene from a seed."""
+    """Procedurally compose an entire Dark-Souls × Escher gothic ruin scene from a seed."""
     bl_idname = "surreal_arch.compose_scene"
-    bl_label  = "ðŸš Compose Gothic Ruin Scene"
+    bl_label  = "🏚 Compose Gothic Ruin Scene"
     bl_options = {'REGISTER', 'UNDO'}
 
     style: bpy.props.EnumProperty(
         name="Style",
         items=[
-            ('DARK_SOULS', "ðŸš Dark Souls Ruin", "Crumbled cathedral with twisted spires, chandeliers, scattered tombstones"),
-            ('ESCHER',     "ðŸªœ Escher Surreal",  "MÃ¶bius staircases, cascading arches, recursive portals"),
-            ('GOTHIC_CITY',"ðŸ› Gothic City",    "Multiple palazzo facades + bridges + radial buildings"),
+            ('DARK_SOULS', "🏚 Dark Souls Ruin", "Crumbled cathedral with twisted spires, chandeliers, scattered tombstones"),
+            ('ESCHER',     "🪜 Escher Surreal",  "Möbius staircases, cascading arches, recursive portals"),
+            ('GOTHIC_CITY',"🏛 Gothic City",    "Multiple palazzo facades + bridges + radial buildings"),
         ],
         default='DARK_SOULS',
     )
@@ -31458,13 +31499,13 @@ class SURREAL_ARCH_OT_compose_scene(bpy.types.Operator):
                     o = spawn_sv("sv_branching_buttress")
                     if o: place(o, x, y, 0, rot_z=ang + math.pi)
 
-            # Cathedral ruin in background â€” far behind
+            # Cathedral ruin in background — far behind
             o = spawn_sv("sv_cathedral_ruin")
             if o:
                 sx, sy, sz = piece_size(o)
                 place(o, 0, -12, 0)   # 12m behind, beyond buttresses
 
-            # Tombstones â€” pointed gothic arches scaled small, scattered
+            # Tombstones — pointed gothic arches scaled small, scattered
             n_tombs = max(2, int(self.density * 0.35))
             for i in range(n_tombs):
                 attempts = 0
@@ -31496,7 +31537,7 @@ class SURREAL_ARCH_OT_compose_scene(bpy.types.Operator):
                 o = spawn_sv("sv_chandelier")
                 if o: place(o, x, y, z)
 
-            # Filigree friezes â€” decorative bands at ground level
+            # Filigree friezes — decorative bands at ground level
             for i in range(2):
                 ang = (math.tau / 2) * i + math.pi / 2
                 dist = 8.0
@@ -31505,7 +31546,7 @@ class SURREAL_ARCH_OT_compose_scene(bpy.types.Operator):
                 if o: place(o, x, y, 0.5, rot_z=ang + math.pi / 2)
 
         elif self.style == 'ESCHER':
-            # MÃ¶bius stairs at center
+            # Möbius stairs at center
             o = spawn_sv("sv_mobius_stairs")
             mobius_size = piece_size(o) if o else (4, 4, 1)
             if o: place(o, 0, 0, 0)
@@ -31537,13 +31578,13 @@ class SURREAL_ARCH_OT_compose_scene(bpy.types.Operator):
                 o = spawn_sv("sv_twisted_spire")
                 if o: place(o, x, y, 0, scale=scale_v)
 
-            # MÃ¶bius companion (rotated 90Â°, offset)
+            # Möbius companion (rotated 90°, offset)
             o = spawn_sv("sv_mobius_stairs")
             if o: place(o, 0, 0, mobius_size[2] + 0.5, rot_z=math.pi / 2, scale=0.7)
 
         else:  # GOTHIC_CITY
-            # Central rotunda â€” figure out its footprint first
-            o = spawn_sv("sv_twisted_spire")    # central landmark â€” much smaller than 12m grid
+            # Central rotunda — figure out its footprint first
+            o = spawn_sv("sv_twisted_spire")    # central landmark — much smaller than 12m grid
             if o:
                 sx, sy, sz = piece_size(o)
                 place(o, 0, 0, 0)
@@ -31585,14 +31626,14 @@ class SURREAL_ARCH_OT_compose_scene(bpy.types.Operator):
         context.view_layer.objects.active = parent
 
         n_kids = len([o for o in bpy.data.objects if o.parent == parent])
-        self.report({'INFO'}, f"Scene composed: {self.style} (seed {self.seed}) â€” {n_kids} pieces")
+        self.report({'INFO'}, f"Scene composed: {self.style} (seed {self.seed}) — {n_kids} pieces")
         return {'FINISHED'}
 
 
 class SURREAL_ARCH_OT_toggle_genshin(bpy.types.Operator):
     """Toggle Genshin-style cel-shading on whatever's currently built."""
     bl_idname = "surreal_arch.toggle_genshin"
-    bl_label  = "ðŸŽ€ Toggle Genshin Style"
+    bl_label  = "🎀 Toggle Genshin Style"
     bl_options = {'REGISTER', 'UNDO'}
 
     @classmethod
@@ -31603,15 +31644,15 @@ class SURREAL_ARCH_OT_toggle_genshin(bpy.types.Operator):
         p = context.active_object.surreal_arch_props
         p.genshin_style = not p.genshin_style
         bpy.ops.surreal_arch.generate()
-        state = "ON ðŸŽ€" if p.genshin_style else "OFF"
+        state = "ON 🎀" if p.genshin_style else "OFF"
         self.report({'INFO'}, f"Genshin style: {state}")
         return {'FINISHED'}
 
 
 class SURREAL_ARCH_OT_uv_unwrap(bpy.types.Operator):
-    """Smart UV Project on the active mesh â€” use after Apply Modifiers for island unwrap."""
+    """Smart UV Project on the active mesh — use after Apply Modifiers for island unwrap."""
     bl_idname = "surreal_arch.uv_unwrap"
-    bl_label  = "ðŸ—º Smart UV Unwrap"
+    bl_label  = "🗺 Smart UV Unwrap"
     bl_options = {'REGISTER', 'UNDO'}
 
     @classmethod
@@ -31626,9 +31667,9 @@ class SURREAL_ARCH_OT_uv_unwrap(bpy.types.Operator):
         props.uv_unwrap_mode = 'SMART'
         try:
             if apply_smart_uv_unwrap(obj, props, context):
-                self.report({'INFO'}, f"Smart UV unwrapped â†’ layer '{props.uv_map_name}'")
+                self.report({'INFO'}, f"Smart UV unwrapped → layer '{props.uv_map_name}'")
                 return {'FINISHED'}
-            self.report({'WARNING'}, "Smart UV unwrap failed â€” try Apply Modifiers first")
+            self.report({'WARNING'}, "Smart UV unwrap failed — try Apply Modifiers first")
             return {'CANCELLED'}
         finally:
             props.uv_unwrap_mode = old_mode
@@ -31637,7 +31678,7 @@ class SURREAL_ARCH_OT_uv_unwrap(bpy.types.Operator):
 class SURREAL_ARCH_OT_export_ue5(bpy.types.Operator):
     """Bake a duplicated copy of the active object as a clean game-ready FBX for Unreal Engine 5."""
     bl_idname = "surreal_arch.export_ue5"
-    bl_label  = "ðŸŽ® Bake & Export to UE5"
+    bl_label  = "🎮 Bake & Export to UE5"
     bl_options = {'REGISTER', 'UNDO'}
 
     filepath: bpy.props.StringProperty(subtype='FILE_PATH', update=auto_update_callback)
@@ -31729,7 +31770,7 @@ class SURREAL_ARCH_OT_export_ue5(bpy.types.Operator):
 class SURREAL_ARCH_OT_spawn_synthia(bpy.types.Operator):
     """Spawn a Synthia math viz, then apply our edge-bevel + material from the library."""
     bl_idname = "surreal_arch.spawn_synthia"
-    bl_label  = "ðŸ§® Spawn Synthia Viz"
+    bl_label  = "🧮 Spawn Synthia Viz"
     bl_options = {'REGISTER', 'UNDO'}
 
     @classmethod
@@ -31860,7 +31901,7 @@ class SURREAL_ARCH_OT_export_fbx(bpy.types.Operator):
 # UI PANEL
 # ----------------------------------------------------------------------
 
-# v2.44: ROUTE DETECTION â€” show user which generation route built the object
+# v2.44: ROUTE DETECTION — show user which generation route built the object
 def _route_for_object(obj):
     """Determine which generation route built the active object."""
     if obj is None: return 'NONE'
@@ -31890,529 +31931,529 @@ def _route_for_object(obj):
 
 
 _ROUTE_BADGES = {
-    'ROOF':      ("ðŸ  Direct Roof Mesh",       'HOME'),
-    'TERRAIN':   ("ðŸŒ„ Terrain Plane",           'MESH_GRID'),
-    'PLAN':      ("ðŸ“ Massing Plan",            'MOD_LATTICE'),
-    'WORLD':     ("ðŸ— Composed World",          'WORLD_DATA'),
-    'PIECES':    ("ðŸ§© Split World Piece",      'GROUP_VERTEX'),
-    'LIBRARY':   ("ðŸ“š Library Piece",           'ASSET_MANAGER'),
-    'EASYTREE':  ("ðŸŒ² EasyTree",                'OUTLINER_OB_GREASEPENCIL'),
-    'SVERCHOK':  ("ðŸŒ€ Sverchok-Built",          'NODETREE'),
-    'GN':        ("âš™ SurrealArch GeoNodes",   'GEOMETRY_NODES'),
-    'AESTHETIC': ("ðŸŽ­ Aesthetic Effect Stack", 'SHADERFX'),
-    'SCIFI':     ("ðŸ”¬ Sci-Fi Effect Stack",    'MOD_PARTICLE_INSTANCE'),
-    'MESH':      ("ðŸ”· Plain Mesh",              'MESH_DATA'),
+    'ROOF':      ("🏠 Direct Roof Mesh",       'HOME'),
+    'TERRAIN':   ("🌄 Terrain Plane",           'MESH_GRID'),
+    'PLAN':      ("📐 Massing Plan",            'MOD_LATTICE'),
+    'WORLD':     ("🏗 Composed World",          'WORLD_DATA'),
+    'PIECES':    ("🧩 Split World Piece",      'GROUP_VERTEX'),
+    'LIBRARY':   ("📚 Library Piece",           'ASSET_MANAGER'),
+    'EASYTREE':  ("🌲 EasyTree",                'OUTLINER_OB_GREASEPENCIL'),
+    'SVERCHOK':  ("🌀 Sverchok-Built",          'NODETREE'),
+    'GN':        ("⚙ SurrealArch GeoNodes",   'GEOMETRY_NODES'),
+    'AESTHETIC': ("🎭 Aesthetic Effect Stack", 'SHADERFX'),
+    'SCIFI':     ("🔬 Sci-Fi Effect Stack",    'MOD_PARTICLE_INSTANCE'),
+    'MESH':      ("🔷 Plain Mesh",              'MESH_DATA'),
     'NONE':      ("(no object selected)",      'ERROR'),
 }
 
 
-# v2.44: DYNAMIC PARAM SPEC â€” fills in the 56 arch_types that PT_geometry
+# v2.44: DYNAMIC PARAM SPEC — fills in the 56 arch_types that PT_geometry
 # was previously silent on. Each entry: arch_type -> list of
 # (section_label, icon, [prop_names]).
 _ARCH_PARAM_SPEC = {
-    # â”€â”€â”€ v2.50 Advanced Generators â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-    'ARCHWAY_ADV':  [("ðŸ› Archway Shape", 'DRIVER_ROTATIONAL_DIFFERENCE',
+    # ─── v2.50 Advanced Generators ───────────────────────────────────
+    'ARCHWAY_ADV':  [("🏛 Archway Shape", 'DRIVER_ROTATIONAL_DIFFERENCE',
                       ['archway_style', 'archway_width', 'archway_height', 'archway_depth']),
-                     ("ðŸ› Arch Band & Piers", 'MESH_CUBE',
+                     ("🏛 Arch Band & Piers", 'MESH_CUBE',
                       ['archway_thickness', 'archway_pier_width',
                        'archway_piers', 'archway_keystone', 'archway_voussoirs'])],
-    'BRIDGE_ADV':   [("ðŸŒ‰ Bridge Shape", 'DRIVER_ROTATIONAL_DIFFERENCE',
+    'BRIDGE_ADV':   [("🌉 Bridge Shape", 'DRIVER_ROTATIONAL_DIFFERENCE',
                       ['bridge_style', 'bridge_span', 'bridge_width', 'bridge_rise']),
-                     ("ðŸŒ‰ Structure", 'MESH_CUBE',
+                     ("🌉 Structure", 'MESH_CUBE',
                       ['bridge_arches', 'bridge_deck_thick', 'bridge_railings'])],
-    'FENCE':        [("ðŸªµ Fence", 'DRIVER_ROTATIONAL_DIFFERENCE',
+    'FENCE':        [("🪵 Fence", 'DRIVER_ROTATIONAL_DIFFERENCE',
                       ['fence_style', 'fence_length', 'fence_height']),
-                     ("ðŸªµ Details", 'MESH_CUBE',
+                     ("🪵 Details", 'MESH_CUBE',
                       ['fence_post_spacing', 'fence_rails', 'fence_picket_gap'])],
-    # â”€â”€â”€ v2.55 Curved Rooms â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-    'GB_ROOM_CIRCULAR':  [("â­• Circular", 'MESH_CIRCLE',
+    # ─── v2.55 Curved Rooms ─────────────────────────────────────────
+    'GB_ROOM_CIRCULAR':  [("⭕ Circular", 'MESH_CIRCLE',
                            ['gb_width', 'gb_height', 'gb_wall_thick', 'gb_door_width', 'gb_door_height',
                             'gb_ceiling']),
-                          ("ðŸªŸ Windows", 'MESH_GRID',
+                          ("🪟 Windows", 'MESH_GRID',
                            ['gb_windows_enabled', 'gb_window_count', 'gb_window_width',
                             'gb_window_height', 'gb_window_sill'])],
-    'GB_ROOM_APSIDAL':   [("â›ª Nave", 'MESH_CUBE',
+    'GB_ROOM_APSIDAL':   [("⛪ Nave", 'MESH_CUBE',
                            ['gb_width', 'gb_depth', 'gb_height', 'gb_wall_thick']),
-                          ("â›ª Door", 'PREFERENCES',
+                          ("⛪ Door", 'PREFERENCES',
                            ['gb_door_width', 'gb_door_height', 'gb_ceiling']),
-                          ("ðŸªŸ Windows", 'MESH_GRID',
+                          ("🪟 Windows", 'MESH_GRID',
                            ['gb_windows_enabled', 'gb_window_count', 'gb_window_width',
                             'gb_window_height', 'gb_window_sill'])],
-    'GB_CORRIDOR_ARC':   [("ðŸŒ€ Arc", 'FORCE_VORTEX',
+    'GB_CORRIDOR_ARC':   [("🌀 Arc", 'FORCE_VORTEX',
                            ['gb_width', 'gb_height', 'gb_wall_thick', 'gb_radius', 'gb_steps', 'gb_ceiling']),
-                          ("ðŸšª Door", 'MESH_CUBE',
+                          ("🚪 Door", 'MESH_CUBE',
                            ['gb_door_width', 'gb_door_height']),
-                          ("ðŸªŸ Windows", 'MESH_GRID',
+                          ("🪟 Windows", 'MESH_GRID',
                            ['gb_windows_enabled', 'gb_window_count', 'gb_window_width',
                             'gb_window_height', 'gb_window_sill'])],
-    'GB_ROOM_ROTUNDA':   [("ðŸ› Rotunda", 'MESH_CIRCLE',
+    'GB_ROOM_ROTUNDA':   [("🏛 Rotunda", 'MESH_CIRCLE',
                            ['gb_width', 'gb_height', 'gb_floors', 'gb_wall_thick']),
-                          ("ðŸ› Gallery", 'PREFERENCES',
+                          ("🏛 Gallery", 'PREFERENCES',
                            ['gb_run', 'gb_door_width', 'gb_door_height']),
-                          ("ðŸªŸ Windows", 'MESH_GRID',
+                          ("🪟 Windows", 'MESH_GRID',
                            ['gb_windows_enabled', 'gb_window_count', 'gb_window_width',
                             'gb_window_height', 'gb_window_sill'])],
-    'GB_CORRIDOR_ARC_CROSS': [("âœ› Cross", 'FORCE_VORTEX',
+    'GB_CORRIDOR_ARC_CROSS': [("✛ Cross", 'FORCE_VORTEX',
                                ['gb_width', 'gb_height', 'gb_wall_thick', 'gb_radius']),
-                              ("ðŸšª Door", 'MESH_CUBE',
+                              ("🚪 Door", 'MESH_CUBE',
                                ['gb_door_width', 'gb_door_height']),
-                              ("ðŸªŸ Windows", 'MESH_GRID',
+                              ("🪟 Windows", 'MESH_GRID',
                                ['gb_windows_enabled', 'gb_window_count', 'gb_window_width',
                                 'gb_window_height', 'gb_window_sill'])],
-    # â”€â”€â”€ v2.53 Lebbeus Woods â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-    'GB_WOODS_PARASITE':  [("ðŸš Host", 'MESH_CUBE',
+    # ─── v2.53 Lebbeus Woods ────────────────────────────────────────
+    'GB_WOODS_PARASITE':  [("🏚 Host", 'MESH_CUBE',
                             ['gb_width', 'gb_depth', 'gb_height', 'gb_wall_thick']),
-                           ("ðŸš Parasites", 'ORIENTATION_LOCAL',
+                           ("🏚 Parasites", 'ORIENTATION_LOCAL',
                             ['gb_cover_count', 'seed']),
-                           ("ðŸšª Openings", 'MESH_PLANE',
+                           ("🚪 Openings", 'MESH_PLANE',
                             ['gb_door_n', 'gb_door_width', 'gb_door_height'])],
-    'GB_WOODS_FREESPACE': [("ðŸš Volumes", 'MESH_CUBE',
+    'GB_WOODS_FREESPACE': [("🏚 Volumes", 'MESH_CUBE',
                             ['gb_width', 'gb_depth', 'gb_height', 'gb_wall_thick']),
-                           ("ðŸš Collision", 'DRIVER_ROTATIONAL_DIFFERENCE',
+                           ("🏚 Collision", 'DRIVER_ROTATIONAL_DIFFERENCE',
                             ['gb_steps'])],
-    'GB_WOODS_RIBS':      [("ðŸ¦´ Room", 'MESH_CUBE',
+    'GB_WOODS_RIBS':      [("🦴 Room", 'MESH_CUBE',
                             ['gb_length', 'gb_width', 'gb_height', 'gb_wall_thick']),
-                           ("ðŸ¦´ Ribs", 'PREFERENCES', ['gb_cover_count'])],
-    'GB_WOODS_HARPSICHORD':[("ðŸ— Tower", 'MESH_CUBE',
+                           ("🦴 Ribs", 'PREFERENCES', ['gb_cover_count'])],
+    'GB_WOODS_HARPSICHORD':[("🏗 Tower", 'MESH_CUBE',
                              ['base_radius', 'gb_floors', 'gb_height', 'gb_wall_thick']),
-                            ("ðŸ— Fins", 'PREFERENCES', ['gb_cover_count'])],
-    'GB_WOODS_WAR_SCAR':  [("ðŸ’¥ Wall", 'MESH_CUBE',
+                            ("🏗 Fins", 'PREFERENCES', ['gb_cover_count'])],
+    'GB_WOODS_WAR_SCAR':  [("💥 Wall", 'MESH_CUBE',
                             ['gb_width', 'gb_height', 'gb_wall_thick']),
-                           ("ðŸ’¥ Strata", 'PREFERENCES', ['gb_floors', 'gb_steps'])],
-    # â”€â”€â”€ v2.53 David Umemoto â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-    'GB_UMEMOTO_TERRACE': [("ðŸ› Tower", 'MESH_CUBE',
+                           ("💥 Strata", 'PREFERENCES', ['gb_floors', 'gb_steps'])],
+    # ─── v2.53 David Umemoto ────────────────────────────────────────
+    'GB_UMEMOTO_TERRACE': [("🏛 Tower", 'MESH_CUBE',
                             ['gb_width', 'gb_depth', 'gb_height', 'gb_wall_thick']),
-                           ("ðŸ› Steps", 'PREFERENCES',
+                           ("🏛 Steps", 'PREFERENCES',
                             ['gb_floors', 'gb_run', 'gb_door_width', 'gb_door_height'])],
-    'GB_UMEMOTO_VAULT':   [("ðŸ¦ Grid", 'MESH_CUBE',
+    'GB_UMEMOTO_VAULT':   [("🏦 Grid", 'MESH_CUBE',
                             ['gb_cols_x', 'gb_cols_y', 'gb_spacing', 'gb_length']),
-                           ("ðŸ¦ Vault", 'PREFERENCES',
+                           ("🏦 Vault", 'PREFERENCES',
                             ['gb_height', 'gb_wall_thick'])],
-    'GB_UMEMOTO_LATTICE': [("â–¦ Block", 'MESH_CUBE',
+    'GB_UMEMOTO_LATTICE': [("▦ Block", 'MESH_CUBE',
                             ['gb_width', 'gb_height', 'gb_wall_thick']),
-                           ("â–¦ Grid", 'PREFERENCES',
+                           ("▦ Grid", 'PREFERENCES',
                             ['gb_spacing'])],
-    'GB_UMEMOTO_FORTRESS':[("ðŸ° Room", 'MESH_CUBE',
+    'GB_UMEMOTO_FORTRESS':[("🏰 Room", 'MESH_CUBE',
                             ['gb_width', 'gb_depth', 'gb_height', 'gb_wall_thick']),
-                           ("ðŸ° Details", 'PREFERENCES',
+                           ("🏰 Details", 'PREFERENCES',
                             ['gb_door_width', 'gb_door_height', 'gb_cover_count'])],
-    # â”€â”€â”€ v2.52 Higgsas-powered â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-    'HIGG_SURFACE_WALL': [("ðŸ”Œ Wall Dimensions", 'NODETREE',
+    # ─── v2.52 Higgsas-powered ────────────────────────────────────────
+    'HIGG_SURFACE_WALL': [("🔌 Wall Dimensions", 'NODETREE',
                            ['brick_wall_width', 'brick_wall_height', 'wall_thickness']),
-                          ("ðŸ”Œ Surface Pattern", 'MESH_GRID',
+                          ("🔌 Surface Pattern", 'MESH_GRID',
                            ['higgsas_surface_style'])],
-    'HIGG_COLONNADE':    [("ðŸ› Colonnade", 'NODETREE',
+    'HIGG_COLONNADE':    [("🏛 Colonnade", 'NODETREE',
                            ['gb_cols_x', 'gb_spacing', 'pillar_radius', 'pillar_height']),
-                          ("ðŸ› Array", 'DRIVER_ROTATIONAL_DIFFERENCE',
+                          ("🏛 Array", 'DRIVER_ROTATIONAL_DIFFERENCE',
                            ['higgsas_array_mode'])],
-    # â”€â”€â”€ v2.52 Escher Greybox â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-    'GB_ESCHER_RELATIVITY':   [("ðŸªœ Chamber", 'MESH_CUBE',
+    # ─── v2.52 Escher Greybox ────────────────────────────────────────
+    'GB_ESCHER_RELATIVITY':   [("🪜 Chamber", 'MESH_CUBE',
                                 ['gb_width', 'gb_height', 'gb_wall_thick']),
-                               ("ðŸªœ Stairs", 'PREFERENCES',
+                               ("🪜 Stairs", 'PREFERENCES',
                                 ['gb_steps', 'gb_rise'])],
-    'GB_ESCHER_PENROSE_LOOP': [("â™¾ Loop", 'MESH_CUBE',
+    'GB_ESCHER_PENROSE_LOOP': [("♾ Loop", 'MESH_CUBE',
                                 ['gb_width', 'gb_depth', 'gb_height', 'gb_wall_thick']),
-                               ("â™¾ Steps", 'PREFERENCES',
+                               ("♾ Steps", 'PREFERENCES',
                                 ['gb_steps', 'gb_rise', 'gb_ceiling'])],
-    'GB_ESCHER_GRAVITY_SHIFT':[("ðŸ”„ Corridor", 'MESH_CUBE',
+    'GB_ESCHER_GRAVITY_SHIFT':[("🔄 Corridor", 'MESH_CUBE',
                                 ['gb_length', 'gb_width', 'gb_height', 'gb_wall_thick'])],
-    'GB_ESCHER_BELVEDERE':    [("ðŸ› Building", 'MESH_CUBE',
+    'GB_ESCHER_BELVEDERE':    [("🏛 Building", 'MESH_CUBE',
                                 ['gb_width', 'gb_depth', 'gb_height', 'gb_wall_thick'])],
-    'GB_ESCHER_WATERFALL':    [("ðŸ’§ Aqueduct", 'MESH_CUBE',
+    'GB_ESCHER_WATERFALL':    [("💧 Aqueduct", 'MESH_CUBE',
                                 ['gb_width', 'gb_depth', 'gb_height', 'gb_rise'])],
-    'GB_ESCHER_RECURSIVE':    [("ðŸŒ€ Rooms", 'MESH_CUBE',
+    'GB_ESCHER_RECURSIVE':    [("🌀 Rooms", 'MESH_CUBE',
                                 ['gb_width', 'gb_height', 'gb_wall_thick',
                                  'gb_door_width', 'gb_door_height']),
-                               ("ðŸŒ€ Recursion", 'NODETREE',
+                               ("🌀 Recursion", 'NODETREE',
                                 ['gb_recursive_depth', 'gb_steps'])],
-    # â”€â”€â”€ v2.52 Extended Greybox â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-    'GB_CORRIDOR_BEND':  [("ðŸ“ Bend Dimensions", 'MESH_CUBE',
+    # ─── v2.52 Extended Greybox ──────────────────────────────────────
+    'GB_CORRIDOR_BEND':  [("📐 Bend Dimensions", 'MESH_CUBE',
                            ['gb_length', 'gb_corridor_profile', 'gb_height', 'gb_wall_thick']),
-                          ("ðŸªš Trim & panels", 'MOD_BOOLEAN',
+                          ("🪚 Trim & panels", 'MOD_BOOLEAN',
                            ['gb_trim_mode', 'gb_trim_recess', 'gb_corridor_rib_mode',
                             'gb_wainscot_height', 'gb_baseboard_height']),
-                          ("ðŸ— Ceiling", 'PREFERENCES',
+                          ("🏗 Ceiling", 'PREFERENCES',
                            ['gb_corridor_ceiling', 'gb_railing_style'])],
-    'GB_CORRIDOR_CROSS': [("âœ› Cross Dimensions", 'MESH_CUBE',
+    'GB_CORRIDOR_CROSS': [("✛ Cross Dimensions", 'MESH_CUBE',
                            ['gb_length', 'gb_corridor_profile', 'gb_height', 'gb_wall_thick']),
-                          ("ðŸ— Junction", 'PREFERENCES',
+                          ("🏗 Junction", 'PREFERENCES',
                            ['gb_corridor_ceiling', 'gb_junction_column'])],
-    'GB_CORRIDOR_T':     [("âŠ¤ T-Junction", 'MESH_CUBE',
+    'GB_CORRIDOR_T':     [("⊤ T-Junction", 'MESH_CUBE',
                            ['gb_length', 'gb_corridor_profile', 'gb_height', 'gb_wall_thick']),
-                          ("ðŸ— Junction", 'PREFERENCES',
+                          ("🏗 Junction", 'PREFERENCES',
                            ['gb_corridor_ceiling', 'gb_junction_column'])],
-    'GB_CORRIDOR_DOOR_END': [("ðŸšª Door End", 'MESH_CUBE',
+    'GB_CORRIDOR_DOOR_END': [("🚪 Door End", 'MESH_CUBE',
                               ['gb_length', 'gb_corridor_profile', 'gb_height', 'gb_wall_thick',
                                'gb_door_width', 'gb_door_height']),
-                             ("ðŸªš Trim", 'MOD_BOOLEAN',
+                             ("🪚 Trim", 'MOD_BOOLEAN',
                               ['gb_trim_mode', 'gb_trim_recess', 'gb_frame']),
-                             ("ðŸ— Ceiling", 'PREFERENCES', ['gb_corridor_ceiling'])],
-    'GB_GOTHIC_PORTAL': [("â›ª Portal", 'MESH_CUBE',
+                             ("🏗 Ceiling", 'PREFERENCES', ['gb_corridor_ceiling'])],
+    'GB_GOTHIC_PORTAL': [("⛪ Portal", 'MESH_CUBE',
                           ['gb_width', 'gb_height', 'gb_wall_thick', 'gb_door_width', 'gb_door_height',
                            'gothic_width', 'gothic_radius']),
-                         ("ðŸªš Trim", 'MOD_BOOLEAN', ['gb_trim_mode', 'gb_trim_recess'])],
-    'GB_GOTHIC_BAY': [("â›ª Bay", 'MESH_CUBE',
+                         ("🪚 Trim", 'MOD_BOOLEAN', ['gb_trim_mode', 'gb_trim_recess'])],
+    'GB_GOTHIC_BAY': [("⛪ Bay", 'MESH_CUBE',
                        ['gothic_width', 'gb_height', 'gb_wall_thick']),
-                      ("ðŸªŸ Opening", 'MESH_GRID',
+                      ("🪟 Opening", 'MESH_GRID',
                        ['gb_windows_enabled', 'gb_window_width', 'gb_window_height', 'gb_window_sill']),
-                      ("ðŸªš Trim", 'MOD_BOOLEAN', ['gb_trim_mode', 'gb_trim_recess'])],
-    'GB_GOTHIC_BUTTRESS': [("ðŸ› Buttress", 'MESH_CUBE',
+                      ("🪚 Trim", 'MOD_BOOLEAN', ['gb_trim_mode', 'gb_trim_recess'])],
+    'GB_GOTHIC_BUTTRESS': [("🏛 Buttress", 'MESH_CUBE',
                             ['buttress_span', 'gb_height', 'gb_wall_thick'])],
-    'GB_GOTHIC_TRACERY_PANEL': [("âœ¦ Tracery", 'MESH_PLANE',
+    'GB_GOTHIC_TRACERY_PANEL': [("✦ Tracery", 'MESH_PLANE',
                                  ['gothic_width', 'gothic_thickness'])],
-    'GB_CORRIDOR_OFFSET': [("ðŸ“ Offset Corridor", 'MESH_CUBE',
+    'GB_CORRIDOR_OFFSET': [("📐 Offset Corridor", 'MESH_CUBE',
                             ['gb_length', 'gb_corridor_profile', 'gb_height', 'gb_wall_thick']),
-                           ("ðŸªš Trim Panels", 'MOD_BOOLEAN',
+                           ("🪚 Trim Panels", 'MOD_BOOLEAN',
                             ['gb_trim_mode', 'gb_trim_recess', 'gb_baseboard_height', 'unit_size']),
-                           ("ðŸ— Ceiling", 'PREFERENCES', ['gb_corridor_ceiling', 'gb_corridor_rib_mode'])],
-    'GB_ROMANESQUE_ARCADE': [("ðŸ› Bay", 'MESH_CUBE',
+                           ("🏗 Ceiling", 'PREFERENCES', ['gb_corridor_ceiling', 'gb_corridor_rib_mode'])],
+    'GB_ROMANESQUE_ARCADE': [("🏛 Bay", 'MESH_CUBE',
                               ['gb_width', 'gb_height', 'gb_wall_thick', 'gb_leg_thick']),
-                             ("âŒ’ Arch", 'MOD_CURVE',
+                             ("⌒ Arch", 'MOD_CURVE',
                               ['gb_corridor_ceiling']),
-                             ("ðŸªš Trim", 'MOD_BOOLEAN', ['gb_trim_mode', 'gb_trim_recess'])],
-    'GB_ROMANESQUE_APSE': [("ðŸ› Apse", 'MESH_CUBE',
+                             ("🪚 Trim", 'MOD_BOOLEAN', ['gb_trim_mode', 'gb_trim_recess'])],
+    'GB_ROMANESQUE_APSE': [("🏛 Apse", 'MESH_CUBE',
                             ['gb_width', 'gb_depth', 'gb_height', 'gb_wall_thick']),
-                           ("ðŸªš Shell", 'MOD_BOOLEAN', ['gb_trim_mode', 'gb_trim_recess', 'unit_size'])],
-    'GB_BRUTALIST_PANEL_WALL': [("ðŸ— Wall", 'MESH_CUBE',
+                           ("🪚 Shell", 'MOD_BOOLEAN', ['gb_trim_mode', 'gb_trim_recess', 'unit_size'])],
+    'GB_BRUTALIST_PANEL_WALL': [("🏗 Wall", 'MESH_CUBE',
                                  ['gb_length', 'gb_height', 'gb_wall_thick', 'unit_size']),
-                                ("ðŸªš Panels", 'MOD_BOOLEAN',
+                                ("🪚 Panels", 'MOD_BOOLEAN',
                                  ['gb_trim_mode', 'gb_trim_recess', 'gb_baseboard_height'])],
-    'GB_VENETIAN_LOGGIA': [("ðŸ‡®ðŸ‡¹ Loggia", 'MESH_CUBE',
+    'GB_VENETIAN_LOGGIA': [("🇮🇹 Loggia", 'MESH_CUBE',
                             ['gb_width', 'gb_height', 'gb_wall_thick', 'unit_size']),
-                           ("ðŸªŸ Bifora", 'MESH_GRID',
+                           ("🪟 Bifora", 'MESH_GRID',
                             ['bifora_lights', 'gb_window_sill', 'gb_window_height']),
-                           ("ðŸªš Cornice", 'MOD_BOOLEAN', ['gb_trim_mode', 'gb_trim_recess'])],
-    'GB_SCIFI_PRESSURE_DOOR': [("ðŸš€ Door End", 'MESH_CUBE',
+                           ("🪚 Cornice", 'MOD_BOOLEAN', ['gb_trim_mode', 'gb_trim_recess'])],
+    'GB_SCIFI_PRESSURE_DOOR': [("🚀 Door End", 'MESH_CUBE',
                                 ['gb_length', 'gb_corridor_profile', 'gb_height', 'gb_wall_thick',
                                  'gb_door_width', 'gb_door_height']),
-                               ("ðŸ”§ Gasket", 'MOD_BOOLEAN',
+                               ("🔧 Gasket", 'MOD_BOOLEAN',
                                 ['gb_trim_mode', 'gb_trim_recess', 'gb_frame'])],
-    'GB_ROOM_COMPOSITE': [("ðŸ  Room Shape", 'MESH_CUBE',
+    'GB_ROOM_COMPOSITE': [("🏠 Room Shape", 'MESH_CUBE',
                            ['gb_room_shape', 'gb_width', 'gb_depth', 'gb_height', 'gb_wall_thick']),
-                          ("ðŸšª Doors", 'MESH_PLANE',
+                          ("🚪 Doors", 'MESH_PLANE',
                            ['gb_door_width', 'gb_door_height', 'gb_door_n', 'gb_door_s', 'gb_door_e', 'gb_door_w']),
-                          ("ðŸªŸ Windows", 'MESH_GRID',
+                          ("🪟 Windows", 'MESH_GRID',
                            ['gb_windows_enabled', 'gb_window_count_ns', 'gb_window_count_ew',
                             'gb_window_width', 'gb_window_height', 'gb_window_sill',
                             'gb_window_frame_thickness']),
                           ("Extras", 'PREFERENCES', ['gb_ceiling', 'gb_interior_walls'])],
-    'GB_ELEVATOR_SHAFT': [("ðŸ›— Shaft", 'MESH_CUBE',
+    'GB_ELEVATOR_SHAFT': [("🛗 Shaft", 'MESH_CUBE',
                            ['gb_floors', 'gb_height', 'gb_width', 'gb_depth', 'gb_wall_thick']),
-                          ("ðŸšª Doors", 'MESH_PLANE',
+                          ("🚪 Doors", 'MESH_PLANE',
                            ['gb_door_width', 'gb_door_height']),
-                          ("ðŸªŸ Windows", 'MESH_GRID',
+                          ("🪟 Windows", 'MESH_GRID',
                            ['gb_windows_enabled', 'gb_window_count_ns', 'gb_window_count_ew',
                             'gb_window_width', 'gb_window_height', 'gb_window_sill',
                             'gb_window_frame_thickness']),
                           ("Extras", 'PREFERENCES', ['gb_railing_style'])],
-    'GB_COMBAT_ROOM':    [("ðŸŽ¯ Room", 'MESH_CUBE',
+    'GB_COMBAT_ROOM':    [("🎯 Room", 'MESH_CUBE',
                            ['gb_width', 'gb_depth', 'gb_height', 'gb_wall_thick']),
-                          ("ðŸªŸ Windows", 'MESH_GRID',
+                          ("🪟 Windows", 'MESH_GRID',
                            ['gb_windows_enabled', 'gb_window_count_ns', 'gb_window_count_ew',
                             'gb_window_width', 'gb_window_height', 'gb_window_sill',
                             'gb_window_frame_thickness']),
-                          ("ðŸŽ¯ Tactical", 'PARTICLES',
+                          ("🎯 Tactical", 'PARTICLES',
                            ['gb_cover_count', 'gb_elevated_area', 'gb_railing_style', 'seed'])],
-    'GB_CORRIDOR_REC':   [("ðŸŒ¿ Trunk", 'MESH_CUBE',
+    'GB_CORRIDOR_REC':   [("🌿 Trunk", 'MESH_CUBE',
                            ['gb_length', 'gb_width', 'gb_height', 'gb_wall_thick']),
-                          ("ðŸŒ¿ Branching", 'NODETREE',
+                          ("🌿 Branching", 'NODETREE',
                            ['gb_recursive_depth', 'gb_branch_count']),
                           ("Extras", 'PREFERENCES', ['gb_ceiling'])],
-    # â”€â”€â”€ v2.51 Ruins â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-    'WALL_RUINED':     [("ðŸš Ruin", 'BRUSH_DATA',
+    # ─── v2.51 Ruins ─────────────────────────────────────────────────
+    'WALL_RUINED':     [("🏚 Ruin", 'BRUSH_DATA',
                          ['wall_segments', 'unit_size', 'wall_height', 'wall_thickness']),
-                        ("ðŸš Damage", 'PARTICLES',
+                        ("🏚 Damage", 'PARTICLES',
                          ['ruin_damage', 'ruin_style', 'seed'])],
-    'ARCH_BROKEN':     [("ðŸš Broken Arch", 'BRUSH_DATA',
+    'ARCH_BROKEN':     [("🏚 Broken Arch", 'BRUSH_DATA',
                          ['arch_radius', 'arch_thickness']),
-                        ("ðŸš Damage", 'PARTICLES',
+                        ("🏚 Damage", 'PARTICLES',
                          ['ruin_damage', 'seed'])],
-    'COLLAPSED_FLOOR': [("ðŸš Floor", 'BRUSH_DATA',
+    'COLLAPSED_FLOOR': [("🏚 Floor", 'BRUSH_DATA',
                          ['wall_segments', 'unit_size']),
-                        ("ðŸš Damage", 'PARTICLES',
+                        ("🏚 Damage", 'PARTICLES',
                          ['ruin_damage', 'seed'])],
-    # â”€â”€â”€ v2.51 Modular frames â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-    'DOOR_FRAME':      [("ðŸšª Door Frame", 'MESH_PLANE',
+    # ─── v2.51 Modular frames ─────────────────────────────────────────
+    'DOOR_FRAME':      [("🚪 Door Frame", 'MESH_PLANE',
                          ['door_width', 'door_height', 'wall_thickness', 'frame_arch_cap'])],
-    'WINDOW_FRAME':    [("ðŸªŸ Window Frame", 'MESH_PLANE',
+    'WINDOW_FRAME':    [("🪟 Window Frame", 'MESH_PLANE',
                          ['window_width', 'window_height', 'wall_thickness',
                           'frame_with_shutters'])],
-    'WALL_T_JOIN':     [("ðŸ§± T-Join Wall", 'MOD_BUILD',
+    'WALL_T_JOIN':     [("🧱 T-Join Wall", 'MOD_BUILD',
                          ['wall_segments', 'unit_size', 'wall_height', 'wall_thickness'])],
-    'WALL_ARROW_SLITS':[("ðŸ° Arrow Slit Wall", 'MOD_BUILD',
+    'WALL_ARROW_SLITS':[("🏰 Arrow Slit Wall", 'MOD_BUILD',
                          ['wall_segments', 'unit_size', 'wall_height', 'wall_thickness']),
-                        ("ðŸ° Battlements", 'MESH_CUBE',
+                        ("🏰 Battlements", 'MESH_CUBE',
                          ['crenel_merlon_count'])],
-    'RETAINING_WALL':  [("ðŸª¨ Retaining Wall", 'MOD_BUILD',
+    'RETAINING_WALL':  [("🪨 Retaining Wall", 'MOD_BUILD',
                          ['wall_segments', 'unit_size', 'wall_thickness']),
-                        ("ðŸª¨ Terraces", 'MESH_CUBE',
+                        ("🪨 Terraces", 'MESH_CUBE',
                          ['retaining_steps', 'retaining_batter'])],
-    'HALF_TIMBER_WALL':[("ðŸ  Half-Timber", 'MOD_BUILD',
+    'HALF_TIMBER_WALL':[("🏠 Half-Timber", 'MOD_BUILD',
                          ['wall_segments', 'unit_size', 'wall_height', 'wall_thickness'])],
-    # â”€â”€â”€ v2.51 Environment Props â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-    'BARREL_STACK':    [("ðŸª£ Barrels", 'OBJECT_DATA',
+    # ─── v2.51 Environment Props ──────────────────────────────────────
+    'BARREL_STACK':    [("🪣 Barrels", 'OBJECT_DATA',
                          ['base_radius', 'height', 'prop_count', 'prop_scatter', 'seed'])],
-    'CRATE_PILE':      [("ðŸ“¦ Crates", 'OBJECT_DATA',
+    'CRATE_PILE':      [("📦 Crates", 'OBJECT_DATA',
                          ['base_radius', 'prop_count', 'prop_scatter', 'seed'])],
-    'CAMPFIRE':        [("ðŸ”¥ Campfire", 'OBJECT_DATA',
+    'CAMPFIRE':        [("🔥 Campfire", 'OBJECT_DATA',
                          ['base_radius', 'seed'])],
-    # â”€â”€â”€ Greybox / level-design library (v2.49) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-    'GREYBOX_ROOM':     [("ðŸ“¦ Room Footprint", 'MESH_CUBE',
+    # ─── Greybox / level-design library (v2.49) ──────────────────────
+    'GREYBOX_ROOM':     [("📦 Room Footprint", 'MESH_CUBE',
                           ['gb_width', 'gb_depth', 'gb_height', 'gb_wall_thick']),
-                         ("ðŸšª Doors", 'MESH_PLANE',
+                         ("🚪 Doors", 'MESH_PLANE',
                           ['gb_door_width', 'gb_door_height',
                            'gb_door_n', 'gb_door_s', 'gb_door_e', 'gb_door_w']),
-                         ("ðŸªŸ Windows", 'MESH_GRID',
+                         ("🪟 Windows", 'MESH_GRID',
                           ['gb_windows_enabled', 'gb_window_count_ns', 'gb_window_count_ew',
                            'gb_window_width', 'gb_window_height', 'gb_window_sill',
                            'gb_window_frame_thickness']),
                          ("Extras", 'PREFERENCES', ['gb_ceiling'])],
-    'GREYBOX_CORRIDOR': [("ðŸ“¦ Corridor", 'MESH_CUBE',
+    'GREYBOX_CORRIDOR': [("📦 Corridor", 'MESH_CUBE',
                           ['gb_length', 'gb_corridor_profile', 'gb_height', 'gb_wall_thick']),
-                         ("ðŸªš Trim & panels", 'MOD_BOOLEAN',
+                         ("🪚 Trim & panels", 'MOD_BOOLEAN',
                           ['gb_trim_mode', 'gb_trim_recess', 'gb_corridor_rib_mode',
                            'gb_wainscot_height', 'gb_baseboard_height']),
-                         ("ðŸ— Ceiling", 'PREFERENCES',
+                         ("🏗 Ceiling", 'PREFERENCES',
                           ['gb_corridor_ceiling'])],
-    'GREYBOX_RAMP':     [("ðŸ“¦ Ramp", 'MESH_CUBE',
+    'GREYBOX_RAMP':     [("📦 Ramp", 'MESH_CUBE',
                           ['gb_length', 'gb_width', 'gb_rise', 'gb_wall_thick']),
                          ("Extras", 'PREFERENCES', ['gb_curbs'])],
-    'GREYBOX_PLATFORM': [("ðŸ“¦ Platform", 'MESH_CUBE',
+    'GREYBOX_PLATFORM': [("📦 Platform", 'MESH_CUBE',
                           ['gb_width', 'gb_depth', 'gb_height',
                            'gb_wall_thick', 'gb_leg_thick']),
                          ("Extras", 'PREFERENCES', ['gb_railings'])],
-    'GREYBOX_COVER':    [("ðŸ“¦ Cover Block", 'MESH_CUBE',
+    'GREYBOX_COVER':    [("📦 Cover Block", 'MESH_CUBE',
                           ['gb_width', 'gb_height', 'gb_wall_thick'])],
-    'GREYBOX_CATWALK':  [("ðŸ“¦ Catwalk", 'MESH_CUBE',
+    'GREYBOX_CATWALK':  [("📦 Catwalk", 'MESH_CUBE',
                           ['gb_length', 'gb_width', 'gb_height', 'gb_wall_thick']),
                          ("Extras", 'PREFERENCES', ['gb_railings'])],
-    'GREYBOX_PILLAR_HALL':[("ðŸ“¦ Pillar Hall", 'MESH_CUBE',
+    'GREYBOX_PILLAR_HALL':[("📦 Pillar Hall", 'MESH_CUBE',
                           ['gb_cols_x', 'gb_cols_y', 'gb_spacing',
                            'gb_height', 'gb_leg_thick', 'gb_wall_thick'])],
-    'GREYBOX_STAIR_BLOCK':[("ðŸ“¦ Stair Block", 'MESH_CUBE',
+    'GREYBOX_STAIR_BLOCK':[("📦 Stair Block", 'MESH_CUBE',
                           ['gb_steps', 'gb_rise', 'gb_run', 'gb_width', 'gb_wall_thick']),
                          ("Extras", 'PREFERENCES', ['gb_curbs', 'gb_landing']),
-                         ("ðŸšª Landing back wall", 'MESH_PLANE',
+                         ("🚪 Landing back wall", 'MESH_PLANE',
                           ['gb_landing_back_wall', 'gb_door_width', 'gb_door_height'])],
-    'GREYBOX_DOORWAY':  [("ðŸ“¦ Doorway", 'MESH_CUBE',
+    'GREYBOX_DOORWAY':  [("📦 Doorway", 'MESH_CUBE',
                           ['gb_width', 'gb_height', 'gb_wall_thick',
                            'gb_door_width', 'gb_door_height']),
-                         ("ðŸªš Trim", 'MOD_BOOLEAN',
+                         ("🪚 Trim", 'MOD_BOOLEAN',
                           ['gb_trim_mode', 'gb_trim_recess', 'gb_frame'])],
-    'GREYBOX_ARENA':    [("ðŸ“¦ Arena", 'MESH_CIRCLE',
+    'GREYBOX_ARENA':    [("📦 Arena", 'MESH_CIRCLE',
                           ['gb_radius', 'gb_tiers', 'gb_sides', 'gb_rise', 'gb_run'])],
-    'GREYBOX_TOWER':    [("ðŸ“¦ Tower Blockout", 'MESH_CUBE',
+    'GREYBOX_TOWER':    [("📦 Tower Blockout", 'MESH_CUBE',
                           ['gb_floors', 'gb_height', 'gb_width', 'gb_depth', 'gb_wall_thick']),
-                         ("ðŸªŸ Openings", 'MESH_PLANE',
+                         ("🪟 Openings", 'MESH_PLANE',
                           ['gb_door_width', 'gb_door_height'])],
-    'GREYBOX_PIPE_RUN': [("ðŸ“¦ Pipe Run", 'MESH_CAPSULE',
+    'GREYBOX_PIPE_RUN': [("📦 Pipe Run", 'MESH_CAPSULE',
                           ['gb_segments', 'gb_radius', 'gb_length'])],
-    # â”€â”€â”€ Castle / curved wall â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-    'CURVED_WALL':      [("ðŸŒ™ Curved Wall Arc", 'CURVE_PATH',
+    # ─── Castle / curved wall ────────────────────────────────────────
+    'CURVED_WALL':      [("🌙 Curved Wall Arc", 'CURVE_PATH',
                           ['wall_arc_angle', 'wall_arc_radius', 'wall_height',
                            'wall_thickness', 'crenel_merlon_count'])],
-    # â”€â”€â”€ Chinese / Korean / Japanese â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-    'CN_DOUGONG':       [("ðŸ› Dougong bracket", 'MOD_LATTICE',
+    # ─── Chinese / Korean / Japanese ─────────────────────────────────
+    'CN_DOUGONG':       [("🏛 Dougong bracket", 'MOD_LATTICE',
                           ['base_radius', 'recursion_depth'])],
-    'CN_TIERED_PAGODA': [("ðŸ›• Tiered Pagoda", 'MESH_CONE',
+    'CN_TIERED_PAGODA': [("🛕 Tiered Pagoda", 'MESH_CONE',
                           ['pagoda_tiers', 'pagoda_base_radius',
                            'pagoda_tier_height', 'pagoda_roof_overhang',
                            'pagoda_taper'])],
-    'KR_HANOK':         [("ðŸ˜ Korean Hanok", 'HOME',
+    'KR_HANOK':         [("🏘 Korean Hanok", 'HOME',
                           ['teahouse_width', 'teahouse_depth',
                            'teahouse_height', 'teahouse_pitch_factor',
                            'teahouse_engawa', 'teahouse_engawa_width'])],
-    'CN_MOON_GATE':     [("ðŸŒ™ Moon Gate", 'MESH_TORUS',
+    'CN_MOON_GATE':     [("🌙 Moon Gate", 'MESH_TORUS',
                           ['base_radius', 'arch_thickness'])],
-    'CN_PAILOU':        [("â›© Pailou", 'OUTLINER_OB_LATTICE',
+    'CN_PAILOU':        [("⛩ Pailou", 'OUTLINER_OB_LATTICE',
                           ['base_radius', 'height', 'recursion_depth'])],
-    'CN_TING_PAVILION': [("ðŸ¯ Ting Pavilion", 'MESH_UVSPHERE',
+    'CN_TING_PAVILION': [("🏯 Ting Pavilion", 'MESH_UVSPHERE',
                           ['base_radius', 'height',
                            'pagoda_roof_overhang'])],
-    'JP_KURA_STOREHOUSE':[("ðŸ  Kura Storehouse", 'HOME',
+    'JP_KURA_STOREHOUSE':[("🏠 Kura Storehouse", 'HOME',
                           ['base_radius', 'height'])],
-    'KR_JANGSEUNG':     [("ðŸªµ Jangseung Totem", 'MESH_CAPSULE',
+    'KR_JANGSEUNG':     [("🪵 Jangseung Totem", 'MESH_CAPSULE',
                           ['base_radius', 'height'])],
-    'KR_HONG_SAL_MUN':  [("ðŸšª Hong-Sal-Mun Gate", 'MESH_CUBE',
+    'KR_HONG_SAL_MUN':  [("🚪 Hong-Sal-Mun Gate", 'MESH_CUBE',
                           ['base_radius', 'height', 'arch_thickness'])],
-    # â”€â”€â”€ Castle / military pieces â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-    'WATCHTOWER':       [("ðŸ—¼ Watchtower", 'MESH_CAPSULE',
+    # ─── Castle / military pieces ────────────────────────────────────
+    'WATCHTOWER':       [("🗼 Watchtower", 'MESH_CAPSULE',
                           ['base_radius', 'height', 'crenel_merlon_count'])],
-    'GATEHOUSE':        [("ðŸ› Gatehouse", 'MOD_LATTICE',
+    'GATEHOUSE':        [("🏛 Gatehouse", 'MOD_LATTICE',
                           ['base_radius', 'height'])],
-    'KEEP':             [("ðŸ¯ Keep / Donjon", 'HOME',
+    'KEEP':             [("🏯 Keep / Donjon", 'HOME',
                           ['base_radius', 'height']),
-                         ("ðŸ° Battlements", 'MESH_CUBE',
+                         ("🏰 Battlements", 'MESH_CUBE',
                           ['crenel_merlon_count', 'crenel_gap_ratio'])],
-    'CURTAIN_WALL':     [("ðŸ§± Curtain Wall", 'MESH_CUBE',
+    'CURTAIN_WALL':     [("🧱 Curtain Wall", 'MESH_CUBE',
                           ['rail_length', 'height', 'wall_thickness',
                            'crenel_merlon_count', 'crenel_gap_ratio'])],
-    'BARBICAN':         [("ðŸ›¡ Barbican", 'OUTLINER_OB_LATTICE',
+    'BARBICAN':         [("🛡 Barbican", 'OUTLINER_OB_LATTICE',
                           ['base_radius', 'height'])],
-    'DRAWBRIDGE':       [("ðŸŒ‰ Drawbridge", 'MESH_PLANE',
+    'DRAWBRIDGE':       [("🌉 Drawbridge", 'MESH_PLANE',
                           ['bridge_length', 'bridge_height', 'sv_complexity'])],
-    'STONE_BRIDGE':     [("ðŸŒ‰ Stone Bridge", 'MESH_UVSPHERE',
+    'STONE_BRIDGE':     [("🌉 Stone Bridge", 'MESH_UVSPHERE',
                           ['bridge_arches', 'bridge_length',
                            'bridge_height', 'bridge_walkway'])],
-    # â”€â”€â”€ Civic & town pieces â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-    'WINDMILL':         [("ðŸŒ¬ Windmill", 'MOD_SCREW',
+    # ─── Civic & town pieces ─────────────────────────────────────────
+    'WINDMILL':         [("🌬 Windmill", 'MOD_SCREW',
                           ['base_radius', 'height'])],
-    'CHAPEL':           [("â›ª Chapel Proportions", 'HOME',
+    'CHAPEL':           [("⛪ Chapel Proportions", 'HOME',
                           ['base_radius', 'height']),
-                         ("â›ª Finish", 'PREFERENCES',
+                         ("⛪ Finish", 'PREFERENCES',
                           ['bevel_amount', 'bevel_subdiv_level', 'auto_smooth'])],
-    'VILLAGE_WELL':     [("ðŸª£ Well Ring", 'MESH_TORUS',
+    'VILLAGE_WELL':     [("🪣 Well Ring", 'MESH_TORUS',
                           ['base_radius']),
-                         ("ðŸª£ Shelter", 'PREFERENCES',
+                         ("🪣 Shelter", 'PREFERENCES',
                           ['height'])],
-    'MARKET_STALL':     [("ðŸª Stall Frame", 'MESH_CUBE',
+    'MARKET_STALL':     [("🏪 Stall Frame", 'MESH_CUBE',
                           ['base_radius', 'height']),
-                         ("ðŸª Awning & Detail", 'PREFERENCES',
+                         ("🏪 Awning & Detail", 'PREFERENCES',
                           ['seed', 'bevel_amount', 'auto_smooth'])],
-    'OBELISK':          [("ðŸ—¿ Shaft & Pyramidion", 'OUTLINER_OB_FORCE_FIELD',
+    'OBELISK':          [("🗿 Shaft & Pyramidion", 'OUTLINER_OB_FORCE_FIELD',
                           ['base_radius', 'height']),
-                         ("ðŸ—¿ Plinth", 'PREFERENCES',
+                         ("🗿 Plinth", 'PREFERENCES',
                           ['bevel_amount', 'auto_smooth'])],
-    'TOWN_HOUSE':       [("ðŸ  Town House", 'HOME',
+    'TOWN_HOUSE':       [("🏠 Town House", 'HOME',
                           ['base_radius', 'height'])],
-    'TAVERN':           [("ðŸ» Tavern", 'HOME',
+    'TAVERN':           [("🍻 Tavern", 'HOME',
                           ['base_radius', 'height'])],
-    'BLACKSMITH':       [("âš’ Blacksmith", 'HOME',
+    'BLACKSMITH':       [("⚒ Blacksmith", 'HOME',
                           ['base_radius', 'height'])],
-    'STABLE':           [("ðŸŽ Stable", 'HOME',
+    'STABLE':           [("🐎 Stable", 'HOME',
                           ['base_radius', 'recursion_depth'])],
-    'BELL_TOWER':       [("ðŸ”” Bell Tower", 'MESH_CAPSULE',
+    'BELL_TOWER':       [("🔔 Bell Tower", 'MESH_CAPSULE',
                           ['base_radius', 'height'])],
-    'MONASTERY':        [("â›ª Cloister Court", 'HOME',
+    'MONASTERY':        [("⛪ Cloister Court", 'HOME',
                           ['base_radius', 'height']),
-                         ("â›ª Colonnade", 'PREFERENCES',
+                         ("⛪ Colonnade", 'PREFERENCES',
                           ['bevel_amount', 'bevel_subdiv_level'])],
-    'WATERMILL':        [("ðŸŒŠ Watermill", 'MOD_SCREW',
+    'WATERMILL':        [("🌊 Watermill", 'MOD_SCREW',
                           ['base_radius', 'height'])],
-    'LIGHTHOUSE':       [("ðŸ—¼ Lighthouse", 'LIGHT',
+    'LIGHTHOUSE':       [("🗼 Lighthouse", 'LIGHT',
                           ['base_radius', 'height'])],
-    'STREET_LAMP':      [("ðŸ”¦ Street Lamp", 'LIGHT',
+    'STREET_LAMP':      [("🔦 Street Lamp", 'LIGHT',
                           ['height'])],
-    'PUBLIC_FOUNTAIN':  [("â›² Public Fountain", 'MESH_UVSPHERE',
+    'PUBLIC_FOUNTAIN':  [("⛲ Public Fountain", 'MESH_UVSPHERE',
                           ['fountain_radius', 'fountain_tiers',
                            'fountain_tier_scale', 'fountain_height'])],
-    'TOWN_HALL':        [("ðŸ› Town Hall", 'HOME',
+    'TOWN_HALL':        [("🏛 Town Hall", 'HOME',
                           ['base_radius', 'height'])],
-    'GUILD_HALL':       [("âšœ Guild Hall", 'HOME',
+    'GUILD_HALL':       [("⚜ Guild Hall", 'HOME',
                           ['base_radius', 'height'])],
-    'CRYPT_ENTRANCE':   [("âš° Crypt Entrance", 'MESH_UVSPHERE',
+    'CRYPT_ENTRANCE':   [("⚰ Crypt Entrance", 'MESH_UVSPHERE',
                           ['base_radius'])],
-    'WAYSIDE_SHRINE':   [("ðŸª¦ Wayside Shrine", 'MESH_CUBE',
+    'WAYSIDE_SHRINE':   [("🪦 Wayside Shrine", 'MESH_CUBE',
                           ['base_radius', 'height']),
-                         ("ðŸª¦ Roof & Finial", 'PREFERENCES',
+                         ("🪦 Roof & Finial", 'PREFERENCES',
                           ['bevel_amount', 'bevel_subdiv_level', 'auto_smooth'])],
-    'STYLIZED_TREE':    [("ðŸŒ³ Stylized Tree", 'OUTLINER_OB_GREASEPENCIL',
+    'STYLIZED_TREE':    [("🌳 Stylized Tree", 'OUTLINER_OB_GREASEPENCIL',
                           ['height', 'recursion_depth'])],
-    'BOULDER_PILE':     [("ðŸª¨ Boulder Pile", 'MESH_ICOSPHERE',
+    'BOULDER_PILE':     [("🪨 Boulder Pile", 'MESH_ICOSPHERE',
                           ['base_radius', 'seed'])],
-    'HERALDIC_BANNER':  [("ðŸš© Heraldic Banner", 'MOD_CLOTH',
+    'HERALDIC_BANNER':  [("🚩 Heraldic Banner", 'MOD_CLOTH',
                           ['height'])],
-    'TORCH_SCONCE':     [("ðŸ”¥ Torch Sconce", 'LIGHT',
+    'TORCH_SCONCE':     [("🔥 Torch Sconce", 'LIGHT',
                           ['base_radius'])],
-    # â”€â”€â”€ Italian / Venetian Gothic â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-    'PALAZZO':          [("ðŸ› Palazzo", 'HOME',
+    # ─── Italian / Venetian Gothic ───────────────────────────────────
+    'PALAZZO':          [("🏛 Palazzo", 'HOME',
                           ['palazzo_floors', 'palazzo_width',
                            'palazzo_floor_h', 'palazzo_arches_per_floor',
                            'palazzo_arch_style', 'palazzo_string_courses',
                            'palazzo_back_wall'])],
-    'BIFORA':           [("ðŸªŸ Bifora Window", 'MESH_GRID',
+    'BIFORA':           [("🪟 Bifora Window", 'MESH_GRID',
                           ['bifora_width', 'bifora_height',
                            'bifora_use_ogee', 'bifora_quatrefoil',
                            'bifora_lights'])],
-    'OGEE_ARCH':        [("âŒ’ Ogee Arch", 'MESH_PLANE',
+    'OGEE_ARCH':        [("⌒ Ogee Arch", 'MESH_PLANE',
                           ['ogee_width', 'ogee_height', 'ogee_swell',
                            'ogee_shoulder', 'ogee_finial'])],
-    'CUSPED_ARCH':      [("âŒ’ Cusped Arch", 'MESH_PLANE',
+    'CUSPED_ARCH':      [("⌒ Cusped Arch", 'MESH_PLANE',
                           ['cusped_width', 'cusped_height',
                            'cusped_lobes', 'cusped_lobe_depth'])],
-    # â”€â”€â”€ Auto-Building (full parametric) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-    'AUTO_BUILDING':    [("ðŸ¢ Building Style", 'HOME',
+    # ─── Auto-Building (full parametric) ─────────────────────────────
+    'AUTO_BUILDING':    [("🏢 Building Style", 'HOME',
                           ['bld_style', 'bld_facade_style']),
-                         ("ðŸ“ Footprint", 'MESH_GRID',
+                         ("📏 Footprint", 'MESH_GRID',
                           ['bld_width', 'bld_depth_b',
                            'bld_floor_count_b', 'bld_floor_height_b']),
-                         ("ðŸªŸ Windows", 'MESH_PLANE',
+                         ("🪟 Windows", 'MESH_PLANE',
                           ['bld_win_cols', 'bld_win_rows',
                            'bld_win_w', 'bld_win_h']),
                          ("Extras", 'PREFERENCES',
                           ['bld_rooftop', 'bld_balconies',
                            'bld_setbacks', 'bld_ground_retail'])],
-    # â”€â”€â”€ Advanced GeoNodes / topology â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-    'RAYCAST_FACADE':   [("ðŸ“¡ Raycast Facade", 'CON_TRACKTO',
+    # ─── Advanced GeoNodes / topology ────────────────────────────────
+    'RAYCAST_FACADE':   [("📡 Raycast Facade", 'CON_TRACKTO',
                           ['base_radius', 'height', 'complexity_level',
                            'recursion_depth'])],
-    'VOLUME_CLOUD':     [("â˜ Volume Cloud", 'OUTLINER_OB_VOLUME',
+    'VOLUME_CLOUD':     [("☁ Volume Cloud", 'OUTLINER_OB_VOLUME',
                           ['base_radius', 'bulge_amount',
                            'complexity_level'])],
-    'GEODESIC_VORONOI': [("ðŸ”® Geodesic Voronoi", 'MESH_ICOSPHERE',
+    'GEODESIC_VORONOI': [("🔮 Geodesic Voronoi", 'MESH_ICOSPHERE',
                           ['base_radius', 'arch_thickness',
                            'complexity_level'])],
-    'DNA_HELIX':        [("ðŸ§¬ DNA Helix", 'MOD_SCREW',
+    'DNA_HELIX':        [("🧬 DNA Helix", 'MOD_SCREW',
                           ['height', 'base_radius', 'twist_angle',
                            'fractal_iterations'])],
-    'KLEIN_BOTTLE':     [("â™¾ Klein Bottle", 'MOD_SUBSURF',
+    'KLEIN_BOTTLE':     [("♾ Klein Bottle", 'MOD_SUBSURF',
                           ['sv_resolution', 'sv_scale'])],
-    'MOBIUS_CATHEDRAL': [("â™¾ MÃ¶bius Cathedral", 'MESH_TORUS',
+    'MOBIUS_CATHEDRAL': [("♾ Möbius Cathedral", 'MESH_TORUS',
                           ['sv_resolution', 'sv_scale'])],
-    'SEIFERT_SURFACE':  [("ðŸŽ€ Seifert Surface", 'MOD_LATTICE',
+    'SEIFERT_SURFACE':  [("🎀 Seifert Surface", 'MOD_LATTICE',
                           ['sv_resolution', 'sv_scale'])],
-    'FIELD_SCULPTURE':  [("ðŸ§² Field Sculpture", 'FORCE_FORCE',
+    'FIELD_SCULPTURE':  [("🧲 Field Sculpture", 'FORCE_FORCE',
                           ['complexity_level', 'fractal_iterations',
                            'fractal_scale'])],
-    'WEAVE_SURFACE':    [("ðŸ§¶ Weave Surface", 'MOD_CLOTH',
+    'WEAVE_SURFACE':    [("🧶 Weave Surface", 'MOD_CLOTH',
                           ['base_radius', 'height', 'complexity_level'])],
-    'TESSELLATION_TOWER':[("ðŸ”³ Tessellation Tower", 'MESH_GRID',
+    'TESSELLATION_TOWER':[("🔳 Tessellation Tower", 'MESH_GRID',
                           ['base_radius', 'height', 'complexity_level',
                            'tess_grid_x', 'tess_grid_y'])],
-    'COSMIC_WEB':       [("ðŸŒŒ Cosmic Web", 'OUTLINER_OB_VOLUME',
+    'COSMIC_WEB':       [("🌌 Cosmic Web", 'OUTLINER_OB_VOLUME',
                           ['base_radius', 'complexity_level'])],
-    'SPIDERWEB_DOME':   [("ðŸ•¸ Spiderweb Dome", 'MESH_TORUS',
+    'SPIDERWEB_DOME':   [("🕸 Spiderweb Dome", 'MESH_TORUS',
                           ['dome_radius', 'dome_segments',
                            'dome_rib_count'])],
-    # â”€â”€â”€ v2.56 Zen Architecture (research-backed components) â”€â”€â”€â”€â”€â”€â”€â”€â”€
-    'ZEN_PAGODA':       [("ðŸ¯ TÅ (å¡”) â€” Tiers", 'HOME',
+    # ─── v2.56 Zen Architecture (research-backed components) ─────────
+    'ZEN_PAGODA':       [("🏯 Tō (塔) — Tiers", 'HOME',
                           ['pagoda_tiers', 'pagoda_base_radius', 'pagoda_tier_height',
                            'pagoda_roof_overhang', 'pagoda_taper']),
-                         ("ðŸ¯ SÅrin Spire (ç›¸è¼ª)", 'OUTLINER_OB_FORCE_FIELD',
+                         ("🏯 Sōrin Spire (相輪)", 'OUTLINER_OB_FORCE_FIELD',
                           ['pagoda_sorin_rings', 'pagoda_show_mokoshi', 'pagoda_show_shinbashira'])],
-    'ZEN_TORII':        [("â›© Hashira (æŸ±)", 'MESH_CAPSULE',
+    'ZEN_TORII':        [("⛩ Hashira (柱)", 'MESH_CAPSULE',
                           ['torii_width', 'torii_height', 'torii_post_radius']),
-                         ("â›© Kasagi / Nuki (ç¬ æœ¨ / è²«)", 'MOD_SUBSURF',
+                         ("⛩ Kasagi / Nuki (笠木 / 貫)", 'MOD_SUBSURF',
                           ['torii_style', 'torii_top_curve', 'torii_nuki_height']),
-                         ("â›© Details", 'PREFERENCES',
+                         ("⛩ Details", 'PREFERENCES',
                           ['torii_show_gakuzuka', 'torii_show_kusabi', 'torii_show_shimenawa'])],
-    'ZEN_SHOJI':        [("ðŸŽ‹ Shamoji Frame (éšœå­æž )", 'MESH_GRID',
+    'ZEN_SHOJI':        [("🎋 Shamoji Frame (隝子枠)", 'MESH_GRID',
                           ['shoji_width', 'shoji_height', 'shoji_frame_depth']),
-                         ("ðŸŽ‹ Kumiko (çµ„å­)", 'MOD_LATTICE',
+                         ("🎋 Kumiko (組子)", 'MOD_LATTICE',
                           ['shoji_kumiko', 'shoji_grid_x', 'shoji_grid_y', 'shoji_mullion'])],
-    'ZEN_LANTERN':      [("ðŸ® TÅrÅ Proportions (ç¯ç± )", 'MESH_CAPSULE',
+    'ZEN_LANTERN':      [("🏮 Tōrō Proportions (灯籠)", 'MESH_CAPSULE',
                           ['zen_lantern_style', 'zen_lantern_height',
                            'zen_lantern_radius', 'zen_lantern_layers']),
-                         ("ðŸ® Elements", 'PREFERENCES',
+                         ("🏮 Elements", 'PREFERENCES',
                           ['zen_lantern_show_kidan', 'zen_lantern_show_ukebana',
                            'zen_lantern_kasa_overhang', 'zen_lantern_hoju_scale']),
-                         ("ðŸ® Motifs", 'MOD_WAVE',
+                         ("🏮 Motifs", 'MOD_WAVE',
                           ['zen_lantern_warabide', 'zen_lantern_higuchi'])],
-    'ZEN_TEAHOUSE':     [("ðŸµ Chashitsu (èŒ¶å®¤)", 'HOME',
+    'ZEN_TEAHOUSE':     [("🍵 Chashitsu (茶室)", 'HOME',
                           ['teahouse_width', 'teahouse_depth', 'teahouse_height',
                            'teahouse_pitch_factor']),
-                         ("ðŸµ Engawa (ç¸å´)", 'MOD_ARRAY',
+                         ("🍵 Engawa (縁側)", 'MOD_ARRAY',
                           ['teahouse_engawa', 'teahouse_engawa_width']),
-                         ("ðŸµ Roji Features", 'OUTLINER_OB_EMPTY',
+                         ("🍵 Roji Features", 'OUTLINER_OB_EMPTY',
                           ['teahouse_tokonoma', 'teahouse_ro', 'teahouse_nijiriguchi',
                            'teahouse_chumon'])],
-    'ZEN_BRIDGE':       [("ðŸŒŠ Taikobashi (å¤ªé¼“æ©‹)", 'CURVE_BEZCIRCLE',
+    'ZEN_BRIDGE':       [("🌊 Taikobashi (太鼓橋)", 'CURVE_BEZCIRCLE',
                           ['zen_bridge_style', 'zen_bridge_span', 'zen_bridge_rise',
                            'zen_bridge_width']),
-                         ("ðŸŒŠ Deck & Rail", 'MESH_PLANE',
+                         ("🌊 Deck & Rail", 'MESH_PLANE',
                           ['zen_bridge_planks', 'zen_bridge_railings', 'zen_bridge_giboshi'])],
 
-    # â”€â”€â”€ v2.58 Baroque Architecture â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ─── v2.58 Baroque Architecture ──────────────────────────────────
     'BAROQUE_VAULT':      [("Vault Proportions", 'MOD_SUBSURF',
                           ['baroque_vault_style', 'baroque_vault_span',
                            'baroque_vault_depth', 'baroque_vault_rise', 'baroque_rib_count'])],
@@ -32423,7 +32464,7 @@ _ARCH_PARAM_SPEC = {
                           ['baroque_niche_width', 'baroque_niche_depth', 'baroque_niche_height'])],
     'BAROQUE_BALUSTRADE':[("Balustrade", 'MOD_ARRAY',
                           ['baroque_balustrade_length', 'baroque_balustrade_posts'])],
-    # â”€â”€â”€ v2.58 Gothic param spec (legacy geometry fallback removed) â”€â”€
+    # ─── v2.58 Gothic param spec (legacy geometry fallback removed) ──
     'GOTHIC_ARCH':        [("Gothic Arch", 'MESH_PLANE',
                           ['gothic_width', 'gothic_radius', 'gothic_thickness'])],
     'ROSE_WINDOW':        [("Rose Window", 'MESH_GRID',
@@ -32452,9 +32493,9 @@ _ARCH_PARAM_SPEC = {
                           ['base_radius', 'height'])],
     'CRENEL':             [("Crenellation", 'MOD_BUILD',
                           ['crenel_merlon_count', 'crenel_gap_ratio', 'rail_length'])],
-    'ZEN_STONE_GARDEN': [("ðŸª¨ Karesansui (æž¯å±±æ°´)", 'MESH_PLANE',
+    'ZEN_STONE_GARDEN': [("🪨 Karesansui (枯山水)", 'MESH_PLANE',
                           ['stone_garden_size', 'stone_garden_ripples']),
-                         ("ðŸª¨ Ishigumi (çŸ³çµ„)", 'MESH_ICOSPHERE',
+                         ("🪨 Ishigumi (石組)", 'MESH_ICOSPHERE',
                           ['stone_garden_stones', 'stone_garden_sansonseki', 'stone_garden_tsukubai'])],
 }
 
@@ -32484,7 +32525,7 @@ def _sanitize_ui_icon(icon_name, fallback='NONE'):
 
 
 def _draw_style_subgroup_header(box, text, icon='DOT'):
-    """v2.60.2 â€” consistent subsection headers in style-panel quick launch."""
+    """v2.60.2 — consistent subsection headers in style-panel quick launch."""
     box.separator(factor=0.35)
     row = box.row(align=True)
     row.scale_y = 0.92
@@ -32511,7 +32552,7 @@ def _draw_arch_params_dynamic(layout, props, arch_type):
 
 
 class SURREAL_ARCH_PT_panel(bpy.types.Panel):
-    """Main parent panel â€” workflow hub for environment blockout â†’ UE export."""
+    """Main parent panel — workflow hub for environment blockout → UE export."""
     bl_label       = f"Surreal Architecture ({_bl_version_string()})"
     bl_idname      = "SURREAL_ARCH_PT_panel"
     bl_space_type  = 'PROPERTIES'
@@ -32538,54 +32579,54 @@ class SURREAL_ARCH_PT_panel(bpy.types.Panel):
             _, style_label = _WORKFLOW_NEXT_PANEL[sid]
             layout.label(text=f"Style panel active: {style_label}", icon='CHECKMARK')
         else:
-            layout.label(text="v2.60.6 â€” civic preset tooltips + grouped picker", icon='INFO')
+            layout.label(text="v2.60.6 — civic preset tooltips + grouped picker", icon='INFO')
 
         s1 = layout.box()
-        s1.label(text="â‘  Choose type", icon='OUTLINER_OB_MESH')
+        s1.label(text="① Choose type", icon='OUTLINER_OB_MESH')
         s1.label(text="Open Architecture Picker below (grouped by style)", icon='FORWARD')
         s1.label(text=f"Current: {props.arch_type}", icon='DOT')
 
         s2 = layout.box()
-        s2.label(text="â‘¡ Generate base geometry", icon='PLAY')
+        s2.label(text="② Generate base geometry", icon='PLAY')
         row = s2.row(align=True); row.scale_y = 1.5
-        row.operator("surreal_arch.generate", text="âœ¨ Generate", icon='SHADERFX')
+        row.operator("surreal_arch.generate", text="✨ Generate", icon='SHADERFX')
         r2 = s2.row(align=True)
         if props.auto_update:
             r2.alert = True
-            r2.prop(props, "auto_update", text="âš¡ Auto-Update: ON (live)",
+            r2.prop(props, "auto_update", text="⚡ Auto-Update: ON (live)",
                     toggle=True, icon='PLAY')
         else:
-            r2.prop(props, "auto_update", text="âš¡ Auto-Update: OFF (manual)",
+            r2.prop(props, "auto_update", text="⚡ Auto-Update: OFF (manual)",
                     toggle=True, icon='PAUSE')
 
         s3 = layout.box()
-        s3.label(text="â‘¢ Tune parameters", icon='MODIFIER')
+        s3.label(text="③ Tune parameters", icon='MODIFIER')
         if sid:
             s3.label(text="Your style panel appears below (auto-shown)", icon='INFO')
         else:
             s3.label(text="Open Advanced Parameters for legacy types", icon='INFO')
 
         s4 = layout.box()
-        s4.label(text="â‘£ Clean up & export", icon='EXPORT')
+        s4.label(text="④ Clean up & export", icon='EXPORT')
         rA = s4.row(align=True)
         rA.operator("surreal_arch.clamp_floating",
-                     text="ðŸ§² Clamp Floating Pieces", icon='SNAP_ON')
+                     text="🧲 Clamp Floating Pieces", icon='SNAP_ON')
         rB = s4.row(align=True)
-        rB.operator("surreal_arch.organize_nodes", text="ðŸ—‚ Organize", icon='NODETREE')
-        rB.operator("surreal_arch.export_fbx",     text="ðŸ“¤ Export FBX", icon='EXPORT')
+        rB.operator("surreal_arch.organize_nodes", text="🗂 Organize", icon='NODETREE')
+        rB.operator("surreal_arch.export_fbx",     text="📤 Export FBX", icon='EXPORT')
 
         s5 = layout.box()
-        s5.label(text="ðŸ’¾ My presets", icon='BOOKMARKS')
-        s5.label(text="Tweak sliders â†’ save â†’ reuse anywhere.", icon='INFO')
+        s5.label(text="💾 My presets", icon='BOOKMARKS')
+        s5.label(text="Tweak sliders → save → reuse anywhere.", icon='INFO')
         rP = s5.row(align=True)
         rP.scale_y = 1.2
-        rP.operator("surreal_arch.save_preset",   text="ðŸ’¾ Save",   icon='ADD')
-        rP.operator("surreal_arch.load_preset",   text="ðŸ“‚ Load",   icon='FILE_FOLDER')
-        rP.operator("surreal_arch.delete_preset", text="ðŸ—‘ Delete", icon='TRASH')
+        rP.operator("surreal_arch.save_preset",   text="💾 Save",   icon='ADD')
+        rP.operator("surreal_arch.load_preset",   text="📂 Load",   icon='FILE_FOLDER')
+        rP.operator("surreal_arch.delete_preset", text="🗑 Delete", icon='TRASH')
 
 
 # ----------------------------------------------------------------------
-# SUB-PANELS  â€”  organized into collapsible sections
+# SUB-PANELS  —  organized into collapsible sections
 # ----------------------------------------------------------------------
 
 # (_SubPanelBase is defined earlier in the file, near the COLORS dict, so it is
@@ -32593,7 +32634,7 @@ class SURREAL_ARCH_PT_panel(bpy.types.Panel):
 
 
 class SURREAL_ARCH_PT_presets(_SubPanelBase, bpy.types.Panel):
-    bl_label = "ðŸŽ¨ Quick Presets"
+    bl_label = "🎨 Quick Presets"
     bl_idname = "SURREAL_ARCH_PT_presets"
     bl_order = 80
 
@@ -32605,267 +32646,267 @@ class SURREAL_ARCH_PT_presets(_SubPanelBase, bpy.types.Panel):
         layout.separator()
 
         # =================================================================
-        # â­•  CURVED ROOMS  â€” arc-plan rooms and corridors
+        # ⭕  CURVED ROOMS  — arc-plan rooms and corridors
         # =================================================================
         box = layout.box()
-        box.label(text="â­•  Curved Rooms  (arc-plan greybox)")
+        box.label(text="⭕  Curved Rooms  (arc-plan greybox)")
         col = box.column(align=True)
         row = col.row(align=True); row.scale_y = 1.2
-        row.operator("surreal_arch.preset_gb_room_circular", text="â­•  Circular Room")
-        row.operator("surreal_arch.preset_gb_room_apsidal",  text="â›ª  Apsidal")
-        row.operator("surreal_arch.preset_gb_room_rotunda",  text="ðŸ›  Rotunda")
+        row.operator("surreal_arch.preset_gb_room_circular", text="⭕  Circular Room")
+        row.operator("surreal_arch.preset_gb_room_apsidal",  text="⛪  Apsidal")
+        row.operator("surreal_arch.preset_gb_room_rotunda",  text="🏛  Rotunda")
         row = col.row(align=True); row.scale_y = 1.2
-        row.operator("surreal_arch.preset_gb_corridor_arc",  text="ðŸŒ€  Arc Corridor")
-        row.operator("surreal_arch.preset_gb_arc_cross",     text="âœ›  Arc Cross")
+        row.operator("surreal_arch.preset_gb_corridor_arc",  text="🌀  Arc Corridor")
+        row.operator("surreal_arch.preset_gb_arc_cross",     text="✛  Arc Cross")
 
         # =================================================================
-        # ðŸš  LEBBEUS WOODS  â€” parasite / conflict / impossibility
+        # 🏚  LEBBEUS WOODS  — parasite / conflict / impossibility
         # =================================================================
         box = layout.box()
-        box.label(text="ðŸš  Lebbeus Woods  (impossible conflict architecture)")
+        box.label(text="🏚  Lebbeus Woods  (impossible conflict architecture)")
         col = box.column(align=True)
         row = col.row(align=True); row.scale_y = 1.2
-        row.operator("surreal_arch.preset_gb_woods_parasite",    text="ðŸš  Parasite")
-        row.operator("surreal_arch.preset_gb_woods_freespace",   text="ðŸ’   Freespace")
-        row.operator("surreal_arch.preset_gb_woods_ribs",        text="ðŸ¦´  Ribs")
+        row.operator("surreal_arch.preset_gb_woods_parasite",    text="🏚  Parasite")
+        row.operator("surreal_arch.preset_gb_woods_freespace",   text="💠  Freespace")
+        row.operator("surreal_arch.preset_gb_woods_ribs",        text="🦴  Ribs")
         row = col.row(align=True); row.scale_y = 1.2
-        row.operator("surreal_arch.preset_gb_woods_harpsichord", text="ðŸ—  Harpsichord")
-        row.operator("surreal_arch.preset_gb_woods_war_scar",    text="ðŸ’¥  War Scar")
+        row.operator("surreal_arch.preset_gb_woods_harpsichord", text="🏗  Harpsichord")
+        row.operator("surreal_arch.preset_gb_woods_war_scar",    text="💥  War Scar")
 
         # =================================================================
-        # ðŸ›  DAVID UMEMOTO  â€” brutalist / geometric / concrete
+        # 🏛  DAVID UMEMOTO  — brutalist / geometric / concrete
         # =================================================================
         box = layout.box()
-        box.label(text="ðŸ›  David Umemoto  (brutalist concrete geometry)")
+        box.label(text="🏛  David Umemoto  (brutalist concrete geometry)")
         col = box.column(align=True)
         row = col.row(align=True); row.scale_y = 1.2
-        row.operator("surreal_arch.preset_gb_umemoto_terrace",  text="ðŸ›  Terrace Tower")
-        row.operator("surreal_arch.preset_gb_umemoto_vault",    text="ðŸ¦  Vault Cluster")
+        row.operator("surreal_arch.preset_gb_umemoto_terrace",  text="🏛  Terrace Tower")
+        row.operator("surreal_arch.preset_gb_umemoto_vault",    text="🏦  Vault Cluster")
         row = col.row(align=True); row.scale_y = 1.2
-        row.operator("surreal_arch.preset_gb_umemoto_lattice",  text="â–¦  Lattice Block")
-        row.operator("surreal_arch.preset_gb_umemoto_fortress", text="ðŸ°  Fortress Room")
+        row.operator("surreal_arch.preset_gb_umemoto_lattice",  text="▦  Lattice Block")
+        row.operator("surreal_arch.preset_gb_umemoto_fortress", text="🏰  Fortress Room")
 
         # =================================================================
-        # ðŸ”Œ  HIGGSAS  â€” Higgsas Geo Nodes powered builders
+        # 🔌  HIGGSAS  — Higgsas Geo Nodes powered builders
         # =================================================================
         box = layout.box()
-        box.label(text="ðŸ”Œ  Higgsas Nodes  (auto-upgrades âœ¦ builders)")
+        box.label(text="🔌  Higgsas Nodes  (auto-upgrades ✦ builders)")
         col = box.column(align=True)
         row = col.row(align=True); row.scale_y = 1.2
-        row.operator("surreal_arch.preset_higg_brick_wall",  text="ðŸ§±  Brick Wall")
-        row.operator("surreal_arch.preset_higg_stone_wall",  text="ðŸª¨  Stone Wall")
-        row.operator("surreal_arch.preset_higg_hex_floor",   text="â¬¡  Hex Floor")
+        row.operator("surreal_arch.preset_higg_brick_wall",  text="🧱  Brick Wall")
+        row.operator("surreal_arch.preset_higg_stone_wall",  text="🪨  Stone Wall")
+        row.operator("surreal_arch.preset_higg_hex_floor",   text="⬡  Hex Floor")
         row = col.row(align=True); row.scale_y = 1.2
-        row.operator("surreal_arch.preset_higg_colonnade",   text="ðŸ›  Colonnade")
-        row.operator("surreal_arch.higgsas_load_arch",       text="ðŸ“¦  Load All Nodes", icon='NODETREE')
+        row.operator("surreal_arch.preset_higg_colonnade",   text="🏛  Colonnade")
+        row.operator("surreal_arch.higgsas_load_arch",       text="📦  Load All Nodes", icon='NODETREE')
 
         # =================================================================
-        # ðŸªœ  ESCHER GREYBOX  â€” impossible / surreal level geometry
+        # 🪝  ESCHER GREYBOX  — impossible / surreal level geometry
         # =================================================================
         box = layout.box()
-        box.label(text="ðŸªœ  Escher Greybox  (impossible geometry)")
+        box.label(text="🪜  Escher Greybox  (impossible geometry)")
         col = box.column(align=True)
         row = col.row(align=True); row.scale_y = 1.2
-        row.operator("surreal_arch.preset_gb_escher_relativity",  text="ðŸªœ  Relativity")
-        row.operator("surreal_arch.preset_gb_escher_penrose",     text="â™¾  Penrose Loop")
-        row.operator("surreal_arch.preset_gb_escher_gravity",     text="ðŸ”„  Gravity Shift")
+        row.operator("surreal_arch.preset_gb_escher_relativity",  text="🪜  Relativity")
+        row.operator("surreal_arch.preset_gb_escher_penrose",     text="♾  Penrose Loop")
+        row.operator("surreal_arch.preset_gb_escher_gravity",     text="🔄  Gravity Shift")
         row = col.row(align=True); row.scale_y = 1.2
-        row.operator("surreal_arch.preset_gb_escher_belvedere",   text="ðŸ›  Belvedere")
-        row.operator("surreal_arch.preset_gb_escher_waterfall",   text="ðŸ’§  Waterfall")
-        row.operator("surreal_arch.preset_gb_escher_recursive",   text="ðŸŒ€  Recursive")
+        row.operator("surreal_arch.preset_gb_escher_belvedere",   text="🏛  Belvedere")
+        row.operator("surreal_arch.preset_gb_escher_waterfall",   text="💧  Waterfall")
+        row.operator("surreal_arch.preset_gb_escher_recursive",   text="🌀  Recursive")
 
         # =================================================================
-        # ðŸ“¦  GREYBOX / LEVEL DESIGN  â€” rooms, corridors, traversal
+        # 📦  GREYBOX / LEVEL DESIGN  — rooms, corridors, traversal
         # =================================================================
         box = layout.box()
-        box.label(text="ðŸ“¦  Greybox Rooms & Corridors")
+        box.label(text="📦  Greybox Rooms & Corridors")
         col = box.column(align=True)
         row = col.row(align=True); row.scale_y = 1.2
-        row.operator("surreal_arch.preset_gb_room_composite", text="ðŸ“¦  Room")
-        row.operator("surreal_arch.preset_gb_room_l",         text="âŒ  L-Room")
-        row.operator("surreal_arch.preset_gb_combat_room",    text="ðŸŽ¯  Combat Room")
+        row.operator("surreal_arch.preset_gb_room_composite", text="📦  Room")
+        row.operator("surreal_arch.preset_gb_room_l",         text="⌐  L-Room")
+        row.operator("surreal_arch.preset_gb_combat_room",    text="🎯  Combat Room")
         row = col.row(align=True); row.scale_y = 1.2
-        row.operator("surreal_arch.preset_gb_corridor_bend",  text="ðŸ“  Bend")
-        row.operator("surreal_arch.preset_gb_corridor_t",     text="âŠ¤  T-Join")
-        row.operator("surreal_arch.preset_gb_corridor_cross", text="âœ›  Cross")
+        row.operator("surreal_arch.preset_gb_corridor_bend",  text="📐  Bend")
+        row.operator("surreal_arch.preset_gb_corridor_t",     text="⊤  T-Join")
+        row.operator("surreal_arch.preset_gb_corridor_cross", text="✛  Cross")
         row = col.row(align=True); row.scale_y = 1.2
-        row.operator("surreal_arch.preset_gb_corridor_door_end", text="ðŸšª  Door End")
-        row.operator("surreal_arch.preset_gb_corridor_rec",   text="ðŸŒ¿  Recursive")
-        row.operator("surreal_arch.preset_gb_elevator_shaft", text="ðŸ›—  Shaft")
+        row.operator("surreal_arch.preset_gb_corridor_door_end", text="🚪  Door End")
+        row.operator("surreal_arch.preset_gb_corridor_rec",   text="🌿  Recursive")
+        row.operator("surreal_arch.preset_gb_elevator_shaft", text="🛗  Shaft")
 
         # =================================================================
-        # ðŸ§±  LEVEL DESIGN  â€” walls, floors, ceilings (greybox foundation)
+        # 🧱  LEVEL DESIGN  — walls, floors, ceilings (greybox foundation)
         # =================================================================
         box = layout.box()
-        box.label(text="ðŸ§±  Walls / Floors / Ceilings  (UE5 grid)")
+        box.label(text="🧱  Walls / Floors / Ceilings  (UE5 grid)")
         col = box.column(align=True)
         row = col.row(align=True); row.scale_y = 1.2
-        row.operator("surreal_arch.preset_wall_straight", text="ðŸ§±  Wall")
-        row.operator("surreal_arch.preset_wall_corner",   text="ðŸ“  Corner")
-        row.operator("surreal_arch.preset_wall_door",     text="ðŸšª  Door Wall")
+        row.operator("surreal_arch.preset_wall_straight", text="🧱  Wall")
+        row.operator("surreal_arch.preset_wall_corner",   text="📐  Corner")
+        row.operator("surreal_arch.preset_wall_door",     text="🚪  Door Wall")
         row = col.row(align=True); row.scale_y = 1.2
-        row.operator("surreal_arch.preset_wall_window",   text="ðŸªŸ  Window Wall")
-        row.operator("surreal_arch.preset_ceiling",       text="â¬›  Ceiling")
-        row.operator("surreal_arch.preset_corner_pillar", text="ðŸ›  Pillar")
+        row.operator("surreal_arch.preset_wall_window",   text="🪟  Window Wall")
+        row.operator("surreal_arch.preset_ceiling",       text="⬛  Ceiling")
+        row.operator("surreal_arch.preset_corner_pillar", text="🏛  Pillar")
         row = col.row(align=True); row.scale_y = 1.2
-        row.operator("surreal_arch.preset_tile",          text="ðŸŸ«  Floor Tile")
-        row.operator("surreal_arch.preset_roof",          text="ðŸ˜  Roof Tiles")
-        row.operator("surreal_arch.preset_brick",         text="ðŸ§±  Brick Wall")
+        row.operator("surreal_arch.preset_tile",          text="🟫  Floor Tile")
+        row.operator("surreal_arch.preset_roof",          text="🏘  Roof Tiles")
+        row.operator("surreal_arch.preset_brick",         text="🧱  Brick Wall")
 
         # =================================================================
-        # ðŸ›  STRUCTURES  â€” full buildings & towers
+        # 🏛  STRUCTURES  — full buildings & towers
         # =================================================================
         box = layout.box()
-        box.label(text="ðŸ›  Structures")
+        box.label(text="🏛  Structures")
         col = box.column(align=True)
         row = col.row(align=True); row.scale_y = 1.2
-        row.operator("surreal_arch.preset_tower",    text="ðŸ—¼  Tower")
-        row.operator("surreal_arch.preset_house",    text="ðŸ   House")
-        row.operator("surreal_arch.preset_building", text="ðŸ¢  Building")
+        row.operator("surreal_arch.preset_tower",    text="🗼  Tower")
+        row.operator("surreal_arch.preset_house",    text="🏠  House")
+        row.operator("surreal_arch.preset_building", text="🏢  Building")
         row = col.row(align=True); row.scale_y = 1.2
-        row.operator("surreal_arch.preset_palazzo",      text="ðŸ›  Palazzo")
-        row.operator("surreal_arch.preset_bridge",       text="ðŸŒ‰  Bridge")
-        row.operator("surreal_arch.preset_radial_bldg",  text="ðŸ”„  Rotunda")
+        row.operator("surreal_arch.preset_palazzo",      text="🏛  Palazzo")
+        row.operator("surreal_arch.preset_bridge",       text="🌉  Bridge")
+        row.operator("surreal_arch.preset_radial_bldg",  text="🔄  Rotunda")
 
         # =================================================================
-        # ðŸ›  ARCHWAYS & INFRASTRUCTURE  â€” arches, bridges, fences
+        # 🏛  ARCHWAYS & INFRASTRUCTURE  — arches, bridges, fences
         # =================================================================
         box = layout.box()
-        box.label(text="ðŸ›  Archways & Infrastructure")
+        box.label(text="🏛  Archways & Infrastructure")
         col = box.column(align=True)
         row = col.row(align=True); row.scale_y = 1.2
-        row.operator("surreal_arch.preset_archway_roman",   text="ðŸ›  Roman")
-        row.operator("surreal_arch.preset_archway_gothic",  text="âœŸ  Gothic Arch")
-        row.operator("surreal_arch.preset_archway_moorish", text="ðŸŒ™  Moorish")
+        row.operator("surreal_arch.preset_archway_roman",   text="🏛  Roman")
+        row.operator("surreal_arch.preset_archway_gothic",  text="✟  Gothic Arch")
+        row.operator("surreal_arch.preset_archway_moorish", text="🌙  Moorish")
         row = col.row(align=True); row.scale_y = 1.2
-        row.operator("surreal_arch.preset_archway_tudor",      text="ðŸ°  Tudor")
-        row.operator("surreal_arch.preset_bridge_stone",       text="ðŸŒ‰  Stone Bridge")
-        row.operator("surreal_arch.preset_bridge_suspension",  text="ðŸŒ‰  Suspension")
+        row.operator("surreal_arch.preset_archway_tudor",      text="🏰  Tudor")
+        row.operator("surreal_arch.preset_bridge_stone",       text="🌉  Stone Bridge")
+        row.operator("surreal_arch.preset_bridge_suspension",  text="🌉  Suspension")
         row = col.row(align=True); row.scale_y = 1.2
-        row.operator("surreal_arch.preset_bridge_truss",   text="ðŸŒ‰  Truss")
-        row.operator("surreal_arch.preset_fence_picket",   text="ðŸªµ  Picket Fence")
-        row.operator("surreal_arch.preset_fence_iron",     text="âš™  Iron Fence")
+        row.operator("surreal_arch.preset_bridge_truss",   text="🌉  Truss")
+        row.operator("surreal_arch.preset_fence_picket",   text="🪵  Picket Fence")
+        row.operator("surreal_arch.preset_fence_iron",     text="⚙  Iron Fence")
         row = col.row(align=True); row.scale_y = 1.2
-        row.operator("surreal_arch.preset_fence_stone",    text="ðŸª¨  Stone Wall")
+        row.operator("surreal_arch.preset_fence_stone",    text="🪨  Stone Wall")
 
         # =================================================================
-        # ðŸ›¡  RAILINGS / STAIRS / DECORATION
+        # 🛡  RAILINGS / STAIRS / DECORATION
         # =================================================================
         box = layout.box()
-        box.label(text="ðŸ›¡  Railings / Stairs / Decor")
+        box.label(text="🛡  Railings / Stairs / Decor")
         col = box.column(align=True)
         row = col.row(align=True); row.scale_y = 1.2
-        row.operator("surreal_arch.preset_railing", text="ðŸ›¡  Railing")
-        row.operator("surreal_arch.preset_stairs",  text="ðŸªœ  Stairs")
-        row.operator("surreal_arch.preset_spiral",  text="ðŸŒ€  Spiral")
+        row.operator("surreal_arch.preset_railing", text="🛡  Railing")
+        row.operator("surreal_arch.preset_stairs",  text="🪜  Stairs")
+        row.operator("surreal_arch.preset_spiral",  text="🌀  Spiral")
         row = col.row(align=True); row.scale_y = 1.2
-        row.operator("surreal_arch.preset_balcony", text="ðŸŒ¿  Balcony")
-        row.operator("surreal_arch.preset_cornice", text="ðŸ›  Cornice")
-        row.operator("surreal_arch.preset_lantern", text="ðŸ®  Lantern")
+        row.operator("surreal_arch.preset_balcony", text="🌿  Balcony")
+        row.operator("surreal_arch.preset_cornice", text="🏛  Cornice")
+        row.operator("surreal_arch.preset_lantern", text="🏮  Lantern")
         row = col.row(align=True); row.scale_y = 1.2
-        row.operator("surreal_arch.preset_fountain", text="â›²  Fountain")
-        row.operator("surreal_arch.preset_buttress", text="ðŸ°  Buttress")
-        row.operator("surreal_arch.preset_dome",     text="ðŸŒ  Dome")
+        row.operator("surreal_arch.preset_fountain", text="⛲  Fountain")
+        row.operator("surreal_arch.preset_buttress", text="🏰  Buttress")
+        row.operator("surreal_arch.preset_dome",     text="🌐  Dome")
 
         # =================================================================
-        # ðŸŒ™  ARCHES / WINDOWS / TRACERY
+        # 🌙  ARCHES / WINDOWS / TRACERY
         # =================================================================
         box = layout.box()
-        box.label(text="ðŸŒ™  Arches / Windows / Tracery")
+        box.label(text="🌙  Arches / Windows / Tracery")
         col = box.column(align=True)
         row = col.row(align=True); row.scale_y = 1.2
-        row.operator("surreal_arch.preset_arch",    text="ðŸŒ™  Round")
-        row.operator("surreal_arch.preset_gothic",  text="âœŸ  Gothic")
-        row.operator("surreal_arch.preset_ogee",    text="ðŸŒ€  Ogee")
+        row.operator("surreal_arch.preset_arch",    text="🌙  Round")
+        row.operator("surreal_arch.preset_gothic",  text="✟  Gothic")
+        row.operator("surreal_arch.preset_ogee",    text="🌀  Ogee")
         row = col.row(align=True); row.scale_y = 1.2
-        row.operator("surreal_arch.preset_bifora",  text="ðŸªŸ  Bifora")
-        row.operator("surreal_arch.preset_cusped",  text="ðŸŒ¸  Cusped")
-        row.operator("surreal_arch.preset_lancet",  text="â€–  Lancet")
+        row.operator("surreal_arch.preset_bifora",  text="🪟  Bifora")
+        row.operator("surreal_arch.preset_cusped",  text="🌸  Cusped")
+        row.operator("surreal_arch.preset_lancet",  text="‖  Lancet")
         row = col.row(align=True); row.scale_y = 1.2
-        row.operator("surreal_arch.preset_window",  text="ðŸªŸ  Window")
-        row.operator("surreal_arch.preset_door",    text="ðŸšª  Door")
-        row.operator("surreal_arch.preset_trefoil", text="â˜˜  Trefoil")
+        row.operator("surreal_arch.preset_window",  text="🪟  Window")
+        row.operator("surreal_arch.preset_door",    text="🚪  Door")
+        row.operator("surreal_arch.preset_trefoil", text="☘  Trefoil")
         row = col.row(align=True); row.scale_y = 1.2
-        row.operator("surreal_arch.preset_rose",    text="â€  Rose Window")
-        row.operator("surreal_arch.preset_crenel",  text="ðŸ°  Crenel")
+        row.operator("surreal_arch.preset_rose",    text="❀  Rose Window")
+        row.operator("surreal_arch.preset_crenel",  text="🏰  Crenel")
 
         # =================================================================
-        # ðŸµ  ZEN ARCHITECTURE
+        # 🍵  ZEN ARCHITECTURE
         # =================================================================
         box = layout.box()
-        box.label(text="ðŸµ  Zen Architecture")
+        box.label(text="🍵  Zen Architecture")
         col = box.column(align=True)
         row = col.row(align=True); row.scale_y = 1.2
-        row.operator("surreal_arch.preset_pagoda",  text="ðŸ¯  Pagoda")
-        row.operator("surreal_arch.preset_torii",   text="â›©  Torii")
-        row.operator("surreal_arch.preset_shoji",   text="ðŸŽ‹  Shoji")
+        row.operator("surreal_arch.preset_pagoda",  text="🏯  Pagoda")
+        row.operator("surreal_arch.preset_torii",   text="⛩  Torii")
+        row.operator("surreal_arch.preset_shoji",   text="🎋  Shoji")
         row = col.row(align=True); row.scale_y = 1.2
-        row.operator("surreal_arch.preset_zen_lantern", text="ðŸ®  Stone Lantern")
-        row.operator("surreal_arch.preset_teahouse",    text="ðŸµ  Tea House")
-        row.operator("surreal_arch.preset_zen_bridge",  text="ðŸŒŠ  Zen Bridge")
+        row.operator("surreal_arch.preset_zen_lantern", text="🏮  Stone Lantern")
+        row.operator("surreal_arch.preset_teahouse",    text="🍵  Tea House")
+        row.operator("surreal_arch.preset_zen_bridge",  text="🌊  Zen Bridge")
         row = col.row(align=True); row.scale_y = 1.2
-        row.operator("surreal_arch.preset_stone_garden", text="ðŸª¨  Stone Garden")
+        row.operator("surreal_arch.preset_stone_garden", text="🪨  Stone Garden")
 
         # =================================================================
-        # ðŸªŸ  ADVANCED WALLS (more detailed greybox)
+        # 🪟  ADVANCED WALLS (more detailed greybox)
         # =================================================================
         box = layout.box()
-        box.label(text="ðŸªŸ  Advanced Walls (greybox+)")
+        box.label(text="🪟  Advanced Walls (greybox+)")
         col = box.column(align=True)
         row = col.row(align=True); row.scale_y = 1.2
-        row.operator("surreal_arch.preset_wall_multi",    text="ðŸªŸ  Multi-Pane")
-        row.operator("surreal_arch.preset_wall_arched",   text="ðŸªŸ  Arched")
-        row.operator("surreal_arch.preset_wall_bay",      text="ðŸªŸ  Bay Window")
+        row.operator("surreal_arch.preset_wall_multi",    text="🪟  Multi-Pane")
+        row.operator("surreal_arch.preset_wall_arched",   text="🪟  Arched")
+        row.operator("surreal_arch.preset_wall_bay",      text="🪟  Bay Window")
         row = col.row(align=True); row.scale_y = 1.2
-        row.operator("surreal_arch.preset_wall_t_join",   text="ðŸ§±  T-Join")
-        row.operator("surreal_arch.preset_arrow_slits",   text="ðŸ°  Arrow Slits")
-        row.operator("surreal_arch.preset_half_timber",   text="ðŸ   Half-Timber")
+        row.operator("surreal_arch.preset_wall_t_join",   text="🧱  T-Join")
+        row.operator("surreal_arch.preset_arrow_slits",   text="🏰  Arrow Slits")
+        row.operator("surreal_arch.preset_half_timber",   text="🏠  Half-Timber")
         row = col.row(align=True); row.scale_y = 1.2
-        row.operator("surreal_arch.preset_retaining_wall",text="ðŸª¨  Retaining Wall")
-        row.operator("surreal_arch.preset_door_frame",    text="ðŸšª  Door Frame")
-        row.operator("surreal_arch.preset_window_frame",  text="ðŸªŸ  Window Frame")
+        row.operator("surreal_arch.preset_retaining_wall",text="🪨  Retaining Wall")
+        row.operator("surreal_arch.preset_door_frame",    text="🚪  Door Frame")
+        row.operator("surreal_arch.preset_window_frame",  text="🪟  Window Frame")
 
         # =================================================================
-        # ðŸš  RUINS & DESTRUCTION
+        # 🏚  RUINS & DESTRUCTION
         # =================================================================
         box = layout.box()
-        box.label(text="ðŸš  Ruins & Destruction")
+        box.label(text="🏚  Ruins & Destruction")
         col = box.column(align=True)
         row = col.row(align=True); row.scale_y = 1.2
-        row.operator("surreal_arch.preset_wall_ruined",    text="ðŸš  Ruined Wall")
-        row.operator("surreal_arch.preset_wall_overgrown", text="ðŸŒ¿  Overgrown")
-        row.operator("surreal_arch.preset_arch_broken",    text="ðŸš  Broken Arch")
+        row.operator("surreal_arch.preset_wall_ruined",    text="🏚  Ruined Wall")
+        row.operator("surreal_arch.preset_wall_overgrown", text="🌿  Overgrown")
+        row.operator("surreal_arch.preset_arch_broken",    text="🏚  Broken Arch")
         row = col.row(align=True); row.scale_y = 1.2
-        row.operator("surreal_arch.preset_collapsed_floor",text="ðŸš  Collapsed Floor")
+        row.operator("surreal_arch.preset_collapsed_floor",text="🏚  Collapsed Floor")
 
         # =================================================================
-        # ðŸ“¦  ENVIRONMENT PROPS
+        # 📦  ENVIRONMENT PROPS
         # =================================================================
         box = layout.box()
-        box.label(text="ðŸ“¦  Environment Props")
+        box.label(text="📦  Environment Props")
         col = box.column(align=True)
         row = col.row(align=True); row.scale_y = 1.2
-        row.operator("surreal_arch.preset_barrel_stack", text="ðŸª£  Barrels")
-        row.operator("surreal_arch.preset_crate_pile",   text="ðŸ“¦  Crates")
-        row.operator("surreal_arch.preset_campfire",     text="ðŸ”¥  Campfire")
+        row.operator("surreal_arch.preset_barrel_stack", text="🪣  Barrels")
+        row.operator("surreal_arch.preset_crate_pile",   text="📦  Crates")
+        row.operator("surreal_arch.preset_campfire",     text="🔥  Campfire")
 
         # =================================================================
-        # ðŸªœ  ESCHER MATH  â€” the surreal/impossible
+        # 🪝  ESCHER MATH  — the surreal/impossible
         # =================================================================
         box = layout.box()
-        box.label(text="ðŸªœ  Escher Math")
+        box.label(text="🪜  Escher Math")
         col = box.column(align=True)
         row = col.row(align=True); row.scale_y = 1.2
-        row.operator("surreal_arch.preset_penrose",      text="ðŸªœ  Penrose")
-        row.operator("surreal_arch.preset_fractal",      text="â„  Fractal")
-        row.operator("surreal_arch.preset_hyperbolic",   text="âšª  Hyperbolic")
+        row.operator("surreal_arch.preset_penrose",      text="🪜  Penrose")
+        row.operator("surreal_arch.preset_fractal",      text="❄  Fractal")
+        row.operator("surreal_arch.preset_hyperbolic",   text="⚪  Hyperbolic")
         row = col.row(align=True); row.scale_y = 1.2
-        row.operator("surreal_arch.preset_tessellation", text="ðŸ¦  Tessellate")
-        row.operator("surreal_arch.preset_beams",        text="ðŸŒŠ  Cascading Beams")
-        row.operator("surreal_arch.preset_pillar",       text="ðŸ›  Fluted Pillar")
+        row.operator("surreal_arch.preset_tessellation", text="🐦  Tessellate")
+        row.operator("surreal_arch.preset_beams",        text="🌊  Cascading Beams")
+        row.operator("surreal_arch.preset_pillar",       text="🏛  Fluted Pillar")
 
         # =================================================================
-        # ðŸŽ€  STYLE TOGGLE
+        # 🎀  STYLE TOGGLE
         # =================================================================
         layout.separator()
         row = layout.row(align=True); row.scale_y = 1.3
@@ -32873,276 +32914,279 @@ class SURREAL_ARCH_PT_presets(_SubPanelBase, bpy.types.Panel):
             on = context.active_object.surreal_arch_props.genshin_style
             if on:
                 row.alert = True
-                row.operator("surreal_arch.toggle_genshin", text="ðŸŽ€  Genshin Style: ON  (click to disable)")
+                row.operator("surreal_arch.toggle_genshin", text="🎀  Genshin Style: ON  (click to disable)")
             else:
-                row.operator("surreal_arch.toggle_genshin", text="ðŸŽ€  Apply Genshin Style")
+                row.operator("surreal_arch.toggle_genshin", text="🎀  Apply Genshin Style")
 
 
-# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-# v2.48 â€” CATEGORIZED ARCH-TYPE PICKER
+# ══════════════════════════════════════════════════════════════════════
+# v2.48 — CATEGORIZED ARCH-TYPE PICKER
 # Replaces the 112-item flat dropdown with style-grouped button grids.
 # User clicks a category to expand it, then clicks a piece type to set arch_type.
-# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# ══════════════════════════════════════════════════════════════════════
 
 # Each category: (id, label, icon, [(arch_type_id, short_label), ...])
 _ARCH_CATEGORIES = [
-    ('GREYBOX', "ðŸ“¦ Greybox / Level Design", 'MESH_CUBE', [
-        # â”€ Room shells â”€
-        ('GREYBOX_ROOM',        "ðŸ“¦ Room Shell"),
-        ('GB_ROOM_COMPOSITE',   "ðŸ  Composite Room"),
-        ('GB_COMBAT_ROOM',      "ðŸŽ¯ Combat Room"),
-        ('GREYBOX_TOWER',       "ðŸ“¦ Tower Blockout"),
-        ('GB_ELEVATOR_SHAFT',   "ðŸ›— Elevator Shaft"),
-        # â”€ Corridors & junctions â”€
-        ('GREYBOX_CORRIDOR',    "ðŸ“¦ Corridor"),
-        ('GB_CORRIDOR_BEND',    "ðŸ“ Corridor Bend"),
-        ('GB_CORRIDOR_T',       "âŠ¤ Corridor T-Join"),
-        ('GB_CORRIDOR_CROSS',   "âœ› Corridor Cross"),
-        ('GB_CORRIDOR_REC',     "ðŸŒ¿ Recursive Corridor"),
-        ('GB_CORRIDOR_OFFSET',  "ðŸ“ Corridor Offset"),
-        ('GB_ROMANESQUE_ARCADE',"ðŸ› Romanesque Arcade"),
-        ('GB_ROMANESQUE_APSE', "ðŸ› Romanesque Apse"),
-        ('GB_BRUTALIST_PANEL_WALL',"ðŸ— Brutalist Panel"),
-        ('GB_VENETIAN_LOGGIA', "ðŸ‡®ðŸ‡¹ Venetian Loggia"),
-        ('GB_SCIFI_PRESSURE_DOOR', "ðŸš€ Pressure Door"),
-        ('GB_ZEN_ROJI_STEP', "ðŸµ Roji Step"),
-        ('GB_ZEN_TORII_GATE', "â›© Torii Gate"),
-        ('GB_ZEN_TSUKUBAI', "ðŸª¨ Tsukubai"),
-        # â”€ Traversal â”€
-        ('GREYBOX_RAMP',        "ðŸ“¦ Ramp"),
-        ('GREYBOX_STAIR_BLOCK', "ðŸ“¦ Stair Block"),
-        ('GREYBOX_PLATFORM',    "ðŸ“¦ Platform"),
-        ('GREYBOX_CATWALK',     "ðŸ“¦ Catwalk"),
-        # â”€ Spaces â”€
-        ('GREYBOX_PILLAR_HALL', "ðŸ“¦ Pillar Hall"),
-        ('GREYBOX_ARENA',       "ðŸ“¦ Arena"),
-        # â”€ Utility â”€
-        ('GREYBOX_COVER',       "ðŸ“¦ Cover Block"),
-        ('GREYBOX_DOORWAY',     "ðŸ“¦ Doorway"),
-        ('GREYBOX_PIPE_RUN',    "ðŸ“¦ Pipe Run"),
+    ('GREYBOX', "📦 Greybox / Level Design", 'MESH_CUBE', [
+        # ─ Room shells ─
+        ('GREYBOX_ROOM',        "📦 Room Shell"),
+        ('GB_ROOM_COMPOSITE',   "🏠 Composite Room"),
+        ('GB_COMBAT_ROOM',      "🎯 Combat Room"),
+        ('GREYBOX_TOWER',       "📦 Tower Blockout"),
+        ('GB_ELEVATOR_SHAFT',   "🛗 Elevator Shaft"),
+        # ─ Corridors & junctions ─
+        ('GREYBOX_CORRIDOR',    "📦 Corridor"),
+        ('GB_CORRIDOR_BEND',    "📐 Corridor Bend"),
+        ('GB_CORRIDOR_T',       "⊤ Corridor T-Join"),
+        ('GB_CORRIDOR_CROSS',   "✛ Corridor Cross"),
+        ('GB_CORRIDOR_REC',     "🌿 Recursive Corridor"),
+        ('GB_CORRIDOR_OFFSET',  "📐 Corridor Offset"),
+        ('GB_ROMANESQUE_ARCADE',"🏛 Romanesque Arcade"),
+        ('GB_ROMANESQUE_APSE', "🏛 Romanesque Apse"),
+        ('GB_BRUTALIST_PANEL_WALL',"🏗 Brutalist Panel"),
+        ('GB_VENETIAN_LOGGIA', "🇮🇹 Venetian Loggia"),
+        ('GB_SCIFI_PRESSURE_DOOR', "🚀 Pressure Door"),
+        ('GB_ZEN_ROJI_STEP', "🍵 Roji Step"),
+        ('GB_ZEN_TORII_GATE', "⛩ Torii Gate"),
+        ('GB_ZEN_TSUKUBAI', "🪨 Tsukubai"),
+        ('GB_ZEN_ENGAWA', "🏯 Engawa"),
+        ('GB_ZEN_BAMBOO_FENCE', "🎋 Bamboo Fence"),
+        ('GB_ZEN_TOBIISHI', "🪨 Tobi-ishi"),
+        # ─ Traversal ─
+        ('GREYBOX_RAMP',        "📦 Ramp"),
+        ('GREYBOX_STAIR_BLOCK', "📦 Stair Block"),
+        ('GREYBOX_PLATFORM',    "📦 Platform"),
+        ('GREYBOX_CATWALK',     "📦 Catwalk"),
+        # ─ Spaces ─
+        ('GREYBOX_PILLAR_HALL', "📦 Pillar Hall"),
+        ('GREYBOX_ARENA',       "📦 Arena"),
+        # ─ Utility ─
+        ('GREYBOX_COVER',       "📦 Cover Block"),
+        ('GREYBOX_DOORWAY',     "📦 Doorway"),
+        ('GREYBOX_PIPE_RUN',    "📦 Pipe Run"),
     ]),
-    ('ARCH_INFRA', "ðŸ› Archways & Infrastructure", 'DRIVER_ROTATIONAL_DIFFERENCE', [
-        ('ARCHWAY_ADV', "ðŸ› Advanced Archway"),
-        ('BRIDGE_ADV',  "ðŸŒ‰ Advanced Bridge"),
-        ('FENCE',       "ðŸªµ Fence Generator"),
-        ('STONE_BRIDGE',"ðŸŒ‰ Stone Bridge"),
-        ('DRAWBRIDGE',  "ðŸŒ‰ Drawbridge"),
-        ('ZEN_BRIDGE',  "ðŸŒ‰ Zen Bridge"),
-        ('BRIDGE',      "ðŸŒ‰ Venetian Bridge"),
-        ('RAILING',     "ðŸ›¡ Railing"),
-        ('STAIRCASE',   "ðŸªœ Staircase"),
+    ('ARCH_INFRA', "🏛 Archways & Infrastructure", 'DRIVER_ROTATIONAL_DIFFERENCE', [
+        ('ARCHWAY_ADV', "🏛 Advanced Archway"),
+        ('BRIDGE_ADV',  "🌉 Advanced Bridge"),
+        ('FENCE',       "🪵 Fence Generator"),
+        ('STONE_BRIDGE',"🌉 Stone Bridge"),
+        ('DRAWBRIDGE',  "🌉 Drawbridge"),
+        ('ZEN_BRIDGE',  "🌉 Zen Bridge"),
+        ('BRIDGE',      "🌉 Venetian Bridge"),
+        ('RAILING',     "🛡 Railing"),
+        ('STAIRCASE',   "🪜 Staircase"),
     ]),
-    ('CURVED_GB', "â­• Curved Rooms", 'FORCE_VORTEX', [
-        ('GB_ROOM_CIRCULAR',     "â­• Circular Room"),
-        ('GB_ROOM_APSIDAL',      "â›ª Basilica Nave"),
-        ('GB_CORRIDOR_ARC',      "ðŸŒ€ Arc Corridor"),
-        ('GB_ROOM_ROTUNDA',      "ðŸ› Pantheon Rotunda"),
-        ('GB_CORRIDOR_ARC_CROSS',"âœ› Arc Cross Junction"),
+    ('CURVED_GB', "⭕ Curved Rooms", 'FORCE_VORTEX', [
+        ('GB_ROOM_CIRCULAR',     "⭕ Circular Room"),
+        ('GB_ROOM_APSIDAL',      "⛪ Basilica Nave"),
+        ('GB_CORRIDOR_ARC',      "🌀 Arc Corridor"),
+        ('GB_ROOM_ROTUNDA',      "🏛 Pantheon Rotunda"),
+        ('GB_CORRIDOR_ARC_CROSS',"✛ Arc Cross Junction"),
     ]),
-    ('WOODS_GB', "ðŸš Lebbeus Woods", 'ORIENTATION_LOCAL', [
-        ('GB_WOODS_PARASITE',   "ðŸš Parasite"),
-        ('GB_WOODS_FREESPACE',  "ðŸš Freespace"),
-        ('GB_WOODS_RIBS',       "ðŸ¦´ Rib Cage"),
-        ('GB_WOODS_HARPSICHORD',"ðŸ— Harpsichord"),
-        ('GB_WOODS_WAR_SCAR',   "ðŸ’¥ War Scar"),
+    ('WOODS_GB', "🏚 Lebbeus Woods", 'ORIENTATION_LOCAL', [
+        ('GB_WOODS_PARASITE',   "🏚 Parasite"),
+        ('GB_WOODS_FREESPACE',  "🏚 Freespace"),
+        ('GB_WOODS_RIBS',       "🦴 Rib Cage"),
+        ('GB_WOODS_HARPSICHORD',"🏗 Harpsichord"),
+        ('GB_WOODS_WAR_SCAR',   "💥 War Scar"),
     ]),
-    ('UMEMOTO_GB', "ðŸ› David Umemoto", 'MOD_SOLIDIFY', [
-        ('GB_UMEMOTO_TERRACE',  "ðŸ› Terrace Tower"),
-        ('GB_UMEMOTO_VAULT',    "ðŸ¦ Vault Cluster"),
-        ('GB_UMEMOTO_LATTICE',  "â–¦ Lattice Block"),
-        ('GB_UMEMOTO_FORTRESS', "ðŸ° Fortress Room"),
+    ('UMEMOTO_GB', "🏛 David Umemoto", 'MOD_SOLIDIFY', [
+        ('GB_UMEMOTO_TERRACE',  "🏛 Terrace Tower"),
+        ('GB_UMEMOTO_VAULT',    "🏦 Vault Cluster"),
+        ('GB_UMEMOTO_LATTICE',  "▦ Lattice Block"),
+        ('GB_UMEMOTO_FORTRESS', "🏰 Fortress Room"),
     ]),
-    ('HIGGSAS', "ðŸ”Œ Higgsas Nodes", 'NODETREE', [
-        ('HIGG_SURFACE_WALL', "ðŸ”Œ Surface Wall"),
-        ('HIGG_COLONNADE',    "ðŸ› Colonnade"),
+    ('HIGGSAS', "🔌 Higgsas Nodes", 'NODETREE', [
+        ('HIGG_SURFACE_WALL', "🔌 Surface Wall"),
+        ('HIGG_COLONNADE',    "🏛 Colonnade"),
         # Enhanced native builders (Higgsas auto-upgrades these when loaded)
-        ('BRICK_WALL',        "ðŸ§± Brick Wall âœ¦"),
-        ('PILLAR',            "ðŸ› Pillar âœ¦"),
+        ('BRICK_WALL',        "🧱 Brick Wall ✦"),
+        ('PILLAR',            "🏛 Pillar ❦"),
     ]),
-    ('ESCHER_GB', "ðŸªœ Escher Greybox", 'MOD_MIRROR', [
-        ('GB_ESCHER_RELATIVITY',   "ðŸªœ Relativity Room"),
-        ('GB_ESCHER_PENROSE_LOOP', "â™¾ Penrose Loop"),
-        ('GB_ESCHER_GRAVITY_SHIFT',"ðŸ”„ Gravity Shift"),
-        ('GB_ESCHER_BELVEDERE',    "ðŸ› Belvedere"),
-        ('GB_ESCHER_WATERFALL',    "ðŸ’§ Waterfall Loop"),
-        ('GB_ESCHER_RECURSIVE',    "ðŸŒ€ Recursive Room"),
+    ('ESCHER_GB', "🪜 Escher Greybox", 'MOD_MIRROR', [
+        ('GB_ESCHER_RELATIVITY',   "🪜 Relativity Room"),
+        ('GB_ESCHER_PENROSE_LOOP', "♾ Penrose Loop"),
+        ('GB_ESCHER_GRAVITY_SHIFT',"🔄 Gravity Shift"),
+        ('GB_ESCHER_BELVEDERE',    "🏛 Belvedere"),
+        ('GB_ESCHER_WATERFALL',    "💧 Waterfall Loop"),
+        ('GB_ESCHER_RECURSIVE',    "🌀 Recursive Room"),
     ]),
-    ('RUINS', "ðŸš Ruins & Destruction", 'BRUSH_DATA', [
-        ('WALL_RUINED',     "ðŸš Ruined Wall"),
-        ('ARCH_BROKEN',     "ðŸš Broken Arch"),
-        ('COLLAPSED_FLOOR', "ðŸš Collapsed Floor"),
+    ('RUINS', "🏚 Ruins & Destruction", 'BRUSH_DATA', [
+        ('WALL_RUINED',     "🏚 Ruined Wall"),
+        ('ARCH_BROKEN',     "🏚 Broken Arch"),
+        ('COLLAPSED_FLOOR', "🏚 Collapsed Floor"),
     ]),
-    ('PROPS', "ðŸ“¦ Environment Props", 'OBJECT_DATA', [
-        ('BARREL_STACK',    "ðŸª£ Barrel Stack"),
-        ('CRATE_PILE',      "ðŸ“¦ Crate Pile"),
-        ('CAMPFIRE',        "ðŸ”¥ Campfire"),
-        ('VILLAGE_WELL',    "ðŸª£ Village Well"),
-        ('MARKET_STALL',    "ðŸª Market Stall"),
-        ('TORCH_SCONCE',    "ðŸ”¦ Torch Sconce"),
-        ('STREET_LAMP',     "ðŸ’¡ Street Lamp"),
-        ('HERALDIC_BANNER', "ðŸ³ Banner"),
-        ('BOULDER_PILE',    "ðŸª¨ Boulder Pile"),
-        ('STYLIZED_TREE',   "ðŸŒ³ Stylized Tree"),
+    ('PROPS', "📦 Environment Props", 'OBJECT_DATA', [
+        ('BARREL_STACK',    "🪣 Barrel Stack"),
+        ('CRATE_PILE',      "📦 Crate Pile"),
+        ('CAMPFIRE',        "🔥 Campfire"),
+        ('VILLAGE_WELL',    "🪣 Village Well"),
+        ('MARKET_STALL',    "🏪 Market Stall"),
+        ('TORCH_SCONCE',    "🔦 Torch Sconce"),
+        ('STREET_LAMP',     "💡 Street Lamp"),
+        ('HERALDIC_BANNER', "🏳 Banner"),
+        ('BOULDER_PILE',    "🪨 Boulder Pile"),
+        ('STYLIZED_TREE',   "🌳 Stylized Tree"),
     ]),
-    ('FOUNDATIONS', "ðŸ§± Foundations / Modular", 'MOD_BUILD', [
-        ('WALL_STRAIGHT',      "ðŸ§± Wall"),
-        ('WALL_CORNER',        "ðŸ“ Corner"),
-        ('WALL_T_JOIN',        "ðŸ§± T-Join"),
-        ('WALL_DOOR',          "ðŸšª Door Wall"),
-        ('WALL_WINDOW',        "ðŸªŸ Window Wall"),
-        ('WALL_MULTI_WINDOW',  "ðŸªŸ Multi-Pane Wall"),
-        ('WALL_ARCHED_WINDOW', "ðŸªŸ Arched Wall"),
-        ('WALL_BAY_WINDOW',    "ðŸªŸ Bay Wall"),
-        ('WALL_ARROW_SLITS',   "ðŸ° Arrow Slit Wall"),
-        ('HALF_TIMBER_WALL',   "ðŸ  Half-Timber Wall"),
-        ('RETAINING_WALL',     "ðŸª¨ Retaining Wall"),
-        ('DOOR_FRAME',         "ðŸšª Door Frame"),
-        ('WINDOW_FRAME',       "ðŸªŸ Window Frame"),
-        ('FLOOR_TILE',         "ðŸŸ« Floor Tile"),
-        ('CEILING_TILE',       "â¬› Ceiling"),
-        ('WINDOW',             "ðŸªŸ Window"),
-        ('DOOR',               "ðŸšª Door"),
-        ('BRICK_WALL',         "ðŸ§± Brick Wall"),
-        ('CORNER_PIECE',       "ðŸ“ Corner Piece"),
-        ('RAILING',            "ðŸ›¡ Railing"),
-        ('BALCONY',            "ðŸŒ¿ Balcony"),
-        ('CORNICE',            "ðŸ› Cornice"),
-        ('STAIRCASE',          "ðŸªœ Staircase"),
+    ('FOUNDATIONS', "🧱 Foundations / Modular", 'MOD_BUILD', [
+        ('WALL_STRAIGHT',      "🧱 Wall"),
+        ('WALL_CORNER',        "📐 Corner"),
+        ('WALL_T_JOIN',        "🧱 T-Join"),
+        ('WALL_DOOR',          "🚪 Door Wall"),
+        ('WALL_WINDOW',        "🪟 Window Wall"),
+        ('WALL_MULTI_WINDOW',  "🪟 Multi-Pane Wall"),
+        ('WALL_ARCHED_WINDOW', "🪟 Arched Wall"),
+        ('WALL_BAY_WINDOW',    "🪟 Bay Wall"),
+        ('WALL_ARROW_SLITS',   "🏰 Arrow Slit Wall"),
+        ('HALF_TIMBER_WALL',   "🏠 Half-Timber Wall"),
+        ('RETAINING_WALL',     "🪨 Retaining Wall"),
+        ('DOOR_FRAME',         "🚪 Door Frame"),
+        ('WINDOW_FRAME',       "🪟 Window Frame"),
+        ('FLOOR_TILE',         "🟫 Floor Tile"),
+        ('CEILING_TILE',       "⬛ Ceiling"),
+        ('WINDOW',             "🪟 Window"),
+        ('DOOR',               "🚪 Door"),
+        ('BRICK_WALL',         "🧱 Brick Wall"),
+        ('CORNER_PIECE',       "📐 Corner Piece"),
+        ('RAILING',            "🛡 Railing"),
+        ('BALCONY',            "🌿 Balcony"),
+        ('CORNICE',            "🏛 Cornice"),
+        ('STAIRCASE',          "🪜 Staircase"),
     ]),
-    ('TOWERS', "ðŸ—¼ Towers & Spires", 'OUTLINER_OB_FORCE_FIELD', [
-        ('TOWER',         "ðŸ—¼ Tower"),
-        ('BELL_TOWER',    "ðŸ”” Bell Tower"),
-        ('WATCHTOWER',    "ðŸ—¼ Watchtower"),
-        ('LIGHTHOUSE',    "ðŸ—¼ Lighthouse"),
-        ('OBELISK',       "ðŸ—¿ Obelisk"),
-        ('WINDMILL',      "ðŸŒ¬ Windmill"),
-        ('WATERMILL',     "ðŸŒŠ Watermill"),
-        ('STREET_LAMP',   "ðŸ”¦ Street Lamp"),
-        ('LANTERN',       "ðŸ® Lantern"),
-        ('TORCH_SCONCE',  "ðŸ”¥ Torch Sconce"),
-        ('PILLAR',        "ðŸ› Pillar"),
+    ('TOWERS', "🗼 Towers & Spires", 'OUTLINER_OB_FORCE_FIELD', [
+        ('TOWER',         "🗼 Tower"),
+        ('BELL_TOWER',    "🔔 Bell Tower"),
+        ('WATCHTOWER',    "🗼 Watchtower"),
+        ('LIGHTHOUSE',    "🗼 Lighthouse"),
+        ('OBELISK',       "🗿 Obelisk"),
+        ('WINDMILL',      "🌬 Windmill"),
+        ('WATERMILL',     "🌊 Watermill"),
+        ('STREET_LAMP',   "🔦 Street Lamp"),
+        ('LANTERN',       "🏮 Lantern"),
+        ('TORCH_SCONCE',  "🔥 Torch Sconce"),
+        ('PILLAR',        "🏛 Pillar"),
     ]),
-    ('CASTLE', "ðŸ° Castle / Military", 'OUTLINER_OB_LATTICE', [
-        ('KEEP',          "ðŸ¯ Keep"),
-        ('GATEHOUSE',     "ðŸ› Gatehouse"),
-        ('BARBICAN',      "ðŸ›¡ Barbican"),
-        ('CURTAIN_WALL',  "ðŸ§± Curtain Wall"),
-        ('CURVED_WALL',   "ðŸŒ™ Curved Wall"),
-        ('CRENEL',        "âŒâŒ Crenellation"),
-        ('DRAWBRIDGE',    "ðŸŒ‰ Drawbridge"),
-        ('BUTTRESS',      "ðŸ° Buttress"),
-        ('HERALDIC_BANNER',"ðŸš© Heraldic Banner"),
+    ('CASTLE', "🏰 Castle / Military", 'OUTLINER_OB_LATTICE', [
+        ('KEEP',          "🏯 Keep"),
+        ('GATEHOUSE',     "🏛 Gatehouse"),
+        ('BARBICAN',      "🛡 Barbican"),
+        ('CURTAIN_WALL',  "🧱 Curtain Wall"),
+        ('CURVED_WALL',   "🌙 Curved Wall"),
+        ('CRENEL',        "⌐⌐ Crenellation"),
+        ('DRAWBRIDGE',    "🌉 Drawbridge"),
+        ('BUTTRESS',      "🏰 Buttress"),
+        ('HERALDIC_BANNER',"🚩 Heraldic Banner"),
     ]),
-    ('CIVIC', "ðŸ› Civic / Classical", 'HOME', [
-        ('BUILDING',         "ðŸ› Composite Building"),
-        ('AUTO_BUILDING',    "ðŸ¢ Auto Building"),
-        ('MODULAR_HOUSE',    "ðŸ  Modular House"),
-        ('CURVED_BUILDING',  "ðŸŒ™ Curved Building"),
-        ('RADIAL_BUILDING',  "ðŸŽ¡ Radial Building"),
-        ('PALAZZO',          "ðŸ‡®ðŸ‡¹ Palazzo"),
-        ('DOME',             "ðŸŸ Dome"),
-        ('ARCH',             "ðŸŒ™ Arch"),
-        ('FOUNTAIN',         "â›² Fountain"),
-        ('PUBLIC_FOUNTAIN',  "â›² Public Fountain"),
-        ('TOWN_HALL',        "ðŸ› Town Hall"),
-        ('GUILD_HALL',       "âšœ Guild Hall"),
-        ('MONASTERY',        "â›ª Monastery"),
-        ('STONE_BRIDGE',     "ðŸŒ‰ Stone Bridge"),
-        ('BRIDGE',           "ðŸŒ‰ Bridge"),
+    ('CIVIC', "🏛 Civic / Classical", 'HOME', [
+        ('BUILDING',         "🏛 Composite Building"),
+        ('AUTO_BUILDING',    "🏢 Auto Building"),
+        ('MODULAR_HOUSE',    "🏠 Modular House"),
+        ('CURVED_BUILDING',  "🌙 Curved Building"),
+        ('RADIAL_BUILDING',  "🎡 Radial Building"),
+        ('PALAZZO',          "🇮🇹 Palazzo"),
+        ('DOME',             "🏟 Dome"),
+        ('ARCH',             "🌙 Arch"),
+        ('FOUNTAIN',         "⛲ Fountain"),
+        ('PUBLIC_FOUNTAIN',  "⛲ Public Fountain"),
+        ('TOWN_HALL',        "🏛 Town Hall"),
+        ('GUILD_HALL',       "⚜ Guild Hall"),
+        ('MONASTERY',        "⛪ Monastery"),
+        ('STONE_BRIDGE',     "🌉 Stone Bridge"),
+        ('BRIDGE',           "🌉 Bridge"),
     ]),
-    ('TOWN', "ðŸ˜ Town & Village", 'GROUP', [
-        ('TOWN_HOUSE',     "ðŸ  Town House"),
-        ('TAVERN',         "ðŸ» Tavern"),
-        ('BLACKSMITH',     "âš’ Blacksmith"),
-        ('STABLE',         "ðŸŽ Stable"),
-        ('MARKET_STALL',   "ðŸª Market Stall"),
-        ('VILLAGE_WELL',   "ðŸª£ Village Well"),
-        ('CHAPEL',         "â›ª Gothic Chapel"),
-        ('CRYPT_ENTRANCE', "âš° Crypt"),
-        ('WAYSIDE_SHRINE', "ðŸª¦ Wayside Shrine"),
-        ('GREYBOX_ARENA',  "ðŸ˜ Town Square Arena"),
+    ('TOWN', "🏘 Town & Village", 'GROUP', [
+        ('TOWN_HOUSE',     "🏠 Town House"),
+        ('TAVERN',         "🍻 Tavern"),
+        ('BLACKSMITH',     "⚒ Blacksmith"),
+        ('STABLE',         "🐎 Stable"),
+        ('MARKET_STALL',   "🏪 Market Stall"),
+        ('VILLAGE_WELL',   "🪣 Village Well"),
+        ('CHAPEL',         "⛪ Gothic Chapel"),
+        ('CRYPT_ENTRANCE', "⚰ Crypt"),
+        ('WAYSIDE_SHRINE', "🪦 Wayside Shrine"),
+        ('GREYBOX_ARENA',  "🏘 Town Square Arena"),
     ]),
-    ('BAROQUE', "ðŸ› Baroque / Classical", 'MATERIAL_DATA', [
-        ('BAROQUE_VAULT',      "ðŸ› Baroque Vault"),
-        ('BAROQUE_FACADE',     "ðŸ› Baroque Facade"),
-        ('BAROQUE_NICHE',      "ðŸ› Baroque Niche"),
-        ('BAROQUE_BALUSTRADE', "ðŸ› Baroque Balustrade"),
-        ('DOME',               "ðŸŸ Dome"),
-        ('PALAZZO',            "ðŸ‡®ðŸ‡¹ Palazzo"),
+    ('BAROQUE', "🏛 Baroque / Classical", 'MATERIAL_DATA', [
+        ('BAROQUE_VAULT',      "🏛 Baroque Vault"),
+        ('BAROQUE_FACADE',     "🏛 Baroque Facade"),
+        ('BAROQUE_NICHE',      "🏛 Baroque Niche"),
+        ('BAROQUE_BALUSTRADE', "🏛 Baroque Balustrade"),
+        ('DOME',               "🏟 Dome"),
+        ('PALAZZO',            "🇮🇹 Palazzo"),
     ]),
-    ('GOTHIC', "â›ª Gothic / Sacred", 'OUTLINER_DATA_LIGHT', [
-        ('ARCHWAY_ADV',  "ðŸ› Advanced Archway"),
-        ('GOTHIC_ARCH',  "âœŸ Gothic Arch"),
-        ('OGEE_ARCH',    "âŒ’ Ogee Arch"),
-        ('CUSPED_ARCH',  "âŒ’ Cusped Arch"),
-        ('LANCET',       "ðŸªŸ Lancet"),
-        ('TREFOIL',      "â˜˜ Trefoil"),
-        ('ROSE_WINDOW',  "â€ Rose Window"),
-        ('BIFORA',       "ðŸªŸ Bifora"),
-        ('GB_GOTHIC_PORTAL', "ðŸšª Gothic Portal"),
-        ('GB_GOTHIC_BAY', "â›ª Gothic Bay"),
-        ('GB_GOTHIC_BUTTRESS', "ðŸ› Gothic Buttress"),
-        ('GB_GOTHIC_TRACERY_PANEL', "âœ¦ Tracery Panel"),
-        ('GB_CORRIDOR_OFFSET', "ðŸ“ Corridor Offset"),
-        ('GB_ROMANESQUE_ARCADE', "ðŸ› Romanesque Arcade"),
-        ('GB_ROMANESQUE_APSE', "ðŸ› Romanesque Apse"),
+    ('GOTHIC', "⛪ Gothic / Sacred", 'OUTLINER_DATA_LIGHT', [
+        ('ARCHWAY_ADV',  "🏛 Advanced Archway"),
+        ('GOTHIC_ARCH',  "✟ Gothic Arch"),
+        ('OGEE_ARCH',    "⌒ Ogee Arch"),
+        ('CUSPED_ARCH',  "⌒ Cusped Arch"),
+        ('LANCET',       "🪟 Lancet"),
+        ('TREFOIL',      "☘ Trefoil"),
+        ('ROSE_WINDOW',  "❀ Rose Window"),
+        ('BIFORA',       "🪟 Bifora"),
+        ('GB_GOTHIC_PORTAL', "🚪 Gothic Portal"),
+        ('GB_GOTHIC_BAY', "⛪ Gothic Bay"),
+        ('GB_GOTHIC_BUTTRESS', "🏛 Gothic Buttress"),
+        ('GB_GOTHIC_TRACERY_PANEL', "✦ Tracery Panel"),
+        ('GB_CORRIDOR_OFFSET', "📐 Corridor Offset"),
+        ('GB_ROMANESQUE_ARCADE', "🏛 Romanesque Arcade"),
+        ('GB_ROMANESQUE_APSE', "🏛 Romanesque Apse"),
     ]),
-    ('ASIAN', "ðŸ‡¯ðŸ‡µðŸ‡¨ðŸ‡³ðŸ‡°ðŸ‡· Asian Architecture", 'OUTLINER_OB_GREASEPENCIL', [
-        ('ZEN_PAGODA',         "ðŸ¯ Japan Pagoda"),
-        ('ZEN_TORII',          "â›© Torii Gate"),
-        ('ZEN_SHOJI',          "ðŸŽ‹ Shoji Screen"),
-        ('ZEN_LANTERN',        "ðŸ® Stone Lantern"),
-        ('ZEN_TEAHOUSE',       "ðŸµ Teahouse"),
-        ('ZEN_BRIDGE',         "ðŸŒŠ Zen Bridge"),
-        ('ZEN_STONE_GARDEN',   "ðŸª¨ Zen Garden"),
-        ('CN_DOUGONG',         "ðŸ› China Dougong"),
-        ('CN_TIERED_PAGODA',   "ðŸ›• China Pagoda"),
-        ('CN_MOON_GATE',       "ðŸŒ™ Moon Gate"),
-        ('CN_PAILOU',          "â›© Pailou"),
-        ('CN_TING_PAVILION',   "ðŸ¯ Ting Pavilion"),
-        ('KR_HANOK',           "ðŸ˜ Korea Hanok"),
-        ('KR_JANGSEUNG',       "ðŸªµ Jangseung"),
-        ('KR_HONG_SAL_MUN',    "ðŸšª Hong-Sal-Mun"),
-        ('JP_KURA_STOREHOUSE', "ðŸ  Kura"),
+    ('ASIAN', "🇯🇵🇨🇳🇰🇷 Asian Architecture", 'OUTLINER_OB_GREASEPENCIL', [
+        ('ZEN_PAGODA',         "🏯 Japan Pagoda"),
+        ('ZEN_TORII',          "⛩ Torii Gate"),
+        ('ZEN_SHOJI',          "🎋 Shoji Screen"),
+        ('ZEN_LANTERN',        "🏮 Stone Lantern"),
+        ('ZEN_TEAHOUSE',       "🍵 Teahouse"),
+        ('ZEN_BRIDGE',         "🌊 Zen Bridge"),
+        ('ZEN_STONE_GARDEN',   "🪨 Zen Garden"),
+        ('CN_DOUGONG',         "🏛 China Dougong"),
+        ('CN_TIERED_PAGODA',   "🛕 China Pagoda"),
+        ('CN_MOON_GATE',       "🌙 Moon Gate"),
+        ('CN_PAILOU',          "⛩ Pailou"),
+        ('CN_TING_PAVILION',   "🏯 Ting Pavilion"),
+        ('KR_HANOK',           "🏘 Korea Hanok"),
+        ('KR_JANGSEUNG',       "🪵 Jangseung"),
+        ('KR_HONG_SAL_MUN',    "🚪 Hong-Sal-Mun"),
+        ('JP_KURA_STOREHOUSE', "🏠 Kura"),
     ]),
-    ('MUSICAL', "ðŸŽµ Musical", 'FILE_SOUND', [
-        ('TREBLE_CLEF',       "ð„ž Treble Clef"),
-        ('NOTE_HEAD',         "â™© Note Head"),
-        ('STAFF',             "ð„  Staff"),
-        ('SHEET_MUSIC_RAIL',  "ðŸŽ¼ Sheet Music"),
+    ('MUSICAL', "🎵 Musical", 'FILE_SOUND', [
+        ('TREBLE_CLEF',       "𝄞 Treble Clef"),
+        ('NOTE_HEAD',         "♩ Note Head"),
+        ('STAFF',             "𝄠 Staff"),
+        ('SHEET_MUSIC_RAIL',  "🎼 Sheet Music"),
     ]),
-    ('ESCHER', "ðŸªœ Escher / Impossible", 'FORCE_VORTEX', [
-        ('PENROSE',         "ðŸªœ Penrose Stairs"),
-        ('ESCHER_PATH',     "ðŸŒ€ Escher Path"),
-        ('FRACTAL',         "â„ Fractal"),
-        ('HYPERBOLIC',      "ðŸŒ Hyperbolic"),
-        ('TESSELLATION',    "ðŸ¦ Tessellation"),
-        ('KLEIN_BOTTLE',    "â™¾ Klein Bottle"),
-        ('MOBIUS_CATHEDRAL',"â™¾ MÃ¶bius"),
-        ('SEIFERT_SURFACE', "ðŸŽ€ Seifert"),
+    ('ESCHER', "🪜 Escher / Impossible", 'FORCE_VORTEX', [
+        ('PENROSE',         "🪜 Penrose Stairs"),
+        ('ESCHER_PATH',     "🌀 Escher Path"),
+        ('FRACTAL',         "❄ Fractal"),
+        ('HYPERBOLIC',      "🌐 Hyperbolic"),
+        ('TESSELLATION',    "🐦 Tessellation"),
+        ('KLEIN_BOTTLE',    "♾ Klein Bottle"),
+        ('MOBIUS_CATHEDRAL',"♾ Möbius"),
+        ('SEIFERT_SURFACE', "🎀 Seifert"),
     ]),
-    ('LANDSCAPE', "ðŸŒ³ Landscape / Decor", 'OUTLINER_OB_GREASEPENCIL', [
-        ('STYLIZED_TREE', "ðŸŒ³ Stylized Tree"),
-        ('BOULDER_PILE',  "ðŸª¨ Boulder Pile"),
-        ('ROOF_TILES',    "ðŸ˜ Roof Tiles"),
+    ('LANDSCAPE', "🌳 Landscape / Decor", 'OUTLINER_OB_GREASEPENCIL', [
+        ('STYLIZED_TREE', "🌳 Stylized Tree"),
+        ('BOULDER_PILE',  "🪨 Boulder Pile"),
+        ('ROOF_TILES',    "🏘 Roof Tiles"),
     ]),
-    ('ADVANCED', "âš— Advanced GeoNodes", 'GEOMETRY_NODES', [
-        ('RAYCAST_FACADE',     "ðŸ“¡ Raycast Facade"),
-        ('VOLUME_CLOUD',       "â˜ Volume Cloud"),
-        ('GEODESIC_VORONOI',   "ðŸ”® Geodesic Voronoi"),
-        ('DNA_HELIX',          "ðŸ§¬ DNA Helix"),
-        ('FIELD_SCULPTURE',    "ðŸ§² Field Sculpture"),
-        ('WEAVE_SURFACE',      "ðŸ§¶ Weave Surface"),
-        ('TESSELLATION_TOWER', "ðŸ”³ Tess Tower"),
-        ('COSMIC_WEB',         "ðŸŒŒ Cosmic Web"),
-        ('SPIDERWEB_DOME',     "ðŸ•¸ Spiderweb Dome"),
-        ('SPLINE_INSTANCE',    "ðŸ“ Spline Instance"),
-        ('RADIAL_ARRAY',       "ðŸŽ¡ Radial Array"),
-        ('CASCADING_BEAMS',    "ðŸ“Š Cascading Beams"),
+    ('ADVANCED', "⚗ Advanced GeoNodes", 'GEOMETRY_NODES', [
+        ('RAYCAST_FACADE',     "📡 Raycast Facade"),
+        ('VOLUME_CLOUD',       "☁ Volume Cloud"),
+        ('GEODESIC_VORONOI',   "🔮 Geodesic Voronoi"),
+        ('DNA_HELIX',          "🧬 DNA Helix"),
+        ('FIELD_SCULPTURE',    "🧲 Field Sculpture"),
+        ('WEAVE_SURFACE',      "🧶 Weave Surface"),
+        ('TESSELLATION_TOWER', "🔳 Tess Tower"),
+        ('COSMIC_WEB',         "🌌 Cosmic Web"),
+        ('SPIDERWEB_DOME',     "🕸 Spiderweb Dome"),
+        ('SPLINE_INSTANCE',    "📐 Spline Instance"),
+        ('RADIAL_ARRAY',       "🎡 Radial Array"),
+        ('CASCADING_BEAMS',    "📊 Cascading Beams"),
     ]),
-    ('MISC', "ðŸŽ² Surreal / Misc", 'EXPERIMENTAL', [
-        ('ORGANIC', "ðŸš Organic"),
-        ('HYBRID',  "ðŸŒ€ Hybrid"),
+    ('MISC', "🎲 Surreal / Misc", 'EXPERIMENTAL', [
+        ('ORGANIC', "🐚 Organic"),
+        ('HYBRID',  "🌀 Hybrid"),
     ]),
 ]
 
@@ -33154,14 +33198,14 @@ _ARCH_CATEGORIES_BY_ID = {
 
 
 def _draw_arch_presets_grouped(layout):
-    """v2.60.6 â€” style-grouped one-click architecture presets from _ARCH_PRESETS."""
+    """v2.60.6 — style-grouped one-click architecture presets from _ARCH_PRESETS."""
     hdr = layout.row(align=True)
     hdr.scale_y = 1.05
     hdr.label(text="Playable Architecture (metres, UE-ready)", icon='HOME')
     intro = layout.row()
     intro.scale_y = 0.92
     intro.label(
-        text="Style buckets show typology hints; presets set arch_type + defaults â€” then Generate.",
+        text="Style buckets show typology hints; presets set arch_type + defaults — then Generate.",
         icon='INFO',
     )
     for group_id, group_label, group_icon in _ARCH_PRESET_GROUPS:
@@ -33242,14 +33286,14 @@ class SURREAL_ARCH_OT_set_arch_type(bpy.types.Operator):
                 bpy.ops.surreal_arch.generate()
             except Exception:
                 pass
-        self.report({'INFO'}, f"Set arch_type â†’ {self.arch_type}")
+        self.report({'INFO'}, f"Set arch_type → {self.arch_type}")
         return {'FINISHED'}
 
 
 class SURREAL_ARCH_PT_arch_picker(_SubPanelBase, bpy.types.Panel):
-    """v2.48: Categorized arch-type picker â€” replaces the flat dropdown
+    """v2.48: Categorized arch-type picker — replaces the flat dropdown
     with style-grouped button grids."""
-    bl_label = "ðŸŽ¯ Architecture Picker (by Style)"
+    bl_label = "🎯 Architecture Picker (by Style)"
     bl_idname = "SURREAL_ARCH_PT_arch_picker"
     bl_order = 1
 
@@ -33289,13 +33333,13 @@ class SURREAL_ARCH_PT_arch_picker(_SubPanelBase, bpy.types.Panel):
         layout.separator()
         gen_row = layout.row(align=True)
         gen_row.scale_y = 1.3
-        gen_row.operator("surreal_arch.generate", text="âœ¨ Generate Active Type",
+        gen_row.operator("surreal_arch.generate", text="✨ Generate Active Type",
                           icon='SHADERFX')
 
 
 class SURREAL_ARCH_PT_more_presets(_SubPanelBase, bpy.types.Panel):
     """Less-used presets tucked behind a collapsible sub-panel."""
-    bl_label = "âœ¨  More Presets"
+    bl_label = "✨  More Presets"
     bl_idname = "SURREAL_ARCH_PT_more_presets"
 
     def draw(self, context):
@@ -33303,46 +33347,46 @@ class SURREAL_ARCH_PT_more_presets(_SubPanelBase, bpy.types.Panel):
 
         # Surreal / Organic
         box = layout.box()
-        box.label(text="ðŸŒ¿  Organic Forms")
+        box.label(text="🌿  Organic Forms")
         col = box.column(align=True)
         row = col.row(align=True); row.scale_y = 1.15
-        row.operator("surreal_arch.preset_organic", text="ðŸŒ¿  Organic")
-        row.operator("surreal_arch.preset_hybrid",  text="âœ¨  Hybrid")
+        row.operator("surreal_arch.preset_organic", text="🌿  Organic")
+        row.operator("surreal_arch.preset_hybrid",  text="✨  Hybrid")
 
         # Curved Bldg & Path
         box = layout.box()
-        box.label(text="ðŸŒ™  Curved & Niche")
+        box.label(text="🌙  Curved & Niche")
         col = box.column(align=True)
         row = col.row(align=True); row.scale_y = 1.15
-        row.operator("surreal_arch.preset_curved",       text="ðŸŒ™  Curved Bldg")
-        row.operator("surreal_arch.preset_escher_path",  text="ðŸ›¤  Escher Path")
+        row.operator("surreal_arch.preset_curved",       text="🌙  Curved Bldg")
+        row.operator("surreal_arch.preset_escher_path",  text="🛤  Escher Path")
 
         # Musical Notation
         box = layout.box()
-        box.label(text="ðŸŽµ  Musical Notation")
+        box.label(text="🎵  Musical Notation")
         col = box.column(align=True)
         row = col.row(align=True); row.scale_y = 1.15
-        row.operator("surreal_arch.preset_clef",        text="ð„ž  Clef")
-        row.operator("surreal_arch.preset_note",        text="â™©  Note")
-        row.operator("surreal_arch.preset_staff",       text="â™«  Staff")
+        row.operator("surreal_arch.preset_clef",        text="𝄞  Clef")
+        row.operator("surreal_arch.preset_note",        text="♩  Note")
+        row.operator("surreal_arch.preset_staff",       text="♫  Staff")
         row = col.row(align=True); row.scale_y = 1.15
-        row.operator("surreal_arch.preset_sheet_music", text="ðŸŽ¼  Music Rail")
+        row.operator("surreal_arch.preset_sheet_music", text="🎼  Music Rail")
 
         # Combos
         box = layout.box()
-        box.label(text="ðŸŽ¼  Combos (preset + style)")
+        box.label(text="🎼  Combos (preset + style)")
         col = box.column(align=True)
         row = col.row(align=True); row.scale_y = 1.15
-        row.operator("surreal_arch.preset_singing_palazzo", text="ðŸŽµ  Singing Palazzo")
-        row.operator("surreal_arch.preset_singing_bridge",  text="ðŸŽµ  Singing Bridge")
+        row.operator("surreal_arch.preset_singing_palazzo", text="🎵  Singing Palazzo")
+        row.operator("surreal_arch.preset_singing_bridge",  text="🎵  Singing Bridge")
         row = col.row(align=True); row.scale_y = 1.15
-        row.operator("surreal_arch.preset_fractal_palazzo", text="â„  Fractal Palazzo")
-        row.operator("surreal_arch.preset_penrose_palazzo", text="ðŸªœ  Penrose Palazzo")
+        row.operator("surreal_arch.preset_fractal_palazzo", text="❄  Fractal Palazzo")
+        row.operator("surreal_arch.preset_penrose_palazzo", text="🪜  Penrose Palazzo")
 
 
 class SURREAL_ARCH_PT_instancer(_SubPanelBase, bpy.types.Panel):
-    """ðŸŒ€ Repeat any built piece along a curve or radially around an axis."""
-    bl_label = "ðŸŒ€  Instance Along Curve"
+    """🌀 Repeat any built piece along a curve or radially around an axis."""
+    bl_label = "🌀  Instance Along Curve"
     bl_idname = "SURREAL_ARCH_PT_instancer"
 
     def draw(self, context):
@@ -33356,16 +33400,16 @@ class SURREAL_ARCH_PT_instancer(_SubPanelBase, bpy.types.Panel):
 
         # === Spline (along a curve) ===
         box = layout.box()
-        box.label(text="ðŸŒ€  Along a Curve")
+        box.label(text="🌀  Along a Curve")
         col = box.column(align=True)
-        col.operator("surreal_arch.preset_spline", text="ðŸŒ€  Apply Spline Instance Setup", icon='CURVE_BEZCURVE')
+        col.operator("surreal_arch.preset_spline", text="🌀  Apply Spline Instance Setup", icon='CURVE_BEZCURVE')
         col.separator()
         col.label(text="Curve to follow:")
         col.prop(props, "spline_target", text="")
         col.label(text="Instance source (any built object):")
         col.prop(props, "spline_source_object", text="")
         if props.spline_source_object is None:
-            col.label(text="â†‘ none = use a built-in piece below:")
+            col.label(text="↑ none = use a built-in piece below:")
             col.prop(props, "spline_piece_type", text="")
         col.prop(props, "spline_count")
         col.prop(props, "spline_align_tangent")
@@ -33375,14 +33419,14 @@ class SURREAL_ARCH_PT_instancer(_SubPanelBase, bpy.types.Panel):
 
         # === Radial ===
         box = layout.box()
-        box.label(text="ðŸŽ¯  Around an Axis")
+        box.label(text="🎯  Around an Axis")
         col = box.column(align=True)
-        col.operator("surreal_arch.preset_radial", text="ðŸŽ¯  Apply Radial Setup", icon='ORIENTATION_NORMAL')
+        col.operator("surreal_arch.preset_radial", text="🎯  Apply Radial Setup", icon='ORIENTATION_NORMAL')
         col.separator()
         col.label(text="Instance source (any built object):")
         col.prop(props, "radial_source_object", text="")
         if props.radial_source_object is None:
-            col.label(text="â†‘ none = use a built-in piece below:")
+            col.label(text="↑ none = use a built-in piece below:")
             col.prop(props, "radial_piece_type", text="")
         col.prop(props, "radial_count")
         col.prop(props, "radial_radius")
@@ -33400,11 +33444,11 @@ def _build_style_registry():
     """Build STYLE_REGISTRY after all glossaries exist."""
     return {
         'asian': {
-            'panel_label': 'ðŸ¯ East Asian Architecture',
+            'panel_label': '🏯 East Asian Architecture',
             'bl_idname': 'SURREAL_ARCH_PT_asian',
             'class_name': 'SURREAL_ARCH_PT_asian',
             'match': _match_asian_arch,
-            'picker_hint': 'Architecture Picker â†’ Asian â†’ CN_DOUGONG / KR_HANOK / JP_KURA / â€¦',
+            'picker_hint': 'Architecture Picker → Asian → CN_DOUGONG / KR_HANOK / JP_KURA / …',
             'glossary': ASIAN_ARCHITECTURE_GLOSSARY,
             'hints_by_type': {
                 'CN_DOUGONG': ('dougong', 'flared_eaves'),
@@ -33419,11 +33463,11 @@ def _build_style_registry():
             },
         },
         'zen': {
-            'panel_label': 'ðŸµ Zen Architecture',
+            'panel_label': '🍵 Zen Architecture',
             'bl_idname': 'SURREAL_ARCH_PT_zen',
             'class_name': 'SURREAL_ARCH_PT_zen',
             'match': lambda t: t.startswith('ZEN_'),
-            'picker_hint': 'Architecture Picker â†’ Asian â†’ ZEN_LANTERN / ZEN_TORII / â€¦',
+            'picker_hint': 'Architecture Picker → Asian → ZEN_LANTERN / ZEN_TORII / …',
             'glossary': ZEN_ARCHITECTURE_GLOSSARY,
             'hints_by_type': {
                 'ZEN_LANTERN': ('kidan', 'kiso', 'sao', 'chudai', 'hibukuro', 'kasa', 'ukebana', 'hoju'),
@@ -33436,11 +33480,11 @@ def _build_style_registry():
             },
         },
         'baroque': {
-            'panel_label': 'ðŸ› Baroque / Classical',
+            'panel_label': '🏛 Baroque / Classical',
             'bl_idname': 'SURREAL_ARCH_PT_baroque',
             'class_name': 'SURREAL_ARCH_PT_baroque',
             'match': lambda t: t.startswith('BAROQUE_'),
-            'picker_hint': 'Architecture Picker â†’ Baroque / Classical â†’ BAROQUE_VAULT / â€¦',
+            'picker_hint': 'Architecture Picker → Baroque / Classical → BAROQUE_VAULT / …',
             'glossary': BAROQUE_ARCHITECTURE_GLOSSARY,
             'hints_by_type': {
                 'BAROQUE_VAULT': ('barrel_vault', 'groin_vault', 'rib', 'keystone', 'coffer'),
@@ -33451,11 +33495,11 @@ def _build_style_registry():
             },
         },
         'gothic': {
-            'panel_label': 'â›ª Gothic / Sacred',
+            'panel_label': '⛪ Gothic / Sacred',
             'bl_idname': 'SURREAL_ARCH_PT_gothic',
             'class_name': 'SURREAL_ARCH_PT_gothic',
             'match': _match_gothic_arch,
-            'picker_hint': 'Architecture Picker â†’ Gothic / Sacred â†’ GOTHIC_ARCH / ROSE_WINDOW / â€¦',
+            'picker_hint': 'Architecture Picker → Gothic / Sacred → GOTHIC_ARCH / ROSE_WINDOW / …',
             'glossary': GOTHIC_ARCHITECTURE_GLOSSARY,
             'hints_by_type': {
                 'GOTHIC_ARCH': ('tracery', 'cusps', 'mullion'),
@@ -33469,11 +33513,11 @@ def _build_style_registry():
             },
         },
         'civic': {
-            'panel_label': 'ðŸ› Civic / Classical',
+            'panel_label': '🏛 Civic / Classical',
             'bl_idname': 'SURREAL_ARCH_PT_civic',
             'class_name': 'SURREAL_ARCH_PT_civic',
             'match': _match_civic_arch,
-            'picker_hint': 'Architecture Picker â†’ Civic / Classical â†’ PALAZZO / DOME / â€¦',
+            'picker_hint': 'Architecture Picker → Civic / Classical → PALAZZO / DOME / …',
             'glossary': CIVIC_ARCHITECTURE_GLOSSARY,
             'hints_by_type': {
                 'PALAZZO': ('arcade', 'piano_nobile', 'loggia', 'cornice'),
@@ -33484,11 +33528,11 @@ def _build_style_registry():
             },
         },
         'castle': {
-            'panel_label': 'ðŸ° Castle / Military',
+            'panel_label': '🏰 Castle / Military',
             'bl_idname': 'SURREAL_ARCH_PT_castle',
             'class_name': 'SURREAL_ARCH_PT_castle',
             'match': _match_castle_arch,
-            'picker_hint': 'Architecture Picker â†’ Castle / Military â†’ KEEP / GATEHOUSE / â€¦',
+            'picker_hint': 'Architecture Picker → Castle / Military → KEEP / GATEHOUSE / …',
             'glossary': CASTLE_ARCHITECTURE_GLOSSARY,
             'hints_by_type': {
                 'KEEP': ('donjon', 'crenellation'),
@@ -33500,11 +33544,11 @@ def _build_style_registry():
             },
         },
         'woods': {
-            'panel_label': 'ðŸš Lebbeus Woods Greybox',
+            'panel_label': '🏚 Lebbeus Woods Greybox',
             'bl_idname': 'SURREAL_ARCH_PT_woods',
             'class_name': 'SURREAL_ARCH_PT_woods',
             'match': _match_woods_arch,
-            'picker_hint': 'Architecture Picker â†’ Lebbeus Woods â†’ GB_WOODS_PARASITE / â€¦',
+            'picker_hint': 'Architecture Picker → Lebbeus Woods → GB_WOODS_PARASITE / …',
             'glossary': WOODS_ARCHITECTURE_GLOSSARY,
             'hints_by_type': {
                 'GB_WOODS_PARASITE': ('host_shell', 'parasite_volume', 'parasite_opening',
@@ -33516,11 +33560,11 @@ def _build_style_registry():
             },
         },
                 'greybox': {
-            'panel_label': 'ðŸ“¦ Greybox / Level Design',
+            'panel_label': '📦 Greybox / Level Design',
             'bl_idname': 'SURREAL_ARCH_PT_greybox',
             'class_name': 'SURREAL_ARCH_PT_greybox',
             'match': _match_greybox_arch,
-            'picker_hint': 'Architecture Picker â†’ Greybox / Level Design â†’ GREYBOX_ROOM / â€¦',
+            'picker_hint': 'Architecture Picker → Greybox / Level Design → GREYBOX_ROOM / …',
             'glossary': GREYBOX_GLOSSARY,
             'hints_by_type': {
                 'GREYBOX_ROOM': ('blocking_volume', 'play_space', 'cutter_depth', 'mullion', 'sill'),
@@ -33566,20 +33610,20 @@ def _geometry_panel_should_show(arch_type):
 
 
 _WORKFLOW_NEXT_PANEL = {
-    'asian': ('SURREAL_ARCH_PT_asian', 'ðŸ¯ East Asian Architecture'),
-    'zen': ('SURREAL_ARCH_PT_zen', 'ðŸµ Zen Architecture'),
-    'baroque': ('SURREAL_ARCH_PT_baroque', 'ðŸ› Baroque / Classical'),
-    'gothic': ('SURREAL_ARCH_PT_gothic', 'â›ª Gothic / Sacred'),
-    'civic': ('SURREAL_ARCH_PT_civic', 'ðŸ› Civic / Classical'),
-    'castle': ('SURREAL_ARCH_PT_castle', 'ðŸ° Castle / Military'),
-    'woods': ('SURREAL_ARCH_PT_woods', 'ðŸš Lebbeus Woods Greybox'),
-    'greybox': ('SURREAL_ARCH_PT_greybox', 'ðŸ“¦ Greybox / Level Design'),
+    'asian': ('SURREAL_ARCH_PT_asian', '🏯 East Asian Architecture'),
+    'zen': ('SURREAL_ARCH_PT_zen', '🍵 Zen Architecture'),
+    'baroque': ('SURREAL_ARCH_PT_baroque', '🏛 Baroque / Classical'),
+    'gothic': ('SURREAL_ARCH_PT_gothic', '⛪ Gothic / Sacred'),
+    'civic': ('SURREAL_ARCH_PT_civic', '🏛 Civic / Classical'),
+    'castle': ('SURREAL_ARCH_PT_castle', '🏰 Castle / Military'),
+    'woods': ('SURREAL_ARCH_PT_woods', '🏚 Lebbeus Woods Greybox'),
+    'greybox': ('SURREAL_ARCH_PT_greybox', '📦 Greybox / Level Design'),
 }
 
 
 def _draw_style_intro(layout):
     intro = layout.box()
-    intro.label(text="Traditional names â€” geometry only", icon='INFO')
+    intro.label(text="Traditional names — geometry only", icon='INFO')
     intro.label(text="Assign materials in Unreal Engine")
 
 
@@ -33630,6 +33674,9 @@ _GREYBOX_QUICK_LAUNCH_GROUPS = (
         ('GB_ZEN_ROJI_STEP', "Roji Step"),
         ('GB_ZEN_TORII_GATE', "Torii Gate"),
         ('GB_ZEN_TSUKUBAI', "Tsukubai"),
+        ('GB_ZEN_ENGAWA', "Engawa"),
+        ('GB_ZEN_BAMBOO_FENCE', "Bamboo Fence"),
+        ('GB_ZEN_TOBIISHI', "Tobi-ishi"),
     )),
     ('Gothic kit', (
         ('GB_GOTHIC_PORTAL', "Portal"),
@@ -33641,14 +33688,14 @@ _GREYBOX_QUICK_LAUNCH_GROUPS = (
 
 
 def _draw_greybox_quick_launch(layout, context):
-    """Grouped greybox type switching â€” Core / Traversal / Curved arc."""
+    """Grouped greybox type switching — Core / Traversal / Curved arc."""
     obj = context.active_object
     if not obj or not hasattr(obj, 'surreal_arch_props'):
         return
     props = obj.surreal_arch_props
     current = props.arch_type
     box = layout.box()
-    box.label(text="Quick launch â€” Greybox blockout kits", icon='PLAY')
+    box.label(text="Quick launch — Greybox blockout kits", icon='PLAY')
     for group_label, items in _GREYBOX_QUICK_LAUNCH_GROUPS:
         _draw_style_subgroup_header(box, group_label, icon='DOT')
         grid = box.grid_flow(row_major=True, columns=4, even_columns=True, align=True)
@@ -33664,13 +33711,13 @@ def _draw_greybox_quick_launch(layout, context):
     row.scale_y = 1.2
     row.operator("surreal_arch.generate", text="Generate Active Greybox", icon='SHADERFX')
     qa = box.box()
-    qa.label(text="Playable presets: open ðŸŽ¨ Quick Presets â†’ Playable Architecture", icon='INFO')
+    qa.label(text="Playable presets: open 🎨 Quick Presets → Playable Architecture", icon='INFO')
     qa.label(text="Curved rooms: boolean door/window cuts (Circular, Apsidal, Rotunda)", icon='INFO')
-    qa.label(text="UE export: Apply Modifiers â†’ boolean holes stay manifold")
+    qa.label(text="UE export: Apply Modifiers → boolean holes stay manifold")
 
 
 _ASIAN_QUICK_LAUNCH = (
-    ('ä¸­å›½ China', (
+    ('中国 China', (
         ('CN_DOUGONG', 'Dougong'),
         ('CN_TIERED_PAGODA', 'Pagoda'),
         ('CN_PAILOU', 'Pailou'),
@@ -33724,6 +33771,9 @@ _ZEN_QUICK_LAUNCH = (
     ('GB_ZEN_ROJI_STEP', 'Roji Step'),
     ('GB_ZEN_TORII_GATE', 'Torii GB'),
     ('GB_ZEN_TSUKUBAI', 'Tsukubai'),
+    ('GB_ZEN_ENGAWA', 'Engawa'),
+    ('GB_ZEN_BAMBOO_FENCE', 'Bamboo Fence'),
+    ('GB_ZEN_TOBIISHI', 'Tobi-ishi'),
 )
 
 
@@ -33892,7 +33942,7 @@ def _draw_woods_quick_launch(layout, context):
     props = obj.surreal_arch_props
     current = props.arch_type
     box = layout.box()
-    box.label(text="Quick launch â€” Woods blockout kits", icon='PLAY')
+    box.label(text="Quick launch — Woods blockout kits", icon='PLAY')
     grid = box.grid_flow(row_major=True, columns=3, even_columns=True, align=True)
     for at_id, label in _WOODS_QUICK_LAUNCH:
         op = grid.operator(
@@ -34154,14 +34204,14 @@ def _gb_apply_snap_pair(active, target, pair):
 
 
 def _gb_validate_assembly(context):
-    """QA warnings for active greybox module â€” datums, trim, door sizing."""
+    """QA warnings for active greybox module — datums, trim, door sizing."""
     obj = context.active_object
     if not obj or not hasattr(obj, 'surreal_arch_props'):
         return ["Select a mesh object with Surreal Architecture"]
     props = obj.surreal_arch_props
     t = props.arch_type
     if not _match_greybox_arch(t):
-        return [f"Active type {t} is not a greybox module â€” switch via Level Design kit"]
+        return [f"Active type {t} is not a greybox module — switch via Level Design kit"]
     warnings = []
     H = getattr(props, 'gb_height', props.wall_height)
     dh = getattr(props, 'gb_door_height', 2.4)
@@ -34169,14 +34219,14 @@ def _gb_validate_assembly(context):
     wt = getattr(props, 'gb_wall_thick', props.wall_thick)
     if dh > H - 0.15:
         warnings.append(
-            f"Door height {dh:.2f} m exceeds wall {H:.2f} m (need â‰¥0.15 m head clearance)"
+            f"Door height {dh:.2f} m exceeds wall {H:.2f} m (need ≥0.15 m head clearance)"
         )
     if dh < 2.0:
-        warnings.append("Door height below 2.0 m â€” below typical accessibility datum")
+        warnings.append("Door height below 2.0 m — below typical accessibility datum")
     if dw < 0.7:
-        warnings.append("Door width below 0.7 m â€” narrow for player capsule blockout")
+        warnings.append("Door width below 0.7 m — narrow for player capsule blockout")
     if _gb_trim_mode(props) == 'RECESS' and _gb_trim_depth(props, wt) < 0.01:
-        warnings.append("Trim recess < 1 cm â€” may z-fight with wall face")
+        warnings.append("Trim recess < 1 cm — may z-fight with wall face")
     unit = getattr(props, 'unit_size', 2.0)
     length = getattr(props, 'gb_length', 0.0)
     if length > 0 and unit > 0:
@@ -34189,10 +34239,10 @@ def _gb_validate_assembly(context):
     must = [p['id'] for p in snap_pts if p.get('rule') == 'MUST_CONNECT']
     if must:
         warnings.append(
-            f"MUST_CONNECT snaps ({', '.join(must)}) â€” use Snap to Selected / Auto Snap Chain"
+            f"MUST_CONNECT snaps ({', '.join(must)}) — use Snap to Selected / Auto Snap Chain"
         )
     if not warnings:
-        warnings.append("Assembly check passed â€” no greybox QA issues detected")
+        warnings.append("Assembly check passed — no greybox QA issues detected")
     return warnings
 
 
@@ -34229,14 +34279,14 @@ class SURREAL_ARCH_OT_snap_to_selected(bpy.types.Operator):
             self.report({'ERROR'}, "Select a target with snap metadata (Generate first)")
             return {'CANCELLED'}
         if not _gb_load_snap_points(active):
-            self.report({'ERROR'}, "Active object has no snap points â€” Generate greybox module")
+            self.report({'ERROR'}, "Active object has no snap points — Generate greybox module")
             return {'CANCELLED'}
         pair = _gb_best_snap_pair(active, targets[0])
         if not pair:
             self.report({'ERROR'}, "No opposing snap pair found")
             return {'CANCELLED'}
         a_id, b_id = _gb_apply_snap_pair(active, targets[0], pair)
-        self.report({'INFO'}, f"Snapped {active.name}.{a_id} â†’ {targets[0].name}.{b_id}")
+        self.report({'INFO'}, f"Snapped {active.name}.{a_id} → {targets[0].name}.{b_id}")
         return {'FINISHED'}
 
 
@@ -34267,7 +34317,7 @@ class SURREAL_ARCH_OT_auto_snap_chain(bpy.types.Operator):
 
 class SURREAL_ARCH_PT_level_design(_SubPanelBase, bpy.types.Panel):
     """Primary greybox / kit authoring UI (v2.61)."""
-    bl_label = "ðŸŽ® Level Design"
+    bl_label = "🎮 Level Design"
     bl_idname = "SURREAL_ARCH_PT_level_design"
     bl_order = 3
     bl_options = {'DEFAULT_CLOSED'}
@@ -34331,8 +34381,8 @@ class SURREAL_ARCH_PT_level_design(_SubPanelBase, bpy.types.Panel):
 
 
 class SURREAL_ARCH_PT_workflow(_SubPanelBase, bpy.types.Panel):
-    """Contextual next-step guide â€” reduces panel hunting for level designers."""
-    bl_label = "ðŸ§­ Workflow Guide"
+    """Contextual next-step guide — reduces panel hunting for level designers."""
+    bl_label = "🧭 Workflow Guide"
     bl_idname = "SURREAL_ARCH_PT_workflow"
     bl_order = 2
 
@@ -34345,21 +34395,21 @@ class SURREAL_ARCH_PT_workflow(_SubPanelBase, bpy.types.Panel):
         sid = _active_style_for_type(t)
         if sid:
             panel_id, panel_label = _WORKFLOW_NEXT_PANEL[sid]
-            box.label(text=f"â‘¡ Tune â†’ open {panel_label}", icon='DOWNARROW_HLT')
+            box.label(text=f"② Tune → open {panel_label}", icon='DOWNARROW_HLT')
         elif t in _ARCH_PARAM_SPEC:
-            box.label(text="â‘¡ Tune â†’ Geometry Parameters (below)", icon='DOWNARROW_HLT')
+            box.label(text="② Tune → Geometry Parameters (below)", icon='DOWNARROW_HLT')
         else:
-            box.label(text="â‘¡ Tune â†’ Advanced Parameters panel", icon='DOWNARROW_HLT')
-        box.label(text="â‘¢ Effects â†’ open ðŸŽ­ Effects & Atmosphere", icon='MODIFIER')
-        box.label(text="â‘£ Export â†’ Bevel / Optimization / Output", icon='EXPORT')
+            box.label(text="② Tune → Advanced Parameters panel", icon='DOWNARROW_HLT')
+        box.label(text="③ Effects → open 🎭 Effects & Atmosphere", icon='MODIFIER')
+        box.label(text="④ Export → Bevel / Optimization / Output", icon='EXPORT')
         if _match_greybox_arch(t):
             gb = layout.box()
-            gb.label(text="Greybox: open ðŸŽ® Level Design for kit + QA", icon='MOD_BOOLEAN')
+            gb.label(text="Greybox: open 🎮 Level Design for kit + QA", icon='MOD_BOOLEAN')
             gb.label(text="Trim mode RECESS/OFFSET avoids doorway z-fighting")
 
 
 class SURREAL_ARCH_PT_geometry(_SubPanelBase, bpy.types.Panel):
-    bl_label = "ðŸ“ Advanced Parameters"
+    bl_label = "📏 Advanced Parameters"
     bl_idname = "SURREAL_ARCH_PT_geometry"
     bl_order = 25
 
@@ -34385,7 +34435,7 @@ class SURREAL_ARCH_PT_geometry(_SubPanelBase, bpy.types.Panel):
         t = props.arch_type
 
         if t in {'TOWER', 'ORGANIC', 'HYBRID', 'BUILDING'}:
-            box = layout.box(); box.label(text="ðŸ“ Body")
+            box = layout.box(); box.label(text="📏 Body")
             col = box.column(align=True)
             col.prop(props, "base_radius")
             col.prop(props, "height")
@@ -34402,7 +34452,7 @@ class SURREAL_ARCH_PT_geometry(_SubPanelBase, bpy.types.Panel):
             col.prop(props, "bulge_amount")
 
         if t in {'RAILING', 'BUILDING'}:
-            box = layout.box(); box.label(text="ðŸ›¡ï¸  Railing")
+            box = layout.box(); box.label(text="🛡️  Railing")
             col = box.column(align=True)
             col.prop(props, "rail_length")
             col.prop(props, "rail_baluster_count")
@@ -34411,7 +34461,7 @@ class SURREAL_ARCH_PT_geometry(_SubPanelBase, bpy.types.Panel):
             col.prop(props, "rail_top_size")
 
         if t == 'STAIRCASE':
-            box = layout.box(); box.label(text="ðŸªœ Staircase")
+            box = layout.box(); box.label(text="🪜 Staircase")
             col = box.column(align=True)
             col.prop(props, "stair_step_count")
             col.prop(props, "stair_rise")
@@ -34421,7 +34471,7 @@ class SURREAL_ARCH_PT_geometry(_SubPanelBase, bpy.types.Panel):
             col.prop(props, "stair_with_rails")
 
         if t in {'ARCH', 'BUILDING'}:
-            box = layout.box(); box.label(text="ðŸŒ™ Arch")
+            box = layout.box(); box.label(text="🌙 Arch")
             col = box.column(align=True)
             col.prop(props, "arch_radius")
             col.prop(props, "arch_sweep_deg")
@@ -34430,7 +34480,7 @@ class SURREAL_ARCH_PT_geometry(_SubPanelBase, bpy.types.Panel):
             col.prop(props, "arch_rib_radius")
 
         if t == 'BUILDING':
-            box = layout.box(); box.label(text="ðŸ° Buttress")
+            box = layout.box(); box.label(text="🏰 Buttress")
             col = box.column(align=True)
             col.prop(props, "buttress_span")
             col.prop(props, "buttress_height")
@@ -34439,7 +34489,7 @@ class SURREAL_ARCH_PT_geometry(_SubPanelBase, bpy.types.Panel):
             col.prop(props, "buttress_finial_size")
 
         if t == 'BUILDING':
-            box = layout.box(); box.label(text="ðŸ›ï¸  Composition")
+            box = layout.box(); box.label(text="🏛️  Composition")
             col = box.column(align=True)
             col.prop(props, "building_floors")
             col.prop(props, "building_floor_height")
@@ -34452,7 +34502,7 @@ class SURREAL_ARCH_PT_geometry(_SubPanelBase, bpy.types.Panel):
             col.prop(props, "building_arches_per_face")
 
         if t == 'WINDOW':
-            box = layout.box(); box.label(text="ðŸªŸ Window")
+            box = layout.box(); box.label(text="🪟 Window")
             col = box.column(align=True)
             col.prop(props, "window_width")
             col.prop(props, "window_height")
@@ -34461,7 +34511,7 @@ class SURREAL_ARCH_PT_geometry(_SubPanelBase, bpy.types.Panel):
             col.prop(props, "window_sill_depth")
 
         if t == 'DOOR':
-            box = layout.box(); box.label(text="ðŸšª Door")
+            box = layout.box(); box.label(text="🚪 Door")
             col = box.column(align=True)
             col.prop(props, "door_width")
             col.prop(props, "door_height")
@@ -34470,7 +34520,7 @@ class SURREAL_ARCH_PT_geometry(_SubPanelBase, bpy.types.Panel):
             col.prop(props, "door_step_count")
 
         if t == 'BALCONY':
-            box = layout.box(); box.label(text="ðŸŒ¿ Balcony")
+            box = layout.box(); box.label(text="🌿 Balcony")
             col = box.column(align=True)
             col.prop(props, "balcony_width")
             col.prop(props, "balcony_depth")
@@ -34478,7 +34528,7 @@ class SURREAL_ARCH_PT_geometry(_SubPanelBase, bpy.types.Panel):
             col.prop(props, "balcony_baluster_count")
 
         if t == 'CORNICE':
-            box = layout.box(); box.label(text="ðŸ› Cornice")
+            box = layout.box(); box.label(text="🏛 Cornice")
             col = box.column(align=True)
             col.prop(props, "cornice_length")
             col.prop(props, "cornice_height")
@@ -34486,7 +34536,7 @@ class SURREAL_ARCH_PT_geometry(_SubPanelBase, bpy.types.Panel):
             col.prop(props, "cornice_layers")
 
         if t == 'FOUNTAIN':
-            box = layout.box(); box.label(text="â›² Fountain")
+            box = layout.box(); box.label(text="⛲ Fountain")
             col = box.column(align=True)
             col.prop(props, "fountain_radius")
             col.prop(props, "fountain_tiers")
@@ -34494,7 +34544,7 @@ class SURREAL_ARCH_PT_geometry(_SubPanelBase, bpy.types.Panel):
             col.prop(props, "fountain_height")
 
         if t == 'FLOOR_TILE':
-            box = layout.box(); box.label(text="ðŸŸ« Floor Tile")
+            box = layout.box(); box.label(text="🟫 Floor Tile")
             col = box.column(align=True)
             col.prop(props, "tile_size")
             col.prop(props, "tile_thickness")
@@ -34502,7 +34552,7 @@ class SURREAL_ARCH_PT_geometry(_SubPanelBase, bpy.types.Panel):
             col.prop(props, "tile_grid_count")
 
         if t == 'ROOF_TILES':
-            box = layout.box(); box.label(text="ðŸ  Roof Tiles")
+            box = layout.box(); box.label(text="🏠 Roof Tiles")
             col = box.column(align=True)
             col.prop(props, "roof_width")
             col.prop(props, "roof_length")
@@ -34511,7 +34561,7 @@ class SURREAL_ARCH_PT_geometry(_SubPanelBase, bpy.types.Panel):
             col.prop(props, "roof_tile_count_y")
 
         if t == 'LANTERN':
-            box = layout.box(); box.label(text="ðŸ® Lantern Post")
+            box = layout.box(); box.label(text="🏮 Lantern Post")
             col = box.column(align=True)
             col.prop(props, "lantern_height")
             col.prop(props, "lantern_post_radius")
@@ -34519,11 +34569,11 @@ class SURREAL_ARCH_PT_geometry(_SubPanelBase, bpy.types.Panel):
             col.prop(props, "lantern_emissive")
 
         if t == 'SPLINE_INSTANCE':
-            box = layout.box(); box.label(text="ðŸŒ€  Spline Instance")
+            box = layout.box(); box.label(text="🌀  Spline Instance")
             col = box.column(align=True)
             col.label(text="Curve to follow:")
             col.prop(props, "spline_target", text="")
-            col.label(text="Source (any object â€” overrides piece type):")
+            col.label(text="Source (any object — overrides piece type):")
             col.prop(props, "spline_source_object", text="")
             if props.spline_source_object is None:
                 col.prop(props, "spline_piece_type")
@@ -34534,9 +34584,9 @@ class SURREAL_ARCH_PT_geometry(_SubPanelBase, bpy.types.Panel):
             col.prop(props, "spline_z_offset")
 
         if t == 'RADIAL_ARRAY':
-            box = layout.box(); box.label(text="ðŸŽ¯  Radial Array")
+            box = layout.box(); box.label(text="🎯  Radial Array")
             col = box.column(align=True)
-            col.label(text="Source (any object â€” overrides piece type):")
+            col.label(text="Source (any object — overrides piece type):")
             col.prop(props, "radial_source_object", text="")
             if props.radial_source_object is None:
                 col.prop(props, "radial_piece_type")
@@ -34546,17 +34596,17 @@ class SURREAL_ARCH_PT_geometry(_SubPanelBase, bpy.types.Panel):
             col.prop(props, "radial_face_out")
 
         if t == 'TESSELLATION':
-            box = layout.box(); box.label(text="ðŸ¦ Escher Tessellation")
+            box = layout.box(); box.label(text="🐦 Escher Tessellation")
             col = box.column(align=True)
             col.prop(props, "tess_grid_x")
             col.prop(props, "tess_grid_y")
             col.prop(props, "tess_size")
             col.prop(props, "tess_height_var")
             col.prop(props, "tess_rotate_var")
-            col.label(text="Heights driven by Harmonic A Ã— Note Ã— Tempo")
+            col.label(text="Heights driven by Harmonic A × Note × Tempo")
 
         if t == 'HYPERBOLIC':
-            box = layout.box(); box.label(text="âšª Hyperbolic Disk (Escher Circle Limit)")
+            box = layout.box(); box.label(text="⚪ Hyperbolic Disk (Escher Circle Limit)")
             col = box.column(align=True)
             col.prop(props, "hyperbolic_radius")
             col.prop(props, "hyperbolic_rings")
@@ -34567,34 +34617,34 @@ class SURREAL_ARCH_PT_geometry(_SubPanelBase, bpy.types.Panel):
         if t in {'WALL_STRAIGHT', 'WALL_CORNER', 'WALL_DOOR', 'WALL_WINDOW',
                  'CEILING_TILE', 'CORNER_PIECE', 'MODULAR_HOUSE',
                  'CURVED_BUILDING', 'RADIAL_BUILDING'}:
-            box = layout.box(); box.label(text="ðŸ§± Grid (UE5-friendly)")
+            box = layout.box(); box.label(text="🧱 Grid (UE5-friendly)")
             col = box.column(align=True)
             col.prop(props, "unit_size")
             col.prop(props, "wall_height")
             col.prop(props, "wall_thickness")
 
         if t in {'WALL_STRAIGHT', 'WALL_DOOR', 'WALL_WINDOW'}:
-            box = layout.box(); box.label(text="ðŸ§± Wall")
+            box = layout.box(); box.label(text="🧱 Wall")
             col = box.column(align=True)
             col.prop(props, "wall_segments")
             col.prop(props, "wall_with_baseboard")
             col.prop(props, "wall_with_cornice")
 
         if t == 'WALL_DOOR':
-            box = layout.box(); box.label(text="ðŸšª Door Opening")
+            box = layout.box(); box.label(text="🚪 Door Opening")
             col = box.column(align=True)
             col.prop(props, "wall_door_width")
             col.prop(props, "wall_door_height")
 
         if t == 'WALL_WINDOW':
-            box = layout.box(); box.label(text="ðŸªŸ Window Opening")
+            box = layout.box(); box.label(text="🪟 Window Opening")
             col = box.column(align=True)
             col.prop(props, "wall_window_width")
             col.prop(props, "wall_window_height")
             col.prop(props, "wall_window_sill")
 
         if t == 'CASCADING_BEAMS':
-            box = layout.box(); box.label(text="ðŸŒŠ Cascading Beams (Erindale)")
+            box = layout.box(); box.label(text="🌊 Cascading Beams (Erindale)")
             col = box.column(align=True)
             col.prop(props, "beams_count")
             col.prop(props, "beams_length")
@@ -34605,7 +34655,7 @@ class SURREAL_ARCH_PT_geometry(_SubPanelBase, bpy.types.Panel):
             col.prop(props, "beams_twist")
 
         if t == 'MODULAR_HOUSE':
-            box = layout.box(); box.label(text="ðŸ  Modular House")
+            box = layout.box(); box.label(text="🏠 Modular House")
             col = box.column(align=True)
             col.prop(props, "house_units_x")
             col.prop(props, "house_units_y")
@@ -34616,7 +34666,7 @@ class SURREAL_ARCH_PT_geometry(_SubPanelBase, bpy.types.Panel):
             col.prop(props, "house_with_chimney")
 
         if t == 'CURVED_BUILDING':
-            box = layout.box(); box.label(text="ðŸŒ™ Curved Building")
+            box = layout.box(); box.label(text="🌙 Curved Building")
             col = box.column(align=True)
             col.prop(props, "curved_radius")
             col.prop(props, "curved_arc_deg")
@@ -34624,7 +34674,7 @@ class SURREAL_ARCH_PT_geometry(_SubPanelBase, bpy.types.Panel):
             col.prop(props, "curved_arches_per_unit")
 
         if t == 'RADIAL_BUILDING':
-            box = layout.box(); box.label(text="ðŸ”„ Radial Building")
+            box = layout.box(); box.label(text="🔄 Radial Building")
             col = box.column(align=True)
             col.prop(props, "radial_building_radius")
             col.prop(props, "radial_building_floors")
@@ -34633,7 +34683,7 @@ class SURREAL_ARCH_PT_geometry(_SubPanelBase, bpy.types.Panel):
 
         # === Advanced wall parameters ===
         if t == 'WALL_MULTI_WINDOW':
-            box = layout.box(); box.label(text="ðŸªŸ Multi-Pane Window")
+            box = layout.box(); box.label(text="🪟 Multi-Pane Window")
             col = box.column(align=True)
             col.prop(props, "wall_segments")
             col.prop(props, "wall_window_grid_x", text="Pane Cols")
@@ -34641,7 +34691,7 @@ class SURREAL_ARCH_PT_geometry(_SubPanelBase, bpy.types.Panel):
             col.prop(props, "wall_window_mullion", text="Mullion Width")
 
         if t == 'WALL_ARCHED_WINDOW':
-            box = layout.box(); box.label(text="ðŸªŸ Arched Window")
+            box = layout.box(); box.label(text="🪟 Arched Window")
             col = box.column(align=True)
             col.prop(props, "wall_segments")
             col.prop(props, "wall_window_width")
@@ -34650,7 +34700,7 @@ class SURREAL_ARCH_PT_geometry(_SubPanelBase, bpy.types.Panel):
             col.prop(props, "wall_arched_radius")
 
         if t == 'WALL_BAY_WINDOW':
-            box = layout.box(); box.label(text="ðŸªŸ Bay Window")
+            box = layout.box(); box.label(text="🪟 Bay Window")
             col = box.column(align=True)
             col.prop(props, "wall_segments")
             col.prop(props, "wall_window_width", text="Bay Width")
@@ -34660,7 +34710,7 @@ class SURREAL_ARCH_PT_geometry(_SubPanelBase, bpy.types.Panel):
             col.prop(props, "wall_bay_sides")
 
         if t == 'SHEET_MUSIC_RAIL':
-            box = layout.box(); box.label(text="ðŸŽ¼ Sheet Music Railing")
+            box = layout.box(); box.label(text="🎼 Sheet Music Railing")
             col = box.column(align=True)
             col.prop(props, "sheet_length")
             col.prop(props, "sheet_height")
@@ -34676,14 +34726,14 @@ class SURREAL_ARCH_PT_geometry(_SubPanelBase, bpy.types.Panel):
             col.label(text="Notes follow Harmonic A & B params!")
 
         if t == 'PENROSE':
-            box = layout.box(); box.label(text="ðŸªœ Penrose")
+            box = layout.box(); box.label(text="🪜 Penrose")
             col = box.column(align=True)
             col.prop(props, "penrose_steps_per_side")
             col.prop(props, "penrose_side_length")
             col.prop(props, "penrose_rise")
 
         if t == 'PILLAR':
-            box = layout.box(); box.label(text="ðŸ›  Pillar")
+            box = layout.box(); box.label(text="🏛  Pillar")
             col = box.column(align=True)
             col.prop(props, "pillar_radius")
             col.prop(props, "pillar_height")
@@ -34693,7 +34743,7 @@ class SURREAL_ARCH_PT_geometry(_SubPanelBase, bpy.types.Panel):
             col.prop(props, "pillar_capital_layers")
 
         if t == 'FRACTAL':
-            box = layout.box(); box.label(text="â„  Fractal")
+            box = layout.box(); box.label(text="❄  Fractal")
             col = box.column(align=True)
             col.prop(props, "fractal_iterations")
             col.prop(props, "fractal_scale")
@@ -34701,28 +34751,28 @@ class SURREAL_ARCH_PT_geometry(_SubPanelBase, bpy.types.Panel):
             col.prop(props, "fractal_twist_per")
 
         if t == 'TREBLE_CLEF':
-            box = layout.box(); box.label(text="ð„ž Treble Clef")
+            box = layout.box(); box.label(text="𝄞 Treble Clef")
             col = box.column(align=True)
             col.prop(props, "clef_size")
             col.prop(props, "clef_thickness")
             col.prop(props, "clef_curls")
 
         if t == 'NOTE_HEAD':
-            box = layout.box(); box.label(text="â™© Note Head")
+            box = layout.box(); box.label(text="♩ Note Head")
             col = box.column(align=True)
             col.prop(props, "note_kind")
             col.prop(props, "note_size")
             col.prop(props, "note_stem_len")
 
         if t == 'STAFF':
-            box = layout.box(); box.label(text="â™« Music Staff")
+            box = layout.box(); box.label(text="♫ Music Staff")
             col = box.column(align=True)
             col.prop(props, "staff_length")
             col.prop(props, "staff_note_count")
             col.prop(props, "staff_line_thickness")
 
         if t == 'BRICK_WALL':
-            box = layout.box(); box.label(text="ðŸ§± Brick Wall")
+            box = layout.box(); box.label(text="🧱 Brick Wall")
             col = box.column(align=True)
             col.prop(props, "brick_wall_width")
             col.prop(props, "brick_wall_height")
@@ -34732,7 +34782,7 @@ class SURREAL_ARCH_PT_geometry(_SubPanelBase, bpy.types.Panel):
             col.prop(props, "brick_mortar_gap")
 
         if t == 'BRIDGE':
-            box = layout.box(); box.label(text="ðŸŒ‰ Venetian Bridge")
+            box = layout.box(); box.label(text="🌉 Venetian Bridge")
             col = box.column(align=True)
             col.prop(props, "bridge_length")
             col.prop(props, "bridge_height")
@@ -34742,7 +34792,7 @@ class SURREAL_ARCH_PT_geometry(_SubPanelBase, bpy.types.Panel):
             col.prop(props, "bridge_railings")
 
         if t == 'ESCHER_PATH':
-            box = layout.box(); box.label(text="ðŸ›¤ Escher Path")
+            box = layout.box(); box.label(text="🛤 Escher Path")
             col = box.column(align=True)
             col.prop(props, "path_radius")
             col.prop(props, "path_segments")
@@ -34756,18 +34806,18 @@ class SURREAL_ARCH_PT_geometry(_SubPanelBase, bpy.types.Panel):
 
 class SURREAL_ARCH_PT_effects(_SubPanelBase, bpy.types.Panel):
     """Collapsible parent for optional decorative / atmospheric overlays."""
-    bl_label = "ðŸŽ­ Effects & Atmosphere"
+    bl_label = "🎭 Effects & Atmosphere"
     bl_idname = "SURREAL_ARCH_PT_effects"
     bl_order = 45
 
     def draw(self, context):
         layout = self.layout
-        layout.label(text="Optional â€” expand sub-panels below", icon='INFO')
-        layout.label(text="Music Â· Magic Â· Sci-Fi Â· Escher Â· Aesthetic", icon='DOWNARROW_HLT')
+        layout.label(text="Optional — expand sub-panels below", icon='INFO')
+        layout.label(text="Music · Magic · Sci-Fi · Escher · Aesthetic", icon='DOWNARROW_HLT')
 
 
 class SURREAL_ARCH_PT_music(_EffectsSubPanelBase, bpy.types.Panel):
-    bl_label = "ðŸŽµ Music & Whimsy"
+    bl_label = "🎵 Music & Whimsy"
     bl_idname = "SURREAL_ARCH_PT_music"
     bl_order = 1
 
@@ -34775,14 +34825,14 @@ class SURREAL_ARCH_PT_music(_EffectsSubPanelBase, bpy.types.Panel):
         layout = self.layout
         props = context.active_object.surreal_arch_props
 
-        # Universal modifiers â€” apply music/twist/flow to ANY type
-        box = layout.box(); box.label(text="ðŸŒ Universal Modifiers (any type)")
+        # Universal modifiers — apply music/twist/flow to ANY type
+        box = layout.box(); box.label(text="🌐 Universal Modifiers (any type)")
         col = box.column(align=True)
         col.prop(props, "universal_music_influence")
         col.prop(props, "universal_twist_apply")
         col.prop(props, "universal_flow_apply")
 
-        box = layout.box(); box.label(text="ðŸŽµ Whimsical Ornaments")
+        box = layout.box(); box.label(text="🎵 Whimsical Ornaments")
         col = box.column(align=True)
         col.prop(props, "ornament_density")
         col.prop(props, "harmonic_layers")
@@ -34790,12 +34840,12 @@ class SURREAL_ARCH_PT_music(_EffectsSubPanelBase, bpy.types.Panel):
         col.prop(props, "musical_freq_b")
         col.prop(props, "musical_amplitude")
 
-        box = layout.box(); box.label(text="ðŸŽ¼ Musical Notation")
+        box = layout.box(); box.label(text="🎼 Musical Notation")
         col = box.column(align=True)
         col.prop(props, "note_pattern")
         col.prop(props, "tempo_factor")
 
-        box = layout.box(); box.label(text="ðŸŽ² Randomization")
+        box = layout.box(); box.label(text="🎲 Randomization")
         col = box.column(align=True)
         col.prop(props, "seed")
         col.prop(props, "variation_intensity")
@@ -34803,7 +34853,7 @@ class SURREAL_ARCH_PT_music(_EffectsSubPanelBase, bpy.types.Panel):
 
 
 class SURREAL_ARCH_PT_materials(_SubPanelBase, bpy.types.Panel):
-    bl_label = "ðŸŽ¨ Materials & Shaders"
+    bl_label = "🎨 Materials & Shaders"
     bl_idname = "SURREAL_ARCH_PT_materials"
     bl_order = 30
 
@@ -34813,24 +34863,24 @@ class SURREAL_ARCH_PT_materials(_SubPanelBase, bpy.types.Panel):
 
         # Build/Refresh shader library
         row = layout.row(align=True); row.scale_y = 1.2
-        row.operator("surreal_arch.build_shaders", text="ðŸ›   Build / Rebuild Library", icon='MATERIAL')
+        row.operator("surreal_arch.build_shaders", text="🛠  Build / Rebuild Library", icon='MATERIAL')
 
-        box = layout.box(); box.label(text="ðŸŽ¨ Material")
+        box = layout.box(); box.label(text="🎨 Material")
         col = box.column(align=True)
         col.prop(props, "material_choice", text="")
         col.prop(props, "auto_apply_material")
-        col.operator("surreal_arch.apply_material", text="ðŸ–Œ  Apply to Active", icon='MATERIAL')
+        col.operator("surreal_arch.apply_material", text="🖌  Apply to Active", icon='MATERIAL')
 
         # Genshin Stylization panel removed in v2.28 (user request).
         # The `genshin_style` / `genshin_rim_strength` / `genshin_pastel_tint`
         # properties still exist for any code referencing them, but they are
         # no longer exposed in the UI.
 
-        box = layout.box(); box.label(text="ðŸŒŠ Water")
+        box = layout.box(); box.label(text="🌊 Water")
         col = box.column(align=True)
         col.label(text="Spawn a musical water plane below.")
-        col.label(text="Drag harmonic sliders â†’ ripples animate.")
-        col.operator("surreal_arch.create_water", text="ðŸ’§ Create Musical Water", icon='OUTLINER_OB_FORCE_FIELD')
+        col.label(text="Drag harmonic sliders → ripples animate.")
+        col.operator("surreal_arch.create_water", text="💧 Create Musical Water", icon='OUTLINER_OB_FORCE_FIELD')
 
 
 # SURREAL_ARCH_PT_world (Day/Night) panel removed in v2.28 (user request).
@@ -34840,7 +34890,7 @@ class SURREAL_ARCH_PT_materials(_SubPanelBase, bpy.types.Panel):
 
 class SURREAL_ARCH_PT_venetian(_SubPanelBase, bpy.types.Panel):
     """Venetian Gothic features (after Boscarino et al.)."""
-    bl_label = "ðŸ‡®ðŸ‡¹  Venetian Gothic"
+    bl_label = "🇮🇹  Venetian Gothic"
     bl_idname = "SURREAL_ARCH_PT_venetian"
 
     def draw(self, context):
@@ -34850,18 +34900,18 @@ class SURREAL_ARCH_PT_venetian(_SubPanelBase, bpy.types.Panel):
 
         col = layout.column(align=True)
         col.label(text="Reference: Boscarino et al.,")
-        col.label(text="3D Geom. Analysis of Venetian Gothic FaÃ§ades")
+        col.label(text="3D Geom. Analysis of Venetian Gothic Façades")
         layout.separator()
 
-        # Surveyed-imperfection deformation pass â€” applies to ANY type
-        box = layout.box(); box.label(text="ðŸ“ Surveyed Deformation (any type)")
+        # Surveyed-imperfection deformation pass — applies to ANY type
+        box = layout.box(); box.label(text="📐 Surveyed Deformation (any type)")
         col = box.column(align=True)
         col.prop(props, "entropiombo_lean")
         col.prop(props, "subsidence_amount")
         col.prop(props, "survey_imperfection")
 
         if t == 'OGEE_ARCH':
-            box = layout.box(); box.label(text="ðŸŒ€ Ogee Arch")
+            box = layout.box(); box.label(text="🌀 Ogee Arch")
             col = box.column(align=True)
             col.prop(props, "ogee_width")
             col.prop(props, "ogee_height")
@@ -34870,7 +34920,7 @@ class SURREAL_ARCH_PT_venetian(_SubPanelBase, bpy.types.Panel):
             col.prop(props, "ogee_finial")
 
         if t == 'BIFORA':
-            box = layout.box(); box.label(text="ðŸªŸ Bifora / Trifora / Quadrifora")
+            box = layout.box(); box.label(text="🪟 Bifora / Trifora / Quadrifora")
             col = box.column(align=True)
             col.prop(props, "bifora_width")
             col.prop(props, "bifora_height")
@@ -34879,7 +34929,7 @@ class SURREAL_ARCH_PT_venetian(_SubPanelBase, bpy.types.Panel):
             col.prop(props, "bifora_quatrefoil")
 
         if t == 'CUSPED_ARCH':
-            box = layout.box(); box.label(text="ðŸŒ¸ Cusped (Foiled) Arch")
+            box = layout.box(); box.label(text="🌸 Cusped (Foiled) Arch")
             col = box.column(align=True)
             col.prop(props, "cusped_width")
             col.prop(props, "cusped_height")
@@ -34887,7 +34937,7 @@ class SURREAL_ARCH_PT_venetian(_SubPanelBase, bpy.types.Panel):
             col.prop(props, "cusped_lobe_depth")
 
         if t == 'PALAZZO':
-            box = layout.box(); box.label(text="ðŸ› Palazzo (Composite)")
+            box = layout.box(); box.label(text="🏛 Palazzo (Composite)")
             col = box.column(align=True)
             col.prop(props, "palazzo_floors")
             col.prop(props, "palazzo_width")
@@ -34901,7 +34951,7 @@ class SURREAL_ARCH_PT_venetian(_SubPanelBase, bpy.types.Panel):
 class SURREAL_ARCH_OT_sv_open_editor(bpy.types.Operator):
     """Switch the largest visible area to the Sverchok node editor.
     If the active object has a bound Sverchok tree (via the
-    `surreal_sv_tree` custom property), focus THAT tree â€” otherwise focus
+    `surreal_sv_tree` custom property), focus THAT tree — otherwise focus
     the most-recently-created `_sv_*` tree."""
     bl_idname = "surreal_arch.sv_open_editor"
     bl_label = "Open Sverchok Editor"
@@ -34922,7 +34972,7 @@ class SURREAL_ARCH_OT_sv_open_editor(bpy.types.Operator):
             sv_trees = [t for t in bpy.data.node_groups
                         if getattr(t, 'bl_idname', '') == 'SverchCustomTreeType']
             if not sv_trees:
-                self.report({'WARNING'}, "No Sverchok trees in this file â€” run a preset first.")
+                self.report({'WARNING'}, "No Sverchok trees in this file — run a preset first.")
                 return {'CANCELLED'}
             target_tree = next((t for t in sv_trees if t.name.startswith('_sv_')),
                                sv_trees[-1])
@@ -34944,12 +34994,12 @@ class SURREAL_ARCH_OT_sv_open_editor(bpy.types.Operator):
             return {'CANCELLED'}
         bound_note = " (bound to active object)" if obj and obj.get("surreal_sv_tree") else ""
         self.report({'INFO'},
-                    f"Opened {target_tree.name}{bound_note} â€” edit nodes to customize the preset.")
+                    f"Opened {target_tree.name}{bound_note} — edit nodes to customize the preset.")
         return {'FINISHED'}
 
 
 # ======================================================================
-# KEPLER-POINSOT POLYHEDRA â€” four regular star polyhedra built via bmesh
+# KEPLER-POINSOT POLYHEDRA — four regular star polyhedra built via bmesh
 # (small stellated dodecahedron, great dodecahedron,
 #  great stellated dodecahedron, great icosahedron)
 # ======================================================================
@@ -34974,7 +35024,7 @@ def _build_dodecahedron_bmesh(bm, size=1.0):
     bm.verts.ensure_lookup_table()
     # 12 pentagonal faces (each as 5 vertex indices, ordered)
     pent_faces = [
-        ( 0, 16, 17,  1,  9),  # left-back-bottom pentagon? â€” order by ring
+        ( 0, 16, 17,  1,  9),  # left-back-bottom pentagon? — order by ring
         # We use a verified set of 12 pentagons for golden-ratio dodecahedron:
     ]
     # Replace with the canonical face list (clockwise, outward-facing)
@@ -35003,16 +35053,16 @@ def _build_dodecahedron_bmesh(bm, size=1.0):
 
 def _build_kepler_poinsot(kind, size=1.0):
     """Construct a Kepler-Poinsot polyhedron and return a new Blender mesh.
-    `kind` âˆˆ {'SSDC','GD','GSDC','GI'} for the four canonical star polyhedra."""
+    `kind` ∈ {'SSDC','GD','GSDC','GI'} for the four canonical star polyhedra."""
     import bmesh
     bm = bmesh.new()
     if kind == 'SSDC':
         # Small Stellated Dodecahedron:
-        # dodecahedron base â†’ poke each pentagonal face into 5 triangles meeting
-        # at a spike apex pushed outward â†’ 12 pentagonal pyramid spikes
+        # dodecahedron base → poke each pentagonal face into 5 triangles meeting
+        # at a spike apex pushed outward → 12 pentagonal pyramid spikes
         _build_dodecahedron_bmesh(bm, size=size)
         res = bmesh.ops.poke(bm, faces=bm.faces[:])
-        # Push each new apex outward to ~2.5Ã— radius for the proper spike depth
+        # Push each new apex outward to ~2.5× radius for the proper spike depth
         for v in res['verts']:
             length = (v.co.x ** 2 + v.co.y ** 2 + v.co.z ** 2) ** 0.5
             if length > 1e-6:
@@ -35020,7 +35070,7 @@ def _build_kepler_poinsot(kind, size=1.0):
                 v.co = v.co * factor
     elif kind == 'GD':
         # Great Dodecahedron:
-        # icosahedron base â†’ poke each triangular face â†’ pull poked verts
+        # icosahedron base → poke each triangular face → pull poked verts
         # INWARD so the surface becomes the concave pentagonal-vertex figure
         bmesh.ops.create_icosphere(bm, subdivisions=1,
                                     radius=size, calc_uvs=False)
@@ -35032,7 +35082,7 @@ def _build_kepler_poinsot(kind, size=1.0):
                 v.co = v.co * factor
     elif kind == 'GSDC':
         # Great Stellated Dodecahedron:
-        # icosahedron â†’ poke â†’ push out 2.8Ã— for sharp triangular spikes
+        # icosahedron → poke → push out 2.8× for sharp triangular spikes
         bmesh.ops.create_icosphere(bm, subdivisions=1,
                                     radius=size, calc_uvs=False)
         res = bmesh.ops.poke(bm, faces=bm.faces[:])
@@ -35043,7 +35093,7 @@ def _build_kepler_poinsot(kind, size=1.0):
                 v.co = v.co * factor
     elif kind == 'GI':
         # Great Icosahedron:
-        # icosahedron â†’ poke twice with increasing outward push to approximate
+        # icosahedron → poke twice with increasing outward push to approximate
         # the deeply-stellated final icosahedron
         bmesh.ops.create_icosphere(bm, subdivisions=1,
                                     radius=size, calc_uvs=False)
@@ -35101,7 +35151,7 @@ class SURREAL_ARCH_OT_kepler_ssdc(bpy.types.Operator):
 
 
 class SURREAL_ARCH_OT_kepler_gd(bpy.types.Operator):
-    """Spawn a Great Dodecahedron (icosahedron with vertices pulled inward â€” concave pentagonal facets)."""
+    """Spawn a Great Dodecahedron (icosahedron with vertices pulled inward — concave pentagonal facets)."""
     bl_idname = "surreal_arch.kepler_gd"
     bl_label = "Great Dodecahedron"
     bl_options = {'REGISTER', 'UNDO'}
@@ -35137,7 +35187,7 @@ class SURREAL_ARCH_OT_kepler_gi(bpy.types.Operator):
 
 
 class SURREAL_ARCH_PT_kepler(_SubPanelBase, bpy.types.Panel):
-    bl_label = "âœ¦ Kepler-Poinsot Polyhedra"
+    bl_label = "✦ Kepler-Poinsot Polyhedra"
     bl_idname = "SURREAL_ARCH_PT_kepler"
 
     def draw(self, context):
@@ -35145,10 +35195,10 @@ class SURREAL_ARCH_PT_kepler(_SubPanelBase, bpy.types.Panel):
         layout.label(text="The four regular star polyhedra:", icon='MESH_ICOSPHERE')
         col = layout.column(align=True)
         col.scale_y = 1.2
-        col.operator("surreal_arch.kepler_ssdc", text="â­ Small Stellated Dodecahedron")
-        col.operator("surreal_arch.kepler_gd",   text="ðŸ”¶ Great Dodecahedron")
-        col.operator("surreal_arch.kepler_gsdc", text="âœ¦ Great Stellated Dodecahedron")
-        col.operator("surreal_arch.kepler_gi",   text="âœ¸ Great Icosahedron")
+        col.operator("surreal_arch.kepler_ssdc", text="⭐ Small Stellated Dodecahedron")
+        col.operator("surreal_arch.kepler_gd",   text="🔶 Great Dodecahedron")
+        col.operator("surreal_arch.kepler_gsdc", text="✦ Great Stellated Dodecahedron")
+        col.operator("surreal_arch.kepler_gi",   text="✸ Great Icosahedron")
         layout.label(text="Scale follows active object's base_radius.", icon='INFO')
 
 
@@ -35170,7 +35220,7 @@ class SURREAL_ARCH_OT_sv_reevaluate(bpy.types.Operator):
         bound = obj.get("surreal_sv_tree")
         if not bound:
             self.report({'WARNING'},
-                        "Active object has no bound Sverchok tree â€” run a preset first")
+                        "Active object has no bound Sverchok tree — run a preset first")
             return {'CANCELLED'}
         tree = bpy.data.node_groups.get(bound)
         if tree is None:
@@ -35226,8 +35276,8 @@ class SURREAL_ARCH_OT_sv_clean_trees(bpy.types.Operator):
 
 
 class SURREAL_ARCH_PT_sverchok(_SubPanelBase, bpy.types.Panel):
-    """ðŸŒ€ Sverchok-driven Escher presets â€” algorithmic/parametric geometry."""
-    bl_label = "ðŸŒ€  Sverchok Escher"
+    """🌀 Sverchok-driven Escher presets — algorithmic/parametric geometry."""
+    bl_label = "🌀  Sverchok Escher"
     bl_idname = "SURREAL_ARCH_PT_sverchok"
 
     def draw(self, context):
@@ -35237,9 +35287,9 @@ class SURREAL_ARCH_PT_sverchok(_SubPanelBase, bpy.types.Panel):
         sb = layout.box()
         head = sb.row(align=True)
         if _sverchok_available():
-            head.label(text="ðŸŒ€ Sverchok detected", icon='CHECKMARK')
+            head.label(text="🌀 Sverchok detected", icon='CHECKMARK')
         else:
-            head.label(text="âš  Sverchok not detected", icon='ERROR')
+            head.label(text="⚠ Sverchok not detected", icon='ERROR')
             sb.alert = True
             sb.label(text="Install/enable the Sverchok addon to use these.")
             return
@@ -35257,77 +35307,77 @@ class SURREAL_ARCH_PT_sverchok(_SubPanelBase, bpy.types.Panel):
             info.label(text="Active: unbound", icon='UNLINKED')
         layout.separator()
 
-        # === SCENE COMPOSER â€” top of panel, most-impactful feature ===
+        # === SCENE COMPOSER — top of panel, most-impactful feature ===
         box = layout.box()
-        box.label(text="ðŸš  Procedural Environments")
+        box.label(text="🏚  Procedural Environments")
         col = box.column(align=True)
         col.scale_y = 1.4
-        col.operator("surreal_arch.compose_scene", text="ðŸš  Compose Full Sceneâ€¦", icon='WORLD_DATA')
+        col.operator("surreal_arch.compose_scene", text="🏚  Compose Full Scene…", icon='WORLD_DATA')
         col.label(text="(Choose style + seed)")
 
-        # === Dark Souls Ã— Escher â€” unique parametric geometry ===
+        # === Dark Souls × Escher — unique parametric geometry ===
         box = layout.box()
-        box.label(text="ðŸš  Dark Souls Ã— Escher")
+        box.label(text="🏚  Dark Souls × Escher")
         col = box.column(align=True)
         row = col.row(align=True); row.scale_y = 1.25
-        row.operator("surreal_arch.sv_twisted_spire",     text="ðŸ—¼  Twisted Spire")
-        row.operator("surreal_arch.sv_cathedral_ruin",    text="ðŸš  Cathedral Ruin")
-        row.operator("surreal_arch.sv_branching_buttress",text="ðŸŒ³  Branching Buttress")
+        row.operator("surreal_arch.sv_twisted_spire",     text="🗼  Twisted Spire")
+        row.operator("surreal_arch.sv_cathedral_ruin",    text="🏚  Cathedral Ruin")
+        row.operator("surreal_arch.sv_branching_buttress",text="🌳  Branching Buttress")
         row = col.row(align=True); row.scale_y = 1.25
-        row.operator("surreal_arch.sv_iron_gate",         text="ðŸšª  Iron Gate")
-        row.operator("surreal_arch.sv_chandelier",        text="ðŸ’¡  Chandelier")
-        row.operator("surreal_arch.sv_cascading_arches",  text="ðŸŒŠ  Cascading Arches")
+        row.operator("surreal_arch.sv_iron_gate",         text="🚪  Iron Gate")
+        row.operator("surreal_arch.sv_chandelier",        text="💡  Chandelier")
+        row.operator("surreal_arch.sv_cascading_arches",  text="🌊  Cascading Arches")
         row = col.row(align=True); row.scale_y = 1.25
-        row.operator("surreal_arch.sv_mobius_stairs",     text="â™¾  MÃ¶bius Stairs")
-        row.operator("surreal_arch.sv_recursive_portal",  text="ðŸŒŒ  Recursive Portal")
+        row.operator("surreal_arch.sv_mobius_stairs",     text="♾  Möbius Stairs")
+        row.operator("surreal_arch.sv_recursive_portal",  text="🌌  Recursive Portal")
 
         # === Filigree & Ornament ===
         box = layout.box()
-        box.label(text="ðŸŒ¿  Filigree & Ornament")
+        box.label(text="🌿  Filigree & Ornament")
         col = box.column(align=True)
         row = col.row(align=True); row.scale_y = 1.25
-        row.operator("surreal_arch.sv_filigree",          text="ðŸŒ¿  Filigree")
-        row.operator("surreal_arch.sv_trefoil_frieze",    text="â˜˜  Trefoil Frieze")
+        row.operator("surreal_arch.sv_filigree",          text="🌿  Filigree")
+        row.operator("surreal_arch.sv_trefoil_frieze",    text="☘  Trefoil Frieze")
 
         # === Architectural Sverchok (the new useful ones) ===
         box = layout.box()
-        box.label(text="ðŸ›  Architectural")
+        box.label(text="🏛  Architectural")
         col = box.column(align=True)
         row = col.row(align=True); row.scale_y = 1.25
-        row.operator("surreal_arch.sv_railing",      text="ðŸ›¡  Railing")
-        row.operator("surreal_arch.sv_curved_wall",  text="ðŸŒ™  Curved Wall")
-        row.operator("surreal_arch.sv_floor",        text="ðŸŸ«  Floor")
+        row.operator("surreal_arch.sv_railing",      text="🛡  Railing")
+        row.operator("surreal_arch.sv_curved_wall",  text="🌙  Curved Wall")
+        row.operator("surreal_arch.sv_floor",        text="🟫  Floor")
         row = col.row(align=True); row.scale_y = 1.25
-        row.operator("surreal_arch.sv_balcony",      text="ðŸŒ¿  Balcony")
-        row.operator("surreal_arch.sv_staircase",    text="ðŸªœ  Spiral Stairs")
-        row.operator("surreal_arch.sv_vault",        text="â›ª  Vault")
+        row.operator("surreal_arch.sv_balcony",      text="🌿  Balcony")
+        row.operator("surreal_arch.sv_staircase",    text="🪜  Spiral Stairs")
+        row.operator("surreal_arch.sv_vault",        text="⛪  Vault")
 
         # === Gothic Sverchok ===
         box = layout.box()
-        box.label(text="âœŸ  Gothic")
+        box.label(text="✟  Gothic")
         col = box.column(align=True)
         row = col.row(align=True); row.scale_y = 1.25
-        row.operator("surreal_arch.sv_gothic_arch",  text="âœŸ  Gothic Arch")
-        row.operator("surreal_arch.sv_rose_window",  text="â€  Rose Window")
+        row.operator("surreal_arch.sv_gothic_arch",  text="✟  Gothic Arch")
+        row.operator("surreal_arch.sv_rose_window",  text="❀  Rose Window")
 
         # === Escher Math Sverchok ===
         box = layout.box()
-        box.label(text="ðŸªœ  Escher Math")
+        box.label(text="🪜  Escher Math")
         col = box.column(align=True)
         row = col.row(align=True); row.scale_y = 1.25
-        row.operator("surreal_arch.sv_spiral",       text="ðŸŒ€  Spiral Tower")
-        row.operator("surreal_arch.sv_torus_knot",   text="ðŸª¢  Torus Knot")
-        row.operator("surreal_arch.sv_twisted",      text="ðŸŒª  Twisted Tower")
+        row.operator("surreal_arch.sv_spiral",       text="🌀  Spiral Tower")
+        row.operator("surreal_arch.sv_torus_knot",   text="🪢  Torus Knot")
+        row.operator("surreal_arch.sv_twisted",      text="🌪  Twisted Tower")
         row = col.row(align=True); row.scale_y = 1.25
-        row.operator("surreal_arch.sv_tessellation", text="ðŸ¦  Tessellation")
-        row.operator("surreal_arch.sv_fractal",      text="â„  Fractal Curve")
+        row.operator("surreal_arch.sv_tessellation", text="🐦  Tessellation")
+        row.operator("surreal_arch.sv_fractal",      text="❄  Fractal Curve")
 
         # === Unified Sverchok Parameters ===
         layout.separator()
         box = layout.box()
-        box.label(text="ðŸŽš  Universal Sverchok Parameters")
+        box.label(text="🎚  Universal Sverchok Parameters")
         col = box.column(align=True)
-        # Quick quality preset â€” sets resolution + complexity in one click
+        # Quick quality preset — sets resolution + complexity in one click
         col.prop(context.active_object.surreal_arch_props, "sv_quality_preset", text="Quality")
         col.separator()
         col.label(text="Fine controls (override quality):")
@@ -35340,39 +35390,39 @@ class SURREAL_ARCH_PT_sverchok(_SubPanelBase, bpy.types.Panel):
         # Editor action row (Open / Re-evaluate / Clean)
         r1 = col.row(align=True)
         r1.scale_y = 1.15
-        r1.operator("surreal_arch.sv_open_editor", text="ðŸªŸ Open Editor",  icon='NODETREE')
-        r1.operator("surreal_arch.sv_reevaluate",  text="ðŸ”„ Re-evaluate",  icon='FILE_REFRESH')
-        r1.operator("surreal_arch.sv_clean_trees", text="ðŸ—‘ Clean Stale",  icon='TRASH')
+        r1.operator("surreal_arch.sv_open_editor", text="🪟 Open Editor",  icon='NODETREE')
+        r1.operator("surreal_arch.sv_reevaluate",  text="🔄 Re-evaluate",  icon='FILE_REFRESH')
+        r1.operator("surreal_arch.sv_clean_trees", text="🗑 Clean Stale",  icon='TRASH')
         # v2.47: Diagnostic
         r1d = col.row(align=True)
         r1d.scale_y = 1.15
         r1d.operator("surreal_arch.sv_diagnose",
-                     text="ðŸ©º Diagnose Sverchok Compatibility",
+                     text="🩺 Diagnose Sverchok Compatibility",
                      icon='CONSOLE')
         col.label(text="Tip: each preset opens a parameter dialog first.")
 
         # === Music response section ===
         box = layout.box()
-        box.label(text="ðŸŽµ  Music-Driven Geometry")
+        box.label(text="🎵  Music-Driven Geometry")
         col = box.column(align=True)
         col.prop(context.active_object.surreal_arch_props, "universal_music_influence")
         col.prop(context.active_object.surreal_arch_props, "sv_music_response")
         col.label(text="When music influence > 0:")
-        col.label(text="  â€¢ Spiral turns, twist amount,")
-        col.label(text="  â€¢ Tessellation grid, fractal depth,")
-        col.label(text="  â€¢ Branch angles â€” all respond to")
-        col.label(text="  â€¢ Harmonic A/B Ã— Tempo")
+        col.label(text="  • Spiral turns, twist amount,")
+        col.label(text="  • Tessellation grid, fractal depth,")
+        col.label(text="  • Branch angles — all respond to")
+        col.label(text="  • Harmonic A/B × Tempo")
 
         layout.separator()
         col = layout.column(align=True)
-        col.label(text="ðŸ’¡ sv_keep_tree=ON â†’ Sverchok node tree")
+        col.label(text="💡 sv_keep_tree=ON → Sverchok node tree")
         col.label(text="   stays in the Sverchok editor for tweaking.")
         col.label(text="   Default OFF prevents mesh duplication.")
 
 
 class SURREAL_ARCH_PT_synthia(_SubPanelBase, bpy.types.Panel):
     """Synthia math-equation visualizations integrated with our pipeline."""
-    bl_label = "ðŸ§® Synthia (Math Equations)"
+    bl_label = "🧮 Synthia (Math Equations)"
     bl_idname = "SURREAL_ARCH_PT_synthia"
 
     def draw(self, context):
@@ -35385,22 +35435,22 @@ class SURREAL_ARCH_PT_synthia(_SubPanelBase, bpy.types.Panel):
         layout.separator()
 
         # Quick preset buttons
-        box = layout.box(); box.label(text="ðŸŒŸ Quick Math Presets")
+        box = layout.box(); box.label(text="🌟 Quick Math Presets")
         row = box.row(align=True); row.scale_y = 1.15
-        row.operator("surreal_arch.synthia_lorenz",   text="ðŸŒª Lorenz")
-        row.operator("surreal_arch.synthia_klein",    text="ðŸ¶ Klein")
-        row.operator("surreal_arch.synthia_mobius",   text="â™¾ MÃ¶bius")
+        row.operator("surreal_arch.synthia_lorenz",   text="🌪 Lorenz")
+        row.operator("surreal_arch.synthia_klein",    text="🍶 Klein")
+        row.operator("surreal_arch.synthia_mobius",   text="♾ Möbius")
         row = box.row(align=True); row.scale_y = 1.15
-        row.operator("surreal_arch.synthia_torus_knot", text="ðŸª¢ Torus Knot")
-        row.operator("surreal_arch.synthia_lissajous",  text="â™¬ Lissajous")
+        row.operator("surreal_arch.synthia_torus_knot", text="🪢 Torus Knot")
+        row.operator("surreal_arch.synthia_lissajous",  text="♬ Lissajous")
         row = box.row(align=True); row.scale_y = 1.15
-        row.operator("surreal_arch.synthia_golden",   text="ðŸŒ€ Golden Spiral")
-        row.operator("surreal_arch.synthia_platonic", text="ðŸ”· Platonic")
+        row.operator("surreal_arch.synthia_golden",   text="🌀 Golden Spiral")
+        row.operator("surreal_arch.synthia_platonic", text="🔷 Platonic")
 
         layout.separator()
 
         # Manual preset selection
-        box = layout.box(); box.label(text="ðŸŽš Manual Preset")
+        box = layout.box(); box.label(text="🎚 Manual Preset")
         col = box.column(align=True)
         col.prop(props, "synthia_use_custom", text="Use Custom Formula")
         if props.synthia_use_custom:
@@ -35412,11 +35462,11 @@ class SURREAL_ARCH_PT_synthia(_SubPanelBase, bpy.types.Panel):
 
         layout.separator()
         row = layout.row(align=True); row.scale_y = 1.4
-        row.operator("surreal_arch.spawn_synthia", text="ðŸ§® Spawn Synthia Visualization")
+        row.operator("surreal_arch.spawn_synthia", text="🧮 Spawn Synthia Visualization")
 
 
 # ==============================================================================
-# ðŸ”Œ  HIGGSAS INTEGRATION PANEL + OPERATORS  (v2.52)
+# 🔌  HIGGSAS INTEGRATION PANEL + OPERATORS  (v2.52)
 # ==============================================================================
 
 class SURREAL_ARCH_OT_higgsas_load_arch(bpy.types.Operator):
@@ -35461,7 +35511,7 @@ class SURREAL_ARCH_OT_higgsas_apply_bricks(bpy.types.Operator):
             self.report({'WARNING'}, "Select a mesh object first"); return {'CANCELLED'}
         ng = _higg_load('NTBricks Grid')
         if ng is None:
-            self.report({'ERROR'}, "NTBricks Grid not found â€” load Higgsas first"); return {'CANCELLED'}
+            self.report({'ERROR'}, "NTBricks Grid not found — load Higgsas first"); return {'CANCELLED'}
         # Add a new GN modifier on the object
         mod = obj.modifiers.new(name="SurrealBrickDetail", type='NODES')
         tree = bpy.data.node_groups.new(name="_surreal_bricks_detail",
@@ -35494,15 +35544,15 @@ class SURREAL_ARCH_OT_higgsas_apply_bricks(bpy.types.Operator):
 
 
 class SURREAL_ARCH_PT_higgsas(_SubPanelBase, bpy.types.Panel):
-    """ðŸ”Œ Higgsas Geo Nodes integration status + quick-load panel."""
-    bl_label   = "ðŸ”Œ  Higgsas Geo Nodes"
+    """🔌 Higgsas Geo Nodes integration status + quick-load panel."""
+    bl_label   = "🔌  Higgsas Geo Nodes"
     bl_idname  = "SURREAL_ARCH_PT_higgsas"
 
     def draw(self, context):
         layout = self.layout
         import os
 
-        # â”€â”€ Status header â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+        # ── Status header ───────────────────────────────────────────────
         sb = layout.box()
         row = sb.row(align=True)
         lib_exists = os.path.exists(_HIGGSAS_LIB_PATH)
@@ -35510,50 +35560,50 @@ class SURREAL_ARCH_PT_higgsas(_SubPanelBase, bpy.types.Panel):
                          if ng.name.startswith('NT') and len(ng.name) > 4)
 
         if lib_exists:
-            row.label(text=f"âœ…  Library found  ({ng_loaded} groups loaded)", icon='CHECKMARK')
+            row.label(text=f"✅  Library found  ({ng_loaded} groups loaded)", icon='CHECKMARK')
         else:
-            row.label(text="âŒ  Library not found at registered path", icon='ERROR')
+            row.label(text="❌  Library not found at registered path", icon='ERROR')
             sb.alert = True
-            sb.label(text=_HIGGSAS_LIB_PATH[:60] + "â€¦")
+            sb.label(text=_HIGGSAS_LIB_PATH[:60] + "…")
 
-        # â”€â”€ Load all arch nodes â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-        box = layout.box(); box.label(text="âš¡ Quick Load")
+        # ── Load all arch nodes ─────────────────────────────────────────
+        box = layout.box(); box.label(text="⚡ Quick Load")
         col = box.column(align=True); col.scale_y = 1.3
         col.operator("surreal_arch.higgsas_load_arch",
-                     text="ðŸ“¦  Load Architecture Nodes  (first-time setup)",
+                     text="📦  Load Architecture Nodes  (first-time setup)",
                      icon='NODETREE')
         col.label(text=f"Loads: {len(_HIGGSAS_ARCH_NODES)} node groups for architecture")
 
-        # â”€â”€ Surface detail operators â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-        box = layout.box(); box.label(text="ðŸŽ¨ Surface Detail (adds modifier)")
+        # ── Surface detail operators ───────────────────────────────────
+        box = layout.box(); box.label(text="🎨 Surface Detail (adds modifier)")
         col = box.column(align=True); col.scale_y = 1.2
-        col.operator("surreal_arch.higgsas_apply_bricks",  text="ðŸ§±  Brick Surface  (NTBricks Grid)")
+        col.operator("surreal_arch.higgsas_apply_bricks",  text="🧱  Brick Surface  (NTBricks Grid)")
 
-        # â”€â”€ Higgsas-native builders â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-        box = layout.box(); box.label(text="ðŸ— Higgsas-Powered Builders")
+        # ── Higgsas-native builders ─────────────────────────────────────
+        box = layout.box(); box.label(text="🏗 Higgsas-Powered Builders")
         col = box.column(align=True); col.scale_y = 1.15
-        col.label(text="Select from Arch Picker â†’ ðŸ”Œ Higgsas Nodes")
-        col.label(text="â€¢ Surface Wall â€” Brick/Hex/Voronoi/Cairo/Triangle")
-        col.label(text="â€¢ Colonnade â€” Linear or Radial column array")
+        col.label(text="Select from Arch Picker → 🔌 Higgsas Nodes")
+        col.label(text="• Surface Wall — Brick/Hex/Voronoi/Cairo/Triangle")
+        col.label(text="• Colonnade — Linear or Radial column array")
         col.separator()
         col.label(text="Auto-upgraded when Higgsas is loaded:")
-        col.label(text="  ðŸ§± Brick Wall â†’ NTBricks Grid + NTSolidify")
-        col.label(text="  ðŸ› Pillar     â†’ NTSpin + NTTaper entasis")
+        col.label(text="  🧱 Brick Wall → NTBricks Grid + NTSolidify")
+        col.label(text="  🏛 Pillar     → NTSpin + NTTaper entasis")
 
-        # â”€â”€ Node group list â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+        # ── Node group list ─────────────────────────────────────────────
         if ng_loaded > 0:
-            box = layout.box(); box.label(text=f"ðŸ“‹ Loaded Groups ({ng_loaded})")
+            box = layout.box(); box.label(text=f"📋 Loaded Groups ({ng_loaded})")
             col = box.column(align=True)
             arch_loaded = [ng.name for ng in bpy.data.node_groups
                            if ng.name in _HIGGSAS_ARCH_NODES]
             for name in arch_loaded[:12]:
-                col.label(text=f"  âœ“ {name}")
+                col.label(text=f"  ✓ {name}")
             if len(arch_loaded) > 12:
-                col.label(text=f"  â€¦ +{len(arch_loaded)-12} more")
+                col.label(text=f"  … +{len(arch_loaded)-12} more")
 
 
 class SURREAL_ARCH_PT_optimization(_SubPanelBase, bpy.types.Panel):
-    bl_label = "âš™ï¸  Bevel / Optimization / Output"
+    bl_label = "⚙️  Bevel / Optimization / Output"
     bl_idname = "SURREAL_ARCH_PT_optimization"
     bl_order = 35
 
@@ -35562,17 +35612,17 @@ class SURREAL_ARCH_PT_optimization(_SubPanelBase, bpy.types.Panel):
         props = context.active_object.surreal_arch_props
 
         pf = layout.box()
-        pf.label(text="ðŸŽ® UE5 Portfolio Export Checklist", icon='EXPORT')
+        pf.label(text="🎮 UE5 Portfolio Export Checklist", icon='EXPORT')
         pf.label(text="1. Generate geometry  2. Clamp floating pieces")
         pf.label(text="3. Auto UV (triplanar/box)  4. Apply modifiers")
         pf.label(text="5. Export FBX or Bake & Export to UE5")
-        pf.label(text="Materials assigned in Unreal â€” geometry only here", icon='INFO')
+        pf.label(text="Materials assigned in Unreal — geometry only here", icon='INFO')
 
-        # â”€â”€ Full Bevel Add-on Integration â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+        # ── Full Bevel Add-on Integration ────────────────────────────────
         box = layout.box()
         hrow = box.row(align=True)
-        hrow.label(text="ðŸ”ª Bevel (Add-on)", icon='MOD_BEVEL')
-        hrow.operator("surreal_arch.apply_bevel_addon", text="âš¡ Apply", icon='CHECKMARK')
+        hrow.label(text="🔪 Bevel (Add-on)", icon='MOD_BEVEL')
+        hrow.operator("surreal_arch.apply_bevel_addon", text="⚡ Apply", icon='CHECKMARK')
         col = box.column(align=True)
         col.prop(props, "bevel_mode", text="Mode")
         if props.bevel_mode != 'NONE':
@@ -35583,7 +35633,7 @@ class SURREAL_ARCH_PT_optimization(_SubPanelBase, bpy.types.Panel):
             col.prop(props, "bevel_profile_type",  text="Profile")
             if props.bevel_profile_type != 'CUSTOM':
                 col.prop(props, "bevel_profile_value", text="Profile Value")
-            col.prop(props, "bevel_angle_deg",     text="Angle Â°")
+            col.prop(props, "bevel_angle_deg",     text="Angle °")
             col.separator()
             col.prop(props, "bevel_vertex_only")
             col.prop(props, "bevel_harden_normals")
@@ -35598,31 +35648,31 @@ class SURREAL_ARCH_PT_optimization(_SubPanelBase, bpy.types.Panel):
             col.prop(props, "bevel_clamp_overlap")
             col.prop(props, "bevel_material_index", text="Material Slot")
 
-        box = layout.box(); box.label(text="âš™ï¸  Optimization")
+        box = layout.box(); box.label(text="⚙️  Optimization")
         col = box.column(align=True)
         col.prop(props, "poly_target")
         col.prop(props, "aggressive_decimation")
         col.prop(props, "bake_normals")
 
-        box = layout.box(); box.label(text="ðŸ“  Auto-Align Origin")
+        box = layout.box(); box.label(text="📐  Auto-Align Origin")
         col = box.column(align=True)
         col.prop(props, "auto_align_mode", text="")
         col.label(text="Snaps every preset to the same origin convention.")
 
-        box = layout.box(); box.label(text="ðŸ§¼ Topology Cleanup (Blender 5.0+ smooth-by-angle)")
+        box = layout.box(); box.label(text="🧼 Topology Cleanup (Blender 5.0+ smooth-by-angle)")
         col = box.column(align=True)
         col.prop(props, "cleanup_apply_pass")
         if props.cleanup_apply_pass:
             col.prop(props, "cleanup_merge_distance")
             col.prop(props, "cleanup_smooth_angle")
 
-        box = layout.box(); box.label(text="ðŸ“¤ Output")
+        box = layout.box(); box.label(text="📤 Output")
         col = box.column(align=True)
         col.prop(props, "auto_smooth")
         col.prop(props, "apply_modifiers")
         col.prop(props, "auto_frame_nodes")
         col.separator()
-        box_uv = layout.box(); box_uv.label(text="ðŸ—º Auto UV (UE5)", icon='UV')
+        box_uv = layout.box(); box_uv.label(text="🗺 Auto UV (UE5)", icon='UV')
         col_uv = box_uv.column(align=True)
         col_uv.prop(props, "auto_uv_unwrap")
         if props.auto_uv_unwrap:
@@ -35634,16 +35684,16 @@ class SURREAL_ARCH_PT_optimization(_SubPanelBase, bpy.types.Panel):
                 col_uv.prop(props, "uv_angle_limit")
                 col_uv.prop(props, "uv_island_margin")
                 col_uv.label(text="Smart UV runs when Apply Modifiers is on", icon='INFO')
-            col_uv.operator("surreal_arch.uv_unwrap", text="ðŸ—º Unwrap Active Mesh", icon='UV')
+            col_uv.operator("surreal_arch.uv_unwrap", text="🗺 Unwrap Active Mesh", icon='UV')
         col.separator()
-        col.operator("surreal_arch.export_ue5", text="ðŸŽ® Bake & Export to UE5", icon='EXPORT')
+        col.operator("surreal_arch.export_ue5", text="🎮 Bake & Export to UE5", icon='EXPORT')
 
 
 def _draw_old_legacy_unused(self, context):
     """legacy stub kept for safe diff - no-op"""
     if False:
         layout = self.layout
-        layout.label(text="ðŸŽ¨ Quick Presets:")
+        layout.label(text="🎨 Quick Presets:")
         col_p = layout.column(align=True)
 
         row = col_p.row(align=True)
@@ -35666,38 +35716,38 @@ def _draw_old_legacy_unused(self, context):
 
         row = col_p.row(align=True)
         row.scale_y = 1.25
-        row.operator("surreal_arch.preset_penrose", text="ðŸªœ Penrose")
-        row.operator("surreal_arch.preset_pillar",  text="ðŸ› Pillar")
-        row.operator("surreal_arch.preset_dome",    text="ðŸŒ Dome")
+        row.operator("surreal_arch.preset_penrose", text="🪜 Penrose")
+        row.operator("surreal_arch.preset_pillar",  text="🏛 Pillar")
+        row.operator("surreal_arch.preset_dome",    text="🌐 Dome")
 
         row = col_p.row(align=True)
         row.scale_y = 1.25
-        row.operator("surreal_arch.preset_crenel",  text="ðŸ° Crenel")
-        row.operator("surreal_arch.preset_fractal", text="â„ Fractal")
+        row.operator("surreal_arch.preset_crenel",  text="🏰 Crenel")
+        row.operator("surreal_arch.preset_fractal", text="❄ Fractal")
 
         # Music presets
         col_p.label(text="Musical Notation:")
         row = col_p.row(align=True)
         row.scale_y = 1.25
-        row.operator("surreal_arch.preset_clef",  text="ð„ž Clef")
-        row.operator("surreal_arch.preset_note",  text="â™© Note")
-        row.operator("surreal_arch.preset_staff", text="â™« Staff")
+        row.operator("surreal_arch.preset_clef",  text="𝄞 Clef")
+        row.operator("surreal_arch.preset_note",  text="♩ Note")
+        row.operator("surreal_arch.preset_staff", text="♫ Staff")
 
         # Gothic presets
         col_p.label(text="Gothic / Tracery:")
         row = col_p.row(align=True)
         row.scale_y = 1.25
-        row.operator("surreal_arch.preset_gothic",  text="âœŸ Gothic")
-        row.operator("surreal_arch.preset_trefoil", text="â˜˜ Trefoil")
-        row.operator("surreal_arch.preset_rose",    text="â€ Rose")
+        row.operator("surreal_arch.preset_gothic",  text="✟ Gothic")
+        row.operator("surreal_arch.preset_trefoil", text="☘ Trefoil")
+        row.operator("surreal_arch.preset_rose",    text="❀ Rose")
         row = col_p.row(align=True)
         row.scale_y = 1.25
-        row.operator("surreal_arch.preset_lancet", text="â€– Lancet")
+        row.operator("surreal_arch.preset_lancet", text="‖ Lancet")
 
         layout.separator()
 
         # Architecture type
-        layout.label(text="ðŸ—ï¸  Architecture Type:")
+        layout.label(text="🏗️  Architecture Type:")
         layout.prop(props, "arch_type", text="")
 
         layout.separator()
@@ -35706,7 +35756,7 @@ def _draw_old_legacy_unused(self, context):
         t = props.arch_type
 
         if t in {'TOWER', 'ORGANIC', 'HYBRID', 'BUILDING'}:
-            box = layout.box(); box.label(text="ðŸ“ Geometry")
+            box = layout.box(); box.label(text="📏 Geometry")
             col = box.column(align=True)
             col.prop(props, "base_radius")
             col.prop(props, "height")
@@ -35723,7 +35773,7 @@ def _draw_old_legacy_unused(self, context):
             col.prop(props, "bulge_amount")
 
         if t in {'RAILING', 'BUILDING'}:
-            box = layout.box(); box.label(text="ðŸ›¡ï¸  Railing")
+            box = layout.box(); box.label(text="🛡️  Railing")
             col = box.column(align=True)
             col.prop(props, "rail_length")
             col.prop(props, "rail_baluster_count")
@@ -35732,7 +35782,7 @@ def _draw_old_legacy_unused(self, context):
             col.prop(props, "rail_top_size")
 
         if t == 'STAIRCASE':
-            box = layout.box(); box.label(text="ðŸªœ Staircase")
+            box = layout.box(); box.label(text="🪜 Staircase")
             col = box.column(align=True)
             col.prop(props, "stair_step_count")
             col.prop(props, "stair_rise")
@@ -35742,7 +35792,7 @@ def _draw_old_legacy_unused(self, context):
             col.prop(props, "stair_with_rails")
 
         if t in {'ARCH', 'BUILDING'}:
-            box = layout.box(); box.label(text="ðŸŒ™ Arch")
+            box = layout.box(); box.label(text="🌙 Arch")
             col = box.column(align=True)
             col.prop(props, "arch_radius")
             col.prop(props, "arch_sweep_deg")
@@ -35751,7 +35801,7 @@ def _draw_old_legacy_unused(self, context):
             col.prop(props, "arch_rib_radius")
 
         if t in {'BUTTRESS', 'BUILDING'}:
-            box = layout.box(); box.label(text="ðŸ° Buttress")
+            box = layout.box(); box.label(text="🏰 Buttress")
             col = box.column(align=True)
             col.prop(props, "buttress_span")
             col.prop(props, "buttress_height")
@@ -35760,7 +35810,7 @@ def _draw_old_legacy_unused(self, context):
             col.prop(props, "buttress_finial_size")
 
         if t == 'BUILDING':
-            box = layout.box(); box.label(text="ðŸ›ï¸  Building Composition")
+            box = layout.box(); box.label(text="🏛️  Building Composition")
             col = box.column(align=True)
             col.prop(props, "building_floors")
             col.prop(props, "building_floor_height")
@@ -35769,14 +35819,14 @@ def _draw_old_legacy_unused(self, context):
             col.prop(props, "building_with_buttress")
 
         if t == 'PENROSE':
-            box = layout.box(); box.label(text="ðŸªœ Penrose Stairs")
+            box = layout.box(); box.label(text="🪜 Penrose Stairs")
             col = box.column(align=True)
             col.prop(props, "penrose_steps_per_side")
             col.prop(props, "penrose_side_length")
             col.prop(props, "penrose_rise")
 
         if t == 'PILLAR':
-            box = layout.box(); box.label(text="ðŸ›  Pillar / Column")
+            box = layout.box(); box.label(text="🏛  Pillar / Column")
             col = box.column(align=True)
             col.prop(props, "pillar_radius")
             col.prop(props, "pillar_height")
@@ -35786,7 +35836,7 @@ def _draw_old_legacy_unused(self, context):
             col.prop(props, "pillar_capital_layers")
 
         if t == 'DOME':
-            box = layout.box(); box.label(text="ðŸŒ Dome")
+            box = layout.box(); box.label(text="🌐 Dome")
             col = box.column(align=True)
             col.prop(props, "dome_radius")
             col.prop(props, "dome_segments")
@@ -35795,7 +35845,7 @@ def _draw_old_legacy_unused(self, context):
             col.prop(props, "dome_spire")
 
         if t == 'CRENEL':
-            box = layout.box(); box.label(text="ðŸ° Crenellation")
+            box = layout.box(); box.label(text="🏰 Crenellation")
             col = box.column(align=True)
             col.prop(props, "crenel_length")
             col.prop(props, "crenel_height")
@@ -35805,7 +35855,7 @@ def _draw_old_legacy_unused(self, context):
             col.prop(props, "crenel_gap_ratio")
 
         if t == 'FRACTAL':
-            box = layout.box(); box.label(text="â„  Fractal Tower")
+            box = layout.box(); box.label(text="❄  Fractal Tower")
             col = box.column(align=True)
             col.prop(props, "fractal_iterations")
             col.prop(props, "fractal_scale")
@@ -35813,46 +35863,46 @@ def _draw_old_legacy_unused(self, context):
             col.prop(props, "fractal_twist_per")
 
         if t == 'TREBLE_CLEF':
-            box = layout.box(); box.label(text="ð„ž Treble Clef")
+            box = layout.box(); box.label(text="𝄞 Treble Clef")
             col = box.column(align=True)
             col.prop(props, "clef_size")
             col.prop(props, "clef_thickness")
             col.prop(props, "clef_curls")
 
         if t == 'NOTE_HEAD':
-            box = layout.box(); box.label(text="â™© Note Head")
+            box = layout.box(); box.label(text="♩ Note Head")
             col = box.column(align=True)
             col.prop(props, "note_kind")
             col.prop(props, "note_size")
             col.prop(props, "note_stem_len")
 
         if t == 'STAFF':
-            box = layout.box(); box.label(text="â™« Music Staff")
+            box = layout.box(); box.label(text="♫ Music Staff")
             col = box.column(align=True)
             col.prop(props, "staff_length")
             col.prop(props, "staff_note_count")
             col.prop(props, "staff_line_thickness")
 
         if t in {'GOTHIC_ARCH', 'TREFOIL', 'LANCET', 'ROSE_WINDOW'}:
-            box = layout.box(); box.label(text="âœŸ Gothic Common")
+            box = layout.box(); box.label(text="✟ Gothic Common")
             col = box.column(align=True)
             col.prop(props, "gothic_thickness")
 
         if t == 'GOTHIC_ARCH':
-            box = layout.box(); box.label(text="âœŸ Gothic Arch")
+            box = layout.box(); box.label(text="✟ Gothic Arch")
             col = box.column(align=True)
             col.prop(props, "gothic_width")
             col.prop(props, "gothic_radius")
 
         if t == 'TREFOIL':
-            box = layout.box(); box.label(text="â˜˜ Trefoil")
+            box = layout.box(); box.label(text="☘ Trefoil")
             col = box.column(align=True)
             col.prop(props, "trefoil_lobes")
             col.prop(props, "trefoil_radius")
             col.prop(props, "trefoil_outer")
 
         if t == 'ROSE_WINDOW':
-            box = layout.box(); box.label(text="â€ Rose Window")
+            box = layout.box(); box.label(text="❀ Rose Window")
             col = box.column(align=True)
             col.prop(props, "rose_outer_radius")
             col.prop(props, "rose_inner_radius")
@@ -35861,7 +35911,7 @@ def _draw_old_legacy_unused(self, context):
             col.prop(props, "rose_spoke_count")
 
         if t == 'LANCET':
-            box = layout.box(); box.label(text="â€– Lancet Window")
+            box = layout.box(); box.label(text="‖ Lancet Window")
             col = box.column(align=True)
             col.prop(props, "lancet_width")
             col.prop(props, "lancet_height")
@@ -35869,7 +35919,7 @@ def _draw_old_legacy_unused(self, context):
             col.prop(props, "lancet_count")
 
         # Whimsy / musical (always)
-        box = layout.box(); box.label(text="ðŸŽµ Whimsical Ornaments")
+        box = layout.box(); box.label(text="🎵 Whimsical Ornaments")
         col = box.column(align=True)
         col.prop(props, "ornament_density")
         col.prop(props, "harmonic_layers")
@@ -35878,13 +35928,13 @@ def _draw_old_legacy_unused(self, context):
         col.prop(props, "musical_amplitude")
 
         # Musical notation
-        box = layout.box(); box.label(text="ðŸŽ¼ Musical Notation")
+        box = layout.box(); box.label(text="🎼 Musical Notation")
         col = box.column(align=True)
         col.prop(props, "note_pattern")
         col.prop(props, "tempo_factor")
 
         # Bevel
-        box = layout.box(); box.label(text="ðŸ”ª Bevel (Edge Modifier)")
+        box = layout.box(); box.label(text="🔪 Bevel (Edge Modifier)")
         col = box.column(align=True)
         col.prop(props, "bevel_mode", text="Mode")
         col.prop(props, "bevel_amount", text="Width")
@@ -35895,21 +35945,21 @@ def _draw_old_legacy_unused(self, context):
             col.prop(props, "bevel_clamp_overlap")
 
         # Randomization
-        box = layout.box(); box.label(text="ðŸŽ² Randomization")
+        box = layout.box(); box.label(text="🎲 Randomization")
         col = box.column(align=True)
         col.prop(props, "seed")
         col.prop(props, "variation_intensity")
         col.prop(props, "symmetry_break")
 
         # Optimization
-        box = layout.box(); box.label(text="âš™ï¸  Optimization")
+        box = layout.box(); box.label(text="⚙️  Optimization")
         col = box.column(align=True)
         col.prop(props, "poly_target")
         col.prop(props, "aggressive_decimation")
         col.prop(props, "bake_normals")
 
         # Output
-        box = layout.box(); box.label(text="ðŸ“¤ Output")
+        box = layout.box(); box.label(text="📤 Output")
         col = box.column(align=True)
         col.prop(props, "auto_smooth")
         col.prop(props, "apply_modifiers")
@@ -35918,8 +35968,8 @@ def _draw_old_legacy_unused(self, context):
 
         # Generate button
         row = layout.row(align=True); row.scale_y = 1.6
-        row.operator("surreal_arch.generate", text="âœ¨ Generate Geometry")
-        layout.operator("surreal_arch.export_fbx", text="ðŸ“¤ Export FBX")
+        row.operator("surreal_arch.generate", text="✨ Generate Geometry")
+        layout.operator("surreal_arch.export_fbx", text="📤 Export FBX")
 
 
 # ======================================================================
@@ -36177,7 +36227,7 @@ def _add_roof_modifier_stack(obj, props):
 class SURREAL_ARCH_OT_preset_curved_roof(bpy.types.Operator):
     """Generate a procedural curved roof on the active mesh object."""
     bl_idname = "surreal_arch.preset_curved_roof"
-    bl_label  = "ðŸ  Generate Curved Roof"
+    bl_label  = "🏠 Generate Curved Roof"
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
@@ -36325,7 +36375,7 @@ def _build_bbox_grow(obj, props):
 class SURREAL_ARCH_OT_bbox_grow(bpy.types.Operator):
     """Generate expanding geometry around the active object's bounding box."""
     bl_idname = "surreal_arch.bbox_grow"
-    bl_label  = "ðŸ“¦ BBox Grow"
+    bl_label  = "📦 BBox Grow"
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
@@ -36434,7 +36484,7 @@ def _apply_magic_distortion(obj, props):
 class SURREAL_ARCH_OT_apply_magic(bpy.types.Operator):
     """Apply the chosen magical distortion preset to the active object."""
     bl_idname = "surreal_arch.apply_magic"
-    bl_label  = "âœ¨ Apply Magic"
+    bl_label  = "✨ Apply Magic"
     bl_options = {'REGISTER', 'UNDO'}
     def execute(self, context):
         obj=context.active_object
@@ -36453,36 +36503,36 @@ def _magic_one_click(preset):
     return execute
 
 class SURREAL_ARCH_OT_magic_liquid(bpy.types.Operator):
-    bl_idname="surreal_arch.magic_liquid"; bl_label="ðŸ’§ Liquid"; bl_options={'REGISTER','UNDO'}
+    bl_idname="surreal_arch.magic_liquid"; bl_label="💧 Liquid"; bl_options={'REGISTER','UNDO'}
     execute=_magic_one_click('LIQUID')
 
 class SURREAL_ARCH_OT_magic_crystal(bpy.types.Operator):
-    bl_idname="surreal_arch.magic_crystal"; bl_label="ðŸ’Ž Crystal"; bl_options={'REGISTER','UNDO'}
+    bl_idname="surreal_arch.magic_crystal"; bl_label="💎 Crystal"; bl_options={'REGISTER','UNDO'}
     execute=_magic_one_click('CRYSTAL')
 
 class SURREAL_ARCH_OT_magic_portal(bpy.types.Operator):
-    bl_idname="surreal_arch.magic_portal"; bl_label="ðŸŒ€ Portal"; bl_options={'REGISTER','UNDO'}
+    bl_idname="surreal_arch.magic_portal"; bl_label="🌀 Portal"; bl_options={'REGISTER','UNDO'}
     execute=_magic_one_click('PORTAL')
 
 class SURREAL_ARCH_OT_magic_timerift(bpy.types.Operator):
-    bl_idname="surreal_arch.magic_timerift"; bl_label="â³ TimeRift"; bl_options={'REGISTER','UNDO'}
+    bl_idname="surreal_arch.magic_timerift"; bl_label="⏳ TimeRift"; bl_options={'REGISTER','UNDO'}
     execute=_magic_one_click('TIMERIFT')
 
 class SURREAL_ARCH_OT_magic_dreamweave(bpy.types.Operator):
-    bl_idname="surreal_arch.magic_dreamweave"; bl_label="ðŸŒˆ Dreamweave"; bl_options={'REGISTER','UNDO'}
+    bl_idname="surreal_arch.magic_dreamweave"; bl_label="🌈 Dreamweave"; bl_options={'REGISTER','UNDO'}
     execute=_magic_one_click('DREAMWEAVE')
 
 class SURREAL_ARCH_OT_magic_void_bloom(bpy.types.Operator):
-    bl_idname="surreal_arch.magic_void_bloom"; bl_label="ðŸ–¤ Void Bloom"; bl_options={'REGISTER','UNDO'}
+    bl_idname="surreal_arch.magic_void_bloom"; bl_label="🖤 Void Bloom"; bl_options={'REGISTER','UNDO'}
     execute=_magic_one_click('VOID_BLOOM')
 
 class SURREAL_ARCH_OT_magic_aurora(bpy.types.Operator):
-    bl_idname="surreal_arch.magic_aurora"; bl_label="ðŸŒŒ Aurora"; bl_options={'REGISTER','UNDO'}
+    bl_idname="surreal_arch.magic_aurora"; bl_label="🌌 Aurora"; bl_options={'REGISTER','UNDO'}
     execute=_magic_one_click('AURORA')
 
 class SURREAL_ARCH_OT_magic_clear(bpy.types.Operator):
     """Remove all Magic_ modifiers from active object."""
-    bl_idname="surreal_arch.magic_clear"; bl_label="ðŸ—‘ Clear Magic"; bl_options={'REGISTER','UNDO'}
+    bl_idname="surreal_arch.magic_clear"; bl_label="🗑 Clear Magic"; bl_options={'REGISTER','UNDO'}
     def execute(self,context):
         o=context.active_object
         if o and o.type=='MESH':
@@ -36511,10 +36561,13 @@ def _apply_bevel_addon(obj, props):
     mod.use_clamp_overlap=props.bevel_clamp_overlap
     mod.harden_normals=props.bevel_harden_normals
     mod.material=max(-1,props.bevel_material_index)
-    mod.vertex_only=props.bevel_vertex_only
     mod.miter_outer=props.bevel_miter_outer
     mod.miter_inner=props.bevel_miter_inner
     mod.spread=props.bevel_spread
+    try:
+        mod.vertex_only=props.bevel_vertex_only
+    except (AttributeError, TypeError):
+        pass
     ptype=props.bevel_profile_type
     try:
         if ptype=='CHAMFER':
@@ -36544,7 +36597,7 @@ def _apply_bevel_addon(obj, props):
 class SURREAL_ARCH_OT_apply_bevel_addon(bpy.types.Operator):
     """Apply full-featured Bevel modifier (profile, miters, smart edge detection)."""
     bl_idname="surreal_arch.apply_bevel_addon"
-    bl_label ="ðŸ”ª Apply Bevel (Full)"
+    bl_label ="🔪 Apply Bevel (Full)"
     bl_options={'REGISTER','UNDO'}
     def execute(self,context):
         obj=context.active_object
@@ -36558,7 +36611,7 @@ class SURREAL_ARCH_OT_apply_bevel_addon(bpy.types.Operator):
 # ======================================================================
 
 class SURREAL_ARCH_PT_curved_roof(_SubPanelBase, bpy.types.Panel):
-    bl_label  = "ðŸ  Curved Roof Generator"
+    bl_label  = "🏠 Curved Roof Generator"
     bl_idname = "SURREAL_ARCH_PT_curved_roof"
 
     def draw(self, context):
@@ -36572,18 +36625,18 @@ class SURREAL_ARCH_PT_curved_roof(_SubPanelBase, bpy.types.Panel):
         col.prop(props,"roof_eave_overhang"); col.prop(props,"roof_eave_curve")
         col.prop(props,"roof_thickness"); col.prop(props,"roof_segments")
         if props.roof_type=='PAGODA':
-            b2=layout.box(); b2.label(text="ðŸ¯ Pagoda")
+            b2=layout.box(); b2.label(text="🏯 Pagoda")
             c2=b2.column(align=True)
             c2.prop(props,"roof_tiers"); c2.prop(props,"roof_tier_shrink")
         if props.roof_type=='WAVE':
             layout.prop(props,"roof_wave_freq")
         layout.prop(props,"roof_with_tiles")
         row=layout.row(align=True); row.scale_y=1.5
-        row.operator("surreal_arch.preset_curved_roof",text="ðŸ  Build Roof",icon='MESH_DATA')
+        row.operator("surreal_arch.preset_curved_roof",text="🏠 Build Roof",icon='MESH_DATA')
 
 
 class SURREAL_ARCH_PT_bbox_grow(_SubPanelBase, bpy.types.Panel):
-    bl_label  = "ðŸ“¦ BBox Grow / Shell"
+    bl_label  = "📦 BBox Grow / Shell"
     bl_idname = "SURREAL_ARCH_PT_bbox_grow"
 
     def draw(self, context):
@@ -36598,31 +36651,31 @@ class SURREAL_ARCH_PT_bbox_grow(_SubPanelBase, bpy.types.Panel):
         if props.bbox_grow_mode in('CRYSTAL_GROW','ORGANIC_GROW'):
             col.prop(props,"bbox_grow_spike_count"); col.prop(props,"bbox_grow_spike_length")
         row=layout.row(align=True); row.scale_y=1.5
-        row.operator("surreal_arch.bbox_grow",text="ðŸ“¦ Grow!",icon='OUTLINER_OB_LATTICE')
+        row.operator("surreal_arch.bbox_grow",text="📦 Grow!",icon='OUTLINER_OB_LATTICE')
 
 
 class SURREAL_ARCH_PT_magic(_EffectsSubPanelBase, bpy.types.Panel):
-    bl_label  = "âœ¨ Magical Surreal Presets"
+    bl_label  = "✨ Magical Surreal Presets"
     bl_idname = "SURREAL_ARCH_PT_magic"
     bl_order = 2
 
     def draw(self, context):
         layout=self.layout; props=context.active_object.surreal_arch_props
-        box=layout.box(); box.label(text="âš¡ One-Click Magic")
+        box=layout.box(); box.label(text="⚡ One-Click Magic")
         col=box.column(align=True)
         r=col.row(align=True); r.scale_y=1.35
-        r.operator("surreal_arch.magic_liquid",   text="ðŸ’§ Liquid",   icon='MOD_WAVE')
-        r.operator("surreal_arch.magic_crystal",  text="ðŸ’Ž Crystal",  icon='SHADING_SOLID')
-        r.operator("surreal_arch.magic_portal",   text="ðŸŒ€ Portal",   icon='FORCE_VORTEX')
+        r.operator("surreal_arch.magic_liquid",   text="💧 Liquid",   icon='MOD_WAVE')
+        r.operator("surreal_arch.magic_crystal",  text="💎 Crystal",  icon='SHADING_SOLID')
+        r.operator("surreal_arch.magic_portal",   text="🌀 Portal",   icon='FORCE_VORTEX')
         r=col.row(align=True); r.scale_y=1.35
-        r.operator("surreal_arch.magic_timerift", text="â³ TimeRift", icon='TIME')
-        r.operator("surreal_arch.magic_dreamweave",text="ðŸŒˆ Dream",   icon='COLOR')
-        r.operator("surreal_arch.magic_void_bloom",text="ðŸ–¤ Void",    icon='IMPORT')
+        r.operator("surreal_arch.magic_timerift", text="⏳ TimeRift", icon='TIME')
+        r.operator("surreal_arch.magic_dreamweave",text="🌈 Dream",   icon='COLOR')
+        r.operator("surreal_arch.magic_void_bloom",text="🖤 Void",    icon='IMPORT')
         r=col.row(align=True); r.scale_y=1.35
-        r.operator("surreal_arch.magic_aurora",   text="ðŸŒŒ Aurora",   icon='LIGHT_SUN')
-        r.operator("surreal_arch.apply_magic",    text="âœ¨ Custom",   icon='SHADERFX')
-        r.operator("surreal_arch.magic_clear",    text="ðŸ—‘ Clear",    icon='TRASH')
-        box2=layout.box(); box2.label(text="ðŸ”§ Fine Control")
+        r.operator("surreal_arch.magic_aurora",   text="🌌 Aurora",   icon='LIGHT_SUN')
+        r.operator("surreal_arch.apply_magic",    text="✨ Custom",   icon='SHADERFX')
+        r.operator("surreal_arch.magic_clear",    text="🗑 Clear",    icon='TRASH')
+        box2=layout.box(); box2.label(text="🔧 Fine Control")
         col2=box2.column(align=True)
         col2.prop(props,"magic_preset",text="Preset")
         col2.prop(props,"magic_intensity"); col2.prop(props,"magic_frequency")
@@ -36630,7 +36683,7 @@ class SURREAL_ARCH_PT_magic(_EffectsSubPanelBase, bpy.types.Panel):
         col2.prop(props,"magic_layers"); col2.prop(props,"magic_warp_type",text="Warp")
         col2.prop(props,"magic_chromatic"); col2.prop(props,"magic_animate")
         if props.magic_preset=='GRAVITY_WELL':
-            b3=layout.box(); b3.label(text="ðŸ•³ Attractor")
+            b3=layout.box(); b3.label(text="🕳 Attractor")
             c3=b3.column(align=True)
             c3.prop(props,"magic_attractor_x",text="X")
             c3.prop(props,"magic_attractor_y",text="Y")
@@ -36638,14 +36691,14 @@ class SURREAL_ARCH_PT_magic(_EffectsSubPanelBase, bpy.types.Panel):
 
 
 # ----------------------------------------------------------------------
-# AESTHETIC PRESET LIBRARY â€” one-click vibes
+# AESTHETIC PRESET LIBRARY — one-click vibes
 # ----------------------------------------------------------------------
 # Each preset is a flat dict of property overrides. The operator sets them
 # on the active object's surreal_arch_props, then triggers a regeneration.
 
 AESTHETIC_PRESETS = {
     # ===========================================================
-    # ðŸŒ´ VAPORWAVE â€” neon, pastel, chromatic, glitched
+    # 🌴 VAPORWAVE — neon, pastel, chromatic, glitched
     # ===========================================================
     'MIAMI_SUNSET': {
         'arch_type': 'PALAZZO', 'palazzo_floors': 4, 'palazzo_width': 8.0,
@@ -36707,7 +36760,7 @@ AESTHETIC_PRESETS = {
     },
 
     # ===========================================================
-    # â›© ZEN â€” quiet, balanced, traditional + meditative
+    # ⛩ ZEN — quiet, balanced, traditional + meditative
     # ===========================================================
     'ENSO_GATEWAY': {
         'arch_type': 'ARCH', 'arch_radius': 3.0, 'arch_sweep_deg': 360.0,
@@ -36758,7 +36811,7 @@ AESTHETIC_PRESETS = {
     },
 
     # ===========================================================
-    # ðŸ¦‡ GOTHIC â€” dark, ornate, sacred, decayed
+    # 🦇 GOTHIC — dark, ornate, sacred, decayed
     # ===========================================================
     'HIGH_CATHEDRAL': {
         'arch_type': 'PALAZZO', 'palazzo_floors': 5, 'palazzo_width': 12.0,
@@ -36819,7 +36872,7 @@ AESTHETIC_PRESETS = {
     },
 
     # ===========================================================
-    # ðŸ‘ ELDRITCH / OTHERWORLDLY â€” surreal, cosmic, weird-physics
+    # 👁 ELDRITCH / OTHERWORLDLY — surreal, cosmic, weird-physics
     # ===========================================================
     'ELDRITCH_BLOOM': {
         'arch_type': 'KLEIN_BOTTLE', 'sv_resolution': 80, 'sv_scale': 2.5,
@@ -36877,7 +36930,7 @@ AESTHETIC_PRESETS = {
     },
 
     # ===========================================================
-    # ðŸ”¥ GO CRAZY â€” wildcard combos
+    # 🔥 GO CRAZY — wildcard combos
     # ===========================================================
     'TOTAL_CHAOS': {
         'arch_type': 'FIELD_SCULPTURE', 'fractal_iterations': 5,
@@ -36970,7 +37023,7 @@ class SURREAL_ARCH_OT_aesthetic_preset(bpy.types.Operator):
 
 class SURREAL_ARCH_OT_aesthetic_random(bpy.types.Operator):
     bl_idname = "surreal_arch.aesthetic_random"
-    bl_label = "ðŸŽ² Random Aesthetic"
+    bl_label = "🎲 Random Aesthetic"
     bl_description = "Apply a random aesthetic preset from the entire library"
     bl_options = {'REGISTER', 'UNDO'}
 
@@ -36987,74 +37040,74 @@ class SURREAL_ARCH_OT_aesthetic_random(bpy.types.Operator):
             return {'CANCELLED'}
         chosen = random.choice(keys)
         _apply_aesthetic_preset(context, chosen)
-        self.report({'INFO'}, f"ðŸŽ² {chosen}")
+        self.report({'INFO'}, f"🎲 {chosen}")
         return {'FINISHED'}
 
 
 # Display groupings for the panel
 _AESTHETIC_GROUPS = {
     'VAPORWAVE': [
-        ('MIAMI_SUNSET',     'ðŸŒ´ Miami Sunset'),
-        ('GLITCH_MALL',      'ðŸ“¼ Glitch Mall'),
-        ('NEON_GRID',        'ðŸŸª Neon Grid'),
-        ('SYNTHWAVE_SPIRE',  'ðŸŽ¹ Synthwave Spire'),
-        ('PASTEL_PYRAMID',   'ðŸ”º Pastel Pyramid'),
-        ('HOLO_STATUE',      'ðŸ‘¤ Holo Statue'),
-        ('CRYSTAL_POOL',     'ðŸ’§ Crystal Pool'),
-        ('ANALOG_HORROR',    'ðŸ“º Analog Horror'),
+        ('MIAMI_SUNSET',     '🌴 Miami Sunset'),
+        ('GLITCH_MALL',      '📼 Glitch Mall'),
+        ('NEON_GRID',        '🟪 Neon Grid'),
+        ('SYNTHWAVE_SPIRE',  '🎹 Synthwave Spire'),
+        ('PASTEL_PYRAMID',   '🔺 Pastel Pyramid'),
+        ('HOLO_STATUE',      '👤 Holo Statue'),
+        ('CRYSTAL_POOL',     '💧 Crystal Pool'),
+        ('ANALOG_HORROR',    '📺 Analog Horror'),
     ],
     'ZEN': [
-        ('ENSO_GATEWAY',     'â­• Enso Gateway'),
-        ('KARESANSUI',       'ðŸª¨ Karesansui'),
-        ('BAMBOO_GROVE',     'ðŸŽ‹ Bamboo Grove'),
-        ('MOSS_TEMPLE',      'ðŸµ Moss Temple'),
-        ('CHERRY_PAGODA',    'ðŸŒ¸ Cherry Pagoda'),
-        ('KOI_BRIDGE',       'ðŸŸ Koi Bridge'),
-        ('FLOATING_LANTERN', 'ðŸ® Floating Lantern'),
-        ('TORII_OF_MIST',    'â›© Torii of Mist'),
+        ('ENSO_GATEWAY',     '⭕ Enso Gateway'),
+        ('KARESANSUI',       '🪨 Karesansui'),
+        ('BAMBOO_GROVE',     '🎋 Bamboo Grove'),
+        ('MOSS_TEMPLE',      '🍵 Moss Temple'),
+        ('CHERRY_PAGODA',    '🌸 Cherry Pagoda'),
+        ('KOI_BRIDGE',       '🐟 Koi Bridge'),
+        ('FLOATING_LANTERN', '🏮 Floating Lantern'),
+        ('TORII_OF_MIST',    '⛩ Torii of Mist'),
     ],
     'GOTHIC': [
-        ('HIGH_CATHEDRAL',     'â›ª High Cathedral'),
-        ('BONE_SPIRE',         'ðŸ¦´ Bone Spire'),
-        ('CRYPT_VAULT',        'âš° Crypt Vault'),
-        ('FLYING_BUTTRESS_RUN','ðŸ› Flying Buttress'),
-        ('BLOODY_ROSE',        'ðŸŒ¹ Bloody Rose'),
-        ('HAUNTED_MANOR',      'ðŸ¦‡ Haunted Manor'),
-        ('NIGHT_CLOISTER',     'ðŸŒ™ Night Cloister'),
-        ('NECROPOLIS',         'ðŸ’€ Necropolis'),
+        ('HIGH_CATHEDRAL',     '⛪ High Cathedral'),
+        ('BONE_SPIRE',         '🦴 Bone Spire'),
+        ('CRYPT_VAULT',        '⚰ Crypt Vault'),
+        ('FLYING_BUTTRESS_RUN','🏛 Flying Buttress'),
+        ('BLOODY_ROSE',        '🌹 Bloody Rose'),
+        ('HAUNTED_MANOR',      '🦇 Haunted Manor'),
+        ('NIGHT_CLOISTER',     '🌙 Night Cloister'),
+        ('NECROPOLIS',         '💀 Necropolis'),
     ],
     'ELDRITCH': [
-        ('ELDRITCH_BLOOM', 'ðŸ‘ Eldritch Bloom'),
-        ('QUANTUM_FOAM',   'â˜ Quantum Foam'),
-        ('TIME_SPIRAL',    'â³ Time Spiral'),
-        ('COSMIC_EGG',     'ðŸ¥š Cosmic Egg'),
-        ('ABYSSAL_RIFT',   'ðŸ•³ Abyssal Rift'),
-        ('WORMHOLE_GATE',  'ðŸŒ€ Wormhole Gate'),
-        ('ANGEL_NUMBERS',  'âœ¨ Angel Numbers'),
-        ('GRAVITY_TEMPLE', 'ðŸª Gravity Temple'),
+        ('ELDRITCH_BLOOM', '👁 Eldritch Bloom'),
+        ('QUANTUM_FOAM',   '☁ Quantum Foam'),
+        ('TIME_SPIRAL',    '⏳ Time Spiral'),
+        ('COSMIC_EGG',     '🥚 Cosmic Egg'),
+        ('ABYSSAL_RIFT',   '🕳 Abyssal Rift'),
+        ('WORMHOLE_GATE',  '🌀 Wormhole Gate'),
+        ('ANGEL_NUMBERS',  '✨ Angel Numbers'),
+        ('GRAVITY_TEMPLE', '🪐 Gravity Temple'),
     ],
     'CRAZY': [
-        ('TOTAL_CHAOS',    'ðŸ’¥ Total Chaos'),
-        ('MELTING_CITY',   'ðŸŒƒ Melting City'),
-        ('BIO_CATHEDRAL',  'ðŸ§¬ Bio Cathedral'),
-        ('STAR_FOREST',    'ðŸŒŸ Star Forest'),
+        ('TOTAL_CHAOS',    '💥 Total Chaos'),
+        ('MELTING_CITY',   '🌃 Melting City'),
+        ('BIO_CATHEDRAL',  '🧬 Bio Cathedral'),
+        ('STAR_FOREST',    '🌟 Star Forest'),
     ],
 }
 
 
-# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-# M.C. ESCHER PRESETS â€” both GN-arch_type and Sverchok routes (v2.36)
+# ══════════════════════════════════════════════════════════════════════
+# M.C. ESCHER PRESETS — both GN-arch_type and Sverchok routes (v2.36)
 #
 # Each preset is a dict with:
-#   `route`    â€” 'GN' (sets arch_type + props, calls generate) or
+#   `route`    — 'GN' (sets arch_type + props, calls generate) or
 #                'SV' (calls a Sverchok-spawn operator directly)
-#   `params`   â€” for GN: dict of surreal_arch_props overrides
+#   `params`   — for GN: dict of surreal_arch_props overrides
 #                for SV: dict of operator-call kwargs
-#   `sv_op`    â€” for SV: the operator id to call (e.g. 'surreal_arch.sv_twisted')
-# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+#   `sv_op`    — for SV: the operator id to call (e.g. 'surreal_arch.sv_twisted')
+# ══════════════════════════════════════════════════════════════════════
 
 ESCHER_PRESETS = {
-    # â”€â”€ Impossible Architecture (GN arch_type route) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Impossible Architecture (GN arch_type route) ──────────────────
     'PENROSE_STAIRS': {
         'route': 'GN',
         'params': {
@@ -37082,7 +37135,7 @@ ESCHER_PRESETS = {
             'material_choice': 'MARBLE',
         },
     },
-    # â”€â”€ Topology / Non-Orientable Surfaces â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Topology / Non-Orientable Surfaces ─────────────────────────────
     'MOBIUS_CATHEDRAL': {
         'route': 'GN',
         'params': {
@@ -37112,7 +37165,7 @@ ESCHER_PRESETS = {
             'material_choice': 'GOLD',
         },
     },
-    # â”€â”€ Tessellation (Escher's reptiles/birds/fish) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Tessellation (Escher's reptiles/birds/fish) ───────────────────
     'TESSELLATION_GRID': {
         'route': 'GN',
         'params': {
@@ -37135,7 +37188,7 @@ ESCHER_PRESETS = {
             'aest_intensity': 0.5,
         },
     },
-    # â”€â”€ Hyperbolic Plane (Circle Limit) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Hyperbolic Plane (Circle Limit) ───────────────────────────────
     'HYPERBOLIC_PLAZA': {
         'route': 'GN',
         'params': {
@@ -37147,7 +37200,7 @@ ESCHER_PRESETS = {
             'material_choice': 'STAINED',
         },
     },
-    # â”€â”€ Recursive / Self-Similar (Escher's Drawing Hands) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Recursive / Self-Similar (Escher's Drawing Hands) ─────────────
     'FRACTAL_BRANCH': {
         'route': 'GN',
         'params': {
@@ -37169,7 +37222,7 @@ ESCHER_PRESETS = {
             'material_choice': 'CLEF_GLOW',
         },
     },
-    # â”€â”€ Sverchok route (algorithmic-pure Escher) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Sverchok route (algorithmic-pure Escher) ──────────────────────
     'SV_SPIRAL_TOWER': {
         'route': 'SV',
         'sv_op': 'surreal_arch.sv_spiral',
@@ -37223,32 +37276,32 @@ ESCHER_PRESETS = {
 # Display groupings for the Escher panel
 _ESCHER_GROUPS = {
     'IMPOSSIBLE': [
-        ('PENROSE_STAIRS',     'ðŸªœ Penrose Stairs'),
-        ('ESCHER_PATH_LOOP',   'â™¾ Escher Path Loop'),
+        ('PENROSE_STAIRS',     '🪜 Penrose Stairs'),
+        ('ESCHER_PATH_LOOP',   '♾ Escher Path Loop'),
     ],
     'TOPOLOGY': [
-        ('MOBIUS_CATHEDRAL',     'â™¾ MÃ¶bius Cathedral'),
-        ('KLEIN_BOTTLE_SANCTUARY','ðŸ¶ Klein Bottle Sanctuary'),
-        ('SEIFERT_KNOT_TEMPLE',  'ðŸŽ€ Seifert Knot Temple'),
+        ('MOBIUS_CATHEDRAL',     '♾ Möbius Cathedral'),
+        ('KLEIN_BOTTLE_SANCTUARY','🍶 Klein Bottle Sanctuary'),
+        ('SEIFERT_KNOT_TEMPLE',  '🎀 Seifert Knot Temple'),
     ],
     'TESSELLATION': [
-        ('TESSELLATION_GRID',  'ðŸ¦ Tessellation Grid'),
-        ('TESSELLATION_TOWER', 'ðŸ”³ Tessellation Tower'),
+        ('TESSELLATION_GRID',  '🐦 Tessellation Grid'),
+        ('TESSELLATION_TOWER', '🔳 Tessellation Tower'),
     ],
     'HYPERBOLIC': [
-        ('HYPERBOLIC_PLAZA',   'ðŸŒ Hyperbolic Plaza'),
-        ('FRACTAL_BRANCH',     'ðŸŒ¿ Fractal Branch'),
-        ('COSMIC_WEB_GATE',    'ðŸŒŒ Cosmic Web Gate'),
+        ('HYPERBOLIC_PLAZA',   '🌐 Hyperbolic Plaza'),
+        ('FRACTAL_BRANCH',     '🌿 Fractal Branch'),
+        ('COSMIC_WEB_GATE',    '🌌 Cosmic Web Gate'),
     ],
     'SVERCHOK': [
-        ('SV_SPIRAL_TOWER',    'ðŸŒ€ Spiral Tower'),
-        ('SV_MOBIUS_STAIRS',   'ðŸªœ MÃ¶bius Stairs'),
-        ('SV_RECURSIVE_PORTAL','ðŸŒŒ Recursive Portal'),
-        ('SV_CASCADING_ARCHES','ðŸŒŠ Cascading Arches'),
-        ('SV_TWISTED_SPIRE',   'ðŸŒª Twisted Spire'),
-        ('SV_TORUS_KNOT',      'ðŸª¢ Torus Knot'),
-        ('SV_TESSELLATION',    'ðŸ¦ SV Tessellation'),
-        ('SV_FRACTAL_CURVE',   'â„ Fractal Curve'),
+        ('SV_SPIRAL_TOWER',    '🌀 Spiral Tower'),
+        ('SV_MOBIUS_STAIRS',   '🪜 Möbius Stairs'),
+        ('SV_RECURSIVE_PORTAL','🌌 Recursive Portal'),
+        ('SV_CASCADING_ARCHES','🌊 Cascading Arches'),
+        ('SV_TWISTED_SPIRE',   '🌪 Twisted Spire'),
+        ('SV_TORUS_KNOT',      '🪢 Torus Knot'),
+        ('SV_TESSELLATION',    '🐦 SV Tessellation'),
+        ('SV_FRACTAL_CURVE',   '❄ Fractal Curve'),
     ],
 }
 
@@ -37281,7 +37334,7 @@ def _apply_escher_preset(context, preset_key):
             bpy.ops.surreal_arch.generate()
         except Exception as e:
             return False, f"Generate failed: {e}"
-        return True, f"GN preset {preset_key} â†’ {p.arch_type}"
+        return True, f"GN preset {preset_key} → {p.arch_type}"
     elif route == 'SV':
         # Set sv_* props on the active object FIRST so the Sverchok op picks
         # them up via _SV_CURRENT_PROPS, THEN call the op
@@ -37299,7 +37352,7 @@ def _apply_escher_preset(context, preset_key):
             finally:
                 _AUTO_UPDATE_RUNNING = False
         # Call the SV operator by id. We've already set the sv_* props on
-        # the active object â€” the operator's execute() reads them via
+        # the active object — the operator's execute() reads them via
         # _SV_CURRENT_PROPS, so no kwargs are needed (and the op's transient
         # dialog props are different names anyway).
         op_id = spec.get('sv_op')
@@ -37329,16 +37382,16 @@ class SURREAL_ARCH_OT_escher_preset(bpy.types.Operator):
     def execute(self, context):
         ok, msg = _apply_escher_preset(context, self.preset)
         if ok:
-            self.report({'INFO'}, f"ðŸªœ {msg}")
+            self.report({'INFO'}, f"🪜 {msg}")
         else:
-            self.report({'WARNING'}, f"âŒ {msg}")
+            self.report({'WARNING'}, f"❌ {msg}")
         return {'FINISHED'}
 
 
 class SURREAL_ARCH_OT_escher_random(bpy.types.Operator):
     """Pick a random Escher preset and apply it."""
     bl_idname = "surreal_arch.escher_random"
-    bl_label = "ðŸŽ² Random Escher"
+    bl_label = "🎲 Random Escher"
     bl_options = {'REGISTER', 'UNDO'}
 
     category: bpy.props.StringProperty(default='ALL', update=auto_update_callback)
@@ -37353,14 +37406,14 @@ class SURREAL_ARCH_OT_escher_random(bpy.types.Operator):
             return {'CANCELLED'}
         chosen = random.choice(keys)
         ok, msg = _apply_escher_preset(context, chosen)
-        self.report({'INFO' if ok else 'WARNING'}, f"ðŸŽ² {chosen}: {msg}")
+        self.report({'INFO' if ok else 'WARNING'}, f"🎲 {chosen}: {msg}")
         return {'FINISHED'}
 
 
 class SURREAL_ARCH_PT_escher(_EffectsSubPanelBase, bpy.types.Panel):
-    """ðŸªœ M.C. Escher Presets â€” impossible architecture, topology,
+    """🪝 M.C. Escher Presets — impossible architecture, topology,
     tessellation, hyperbolic, and Sverchok algorithmic spawns."""
-    bl_label = "ðŸªœ M.C. Escher Presets"
+    bl_label = "🪜 M.C. Escher Presets"
     bl_idname = "SURREAL_ARCH_PT_escher"
     bl_order = 4
 
@@ -37373,16 +37426,16 @@ class SURREAL_ARCH_PT_escher(_EffectsSubPanelBase, bpy.types.Panel):
         # Random row
         row = layout.row(align=True)
         row.scale_y = 1.15
-        op = row.operator("surreal_arch.escher_random", text="ðŸŽ² Random Escher")
+        op = row.operator("surreal_arch.escher_random", text="🎲 Random Escher")
         op.category = 'ALL'
 
         # Category specs
         cat_specs = [
-            ('IMPOSSIBLE',   "ðŸªœ Impossible Architecture"),
-            ('TOPOLOGY',     "â™¾ Topology / Non-Orientable"),
-            ('TESSELLATION', "ðŸ¦ Tessellation"),
-            ('HYPERBOLIC',   "ðŸŒ Hyperbolic + Fractal"),
-            ('SVERCHOK',     "ðŸŒ€ Sverchok Algorithmic"),
+            ('IMPOSSIBLE',   "🪜 Impossible Architecture"),
+            ('TOPOLOGY',     "♾ Topology / Non-Orientable"),
+            ('TESSELLATION', "🐦 Tessellation"),
+            ('HYPERBOLIC',   "🌐 Hyperbolic + Fractal"),
+            ('SVERCHOK',     "🌀 Sverchok Algorithmic"),
         ]
         for cat_key, cat_label in cat_specs:
             box = layout.box()
@@ -37399,7 +37452,7 @@ class SURREAL_ARCH_PT_escher(_EffectsSubPanelBase, bpy.types.Panel):
 
 
 class SURREAL_ARCH_PT_aesthetic_presets(_SubPanelBase, bpy.types.Panel):
-    bl_label = "ðŸŽ¨ Aesthetic Presets"
+    bl_label = "🎨 Aesthetic Presets"
     bl_idname = "SURREAL_ARCH_PT_aesthetic_presets"
 
     def draw(self, context):
@@ -37408,16 +37461,16 @@ class SURREAL_ARCH_PT_aesthetic_presets(_SubPanelBase, bpy.types.Panel):
 
         # Random row up top
         row = layout.row(align=True)
-        op = row.operator("surreal_arch.aesthetic_random", text="ðŸŽ² Random (Any)")
+        op = row.operator("surreal_arch.aesthetic_random", text="🎲 Random (Any)")
         op.category = 'ALL'
 
         # Each category as a box of buttons
         category_specs = [
-            ('VAPORWAVE', "ðŸŒ´ Vaporwave",   (0.95, 0.75, 0.95)),
-            ('ZEN',       "â›© Zen",         (0.80, 0.95, 0.85)),
-            ('GOTHIC',    "ðŸ¦‡ Gothic",      (0.55, 0.50, 0.65)),
-            ('ELDRITCH',  "ðŸ‘ Otherworldly",(0.75, 0.70, 0.95)),
-            ('CRAZY',     "ðŸ”¥ Go Crazy",    (1.00, 0.80, 0.70)),
+            ('VAPORWAVE', "🌴 Vaporwave",   (0.95, 0.75, 0.95)),
+            ('ZEN',       "⛩ Zen",         (0.80, 0.95, 0.85)),
+            ('GOTHIC',    "🦇 Gothic",      (0.55, 0.50, 0.65)),
+            ('ELDRITCH',  "👁 Otherworldly",(0.75, 0.70, 0.95)),
+            ('CRAZY',     "🔥 Go Crazy",    (1.00, 0.80, 0.70)),
         ]
         for cat_key, cat_label, _tint in category_specs:
             box = layout.box()
@@ -37466,13 +37519,13 @@ classes = (
     SURREAL_ARCH_OT_preset_palazzo,
     SURREAL_ARCH_OT_preset_brick,
     SURREAL_ARCH_OT_preset_bridge,
-    # v2.55 â€” Curved Room presets
+    # v2.55 — Curved Room presets
     SURREAL_ARCH_OT_preset_gb_room_circular,
     SURREAL_ARCH_OT_preset_gb_room_apsidal,
     SURREAL_ARCH_OT_preset_gb_corridor_arc,
     SURREAL_ARCH_OT_preset_gb_room_rotunda,
     SURREAL_ARCH_OT_preset_gb_arc_cross,
-    # v2.60 â€” Playable architecture presets
+    # v2.60 — Playable architecture presets
     SURREAL_ARCH_OT_preset_basilica_nave,
     SURREAL_ARCH_OT_preset_town_square,
     SURREAL_ARCH_OT_preset_gothic_chapel,
@@ -37486,62 +37539,62 @@ classes = (
     SURREAL_ARCH_OT_preset_monastery_cloister,
     SURREAL_ARCH_OT_preset_civic_hypostyle,
     SURREAL_ARCH_OT_preset_greybox_basilica_block,
-    # v2.60.1 â€” tick 61 additions
+    # v2.60.1 — tick 61 additions
     SURREAL_ARCH_OT_preset_japanese_temple_compound,
     SURREAL_ARCH_OT_preset_civic_town_hall,
     SURREAL_ARCH_OT_preset_baroque_piazza_facade,
     SURREAL_ARCH_OT_preset_gothic_cloister_walk,
-    # v2.60.1 â€” tick 63 gap-fill presets
+    # v2.60.1 — tick 63 gap-fill presets
     SURREAL_ARCH_OT_preset_escher_courtyard,
     SURREAL_ARCH_OT_preset_shinto_shrine,
     SURREAL_ARCH_OT_preset_moorish_courtyard,
     SURREAL_ARCH_OT_preset_brutalist_plaza,
     SURREAL_ARCH_OT_preset_medieval_keep,
     SURREAL_ARCH_OT_preset_scifi_atrium,
-    # v2.60.2 â€” tick 64 additions
+    # v2.60.2 — tick 64 additions
     SURREAL_ARCH_OT_preset_zen_teahouse_pavilion,
     SURREAL_ARCH_OT_preset_modular_village_house,
     SURREAL_ARCH_OT_preset_gothic_bell_tower,
     SURREAL_ARCH_OT_preset_greybox_stair_ascent,
     SURREAL_ARCH_OT_preset_castle_gatehouse,
-    # v2.60.2 â€” tick 65 (64b) additions
+    # v2.60.2 — tick 65 (64b) additions
     SURREAL_ARCH_OT_preset_guild_hall_blockout,
     SURREAL_ARCH_OT_preset_venetian_palazzo,
     SURREAL_ARCH_OT_preset_chinese_pailou,
     SURREAL_ARCH_OT_preset_corner_watchtower,
-    # v2.60.3 â€” tick 67â€“68 civic gap-fill
+    # v2.60.3 — tick 67–68 civic gap-fill
     SURREAL_ARCH_OT_preset_roman_bath,
     SURREAL_ARCH_OT_preset_market_colonnade,
     SURREAL_ARCH_OT_preset_lighthouse_tower,
-    # v2.60.5 â€” tick 86: amphitheatre + covered bazaar preset descriptions
+    # v2.60.5 — tick 86: amphitheatre + covered bazaar preset descriptions
     SURREAL_ARCH_OT_preset_amphitheatre,
     SURREAL_ARCH_OT_preset_covered_bazaar,
-    # v2.53 â€” Lebbeus Woods presets
+    # v2.53 — Lebbeus Woods presets
     SURREAL_ARCH_OT_preset_gb_woods_parasite,
     SURREAL_ARCH_OT_preset_gb_woods_freespace,
     SURREAL_ARCH_OT_preset_gb_woods_ribs,
     SURREAL_ARCH_OT_preset_gb_woods_harpsichord,
     SURREAL_ARCH_OT_preset_gb_woods_war_scar,
-    # v2.53 â€” David Umemoto presets
+    # v2.53 — David Umemoto presets
     SURREAL_ARCH_OT_preset_gb_umemoto_terrace,
     SURREAL_ARCH_OT_preset_gb_umemoto_vault,
     SURREAL_ARCH_OT_preset_gb_umemoto_lattice,
     SURREAL_ARCH_OT_preset_gb_umemoto_fortress,
-    # v2.52 â€” Higgsas integration (panel registered later, after SURREAL_ARCH_PT_panel)
+    # v2.52 — Higgsas integration (panel registered later, after SURREAL_ARCH_PT_panel)
     SURREAL_ARCH_OT_higgsas_load_arch,
     SURREAL_ARCH_OT_higgsas_apply_bricks,
     SURREAL_ARCH_OT_preset_higg_brick_wall,
     SURREAL_ARCH_OT_preset_higg_hex_floor,
     SURREAL_ARCH_OT_preset_higg_stone_wall,
     SURREAL_ARCH_OT_preset_higg_colonnade,
-    # v2.52 â€” Escher Greybox preset operators
+    # v2.52 — Escher Greybox preset operators
     SURREAL_ARCH_OT_preset_gb_escher_relativity,
     SURREAL_ARCH_OT_preset_gb_escher_penrose,
     SURREAL_ARCH_OT_preset_gb_escher_gravity,
     SURREAL_ARCH_OT_preset_gb_escher_belvedere,
     SURREAL_ARCH_OT_preset_gb_escher_waterfall,
     SURREAL_ARCH_OT_preset_gb_escher_recursive,
-    # v2.52 â€” Extended Greybox preset operators
+    # v2.52 — Extended Greybox preset operators
     SURREAL_ARCH_OT_preset_gb_corridor_bend,
     SURREAL_ARCH_OT_preset_gb_corridor_cross,
     SURREAL_ARCH_OT_preset_gb_corridor_t,
@@ -37551,7 +37604,7 @@ classes = (
     SURREAL_ARCH_OT_preset_gb_elevator_shaft,
     SURREAL_ARCH_OT_preset_gb_combat_room,
     SURREAL_ARCH_OT_preset_gb_corridor_rec,
-    # v2.51 â€” Ruins / Frames / Props preset operators
+    # v2.51 — Ruins / Frames / Props preset operators
     SURREAL_ARCH_OT_preset_wall_ruined,
     SURREAL_ARCH_OT_preset_wall_overgrown,
     SURREAL_ARCH_OT_preset_arch_broken,
@@ -37566,7 +37619,7 @@ classes = (
     SURREAL_ARCH_OT_preset_barrel_stack,
     SURREAL_ARCH_OT_preset_crate_pile,
     SURREAL_ARCH_OT_preset_campfire,
-    # v2.50 â€” Advanced Archway / Bridge / Fence preset operators
+    # v2.50 — Advanced Archway / Bridge / Fence preset operators
     SURREAL_ARCH_OT_preset_archway_roman,
     SURREAL_ARCH_OT_preset_archway_gothic,
     SURREAL_ARCH_OT_preset_archway_moorish,
@@ -37630,7 +37683,7 @@ classes = (
     SURREAL_ARCH_OT_sv_rose_window,
     SURREAL_ARCH_OT_sv_staircase,
     SURREAL_ARCH_OT_sv_vault,
-    # Dark Souls Ã— Escher
+    # Dark Souls × Escher
     SURREAL_ARCH_OT_sv_filigree,
     SURREAL_ARCH_OT_sv_trefoil_frieze,
     SURREAL_ARCH_OT_sv_twisted_spire,
@@ -37642,7 +37695,7 @@ classes = (
     SURREAL_ARCH_OT_sv_mobius_stairs,
     SURREAL_ARCH_OT_sv_recursive_portal,
     SURREAL_ARCH_OT_preset_singing_bridge,
-    # Synthia disabled v2.17 â€” replaced by the procedural aesthetic library
+    # Synthia disabled v2.17 — replaced by the procedural aesthetic library
     # SURREAL_ARCH_OT_spawn_synthia,
     # SURREAL_ARCH_OT_synthia_lorenz,
     # SURREAL_ARCH_OT_synthia_klein,
@@ -37688,15 +37741,15 @@ classes = (
     SURREAL_ARCH_PT_more_presets,
     SURREAL_ARCH_PT_instancer,
     # SURREAL_ARCH_PT_world,   # removed v2.28 (UI cut, code retained for reference)
-    # SURREAL_ARCH_PT_venetian,  # disabled v2.50 â€” params already in Geometry panel per arch type
-    # SURREAL_ARCH_PT_synthia,  # disabled v2.17
+    # SURREAL_ARCH_PT_venetian,  # disabled v2.50 — params already in Geometry panel per arch type
+    SURREAL_ARCH_PT_synthia,
     SURREAL_ARCH_OT_sv_diagnose,
     SURREAL_ARCH_OT_sv_open_editor,
     SURREAL_ARCH_OT_sv_reevaluate,
     SURREAL_ARCH_OT_sv_clean_trees,
     SURREAL_ARCH_PT_sverchok,
     SURREAL_ARCH_PT_higgsas,
-    # âœ¦ Kepler-Poinsot star polyhedra
+    # ❦ Kepler-Poinsot star polyhedra
     SURREAL_ARCH_OT_kepler_ssdc,
     SURREAL_ARCH_OT_kepler_gd,
     SURREAL_ARCH_OT_kepler_gsdc,
@@ -37704,12 +37757,12 @@ classes = (
     SURREAL_ARCH_PT_kepler,
     # New feature panels
     SURREAL_ARCH_PT_curved_roof,
-    # SURREAL_ARCH_PT_bbox_grow,   # disabled v2.16 â€” replaced by procedural aesthetic effects
-    # New operators â€” curved roof
+    # SURREAL_ARCH_PT_bbox_grow,   # disabled v2.16 — replaced by procedural aesthetic effects
+    # New operators — curved roof
     SURREAL_ARCH_OT_preset_curved_roof,
-    # New operators â€” bbox grow
+    # New operators — bbox grow
     SURREAL_ARCH_OT_bbox_grow,
-    # New operators â€” magic presets
+    # New operators — magic presets
     SURREAL_ARCH_OT_apply_magic,
     SURREAL_ARCH_OT_magic_liquid,
     SURREAL_ARCH_OT_magic_crystal,
@@ -37719,11 +37772,11 @@ classes = (
     SURREAL_ARCH_OT_magic_void_bloom,
     SURREAL_ARCH_OT_magic_aurora,
     SURREAL_ARCH_OT_magic_clear,
-    # New operators â€” bevel add-on
+    # New operators — bevel add-on
     SURREAL_ARCH_OT_apply_bevel_addon,
-    # âš— Advanced GN panel
+    # ⚗ Advanced GN panel
     SURREAL_ARCH_PT_advanced_gn,
-    # âš— Cool random stuff operators
+    # ⚗ Cool random stuff operators
     SURREAL_ARCH_OT_cool_dna,
     SURREAL_ARCH_OT_cool_klein,
     SURREAL_ARCH_OT_cool_geodome,
@@ -37758,14 +37811,14 @@ classes = (
     SURREAL_ARCH_OT_bld_brutalist,
     SURREAL_ARCH_OT_bld_randomize,
     SURREAL_ARCH_PT_auto_building,
-    # Aesthetic Presets â€” DISABLED v2.16 (replaced by procedural aesthetic effects below)
+    # Aesthetic Presets — DISABLED v2.16 (replaced by procedural aesthetic effects below)
     # Escher preset system (v2.36)
     SURREAL_ARCH_OT_escher_preset,
     SURREAL_ARCH_OT_escher_random,
     # SURREAL_ARCH_OT_aesthetic_preset,
     # SURREAL_ARCH_OT_aesthetic_random,
     # SURREAL_ARCH_PT_aesthetic_presets,
-    # Aesthetic Effects (Gothic / Vaporwave / Zen / Spiritual) â€” non-destructive on any mesh
+    # Aesthetic Effects (Gothic / Vaporwave / Zen / Spiritual) — non-destructive on any mesh
     SURREAL_ARCH_OT_aest_apply,
     SURREAL_ARCH_OT_aest_clear,
     SURREAL_ARCH_OT_aest_goth_tracery,
@@ -37816,7 +37869,7 @@ classes = (
     SURREAL_ARCH_OT_aest_spi_flames,
     SURREAL_ARCH_OT_aest_spi_ouroboros,
     SURREAL_ARCH_OT_aest_spi_portal,
-    # v2.17 â€” music-reactive + advanced-GN
+    # v2.17 — music-reactive + advanced-GN
     SURREAL_ARCH_OT_aest_mus_pulse,
     SURREAL_ARCH_OT_aest_mus_eq_bars,
     SURREAL_ARCH_OT_aest_mus_wave_disp,
@@ -37829,14 +37882,14 @@ classes = (
     SURREAL_ARCH_OT_aest_adv_vor_frac,
     SURREAL_ARCH_OT_aest_adv_crystals,
     SURREAL_ARCH_OT_aest_adv_field_lat,
-    # v2.18 â€” curve-rich
+    # v2.18 — curve-rich
     SURREAL_ARCH_OT_aest_goth_vault,
     SURREAL_ARCH_OT_aest_goth_tracery2,
     SURREAL_ARCH_OT_aest_vap_dolphin,
     SURREAL_ARCH_OT_aest_zen_bonsai,
     SURREAL_ARCH_OT_aest_spi_flower,
     SURREAL_ARCH_OT_aest_spi_metatron,
-    # v2.19 â€” mechanical + stack tools
+    # v2.19 — mechanical + stack tools
     SURREAL_ARCH_OT_aest_mech_bolts,
     SURREAL_ARCH_OT_aest_mech_pipes,
     SURREAL_ARCH_OT_aest_mech_gears,
@@ -37848,7 +37901,7 @@ classes = (
     SURREAL_ARCH_OT_save_preset,
     SURREAL_ARCH_OT_load_preset,
     SURREAL_ARCH_OT_delete_preset,
-    # Layer 2 â€” Procedural City/Castle Composer
+    # Layer 2 — Procedural City/Castle Composer
     SURREAL_ARCH_OT_library_init,
     SURREAL_ARCH_OT_library_refresh_polish,
     SURREAL_ARCH_OT_plan_spawn_castle,
@@ -37871,7 +37924,7 @@ classes = (
     SURREAL_ARCH_PT_plan_edit_floating,
     SURREAL_ARCH_OT_one_click_castle,
     SURREAL_ARCH_PT_compose,
-    # Layer 3 â€” World Atmosphere (terrain + vegetation + lighting + polish)
+    # Layer 3 — World Atmosphere (terrain + vegetation + lighting + polish)
     SURREAL_ARCH_OT_spawn_terrain,
     SURREAL_ARCH_OT_scatter_vegetation,
     SURREAL_ARCH_OT_scatter_easytrees,
@@ -37900,7 +37953,7 @@ def register():
         _patch_monolith(_sys.modules[__name__])
     except Exception:
         pass
-    print(f"[Surreal Architecture Generator {_bl_version_string()}] Registered â€” UI search, Gothic/Romanesque kit, snap overlay")
+    print(f"[Surreal Architecture Generator {_bl_version_string()}] Registered — UI search, Gothic/Romanesque kit, snap overlay")
 
 
 def unregister():

@@ -1,4 +1,4 @@
-"""Zen modular kit — roji path, torii gate greybox, tsukubai basin (v2.67)."""
+"""Zen modular kit — roji path, torii gate, tsukubai, engawa, bamboo fence, tobi-ishi (v2.71)."""
 
 from __future__ import annotations
 
@@ -126,6 +126,120 @@ def build_zen_tsukubai(tree, M, props, base_x=-1400):
     return M._gb_join(tree, parts, base_x + 900, 0)
 
 
+def build_zen_engawa(tree, M, props, base_x=-1400):
+    """Engawa veranda — raised deck slab, post row, low railing beam along open edge."""
+    W = getattr(props, "gb_width", 5.0)
+    D = getattr(props, "gb_depth", 2.4)
+    H = getattr(props, "gb_height", 0.35)
+    t = getattr(props, "gb_wall_thick", 0.12)
+    post_h = max(H * 1.6, 0.55)
+    parts = []
+
+    deck = M._gb_box(tree, (W, D, t), (0, 0, t * 0.5), base_x, 0, "trim:deck")
+    if deck:
+        parts.append(deck)
+
+    n_posts = max(3, int(W / 1.4) + 1)
+    for i in range(n_posts):
+        u = i / max(n_posts - 1, 1)
+        px = -W * 0.5 + u * W
+        post = M._gb_box(
+            tree,
+            (t * 1.1, t * 1.1, post_h),
+            (px, D * 0.5 - t * 0.6, post_h * 0.5 + t),
+            base_x,
+            100 + i * 30,
+            "trim:post",
+        )
+        if post:
+            parts.append(post)
+
+    rail = M._gb_box(
+        tree,
+        (W * 0.98, t * 0.85, t * 0.75),
+        (0, D * 0.5 - t * 0.35, post_h * 0.82 + t),
+        base_x,
+        500,
+        "trim:rail",
+    )
+    if rail:
+        parts.append(rail)
+
+    return M._gb_join(tree, parts, base_x + 1000, 0)
+
+
+def build_zen_bamboo_fence(tree, M, props, base_x=-1400):
+    """Bamboo fence segment — posts + horizontal rails; tileable along path axis."""
+    L = getattr(props, "gb_length", 4.0)
+    H = getattr(props, "zen_fence_height", getattr(props, "gb_height", 1.2))
+    t = getattr(props, "gb_wall_thick", 0.06)
+    post_r = max(t * 1.4, 0.05)
+    parts = []
+
+    n_posts = max(2, int(L / 1.1) + 1)
+    for i in range(n_posts):
+        u = i / max(n_posts - 1, 1)
+        py = -L * 0.5 + u * L
+        post = M._gb_box(
+            tree,
+            (post_r * 2, post_r * 2, H),
+            (0, py, H * 0.5),
+            base_x,
+            i * 40,
+            "trim:bamboo_post",
+        )
+        if post:
+            parts.append(post)
+
+    for ri, zf in enumerate((0.25, 0.55, 0.82)):
+        rail = M._gb_box(
+            tree,
+            (t * 2.2, L * 0.96, t * 0.9),
+            (0, 0, H * zf),
+            base_x,
+            300 + ri * 50,
+            "trim:bamboo_rail",
+        )
+        if rail:
+            parts.append(rail)
+
+    return M._gb_join(tree, parts, base_x + 1100, 0)
+
+
+def build_zen_tobiishi(tree, M, props, base_x=-1400):
+    """Tobi-ishi stepping stones — scattered flat stones along a path strip."""
+    L = getattr(props, "gb_length", 5.0)
+    W = getattr(props, "gb_width", 1.6)
+    t = getattr(props, "gb_wall_thick", 0.1)
+    stone_w = max(W * 0.28, 0.35)
+    parts = []
+
+    bed = M._gb_box(tree, (W, L, t * 0.35), (0, 0, t * 0.18), base_x, 0)
+    if bed:
+        parts.append(bed)
+
+    offsets = [
+        (-0.22, -0.38), (0.18, -0.12), (-0.08, 0.14), (0.24, 0.32),
+        (-0.26, 0.42), (0.06, -0.28), (0.0, 0.0),
+    ]
+    n_stones = max(4, min(7, int(L / 0.9) + 2))
+    for i in range(n_stones):
+        ox, oy = offsets[i % len(offsets)]
+        py = -L * 0.42 + (i / max(n_stones - 1, 1)) * L * 0.84
+        stone = M._gb_box(
+            tree,
+            (stone_w, stone_w * 0.85, t * 0.55),
+            (ox * W, py + oy * 0.25, t * 0.45),
+            base_x,
+            200 + i * 35,
+            "trim:stepping_stone",
+        )
+        if stone:
+            parts.append(stone)
+
+    return M._gb_join(tree, parts, base_x + 1200, 0)
+
+
 def compute_zen_kit_snaps(M, props, arch_type=None):
     """Snap hooks for GB_ZEN_* modular kits."""
     t = arch_type or props.arch_type
@@ -154,6 +268,28 @@ def compute_zen_kit_snaps(M, props, arch_type=None):
             M._gb_snap_point("basin", "TRIM", (0, 0, getattr(props, "gb_height", 0.45) * 0.6), (0, 0, 1)),
             M._gb_snap_point("approach_ny", "WALL", (0, -W * 0.6, 0), (0, -1, 0), grid_quantum=unit),
             M._gb_snap_point("approach_py", "WALL", (0, W * 0.6, 0), (0, 1, 0), grid_quantum=unit),
+        ]
+    if t == "GB_ZEN_ENGAWA":
+        D = getattr(props, "gb_depth", 2.4)
+        return [
+            M._gb_snap_point("floor", "FLOOR", (0, 0, 0), (0, 0, 1), grid_quantum=unit),
+            M._gb_snap_point("roji", "WALL", (0, -D * 0.5, 0.1), (0, -1, 0), "MUST_CONNECT", grid_quantum=unit),
+            M._gb_snap_point("garden", "WALL", (0, D * 0.5, 0.1), (0, 1, 0), "MUST_CONNECT", grid_quantum=unit),
+            M._gb_snap_point("engawa_edge", "TRIM", (0, D * 0.5, getattr(props, "gb_height", 0.35)), (0, 1, 0)),
+        ]
+    if t == "GB_ZEN_BAMBOO_FENCE":
+        L = getattr(props, "gb_length", 4.0)
+        return [
+            M._gb_snap_point("floor", "FLOOR", (0, 0, 0), (0, 0, 1), grid_quantum=unit),
+            M._gb_snap_point("fence_ny", "WALL", (0, -L * 0.5, 0.2), (0, -1, 0), "MUST_CONNECT", grid_quantum=unit),
+            M._gb_snap_point("fence_py", "WALL", (0, L * 0.5, 0.2), (0, 1, 0), "MUST_CONNECT", grid_quantum=unit),
+        ]
+    if t == "GB_ZEN_TOBIISHI":
+        L = getattr(props, "gb_length", 5.0)
+        return [
+            M._gb_snap_point("floor", "FLOOR", (0, 0, 0), (0, 0, 1), grid_quantum=unit),
+            M._gb_snap_point("path_ny", "WALL", (0, -L * 0.5, 0.05), (0, -1, 0), "MUST_CONNECT", grid_quantum=unit),
+            M._gb_snap_point("path_py", "WALL", (0, L * 0.5, 0.05), (0, 1, 0), "MUST_CONNECT", grid_quantum=unit),
         ]
     return []
 

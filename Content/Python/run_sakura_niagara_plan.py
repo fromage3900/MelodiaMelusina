@@ -93,6 +93,12 @@ def run_plan(*, rebuild: bool = False, skip_master: bool = False, showcase: bool
             lambda: __import__("validate_sakura_niagara").run_validation(),
         )
     )
+    steps.append(
+        _step(
+            "audit sakura petal niagara",
+            lambda: __import__("audit_sakura_petal_niagara").run_audit(),
+        )
+    )
 
     report = {
         "timestamp": started,

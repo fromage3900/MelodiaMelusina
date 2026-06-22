@@ -69,6 +69,16 @@ def build_trim_groups(props, monolith=None):
            notes="Recess bowl — UE trim sheet basin band")
         _g("flagstone", "TRIM_FLAGSTONE", "M_Trim_Flagstone")
         _g("pad", "TRIM_FLOOR", "M_Trim_Floor", snap_bind="floor")
+    elif at == "GB_ZEN_ENGAWA":
+        _g("deck", "TRIM_FLOOR", "M_Trim_Floor", snap_bind="floor")
+        _g("post", "TRIM_COLUMN", "M_Trim_Column")
+        _g("rail", "TRIM_RAIL", "M_Trim_Rail", snap_bind="engawa_edge")
+    elif at == "GB_ZEN_BAMBOO_FENCE":
+        _g("bamboo_post", "TRIM_COLUMN", "M_Trim_Column")
+        _g("bamboo_rail", "TRIM_RAIL", "M_Trim_Rail", notes="Horizontal bamboo rails")
+    elif at == "GB_ZEN_TOBIISHI":
+        _g("stepping_stone", "TRIM_FLOOR", "M_Trim_Floor", notes="Scattered tobi-ishi stones")
+        _g("path_bed", "TRIM_EDGE", "M_Trim_Edge", snap_bind="floor")
     elif at in ("GB_GOTHIC_PORTAL", "GB_GOTHIC_BAY", "GB_CORRIDOR_DOOR_END"):
         _g("door_frame", "TRIM_FRAME", "M_Trim_Frame", snap_bind="door")
         if at == "GB_GOTHIC_BAY":

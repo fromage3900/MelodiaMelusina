@@ -1,4 +1,4 @@
-"""Extended verify for Surreal Architecture v2.68 — kits, graphs, presets, trim bake.
+"""Extended verify for Surreal Architecture v2.71 — kits, bridges, polyhedra, zen expansion.
 
 Launch with --factory-startup for reliable headless runs:
   blender --background --factory-startup --python deploy/_mcp_verify_overhaul.py
@@ -6,7 +6,7 @@ Launch with --factory-startup for reliable headless runs:
 import json
 import bpy
 
-print("=== SURREAL OVERHAUL VERIFY v2.69 ===")
+print("=== SURREAL OVERHAUL VERIFY v2.71 ===")
 print("Blender", bpy.app.version_string)
 
 if "surreal_architecture_gen" not in bpy.context.preferences.addons:
@@ -23,9 +23,14 @@ print("Version:", s.bl_info.get("version"))
 try:
     import surreal_arch.integration as _integration
     importlib.reload(_integration)
-    _integration.patch_monolith(s)
 except Exception as e:
-    print(f"Patch monolith skipped: {e}")
+    print(f"Integration reload skipped: {e}")
+
+try:
+    s.unregister()
+except Exception:
+    pass
+s.register()
 
 obj = bpy.data.objects.new("_VerifyProps", bpy.data.meshes.new("_VerifyMesh"))
 print("Search on object props:", hasattr(obj, "surreal_arch_props"))
@@ -47,10 +52,18 @@ KIT_TESTS = [
     ("GB_ZEN_ROJI_STEP", {"gb_length": 4.5, "gb_width": 1.8, "gb_trim_mode": "RECESS"}),
     ("GB_ZEN_TORII_GATE", {"torii_width": 3.6, "torii_height": 4.2, "gb_trim_mode": "RECESS"}),
     ("GB_ZEN_TSUKUBAI", {"gb_width": 1.6, "gb_depth": 1.6, "gb_height": 0.45, "gb_trim_mode": "RECESS"}),
+    ("GB_ZEN_ENGAWA", {"gb_width": 5.0, "gb_depth": 2.4, "gb_height": 0.35, "gb_trim_mode": "RECESS"}),
+    ("GB_ZEN_BAMBOO_FENCE", {"gb_length": 4.0, "zen_fence_height": 1.2, "gb_trim_mode": "RECESS"}),
+    ("GB_ZEN_TOBIISHI", {"gb_length": 5.0, "gb_width": 1.6, "gb_trim_mode": "RECESS"}),
 ]
 
 print("\n--- Kit smoke ---")
 all_ok = True
+if not getattr(s, "_surreal_patched", False):
+    print("  !! FAIL: monolith patch (_surreal_patched) not applied")
+    all_ok = False
+else:
+    print("  patch_applied: OK")
 for atype, overrides in KIT_TESTS:
     mesh = bpy.data.meshes.new("VerifyMesh")
     obj = bpy.data.objects.new(f"Verify_{atype}", mesh)
@@ -68,7 +81,7 @@ for atype, overrides in KIT_TESTS:
     if atype.startswith(("GB_", "GREYBOX_")) and len(snaps) == 0:
         print(f"  !! FAIL: {atype} wrote 0 snap points")
         all_ok = False
-    if atype.startswith("GB_") and atype in ("GB_CORRIDOR_OFFSET", "GB_ROMANESQUE_APSE", "GB_SCIFI_PRESSURE_DOOR", "GB_ZEN_ROJI_STEP", "GB_ZEN_TORII_GATE", "GB_ZEN_TSUKUBAI") and len(trim) == 0:
+    if atype.startswith("GB_") and atype in ("GB_CORRIDOR_OFFSET", "GB_ROMANESQUE_APSE", "GB_SCIFI_PRESSURE_DOOR", "GB_ZEN_ROJI_STEP", "GB_ZEN_TORII_GATE", "GB_ZEN_TSUKUBAI", "GB_ZEN_ENGAWA", "GB_ZEN_BAMBOO_FENCE", "GB_ZEN_TOBIISHI") and len(trim) == 0:
         print(f"  !! FAIL: {atype} wrote 0 trim_groups")
         all_ok = False
 
@@ -278,6 +291,8 @@ PIPELINE_OPS = (
     "export_ue5",
     "export_snap_json",
     "bake_trim_attributes",
+    "bake_beavel",
+    "spawn_polyhedron",
     "export_catalog_enum",
     "validate_assembly",
     "toggle_snap_overlay",
@@ -288,6 +303,60 @@ for op_id in PIPELINE_OPS:
     print(f"  {op_id}: {ok}")
     if not ok:
         all_ok = False
+
+print("\n--- Optional dependency bridges ---")
+try:
+    import surreal_arch.capabilities as _cap
+    import surreal_arch.polyhedra as _poly
+    import surreal_arch.higgsas_bridge as _higg
+    importlib.reload(_cap)
+    importlib.reload(_poly)
+    importlib.reload(_higg)
+    from surreal_arch.capabilities import is_available
+    from surreal_arch.polyhedra import POLYHEDRA_REGISTRY
+
+    print(f"  beavel: {is_available('beavel')}")
+    print(f"  synthia: {is_available('synthia')} (skip spawn if missing)")
+    print(f"  higgsas: {is_available('higgsas')}")
+    if is_available("higgsas"):
+        ng = _higg.load_node("NTBricks Grid")
+        print(f"  higgsas NTBricks Grid: {ng is not None}")
+        if ng is None:
+            print("  higgsas NTBricks Grid: WARN (library on disk but group not loaded in factory-startup)")
+    else:
+        print("  higgsas: SKIP (library not on disk)")
+
+    for key, meta in POLYHEDRA_REGISTRY.items():
+        mesh = meta["build"](1.0)
+        nv = len(mesh.vertices)
+        np = len(mesh.polygons)
+        ok_poly = nv >= 4 and np > 0
+        print(f"  polyhedron {key}: verts={nv} faces={np}")
+        if not ok_poly:
+            print(f"  !! FAIL: polyhedron {key} invalid mesh")
+            all_ok = False
+        bpy.data.meshes.remove(mesh)
+
+    print("\n--- Synthia arch types (fallback mesh) ---")
+    from surreal_arch.synthia_bridge import SYNTHIA_ARCH_MAP
+    for arch_id in SYNTHIA_ARCH_MAP:
+        mesh = bpy.data.meshes.new(f"Verify_{arch_id}")
+        obj = bpy.data.objects.new(f"Verify_{arch_id}", mesh)
+        bpy.context.collection.objects.link(obj)
+        p = obj.surreal_arch_props
+        p.arch_type = arch_id
+        bpy.context.view_layer.objects.active = obj
+        obj.select_set(True)
+        bpy.ops.surreal_arch.generate()
+        nv = len(obj.data.vertices) if obj.data else 0
+        print(f"  {arch_id}: verts={nv} tag={obj.get('surreal_synthia_source', '')}")
+        if nv < 4:
+            print(f"  !! FAIL: {arch_id} produced empty mesh")
+            all_ok = False
+    print("  bridges: OK")
+except Exception as e:
+    print(f"  bridges error: {e}")
+    all_ok = False
 
 print("\n--- Export contract ---")
 try:

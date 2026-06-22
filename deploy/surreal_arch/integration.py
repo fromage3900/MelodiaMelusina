@@ -161,6 +161,30 @@ def patch_monolith(monolith):
         builder_attr="build_zen_tsukubai",
         material_key="STONE",
     )
+    register_kit(
+        monolith,
+        "GB_ZEN_ENGAWA",
+        zen_kit.build_zen_engawa,
+        snap_fn=zen_kit.compute_zen_kit_snaps,
+        builder_attr="build_zen_engawa",
+        material_key="WOOD",
+    )
+    register_kit(
+        monolith,
+        "GB_ZEN_BAMBOO_FENCE",
+        zen_kit.build_zen_bamboo_fence,
+        snap_fn=zen_kit.compute_zen_kit_snaps,
+        builder_attr="build_zen_bamboo_fence",
+        material_key="WOOD",
+    )
+    register_kit(
+        monolith,
+        "GB_ZEN_TOBIISHI",
+        zen_kit.build_zen_tobiishi,
+        snap_fn=zen_kit.compute_zen_kit_snaps,
+        builder_attr="build_zen_tobiishi",
+        material_key="STONE",
+    )
 
     if not hasattr(monolith, "_gb_compute_snap_points_orig"):
         monolith._gb_compute_snap_points_orig = monolith._gb_compute_snap_points
@@ -238,10 +262,159 @@ def patch_monolith(monolith):
     except Exception as _world_err:
         print(f"[Surreal Architecture] surreal_world patch skipped: {_world_err}")
 
+    _wire_pipeline_and_bridges(monolith)
+
+
+def _wire_pipeline_and_bridges(monolith):
+    """Beavel / Synthia / Higgsas pipeline hooks + monolith delegates."""
+    from .bevel_bridge import apply_bevel
+    from .pipeline import run_post_generate
+    from .synthia_bridge import SYNTHIA_ARCH_MAP, materialize_arch_type
+
+    monolith._surreal_patched = True
+
+    if not hasattr(monolith, "_apply_geometry_nodes_orig"):
+        monolith._apply_geometry_nodes_orig = monolith.apply_geometry_nodes_to_object
+
+    def _apply_geometry_nodes_patched(obj, props):
+        if props.arch_type in SYNTHIA_ARCH_MAP:
+            materialize_arch_type(obj, props)
+            if getattr(props, "auto_apply_material", True):
+                fn = getattr(monolith, "apply_material_to_object", None)
+                if fn:
+                    try:
+                        fn(obj, props)
+                    except Exception:
+                        pass
+            write_snaps = getattr(monolith, "_gb_write_snap_points", None)
+            if write_snaps:
+                try:
+                    write_snaps(obj, props)
+                except Exception:
+                    pass
+            run_post_generate(obj, props, monolith)
+            return
+        monolith._apply_geometry_nodes_orig(obj, props)
+        run_post_generate(obj, props, monolith, skip_bevel=True)
+
+    monolith.apply_geometry_nodes_to_object = _apply_geometry_nodes_patched
+
+    if not hasattr(monolith, "_apply_edge_bevel_orig"):
+        monolith._apply_edge_bevel_orig = monolith.apply_edge_bevel_modifier
+
+    def _apply_edge_bevel_patched(obj, props):
+        apply_bevel(obj, props, backend="MODIFIER", monolith=monolith)
+
+    monolith.apply_edge_bevel_modifier = _apply_edge_bevel_patched
+
+    if hasattr(monolith, "_apply_bevel_addon"):
+        if not hasattr(monolith, "_apply_bevel_addon_orig"):
+            monolith._apply_bevel_addon_orig = monolith._apply_bevel_addon
+
+        def _apply_bevel_addon_patched(obj, props):
+            backend = getattr(props, "bevel_backend", "MODIFIER")
+            if backend == "BEAVEL":
+                apply_bevel(obj, props, backend="BEAVEL", monolith=monolith)
+            else:
+                monolith._apply_bevel_addon_orig(obj, props)
+
+        monolith._apply_bevel_addon = _apply_bevel_addon_patched
+
+    if hasattr(monolith, "SURREAL_ARCH_OT_spawn_synthia"):
+        _orig_spawn_synthia = monolith.SURREAL_ARCH_OT_spawn_synthia.execute
+
+        def _spawn_synthia_patched(self, context):
+            from .capabilities import is_available
+            from .synthia_bridge import apply_post_spawn, spawn
+
+            if not is_available("synthia"):
+                return _orig_spawn_synthia(self, context)
+
+            props = None
+            active = context.active_object
+            if active and hasattr(active, "surreal_arch_props"):
+                props = active.surreal_arch_props
+            if not props:
+                for o in bpy.data.objects:
+                    if o.type == "MESH" and hasattr(o, "surreal_arch_props"):
+                        props = o.surreal_arch_props
+                        break
+            if not props:
+                self.report({"ERROR"}, "No mesh object with surreal_arch_props found")
+                return {"CANCELLED"}
+
+            before = {o.name for o in bpy.data.objects}
+            try:
+                if props.synthia_use_custom:
+                    spawned = spawn("", "EQUATION", formula=props.synthia_custom_formula)
+                else:
+                    eq_ids = {p[0] for p in monolith.SYNTHIA_EQUATION_PRESETS}
+                    preset_type = "EQUATION" if props.synthia_preset in eq_ids else "GEOMETRY"
+                    spawned = spawn(props.synthia_preset, preset_type)
+            except Exception as e:
+                self.report({"ERROR"}, f"Synthia spawn failed: {e}")
+                return {"CANCELLED"}
+
+            if spawned is None:
+                new_objs = [o for o in bpy.data.objects if o.name not in before]
+                spawned = new_objs[-1] if new_objs else None
+            if not spawned:
+                self.report({"WARNING"}, "Synthia spawned but no new object detected")
+                return {"CANCELLED"}
+
+            apply_post_spawn(spawned, props, monolith)
+            context.view_layer.objects.active = spawned
+            bpy.ops.object.select_all(action="DESELECT")
+            spawned.select_set(True)
+            self.report({"INFO"}, f"Synthia: {spawned.name} spawned + pipeline applied")
+            return {"FINISHED"}
+
+        monolith.SURREAL_ARCH_OT_spawn_synthia.execute = _spawn_synthia_patched
+
+    from .synthia_bridge import SYNTHIA_ARCH_MAP as _map
+    from .catalog_dispatch import register_dispatch_entry
+
+    def build_synthia_arch_stub(tree, props, base_x=-1400):
+        """GN placeholder — SYNTHIA types materialize in apply_geometry_nodes patch."""
+        safe = getattr(monolith, "_safe_node", None)
+        if safe:
+            node = safe(tree, "GeometryNodeMeshCube", (base_x, 0))
+            if node:
+                return node.outputs.get("Mesh") or node.outputs[0]
+        return None
+
+    monolith.build_synthia_arch_stub = build_synthia_arch_stub
+
+    for arch_id in _map:
+        register_dispatch_entry(monolith, arch_id, "build_synthia_arch_stub", material_key="IRIDESCENT")
+
+    monolith._higgsas_available = lambda: __import__(
+        "surreal_arch.higgsas_bridge", fromlist=["is_available"]
+    ).is_available()
+    monolith._higg_load = lambda name: __import__(
+        "surreal_arch.higgsas_bridge", fromlist=["load_node"]
+    ).load_node(name)
+
+    if hasattr(monolith, "SURREAL_ARCH_PT_synthia"):
+        _orig_synthia_draw = monolith.SURREAL_ARCH_PT_synthia.draw
+
+        def _synthia_draw_patched(self, context):
+            from .capabilities import status_line
+            layout = self.layout
+            box = layout.box()
+            box.label(text="Optional Dependencies", icon="INFO")
+            for dep in ("synthia", "beavel", "higgsas"):
+                box.label(text=status_line(dep))
+            layout.separator()
+            _orig_synthia_draw(self, context)
+
+        monolith.SURREAL_ARCH_PT_synthia.draw = _synthia_draw_patched
+
 
 def register_overhaul(monolith):
     _ensure_path()
     patch_monolith(monolith)
+    from .bootstrap import register_preferences
     from .ui import make_view3d_panels
     from .greybox_graph import register_graph_operators
     from .greybox_overlay import enable_overlay
@@ -251,6 +424,7 @@ def register_overhaul(monolith):
     from .workflow_polls import patch_workflow_polls
 
     patch_workflow_polls(monolith)
+    register_preferences()
 
     global _EXTRA_CLASSES
     _EXTRA_CLASSES = list(make_view3d_panels(monolith))
@@ -266,6 +440,51 @@ def register_overhaul(monolith):
     except Exception as _wo_err:
         print(f"[Surreal Architecture] world operators skipped: {_wo_err}")
 
+    from .polyhedra_ops import register_polyhedra_operators
+    _EXTRA_CLASSES.extend(register_polyhedra_operators(monolith))
+
+    class SURREAL_ARCH_OT_bake_beavel(bpy.types.Operator):
+        bl_idname = "surreal_arch.bake_beavel"
+        bl_label = "Bake Beavel Pro"
+        bl_options = {"REGISTER", "UNDO"}
+
+        @classmethod
+        def poll(cls, context):
+            obj = context.active_object
+            return obj and obj.type == "MESH" and hasattr(obj, "surreal_arch_props")
+
+        def execute(self, context):
+            from .bevel_bridge import apply_bevel
+            from .capabilities import is_available
+
+            if not is_available("beavel"):
+                self.report({"ERROR"}, "Beavel Pro addon not enabled")
+                return {"CANCELLED"}
+            obj = context.active_object
+            props = obj.surreal_arch_props
+            used = apply_bevel(obj, props, backend="BEAVEL", monolith=monolith)
+            self.report({"INFO"}, f"Beavel bake applied ({used})")
+            return {"FINISHED"}
+
+    class SURREAL_ARCH_OT_higgsas_load_arch_bridge(bpy.types.Operator):
+        bl_idname = "surreal_arch.higgsas_load_arch_bridge"
+        bl_label = "Load Higgsas Architecture Nodes"
+        bl_options = {"REGISTER"}
+
+        def execute(self, context):
+            from .higgsas_bridge import load_arch_nodes, library_path
+            import os
+
+            if not os.path.exists(library_path()):
+                self.report({"ERROR"}, f"Higgsas library not found:\n{library_path()}")
+                return {"CANCELLED"}
+            loaded, skipped = load_arch_nodes()
+            msg = f"Loaded {len(loaded)} nodes"
+            if skipped:
+                msg += f" | missing: {', '.join(skipped[:3])}"
+            self.report({"INFO"}, msg)
+            return {"FINISHED"}
+
     class SURREAL_ARCH_OT_export_snap_json(bpy.types.Operator):
         bl_idname = "surreal_arch.export_snap_json"
         bl_label = "Export Snap JSON"
@@ -278,6 +497,12 @@ def register_overhaul(monolith):
             if not obj or "surreal_snap_points" not in obj:
                 self.report({"ERROR"}, "No snap metadata on active object")
                 return {"CANCELLED"}
+            props = getattr(obj, "surreal_arch_props", None)
+            if props and getattr(props, "bevel_backend", "MODIFIER") in ("BEAVEL", "AUTO"):
+                from .bevel_bridge import apply_bevel
+                from .capabilities import is_available
+                if is_available("beavel"):
+                    apply_bevel(obj, props, backend="BEAVEL", monolith=monolith)
             path = self.filepath or bpy.path.abspath("//snap_points.json")
             from .snap_export import build_ue_export_payload
             payload = build_ue_export_payload(obj, monolith)
@@ -328,6 +553,8 @@ def register_overhaul(monolith):
         SURREAL_ARCH_OT_export_snap_json,
         SURREAL_ARCH_OT_toggle_snap_overlay,
         SURREAL_ARCH_OT_bake_trim_attributes,
+        SURREAL_ARCH_OT_bake_beavel,
+        SURREAL_ARCH_OT_higgsas_load_arch_bridge,
     ])
     for cls in _EXTRA_CLASSES:
         try:
@@ -340,7 +567,9 @@ def register_overhaul(monolith):
 
 
 def unregister_overhaul():
+    from .bootstrap import unregister_preferences
     from .greybox_overlay import disable_overlay
+    unregister_preferences()
     disable_overlay()
     global _EXTRA_CLASSES
     for cls in reversed(_EXTRA_CLASSES):

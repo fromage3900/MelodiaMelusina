@@ -113,25 +113,10 @@ def _ensure_level() -> None:
         lib.try_set_editor_property(s, "auto_exposure_method", unreal.AutoExposureMethod.AEM_MANUAL)
         lib.try_set_editor_property(s, "b_override_auto_exposure_bias", True)
         lib.try_set_editor_property(s, "auto_exposure_bias", 8.0)
-        blendables = []
-        vines_path = PP_VINES_INST if unreal.EditorAssetLibrary.does_asset_exist(PP_VINES_INST) else PP_VINES
-        for pp_path in (PP_OUTLINE, vines_path):
-            if unreal.EditorAssetLibrary.does_asset_exist(pp_path):
-                mat = unreal.load_asset(pp_path)
-                if mat:
-                    blendables.append(mat)
-        if blendables:
-            mlib.try_set_editor_property(s, "b_override_blendables", True)
-            try:
-                weighted = unreal.WeightedBlendables()
-                weighted.set_editor_property(
-                    "array",
-                    [unreal.WeightedBlendable(1.0, mat) for mat in blendables],
-                )
-                s.set_editor_property("weighted_blendables", weighted)
-            except Exception as exc:
-                unreal.log_warning(f"[Showcase] blendables skipped: {exc}")
         ppv.set_editor_property("settings", s)
+        import portfolio_scene_integration as scene
+
+        scene.apply_post_process_stack(ppv)
 
 
 def _spawn_showcase_spheres() -> list[dict]:
@@ -220,8 +205,38 @@ def _spawn_landscape_actor_stub() -> dict:
     return {"status": "plane_fallback", "actor": actor.get_name(), "mi": mi_path}
 
 
+def _spawn_greybox_ground() -> dict:
+    """Ground plane for PCG_Greybox presets."""
+    eas = unreal.get_editor_subsystem(unreal.EditorActorSubsystem)
+    mi_path = "/Game/EnvSandbox/Materials/Instances/Landscape/MI_Landscape_Meadow"
+    for actor in eas.get_all_level_actors():
+        if actor.get_actor_label() == "Ground":
+            return {"status": "exists", "actor": actor.get_name()}
+    mesh = unreal.load_asset(PLANE)
+    actor = eas.spawn_actor_from_class(
+        unreal.StaticMeshActor, unreal.Vector(0, 0, -20), unreal.Rotator(0, 0, 0),
+    )
+    if not actor:
+        return {"status": "spawn_failed"}
+    actor.set_actor_label("Ground")
+    actor.set_actor_scale3d(unreal.Vector(40, 40, 1))
+    sm = actor.static_mesh_component
+    sm.set_static_mesh(mesh)
+    if unreal.EditorAssetLibrary.does_asset_exist(mi_path):
+        sm.set_material(0, unreal.load_asset(mi_path))
+    try:
+        tags = list(actor.tags)
+        if "PCG_Ground" not in tags:
+            tags.append("PCG_Ground")
+            actor.tags = tags
+    except Exception:
+        pass
+    return {"status": "ok", "actor": actor.get_name(), "tag": "PCG_Ground"}
+
+
 def build_all() -> int:
     _ensure_level()
+    ground = _spawn_greybox_ground()
     spheres = _spawn_showcase_spheres()
     specialists = _spawn_specialist_planes()
     landscape_stub = _spawn_landscape_actor_stub()
@@ -231,6 +246,7 @@ def build_all() -> int:
         "spheres": spheres,
         "specialists": specialists,
         "landscape_stub": landscape_stub,
+        "greybox_ground": ground,
         "pp_outline": PP_OUTLINE,
         "pp_vines": PP_VINES_INST if unreal.EditorAssetLibrary.does_asset_exist(PP_VINES_INST) else PP_VINES,
     }

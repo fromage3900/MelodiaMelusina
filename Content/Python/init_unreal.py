@@ -79,11 +79,38 @@ def register_livelink_menus():
         live,
         "Portfolio",
         "RunSakuraPCG",
-        "Run Sakura PCG (Phase 1)",
+        "Run Sakura PCG (showcase wrapper)",
         "import setup_pcg_sakura; "
         "report = setup_pcg_sakura.build_all(rebuild=True, spawn=True); "
-        "unreal.log('[Portfolio] Sakura PCG passed=' + str(report.get('passed')) + "
-        "' ism=' + str(report.get('level_spawn', {}).get('ism_count')))",
+        "unreal.log('[Portfolio] Sakura PCG passed=' + str(report.get('passed')))",
+    )
+    add_entry(
+        live,
+        "Portfolio",
+        "RunUniversalPCG",
+        "Run Universal PCG Build",
+        "import setup_pcg_universal; "
+        "report = setup_pcg_universal.build_all(force=True); "
+        "unreal.log('[Portfolio] Universal PCG passed=' + str(report.get('passed')))",
+    )
+    add_entry(
+        live,
+        "Portfolio",
+        "RunGreyboxPCG",
+        "Apply Greybox PCG (Template minimal)",
+        "import setup_pcg_greybox; "
+        "import pcg_portfolio_standards as s; "
+        "r = setup_pcg_greybox.apply_greybox_pcg(s.LEVEL_TEMPLATE, preset='minimal'); "
+        "unreal.log('[Portfolio] Greybox PCG passed=' + str(r.get('passed')))",
+    )
+    add_entry(
+        live,
+        "Portfolio",
+        "AuditPCGPortfolio",
+        "Audit PCG Portfolio",
+        "import audit_pcg_portfolio; "
+        "r = audit_pcg_portfolio._audit_in_ue(); "
+        "unreal.log('[Portfolio] PCG audit clean=' + str(r.get('clean')))",
     )
     add_entry(
         live,
@@ -93,6 +120,15 @@ def register_livelink_menus():
         "import run_sakura_niagara_plan; "
         "report = run_sakura_niagara_plan.run_plan(rebuild=False); "
         "unreal.log('[Portfolio] Sakura Niagara all_ok=' + str(report.get('all_ok')))",
+    )
+    add_entry(
+        live,
+        "Portfolio",
+        "RunOrchestratorTick",
+        "Portfolio Orchestrator Tick (10m loop step)",
+        "import run_portfolio_orchestrator_loop_tick; "
+        "code = run_portfolio_orchestrator_loop_tick.main(); "
+        "unreal.log('[Portfolio] Orchestrator exit=' + str(code))",
     )
     add_entry(
         live,
