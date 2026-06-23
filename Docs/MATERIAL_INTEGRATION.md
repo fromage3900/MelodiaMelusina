@@ -7,7 +7,7 @@ Session summary for portfolio masters, SDF expansion, compositing textures, and 
 | Area | Result |
 |------|--------|
 | **Universal masters** | `M_Master_Toon_Universal`, `M_Master_SDF_Toon`, `M_Master_Toon_Unified` — 18/18 texture params wired, Substrate Toon, compile OK |
-| **Starter instances** | 10 curated `MI_Show_*` under `Instances/Showcase/` — one master capability each (see below) |
+| **Starter instances** | 13 curated `MI_Show_*` under `Instances/Showcase/` — one master capability each (see below) |
 | **Legacy MI_Universal_*** | 141+ presets deprecated; move to `Instances/_Archive/` via `archive_unused_instances.py` (no delete) |
 | **SDF masters** | All 50 `_PROJECT` `M_SDF_*` ported to `EnvSandbox/Materials/Masters/` (incl. 9 aquatic) |
 | **Aquatic instances** | `MI_SDF_AbyssalVent_Deep` … `MI_SDF_ThermalGlow_Vent` under `SDF/Instances/` |
@@ -29,6 +29,7 @@ Groups in the Material Editor (rebuild master with `--force` after group renames
 | **Gilding** | Curvature gold leaf |
 | **ShadowDream** | Soft N·L shadow color tint |
 | **FlowerShadow** | Projected petal silhouettes in shadow (was `ShadowGarden`) |
+| **Audio** | `MPC_Portfolio_Audio` reactivity — emissive, layer blend, roughness, BeatPhase hooks |
 | **FairyDust** | Highlight motif styles (heart/star/flower/moon) |
 | **Magical** | Henshin wipe, `MotifMask`, palette shift, transform glow |
 | **Character** | Skin wrap, cheek warmth, eye highlight, hair sheen |
@@ -36,7 +37,7 @@ Groups in the Material Editor (rebuild master with `--force` after group renames
 
 Key expansion params have inline `desc` tooltips when the master is rebuilt via `setup_master_universal.py`.
 
-## Starter instances (11)
+## Starter instances (13)
 
 Canonical set on `M_Master_Toon_Universal` — one isolated capability each. Folder: `/Game/EnvSandbox/Materials/Instances/Showcase`. Source of truth: `Content/Python/starter_instances.py` (`STARTER_INSTANCES`, `STARTER_NAMES`).
 
@@ -53,8 +54,13 @@ Canonical set on `M_Master_Toon_Universal` — one isolated capability each. Fol
 | `MI_Show_ContactRimHero` | Cinematic | Contact rim + Nikki rim shaping + distance fade | `ContactRimStrength`, `RimWidth`, `DistanceFadeStrength` (Cinematic + Nikki) |
 | `MI_Show_ElementHydro` | Elemental | Wet iridescent hydro glass (`ElementType=2`) | `ElementStrength`, `IridescencePower`, `WetnessStrength` (Elemental + Nikki) |
 | `MI_Show_InkWash` | Stylized ink | Temporal boil + Nikki dream grade + smear | `TemporalStrength`, `DreamContrast`, `SmearStrength` (Temporal + Nikki) |
+| `MI_Show_TrimsheetHero` | Trimsheet | Layer A/B height blend + POM wear demo | `LayerBlend`, `LayerHeightBias`, `ParallaxMode` (Layers + Parallax) |
+| `MI_Show_ZenTorii` | Zen trim | Dual-layer torii wood + moss height compete | `LayerBlend`, `LayerHeightSharpness`, `MossConcavityStrength` |
+| `MI_Show_AudioPulse` | Audio | MPC-driven emissive + layer pulse (defaults off) | `AudioReactivity`, `AudioEmissiveStrength` (Audio) |
 
 Legacy `MI_Universal_*` names map via `LEGACY_ALIASES` in `starter_instances.py` (e.g. `MI_Universal_DreamyPastel` → `MI_Show_SkinSoft`, `MI_Universal_NikkiHero` → `MI_Show_NikkiHero`).
+
+**Landscape instances:** 11 presets (`MI_Landscape_Meadow` … `MI_Landscape_WetlandMud`). **Water instances:** 8 (`MI_GrandWater_*` incl. SakuraPond, SwampMurk, WaterfallSheet, FrozenPond).
 
 ## Infinity Nikki controls (environment)
 
@@ -106,7 +112,7 @@ python Content/Python/run_phase_a_safe.py
 
 ```text
 py Content/Python/setup_master_universal.py                 # or --force to refresh groups
-py Content/Python/apply_starter_instances.py              # create/update 11 MI_Show_*
+py Content/Python/apply_starter_instances.py              # create/update 13 MI_Show_*
 py Content/Python/setup_trimsheet_instances.py          # create/update 4 trimsheet MIs
 py Content/Python/archive_unused_instances.py             # optional: move legacy Environment MIs
 py Content/Python/review_portfolio_masters.py             # masters + starter texture pass (editor)
@@ -342,3 +348,67 @@ Wired into `M_Master_Toon_Universal` `MotifMask` / `FairyGlyphMask` defaults via
 | `Instances/Environment/Zen/` | `MI_Zen_MossGarden`, `MI_Zen_InkWash`, `MI_Zen_BambooMist`, `MI_Zen_Karesansui`, `MI_Zen_ToriiVermillion`, `MI_Zen_SakuraDrift`, `MI_Zen_LanternWarm`, `MI_Zen_TeaHouseCedar`, `MI_Zen_PondStill`, `MI_Zen_ShojiPaper`, `MI_Zen_TempleStep`, `MI_Zen_MoonlitGarden` |
 
 **Audit:** `Saved/Audit/theme_instances.json` (full) · `Saved/Audit/zen_instances.json` (zen)
+
+## Portfolio Materials AAA (2026-06-23)
+
+Grand sign-off: `Saved/Audit/portfolio_materials_aaa.json` (`all_ok: true` target).
+
+### Orchestration
+
+| Script | Role |
+|--------|------|
+| `run_material_aaa_pipeline.py` | One-shot full rebuild + sync + audits |
+| `run_material_aaa_loop_tick.py` | Rotating 10-task loop (15m `AGENT_LOOP_WAKE_material_aaa`) |
+| `sync_all_material_instances.py` | Re-apply all MI families after master rebuilds |
+
+### Instance families (sync order)
+
+| Family | Count | Script | Notes |
+|--------|-------|--------|-------|
+| `MI_Show_*` | 11 | `apply_starter_instances.py` | Showcase starters |
+| `MI_Sakura_*` | 10 | `setup_sakura_instances.py` | Blossom / path |
+| `MI_Zen_*` | 15 | `apply_zen_instances.py` | JRO `MotifMask` / `FairyGlyphMask` / `SparkleMask` |
+| ZenTrim trimsheet | 9 | `setup_trimsheet_instances.py` | Layer A=`Base4K`, Layer B=variation — see below |
+| `MI_Landscape_*` | 7 | `setup_landscape_height_blend.py` | CC0 layers via `portfolio_landscape_textures.py` |
+| `MI_GrandWater_*` | 5 | `setup_master_water.py` | Grand v6 |
+| Baroque theme | 4 | `apply_theme_instances.py` | Ornament masks |
+
+### ZenTrim trimsheet instances (Universal master — instances only)
+
+Textures: `/Game/Textures/ZenTrim_<Variant>_*` · Catalog: `zen_trim_textures.py`
+
+| Instance | Layer A | Layer B | LayerBlend |
+|----------|---------|---------|------------|
+| `MI_Trimsheet_VariationCracks` | Base4K | CrackedToHell | 0.42 |
+| `MI_Trimsheet_ParallaxPOM` | Base4K | CrackedToHell | 0.35 |
+| `MI_Universal_TrimsheetBlend` | Base4K | ColourShift | 0.25 |
+| `MI_Trimsheet_HeavyWear` | Base4K | CrackedToHell | 0.68 |
+| `MI_ZenTrim_Wet` | Base4K | Wet | 0.55 |
+| `MI_ZenTrim_FlowersMid` | Base4K | FlowersMid | 0.38 |
+| `MI_ZenTrim_FlowersLittle` | Base4K | FlowersLIttleBit | 0.22 |
+| `MI_ZenTrim_FlowersLots` | Base4K | FlowersLOTS | 0.52 |
+| `MI_ZenTrim_ColourShift` | Base4K | ColourShift | 0.48 |
+
+Folder: `/Game/EnvSandbox/Materials/Instances/Environment/Stylized/`
+
+### AAA audits
+
+| Report | Script |
+|--------|--------|
+| `portfolio_materials_aaa.json` | Merged sign-off |
+| `zen_trimsheet_aaa_audit.json` | `audit_zen_trimsheet.py` |
+| `landscape_aaa_audit.json` | `audit_landscape_aaa.py` |
+| `grand_water_aaa_audit.json` | `audit_grand_water_aaa.py` |
+| `master_review.json` | `review_portfolio_masters.py` |
+| `landscape_cc0_textures.json` | `portfolio_landscape_textures.py` |
+| `zen_trim_textures.json` | `zen_trim_textures.py` |
+
+### Headless run (close editor first)
+
+```text
+set BS_MASTER_FORCE=1
+python Content/Python/run_material_aaa_pipeline.py
+python Content/Python/run_material_aaa_loop_tick.py
+```
+
+All Cmd launches: `-DisablePlugins=Monolith` `-nullrhi`

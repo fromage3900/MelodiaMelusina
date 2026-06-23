@@ -136,6 +136,64 @@ INSTANCES = [
         },
         "statics": {"bUseShorelineUV": True},
     },
+    {
+        "name": "MI_GrandWater_SwampMurk",
+        "purpose": "Murky swamp — low clarity, olive depth gradient",
+        "scalars": {
+            "CausticIntensity": 0.25,
+            "GerstnerScale": 0.06,
+            "WaveSpeed": 0.08,
+            "WaterRoughness": 0.22,
+            "MagicalIntensity": 0.05,
+            "DepthFadeDistance": 220.0,
+            "Opacity": 0.9,
+            "RefractionStrength": 0.01,
+        },
+        "vectors": {
+            "WaterColorShallow": (0.28, 0.38, 0.22, 1.0),
+            "WaterColorDeep": (0.06, 0.12, 0.08, 1.0),
+        },
+    },
+    {
+        "name": "MI_GrandWater_WaterfallSheet",
+        "purpose": "Vertical waterfall sheet — fast waves, bright foam",
+        "scalars": {
+            "CausticIntensity": 0.55,
+            "GerstnerScale": 0.28,
+            "WaveSpeed": 1.2,
+            "WaterRoughness": 0.04,
+            "MagicalIntensity": 0.1,
+            "DepthFadeDistance": 180.0,
+            "ShorelineWidth": 0.35,
+            "ShorelineFoam": 0.45,
+            "Opacity": 0.75,
+            "RefractionStrength": 0.02,
+        },
+        "vectors": {
+            "WaterColorShallow": (0.55, 0.72, 0.78, 1.0),
+            "WaterColorDeep": (0.12, 0.28, 0.38, 1.0),
+        },
+        "statics": {"bUseShorelineUV": True},
+    },
+    {
+        "name": "MI_GrandWater_FrozenPond",
+        "purpose": "Frozen pond — slow ripples, icy shallow tint",
+        "scalars": {
+            "CausticIntensity": 0.35,
+            "GerstnerScale": 0.04,
+            "WaveSpeed": 0.05,
+            "WaterRoughness": 0.18,
+            "MagicalIntensity": 0.12,
+            "DepthFadeDistance": 320.0,
+            "Opacity": 0.85,
+            "RefractionStrength": 0.012,
+        },
+        "vectors": {
+            "WaterColorShallow": (0.78, 0.88, 0.92, 1.0),
+            "WaterColorDeep": (0.22, 0.38, 0.48, 1.0),
+            "CausticTint": (0.9, 0.95, 1.0, 1.0),
+        },
+    },
 ]
 
 

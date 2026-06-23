@@ -72,6 +72,8 @@ SHOWCASE: list[tuple[str, str, tuple[float, float, float]]] = [
     ("MI_Show_ContactRimHero", "/Game/EnvSandbox/Materials/Instances/Showcase/MI_Show_ContactRimHero", (1100, 0, 100)),
     ("MI_Show_ElementHydro", "/Game/EnvSandbox/Materials/Instances/Showcase/MI_Show_ElementHydro", (1300, 0, 100)),
     ("MI_Show_InkWash", "/Game/EnvSandbox/Materials/Instances/Showcase/MI_Show_InkWash", (1500, 0, 100)),
+    ("MI_Show_TrimsheetHero", "/Game/EnvSandbox/Materials/Instances/Showcase/MI_Show_TrimsheetHero", (1700, 0, 100)),
+    ("MI_Show_ZenTorii", "/Game/EnvSandbox/Materials/Instances/Showcase/MI_Show_ZenTorii", (1900, 0, 100)),
 ]
 
 

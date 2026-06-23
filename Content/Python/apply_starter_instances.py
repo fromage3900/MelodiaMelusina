@@ -48,6 +48,8 @@ def _resolve_texture_keys(spec: dict, alphas) -> dict[str, list[str]]:
             wires[pname] = [sparkle[key]] if isinstance(sparkle[key], str) else list(sparkle[key])
         elif pname == "FairyGlyphMask" and key in fairy:
             wires[pname] = list(fairy[key])
+        elif pname in ("ShadowFlowerMask",) and key in fairy:
+            wires[pname] = list(fairy[key])
         elif pname == "MotifMask" and key in motif:
             wires[pname] = list(motif[key])
     return wires
@@ -99,6 +101,12 @@ def build_starter_instances() -> list[dict]:
                 wired_textures[pname] = path
         extra = tex_catalog.apply_instance_texture_defaults(inst, name, wired_textures)
         wired_textures.update(extra)
+        if spec.get("layer_a") and spec.get("layer_b"):
+            import zen_trim_textures as zt
+
+            wired_textures.update(
+                zt.apply_zen_trim_layers(inst, spec["layer_a"], spec["layer_b"]),
+            )
         lib.save_package(inst)
         results.append({
             "instance": name,

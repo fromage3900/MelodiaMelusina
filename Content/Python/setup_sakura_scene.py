@@ -92,7 +92,20 @@ def _audit_from_assets() -> dict:
         "pond_bank_mi": bank_name,
         "grand_water_available": _mi_exists("MI_GrandWater_SakuraPond", WATERROOT),
         "landscape_available": _mi_exists("MI_Landscape_SakuraGarden", LANDSCAPEROOT),
+        "stone_path_mi": _mi_exists("MI_Sakura_StonePath", MIROOT),
     }
+    for mi_name, root in (
+        ("MI_Landscape_SakuraGarden", LANDSCAPEROOT),
+        ("MI_Landscape_PondBank", LANDSCAPEROOT),
+        ("MI_Sakura_StonePath", MIROOT),
+    ):
+        path = f"{root}/{mi_name}.{mi_name}"
+        if unreal.EditorAssetLibrary.does_asset_exist(path):
+            try:
+                mi = unreal.load_asset(path)
+                base[f"{mi_name}_shadow_flower"] = mi.get_scalar_parameter_value("ShadowFlowerStrength")
+            except Exception:
+                base[f"{mi_name}_shadow_flower"] = None
     try:
         les = unreal.get_editor_subsystem(unreal.LevelEditorSubsystem)
         if unreal.EditorAssetLibrary.does_asset_exist(f"{LEVEL}.L_SakuraPath"):

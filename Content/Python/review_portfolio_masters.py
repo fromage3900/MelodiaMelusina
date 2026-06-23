@@ -8,6 +8,7 @@ Shell:
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
 from datetime import datetime, timezone
@@ -114,7 +115,7 @@ def _unwired_texture_slots(material, path: str) -> list[str]:
     return missing
 
 
-def _review_master(path: str) -> dict:
+def _review_master(path: str, *, read_only: bool = False) -> dict:
     import unreal
     import material_lib as lib
     import portfolio_texture_catalog as catalog
@@ -137,6 +138,13 @@ def _review_master(path: str) -> dict:
     entry["unwired_textures_before"] = _unwired_texture_slots(mat, path)
     entry["texture_parameter_names"] = lib.texture_parameter_names(mat)
 
+    if read_only:
+        entry["texture_violations"] = catalog.scan_master_texture_violations(mat)
+        entry["unwired_textures_after"] = entry["unwired_textures_before"]
+        entry["banned_textures_after"] = entry["texture_violations"].get("banned", [])
+        entry["read_only"] = True
+        return entry
+
     wired = catalog.apply_master_defaults(mat, path, force=True)
     entry["master_textures_wired"] = wired
     entry["texture_violations"] = catalog.scan_master_texture_violations(mat)
@@ -157,17 +165,18 @@ def _run_in_ue() -> int:
     import unreal
     import portfolio_texture_catalog as catalog
 
+    read_only = os.environ.get("BS_AAA_READ_ONLY", "").lower() in ("1", "true", "yes")
     unreal.log("=== PORTFOLIO MASTER REVIEW ===")
 
-    # Refresh instance textures (idempotent)
-    import apply_compositing_texture_defaults as comp
+    if not read_only:
+        import apply_compositing_texture_defaults as comp
 
-    comp._run_in_ue()
+        comp._run_in_ue()
 
     masters: dict = {}
     for path in SAFE_MASTERS:
         unreal.log(f"[MasterReview] auditing {path}")
-        masters[path] = _review_master(path)
+        masters[path] = _review_master(path, read_only=read_only)
 
     dead_total = sum(len(m.get("dead_functions", [])) for m in masters.values())
     unwired_after = sum(len(m.get("unwired_textures_after", [])) for m in masters.values())
@@ -181,9 +190,12 @@ def _run_in_ue() -> int:
             "dead_function_calls": dead_total,
             "unwired_texture_slots": unwired_after,
             "banned_texture_slots": banned_after,
+            "unwired_texture_count": unwired_after,
+            "banned_texture_count": banned_after,
             "wrong_role_orm_slots": wrong_role,
             "all_substrate_toon": all(m.get("substrate_toon") for m in masters.values() if m.get("exists")),
             "clean": banned_after == 0 and unwired_after == 0 and dead_total == 0,
+            "read_only": read_only,
         },
     }
 

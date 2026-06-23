@@ -102,6 +102,42 @@ Universal (`M_Master_Toon_Universal`) is the **mesh/surface spine**. These maste
 
 ---
 
+## Track E — Zen AAA ✅
+
+| Step | Script / asset | Done when |
+|------|----------------|-----------|
+| E1 Specs | `zen_instances.py` — 15 `MI_Zen_*` | Motif/Fairy/Sparkle keys per preset |
+| E2 Apply | `apply_zen_instances.py` → `build_theme_instances()` | JRO masks + catalog albedo wired |
+| E3 Audit | `audit_zen_trimsheet.py` | `zen_trimsheet_aaa_audit.json` zen section green |
+
+**Folder:** `Instances/Environment/Zen/` · **Pack:** `/Game/Textures/70_Japanese_Ornament_Alphas_vfxMed`
+
+---
+
+## Track F — ZenTrim trimsheet AAA ✅
+
+**Instances only** — master `M_Master_Toon_Universal` Layer A/B lerp unchanged.
+
+| Step | Script / asset | Done when |
+|------|----------------|-----------|
+| F1 Catalog | `zen_trim_textures.py` — 7 variants × 7 channels | All `/Game/Textures/ZenTrim_*` resolve |
+| F2 Instances | `setup_trimsheet_instances.py` — 9 MIs | Layer A=`Base4K`, Layer B=variation maps wired |
+| F3 Audit | `audit_zen_trimsheet.py` trimsheet section | All Layer A/B params resolve |
+
+**Variants:** Base4K, ColourShift, CrackedToHell, FlowersLIttleBit, FlowersLOTS, FlowersMid, Wet
+
+**Folder:** `Instances/Environment/Stylized/`
+
+---
+
+## Portfolio AAA loop
+
+`run_material_aaa_loop_tick.py` — 10 rotating tasks → `material_aaa_loop_state.json`
+
+Sentinel: `AGENT_LOOP_WAKE_material_aaa` (15m fallback heartbeat while napping)
+
+---
+
 ## Script run order
 
 See `Docs/MATERIAL_INTEGRATION.md` § Environment specialists for the full headless pipeline.

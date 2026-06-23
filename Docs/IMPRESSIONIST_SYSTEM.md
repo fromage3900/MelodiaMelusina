@@ -96,7 +96,7 @@ Primary object/façade master. World-position brush coordinates, directional str
 | `MF_AnimationBoil` | — | Phase 2 (needs texture UV displacement) |
 | `MF_LineJitter` | — | Phase 2 (outline / decorative) |
 | `MF_Pulsing Veins` / Vortex pipelines | — | Defer — use SDF batch masters |
-| `MF_AudioReactiveController` | — | **Defer** (portfolio environment) |
+| `MF_AudioReactiveBlend` | `M_Master_Toon_Universal` Audio group | Environment pulse + BeatPhase (portfolio) |
 | SDF Gothic / Ornament / Escher | — | Separate `M_Toon_SDF` family |
 
 ---
@@ -135,7 +135,7 @@ Actionable tunables from `Living_Impressionist_Engine/` mapped to BS_GodFile imp
 
 | Parameter | LIE source | Reason |
 |-----------|------------|--------|
-| `GlobalAudioReactivity`, `Bass/Mid/TrebleIntensity` | `MF_AudioReactiveController` | Rhythm-game scope |
+| `GlobalAudioReactivity`, `Bass/Mid/TrebleIntensity` | `MF_AudioReactiveBlend` + `MPC_Portfolio_Audio` | Mesh spine + outline PP |
 | `BeatPhase`, `AnimationType` | `MF_AudioDrivenAnimation` | Audio MPC wiring |
 | `ArchFrequency`, `OrnamentStyle`, `EscherStyle`, etc. | SDF Phase 4A–4C | `M_Toon_SDF` batch, not impressionist |
 | `RotationSpeed`, `SwirlStrength`, `PulseFrequency`, `VeinStrength` | Phase 2 pipelines | Vortex/Veins masters — Melodia patterns |

@@ -26,6 +26,7 @@ MF_NIKKI_DREAM = "/Game/EnvSandbox/Materials/Functions/MF_NikkiDreamGrade.MF_Nik
 MF_NIKKI_RIM = "/Game/EnvSandbox/Materials/Functions/MF_NikkiRimGlow.MF_NikkiRimGlow"
 MF_NIKKI_SPARKLE = "/Game/EnvSandbox/Materials/Functions/MF_NikkiSparkle.MF_NikkiSparkle"
 MF_NIKKI_IRID = "/Game/EnvSandbox/Materials/Functions/MF_NikkiIridescenceSheen.MF_NikkiIridescenceSheen"
+MF_SHADOW_FLOWER = "/Game/EnvSandbox/Materials/Functions/MF_ShadowFlowerProject.MF_ShadowFlowerProject"
 MPC_SAKURA = "/Game/EnvSandbox/VFX/MPC/MPC_SakuraDream"
 LAYER_NAMES = ("Rock", "Grass", "Mud", "Path")
 
@@ -55,12 +56,20 @@ INSTANCES = [
             "RockTint": (0.50, 0.46, 0.40, 1.0),
             "GrassTint": (0.40, 0.52, 0.28, 1.0),
             "MudTint": (0.24, 0.30, 0.16, 1.0),
+            "ShadowDreamTint": (0.58, 0.48, 0.72, 1.0),
+            "ShadowFlowerColor": (0.92, 0.58, 0.75, 1.0),
         },
         "scalars": {
             "SlopeSharpness": 2.0, "HeightBlendStrength": 1.7, "GrassAmount": 0.88, "MudAmount": 0.20,
             "MacroStrength": 0.30, "SnowStrength": 0.0, "TriplanarTiling": 210.0,
             "PastelLift": 0.22, "DreamSaturation": 0.18, "SparkleIntensity": 0.35,
             "SparkleThreshold": 0.42, "RimIntensity": 0.18, "Iridescence": 0.12,
+            "ShadowDreamStrength": 0.42,
+            "ShadowFlowerStrength": 0.55,
+            "ShadowFlowerScale": 6.5,
+            "ShadowFlowerScaleFine": 13.0,
+            "ShadowFlowerPulseStrength": 0.18,
+            "ShadowContactBoost": 0.22,
         },
     },
     {
@@ -81,36 +90,85 @@ INSTANCES = [
         "vectors": {
             "RockTint": (0.46, 0.44, 0.40, 1.0), "GrassTint": (0.32, 0.50, 0.26, 1.0),
             "MudTint": (0.26, 0.22, 0.16, 1.0), "RimColor": (0.75, 0.88, 0.92, 1.0),
+            "ShadowDreamTint": (0.48, 0.55, 0.72, 1.0),
+            "ShadowFlowerColor": (0.88, 0.62, 0.78, 1.0),
         },
         "scalars": {
             "Wetness": 0.55, "ShoreWetnessBoost": 0.4, "MudAmount": 0.35, "GrassAmount": 0.45,
             "PastelLift": 0.15, "RimIntensity": 0.28, "SparkleIntensity": 0.25,
             "SlopeSharpness": 2.4, "HeightBlendStrength": 2.0, "MacroStrength": 0.38, "TriplanarTiling": 200.0,
+            "ShadowDreamStrength": 0.35,
+            "ShadowFlowerStrength": 0.38,
+            "ShadowFlowerScale": 5.5,
+            "ShadowFlowerPulseStrength": 0.12,
+        },
+    },
+    {
+        "name": "MI_Landscape_DesertArid",
+        "profile": "TP_Stone",
+        "vectors": {
+            "RockTint": (0.62, 0.52, 0.38, 1.0),
+            "GrassTint": (0.48, 0.44, 0.32, 1.0),
+            "MudTint": (0.40, 0.34, 0.24, 1.0),
+        },
+        "scalars": {
+            "GrassAmount": 0.12, "MudAmount": 0.08, "MacroStrength": 0.5,
+            "SlopeSharpness": 3.5, "HeightBlendStrength": 2.8, "TriplanarTiling": 360.0,
+        },
+    },
+    {
+        "name": "MI_Landscape_VolcanicRock",
+        "profile": "TP_Stone",
+        "vectors": {
+            "RockTint": (0.22, 0.20, 0.20, 1.0),
+            "GrassTint": (0.28, 0.32, 0.22, 1.0),
+            "MudTint": (0.18, 0.14, 0.12, 1.0),
+        },
+        "scalars": {
+            "GrassAmount": 0.08, "MudAmount": 0.22, "NormalStrength": 1.4,
+            "SlopeSharpness": 7.0, "HeightBlendStrength": 3.5, "TriplanarTiling": 340.0,
+        },
+    },
+    {
+        "name": "MI_Landscape_UrbanCobble",
+        "profile": "TP_Stone",
+        "vectors": {
+            "RockTint": (0.46, 0.44, 0.42, 1.0),
+            "GrassTint": (0.36, 0.40, 0.30, 1.0),
+            "MudTint": (0.38, 0.34, 0.30, 1.0),
+            "PathTint": (0.52, 0.50, 0.48, 1.0),
+        },
+        "scalars": {
+            "GrassAmount": 0.15, "MudAmount": 0.25, "PathWearStrength": 0.65,
+            "MacroStrength": 0.3, "TriplanarTiling": 180.0,
+        },
+    },
+    {
+        "name": "MI_Landscape_WetlandMud",
+        "profile": "TP_Foliage",
+        "vectors": {
+            "RockTint": (0.36, 0.34, 0.30, 1.0),
+            "GrassTint": (0.30, 0.42, 0.24, 1.0),
+            "MudTint": (0.24, 0.20, 0.14, 1.0),
+        },
+        "scalars": {
+            "GrassAmount": 0.55, "MudAmount": 0.72, "Wetness": 0.75, "WetRoughness": 0.45,
+            "MacroStrength": 0.42, "TriplanarTiling": 200.0,
         },
     },
 ]
 
 
 def _layer_tex():
-    import portfolio_texture_catalog as catalog
+    import portfolio_landscape_textures as lt
 
-    return {
-        "Rock": {
-            "Albedo": catalog._chain(catalog.MARBLE["cool_stone"], catalog.MARBLE["dark"]),
-            "Normal": catalog._normal_chain(),
-            "Height": catalog._chain(catalog.HEIGHT["perlin"], catalog.COMPOSITING["crack_heavy"]),
-        },
-        "Grass": {
-            "Albedo": catalog._chain(catalog.COMPOSITING["abstract_a"], catalog.MARBLE["warm_stone"]),
-            "Normal": catalog._normal_chain(),
-            "Height": catalog._chain(catalog.HEIGHT["perlin"], catalog.COMPOSITING["noise_fine"]),
-        },
-        "Mud": {
-            "Albedo": catalog._chain(catalog.MARBLE["worn"], catalog.COMPOSITING["crack_overlay"]),
-            "Normal": catalog._normal_chain(),
-            "Height": catalog._chain(catalog.COMPOSITING["crack_overlay"], catalog.HEIGHT["perlin"]),
-        },
-    }
+    layers: dict[str, dict[str, list[str]]] = {}
+    for name in LAYER_NAMES:
+        if name == "Path":
+            continue
+        layers[name] = lt.resolve_layer_textures(name)
+    layers["Path"] = lt.resolve_layer_textures("Path")
+    return layers
 
 
 def build(*, force: bool = False) -> str:
@@ -224,6 +282,7 @@ def build(*, force: bool = False) -> str:
     water_tint = lib.vector_param(m, "WaterAlignTint", "Shore", (0.55, 0.72, 0.78, 1.0), px, py + 3020)
     path_wear = lib.scalar_param(m, "PathWearStrength", "Path", 0.0, px, py + 3140)
     path_mask = lib.texture_param(m, "PathMask", "Path", px, py + 3260)
+    wire_tex(path_mask, layer_tex.get("Path", {}).get("Albedo", catalog.MASTER_TEXTURE_DEFAULTS.get("Albedo", [])))
     dream_tint = lib.vector_param(m, "DreamTint", "Nikki", (1.0, 0.85, 0.92, 1.0), px, py + 3380)
     rim_color = lib.vector_param(m, "RimColor", "Nikki", (0.70, 0.85, 1.0, 1.0), px, py + 3500)
     spark_color = lib.vector_param(m, "SparkleColor", "Nikki", (1.0, 0.95, 0.80, 1.0), px, py + 3620)
@@ -244,8 +303,22 @@ def build(*, force: bool = False) -> str:
     irid = lib.scalar_param(m, "Iridescence", "Nikki", 0.0, px, py + 5300)
     irid_pow = lib.scalar_param(m, "IridescencePower", "Nikki", 1.0, px, py + 5420)
     fabric_sheen = lib.scalar_param(m, "FabricSheen", "Nikki", 0.0, px, py + 5540)
-    static_sw(m, "bNikkiFast", "Nikki", px, py + 5660, False)
-    static_sw(m, "bNikkiHero", "Nikki", px, py + 5780, False)
+    nikki_fast_sw = static_sw(m, "bNikkiFast", "Nikki", px, py + 5660, False)
+    nikki_hero_sw = static_sw(m, "bNikkiHero", "Nikki", px, py + 5780, False)
+    shadow_dream_tint = lib.vector_param(
+        m, "ShadowDreamTint", "ShadowDream", (0.48, 0.42, 0.62, 1.0), px, py + 5900,
+    )
+    shadow_dream_str = lib.scalar_param(m, "ShadowDreamStrength", "ShadowDream", 0.0, px, py + 6020)
+    shadow_contact = lib.scalar_param(m, "ShadowContactBoost", "ShadowDream", 0.0, px, py + 6140)
+    flower_str = lib.scalar_param(m, "ShadowFlowerStrength", "FlowerShadow", 0.0, px, py + 6260)
+    flower_scale = lib.scalar_param(m, "ShadowFlowerScale", "FlowerShadow", 6.0, px, py + 6380)
+    flower_scale_fine = lib.scalar_param(m, "ShadowFlowerScaleFine", "FlowerShadow", 12.0, px, py + 6500)
+    flower_col = lib.vector_param(
+        m, "ShadowFlowerColor", "FlowerShadow", (0.92, 0.55, 0.72, 1.0), px, py + 6620,
+    )
+    flower_pulse_str = lib.scalar_param(m, "ShadowFlowerPulseStrength", "FlowerShadow", 0.0, px, py + 6740)
+    flower_mask = lib.texture_param(m, "ShadowFlowerMask", "FlowerShadow", px, py + 6860)
+    wire_tex(flower_mask, ["/Game/Sakura/T_Sakura_Petal.T_Sakura_Petal"])
 
     layer_coords = lib.create_expression(m, unreal.MaterialExpressionLandscapeLayerCoords, -2000, -80)
     layer_uv = lib.create_expression(m, unreal.MaterialExpressionMultiply, -1800, -80)
@@ -262,6 +335,7 @@ def build(*, force: bool = False) -> str:
     lib.connect(b_landscape_uv, "", uv_blend_sw, "Alpha")
 
     layer_samples: dict[str, dict] = {}
+    path_layer_sample: dict | None = None
     for i, (layer, tex) in enumerate(layer_tex.items()):
         yy = 400 + i * 420
         alb = lib.texture_param(m, f"{layer}_Albedo", "Textures", -2000, yy)
@@ -273,6 +347,9 @@ def build(*, force: bool = False) -> str:
         alb_s = sample_layer(m, alb, f"{layer}_Alb", -1600, yy, uv_blend_sw)
         nrm_s = sample_layer(m, nrm, f"{layer}_Nrm", -1600, yy + 120, uv_blend_sw)
         hgt_s = sample_layer(m, hgt, f"{layer}_Hgt", -1600, yy + 240, uv_blend_sw)
+        if layer == "Path":
+            path_layer_sample = {"color": alb_s, "normal": nrm_s, "height": hgt_s}
+            continue
         tint_map = {"Rock": rock_tint, "Grass": grass_tint, "Mud": mud_tint}
         tinted = lib.create_expression(m, unreal.MaterialExpressionMultiply, -1200, yy)
         lib.connect(alb_s, "", tinted, "A")
@@ -441,7 +518,8 @@ def build(*, force: bool = False) -> str:
          ("Mud", mud_paint_col), ("Path", path_tint)], 1280)
     paint_nrm = paint_wsum(
         [("Rock", layer_samples["Rock"]["normal"]), ("Grass", layer_samples["Grass"]["normal"]),
-         ("Mud", layer_samples["Mud"]["normal"]), ("Path", layer_samples["Rock"]["normal"])], 1480)
+         ("Mud", layer_samples["Mud"]["normal"]),
+         ("Path", path_layer_sample["normal"] if path_layer_sample else layer_samples["Rock"]["normal"])], 1480)
     paint_rough = paint_wsum(
         [("Rock", rock_rough), ("Grass", grass_rough), ("Mud", mud_rough), ("Path", roughness_s)], 1680)
 
@@ -548,6 +626,7 @@ def build(*, force: bool = False) -> str:
         lib.connect(glow_int, "", rim, "GlowIntensity")
         lib.connect(bloom, "", rim, "BloomBoost")
         nikki_col = rim
+    nikki_fast_col = nikki_col
     pulse = lib.collection_scalar(m, MPC_SAKURA, "SparklePulse", 2180, 1040)
     spark_eff = lib.create_expression(m, unreal.MaterialExpressionMultiply, 2360, 1040)
     lib.connect(spark_int, "", spark_eff, "A")
@@ -571,6 +650,56 @@ def build(*, force: bool = False) -> str:
         lib.connect(fabric_sheen, "", irid_mf, "FabricSheen")
         lib.connect(sheen_tint, "", irid_mf, "SheenTint")
         nikki_col = irid_mf
+
+    nikki_hero_col = nikki_col
+    lib.connect_static_switch(nikki_fast_sw, nikki_fast_col, water_lerp)
+    lib.connect_static_switch(nikki_hero_sw, nikki_hero_col, nikki_fast_sw)
+    nikki_col = nikki_hero_sw
+
+    wp_sf = lib.create_expression(m, unreal.MaterialExpressionWorldPosition, 2600, 1200)
+    wxy_sf = lib.create_expression(m, unreal.MaterialExpressionComponentMask, 2760, 1200)
+    wxy_sf.set_editor_property("r", True)
+    wxy_sf.set_editor_property("g", True)
+    wxy_sf.set_editor_property("b", False)
+    wxy_sf.set_editor_property("a", False)
+    lib.connect(wp_sf, "", wxy_sf, "")
+    shadow_amt = lib.create_expression(m, unreal.MaterialExpressionSaturate, 2920, 1200)
+    lib.connect(shadow_dream_str, "", shadow_amt, "Input")
+    sf_mf = mf_call(m, MF_SHADOW_FLOWER, 2600, 1360)
+    if sf_mf:
+        lib.connect(wxy_sf, "", sf_mf, "WorldXY")
+        lib.connect(flower_mask, "Texture", sf_mf, "ShadowMask")
+        lib.connect(shadow_amt, "", sf_mf, "ShadowAmount")
+        lib.connect(flower_scale, "", sf_mf, "Scale")
+        lib.connect(flower_scale_fine, "", sf_mf, "ScaleFine")
+        const_rot = lib.create_expression(m, unreal.MaterialExpressionConstant, 2440, 1360)
+        const_rot.set_editor_property("r", 0.35)
+        lib.connect(const_rot, "", sf_mf, "Rotation")
+        const_jit = lib.create_expression(m, unreal.MaterialExpressionConstant, 2440, 1460)
+        const_jit.set_editor_property("r", 0.2)
+        lib.connect(const_jit, "", sf_mf, "Jitter")
+        lib.connect(flower_col, "", sf_mf, "FlowerColor")
+        lib.connect(flower_str, "", sf_mf, "Strength")
+        const_soft = lib.create_expression(m, unreal.MaterialExpressionConstant, 2440, 1560)
+        const_soft.set_editor_property("r", 0.45)
+        lib.connect(const_soft, "", sf_mf, "Softness")
+        const_dark = lib.create_expression(m, unreal.MaterialExpressionConstant, 2440, 1660)
+        const_dark.set_editor_property("r", 0.32)
+        lib.connect(const_dark, "", sf_mf, "AlbedoDarken")
+        pulse_sf = lib.collection_scalar(m, MPC_SAKURA, "SparklePulse", 2440, 1760)
+        lib.connect(pulse_sf, "", sf_mf, "Pulse")
+        lib.connect(flower_pulse_str, "", sf_mf, "PulseStrength")
+        one_sf = lib.create_expression(m, unreal.MaterialExpressionConstant, 3080, 1320)
+        one_sf.set_editor_property("r", 1.0)
+        darken_fac = lib.create_expression(m, unreal.MaterialExpressionMultiply, 3080, 1400)
+        lib.connect(sf_mf, "", darken_fac, "A")
+        dark_sub = lib.create_expression(m, unreal.MaterialExpressionSubtract, 3240, 1320)
+        lib.connect(one_sf, "", dark_sub, "A")
+        lib.connect(darken_fac, "", dark_sub, "B")
+        nikki_dark = lib.create_expression(m, unreal.MaterialExpressionMultiply, 3400, 1280)
+        lib.connect(nikki_col, "", nikki_dark, "A")
+        lib.connect(dark_sub, "", nikki_dark, "B")
+        nikki_col = nikki_dark
 
     proc_rough = proc_lerp3(rock_rough, grass_rough, mud_rough, 900, 960)
     rough_blend = lib.create_expression(m, unreal.MaterialExpressionLinearInterpolate, 1100, 960)

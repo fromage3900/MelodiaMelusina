@@ -73,4 +73,24 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        import unreal  # noqa: F401
+        main()
+    except ImportError:
+        import subprocess
+        from pathlib import Path
+
+        root = Path(__file__).resolve().parents[2]
+        ue = Path(r"C:\Program Files\Epic Games\UE_5.8\Engine\Binaries\Win64\UnrealEditor-Cmd.exe")
+        if not ue.exists():
+            raise SystemExit(1)
+        cmd = [
+            str(ue),
+            str(root / "BS_GodFile.uproject"),
+            f"-ExecutePythonScript={(root / 'Content/Python/archive_unused_instances.py').as_posix()}",
+            "-stdout",
+            "-unattended",
+            "-nullrhi",
+            "-DisablePlugins=Monolith",
+        ]
+        raise SystemExit(subprocess.run(cmd, cwd=str(root)).returncode)

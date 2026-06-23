@@ -26,7 +26,10 @@ VINE_BRANCH_MASK = [
 SPARKLE_MASKS = {
     "twinkle": "/Game/Alphas_Sparkles/T_Spark_Twinkle8.T_Spark_Twinkle8",
     "sparkle4": "/Game/Alphas_Sparkles/T_Spark_Sparkle4.T_Spark_Sparkle4",
-    "glow": "/Game/Alphas_Sparkles/T_Spark_Glow.T_Spark_Glow",
+    "glow": [
+        "/Game/Alphas_Sparkles/T_Spark_Glow.T_Spark_Glow",
+        "/Game/Alphas_Sparkles/T_Spark_Twinkle8.T_Spark_Twinkle8",
+    ],
     "dot": "/Game/Alphas_Sparkles/T_Spark_Dot.T_Spark_Dot",
     "bokeh": "/Game/Alphas_Sparkles/T_Spark_Bokeh.T_Spark_Bokeh",
 }
@@ -76,6 +79,7 @@ FAIRY_GLYPH_MASKS = {
     ],
     "moon": [
         "/Game/Alphas_Sparkles/T_Spark_Glow.T_Spark_Glow",
+        "/Game/Alphas_Sparkles/T_Spark_Twinkle8.T_Spark_Twinkle8",
     ],
     "bow": [
         "/Game/Magical/T_Magic_Bow.T_Magic_Bow",

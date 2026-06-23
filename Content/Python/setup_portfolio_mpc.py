@@ -1,7 +1,8 @@
 """Create MPC_Portfolio_Palette for scene-wide color cohesion (Melodia-style).
 
 Scalars/vectors drive global grade; instances sample via CollectionParameter nodes
-on M_Master_Toon_Universal (wired in setup_master_universal when MPC exists).
+on M_Master_Toon_Universal (ShadowDreamBias wired in setup_master_universal;
+full palette tint deferred).
 
 Run headless:
   UnrealEditor-Cmd.exe BS_GodFile.uproject ^
@@ -93,10 +94,9 @@ def main() -> int:
         "scalars": {n: d for n, d in MPC_SCALARS},
         "vectors": {n: list(v) for n, v in MPC_VECTORS},
         "usage": (
-            "Place MPC_Portfolio_Palette in level; materials using M_Master_Toon_Universal "
-            "read CollectionParameter nodes (BaseTintShift, ShadowDreamBias, RimWarmth, "
-            "ElementalGrade, TimeOfDayWarmth, PaletteTint). Tune once per scene for "
-            "Melodia-style cohesive palette without re-authoring every MI."
+            "Place MPC_Portfolio_Palette in level. M_Master_Toon_Universal reads "
+            "ShadowDreamBias via CollectionParameter; BaseTintShift/PaletteTint/RimWarmth "
+            "are reserved for a future palette pass. Tune once per scene for cohesive grade."
         ),
     }
     REPORT.parent.mkdir(parents=True, exist_ok=True)
