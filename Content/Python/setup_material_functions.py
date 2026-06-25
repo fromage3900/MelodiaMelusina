@@ -33,16 +33,18 @@ MF_SPECS: list[tuple[str, str]] = [
     ("MF_AnimeSkinWrap", "Wrap lighting + soft skin shadow mask"),
     ("MF_ParallaxCore", "Height parallax UV offset — modes 0/1/2"),
     ("MF_NormalAdjust", "Normal strength + power + per-layer scale"),
+    ("MF_Madoka", "Witch-barrier voronoi veins + cute/corrupt tint (Phase 1, no Blur)"),
+    ("MF_Itto", "Truchet crack + wear roughness add (Phase 1, no height/ink)"),
 ]
 
 
 def _clear_function_graph(mf: unreal.MaterialFunction) -> None:
     try:
-        if not hasattr(unreal.MaterialEditingLibrary, "get_function_expressions"):
+        if not hasattr(unreal.MaterialEditingLibrary, "get_material_function_expressions"):
             return
-        exprs = unreal.MaterialEditingLibrary.get_function_expressions(mf)
+        exprs = unreal.MaterialEditingLibrary.get_material_function_expressions(mf)
         for expr in list(exprs or []):
-            unreal.MaterialEditingLibrary.delete_material_expression(mf, expr)
+            unreal.MaterialEditingLibrary.delete_material_expression_in_function(mf, expr)
     except Exception as exc:
         unreal.log_warning(f"[MF] clear graph {mf.get_name()}: {exc}")
 
@@ -556,6 +558,126 @@ def _build_sdf_band(mf: unreal.MaterialFunction) -> None:
     _add_function_output(mf, out, "Result", 180, 40)
 
 
+def _build_madoka(mf: unreal.MaterialFunction) -> None:
+    """Witch-barrier voronoi veins + cute/corrupt tint. Phase 1: no Blur node
+    (the sigma-8 full-screen Blur on a 600+ node master was the likely cause
+    of the prior catastrophic rebuild failure) — cheap DDX/DDY edge approx instead.
+    """
+    world = lib.create_expression(mf, unreal.MaterialExpressionWorldPosition, -900, 0)
+    mask_xy = lib.create_expression(mf, unreal.MaterialExpressionComponentMask, -720, 0)
+    mask_xy.set_editor_property("r", True)
+    mask_xy.set_editor_property("g", True)
+    mask_xy.set_editor_property("b", False)
+    mask_xy.set_editor_property("a", False)
+    lib.connect(world, "", mask_xy, "")
+
+    wallpaper_scale = lib.scalar_param(mf, "WitchBarrierWallpaperScale", "Madoka", 4.0, -900, 140)
+    glow_amount = lib.scalar_param(mf, "MadokaGlowAmount", "Madoka", 0.0, -900, 240)
+    vein_emissive = lib.scalar_param(mf, "MadokaVeinEmissive", "Madoka", 0.0, -900, 340)
+    cute_bias = lib.scalar_param(mf, "MadokaCuteBias", "Madoka", 0.5, -900, 440)
+    emissive_bright = lib.scalar_param(mf, "MadokaEmissiveBrightness", "Madoka", 0.0, -900, 540)
+
+    scaled = lib.create_expression(mf, unreal.MaterialExpressionMultiply, -540, 0)
+    lib.connect(mask_xy, "", scaled, "A")
+    lib.connect(wallpaper_scale, "", scaled, "B")
+    voronoi = lib.create_expression(mf, unreal.MaterialExpressionNoise, -380, 0)
+    lib.connect(scaled, "", voronoi, "Position")
+    voronoi_sat = lib.create_expression(mf, unreal.MaterialExpressionSaturate, -220, 0)
+    lib.connect_unary(voronoi, voronoi_sat)
+
+    ddx = lib.create_expression(mf, unreal.MaterialExpressionDDX, -220, 140)
+    ddy = lib.create_expression(mf, unreal.MaterialExpressionDDY, -220, 240)
+    lib.connect_unary(voronoi_sat, ddx)
+    lib.connect_unary(voronoi_sat, ddy)
+    ddx_abs = lib.create_expression(mf, unreal.MaterialExpressionAbs, -60, 140)
+    ddy_abs = lib.create_expression(mf, unreal.MaterialExpressionAbs, -60, 240)
+    lib.connect_unary(ddx, ddx_abs)
+    lib.connect_unary(ddy, ddy_abs)
+    veins = lib.create_expression(mf, unreal.MaterialExpressionAdd, 100, 190)
+    lib.connect(ddx_abs, "", veins, "A")
+    lib.connect(ddy_abs, "", veins, "B")
+
+    vein_glow = lib.create_expression(mf, unreal.MaterialExpressionMultiply, 260, 190)
+    lib.connect(veins, "", vein_glow, "A")
+    lib.connect(vein_emissive, "", vein_glow, "B")
+
+    cute_color = lib.create_expression(mf, unreal.MaterialExpressionConstant3Vector, -540, 420)
+    cute_color.set_editor_property("constant", unreal.LinearColor(0.92, 0.55, 0.88, 1.0))
+    corrupt_color = lib.create_expression(mf, unreal.MaterialExpressionConstant3Vector, -540, 540)
+    corrupt_color.set_editor_property("constant", unreal.LinearColor(0.55, 0.12, 0.18, 1.0))
+    tint_mix = lib.create_expression(mf, unreal.MaterialExpressionLinearInterpolate, -340, 480)
+    lib.connect(corrupt_color, "", tint_mix, "A")
+    lib.connect(cute_color, "", tint_mix, "B")
+    lib.connect(cute_bias, "", tint_mix, "Alpha")
+
+    color_out = lib.create_expression(mf, unreal.MaterialExpressionMultiply, 100, 420)
+    lib.connect(tint_mix, "", color_out, "A")
+    lib.connect(voronoi_sat, "", color_out, "B")
+
+    glow_base = lib.create_expression(mf, unreal.MaterialExpressionMultiply, 100, 560)
+    lib.connect(tint_mix, "", glow_base, "A")
+    lib.connect(glow_amount, "", glow_base, "B")
+    emissive_scaled = lib.create_expression(mf, unreal.MaterialExpressionMultiply, 420, 280)
+    lib.connect(vein_glow, "", emissive_scaled, "A")
+    lib.connect(emissive_bright, "", emissive_scaled, "B")
+    emissive_out = lib.create_expression(mf, unreal.MaterialExpressionAdd, 580, 380)
+    lib.connect(emissive_scaled, "", emissive_out, "A")
+    lib.connect(glow_base, "", emissive_out, "B")
+
+    _add_function_output(mf, color_out, "Color", 280, 420)
+    _add_function_output(mf, emissive_out, "Emissive", 740, 380)
+
+
+def _build_itto(mf: unreal.MaterialFunction) -> None:
+    """Truchet-style crack + wear roughness add. Phase 1 only — IttoInkStrength/
+    IttoErosionStrength/IttoWearDepth deliberately deferred (height+ink pass),
+    same as the project's existing Impressionist-ink deferral pattern.
+    """
+    world = lib.create_expression(mf, unreal.MaterialExpressionWorldPosition, -700, 0)
+    mask_xy = lib.create_expression(mf, unreal.MaterialExpressionComponentMask, -540, 0)
+    mask_xy.set_editor_property("r", True)
+    mask_xy.set_editor_property("g", True)
+    mask_xy.set_editor_property("b", False)
+    mask_xy.set_editor_property("a", False)
+    lib.connect(world, "", mask_xy, "")
+
+    pattern_scale = lib.scalar_param(mf, "IttoPatternScale", "Itto", 3.0, -700, 140)
+    crack_depth = lib.scalar_param(mf, "IttoCrackDepth", "Itto", 0.0, -700, 240)
+    wear_amount = lib.scalar_param(mf, "IttoWearAmount", "Itto", 0.0, -700, 340)
+
+    scaled = lib.create_expression(mf, unreal.MaterialExpressionMultiply, -360, 0)
+    lib.connect(mask_xy, "", scaled, "A")
+    lib.connect(pattern_scale, "", scaled, "B")
+    truchet = lib.create_expression(mf, unreal.MaterialExpressionNoise, -200, 0)
+    lib.connect(scaled, "", truchet, "Position")
+    truchet_sat = lib.create_expression(mf, unreal.MaterialExpressionSaturate, -40, 0)
+    lib.connect_unary(truchet, truchet_sat)
+
+    ddx = lib.create_expression(mf, unreal.MaterialExpressionDDX, -40, 140)
+    ddy = lib.create_expression(mf, unreal.MaterialExpressionDDY, -40, 240)
+    lib.connect_unary(truchet_sat, ddx)
+    lib.connect_unary(truchet_sat, ddy)
+    ddx_abs = lib.create_expression(mf, unreal.MaterialExpressionAbs, 120, 140)
+    ddy_abs = lib.create_expression(mf, unreal.MaterialExpressionAbs, 120, 240)
+    lib.connect_unary(ddx, ddx_abs)
+    lib.connect_unary(ddy, ddy_abs)
+    cracks = lib.create_expression(mf, unreal.MaterialExpressionAdd, 280, 190)
+    lib.connect(ddx_abs, "", cracks, "A")
+    lib.connect(ddy_abs, "", cracks, "B")
+    crack_mask = lib.create_expression(mf, unreal.MaterialExpressionMultiply, 440, 190)
+    lib.connect(cracks, "", crack_mask, "A")
+    lib.connect(crack_depth, "", crack_mask, "B")
+
+    wear = lib.create_expression(mf, unreal.MaterialExpressionMultiply, 120, 380)
+    lib.connect(truchet_sat, "", wear, "A")
+    lib.connect(wear_amount, "", wear, "B")
+
+    roughness_add = lib.create_expression(mf, unreal.MaterialExpressionAdd, 600, 290)
+    lib.connect(crack_mask, "", roughness_add, "A")
+    lib.connect(wear, "", roughness_add, "B")
+    _add_function_output(mf, roughness_add, "RoughnessAdd", 760, 290)
+
+
 BUILDERS = {
     "MF_UVTransform": _build_uv_transform,
     "MF_RealParallax": _build_real_parallax,
@@ -571,6 +693,8 @@ BUILDERS = {
     "MF_AnimeSkinWrap": _build_anime_skin_wrap,
     "MF_ParallaxCore": _build_parallax_core,
     "MF_NormalAdjust": _build_normal_adjust,
+    "MF_Madoka": _build_madoka,
+    "MF_Itto": _build_itto,
 }
 
 
