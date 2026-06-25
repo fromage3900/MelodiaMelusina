@@ -1684,6 +1684,35 @@ def build():
     wire("dith_bl_alpha", dither_str, dith_blend, "Alpha")
     final_color = dith_blend
 
+    # --- Madoka + Itto: standalone MF lanes (Phase 1 rebuild, post-incident) ---
+    # Single MaterialFunctionCall per function — see MATERIAL_SYSTEM_REVIEW.md /
+    # [[material-system-architecture-review]]: keeps Universal's own node count
+    # flat regardless of internal MF complexity, unlike the reverted inline attempt.
+    madoka_blend = lib.scalar_param(m, "MadokaBlendAmount", "Madoka", 0.0, 12200, 900)
+    madoka_call = mf_call(m, "/Game/EnvSandbox/Materials/Functions/MF_Madoka", 12200, 1000)
+    if madoka_call:
+        madoka_color_blend = lib.create_expression(m, unreal.MaterialExpressionLinearInterpolate, 12500, 1000)
+        lib.connect(final_color, "", madoka_color_blend, "A")
+        lib.connect(madoka_call, "Color", madoka_color_blend, "B")
+        wire("madoka_col_alpha", madoka_blend, madoka_color_blend, "Alpha")
+        final_color = madoka_color_blend
+
+        madoka_emis_add = lib.create_expression(m, unreal.MaterialExpressionAdd, 12700, 1100)
+        lib.connect(emissive, "", madoka_emis_add, "A")
+        lib.connect(madoka_call, "Emissive", madoka_emis_add, "B")
+        emissive = madoka_emis_add
+    else:
+        unreal.log_warning("[Universal] MF_Madoka missing — Madoka lane skipped")
+
+    itto_call = mf_call(m, "/Game/EnvSandbox/Materials/Functions/MF_Itto", 12200, 1300)
+    if itto_call:
+        rough_itto = lib.create_expression(m, unreal.MaterialExpressionAdd, 12500, 1300)
+        lib.connect(rough_gold, "", rough_itto, "A")
+        lib.connect(itto_call, "RoughnessAdd", rough_itto, "B")
+        rough_gold = rough_itto
+    else:
+        unreal.log_warning("[Universal] MF_Itto missing — Itto lane skipped")
+
     # character + elemental emissive additions
     char_emis_a = lib.create_expression(m, unreal.MaterialExpressionAdd, 8280, 640)
     wire("char_eA", eye_e, char_emis_a, "A")
