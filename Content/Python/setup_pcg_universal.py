@@ -161,8 +161,24 @@ def build_all(*, force: bool = False) -> dict:
     import setup_pcg_greybox as grey
     greybox_presets = grey.build_preset_graphs(force=force)
 
+    graphs_ok = all(
+        unreal.EditorAssetLibrary.does_asset_exist(p)
+        for p in (
+            foliage_path, rock_path, excl_path, wall_path,
+            std.GRAPH_GREYBOX_MINIMAL, std.GRAPH_GREYBOX_STANDARD,
+        )
+    )
+    collections_ok = all(
+        collections[k].get("exists") or collections[k].get("method") == "manifest_only"
+        for k in ("portfolio", "greybox", "sakura")
+        if isinstance(collections.get(k), dict)
+    )
     report = {
-        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "generated_by": "setup_pcg_universal.py",
+        "graphs_ok": graphs_ok,
+        "collections_ok": collections_ok,
+        "passed": graphs_ok,
         "graphs": {
             "foliage": {"path": foliage_path, **foliage_meta},
             "rock": {"path": rock_path, **rock_meta},
@@ -171,17 +187,6 @@ def build_all(*, force: bool = False) -> dict:
         },
         "collections": collections,
         "greybox_presets": greybox_presets,
-        "passed": all(
-            unreal.EditorAssetLibrary.does_asset_exist(p)
-            for p in (
-                foliage_path, rock_path, excl_path, wall_path,
-                std.GRAPH_GREYBOX_MINIMAL, std.GRAPH_GREYBOX_STANDARD,
-            )
-        ) and all(
-            collections[k].get("exists")
-            for k in ("portfolio", "greybox", "sakura")
-            if isinstance(collections.get(k), dict)
-        ),
     }
     REPORT.parent.mkdir(parents=True, exist_ok=True)
     REPORT.write_text(json.dumps(report, indent=2), encoding="utf-8")

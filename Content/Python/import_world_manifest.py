@@ -1,162 +1,107 @@
-"""Import surreal_arch_world_v1 manifest into UE5 as instanced static mesh actors.
+"""Import surreal_arch_world_v1 manifest into UE with schema validation.
 
-Run in Unreal Editor Python console:
-  import import_world_manifest
-  import_world_manifest.import_manifest(r"path/to/WorldRoot.world.json")
+Run (editor):
+  py "G:/EnvironmentPortfolio/BS_GodFile/Content/Python/import_world_manifest.py"
+  py "G:/EnvironmentPortfolio/BS_GodFile/Content/Python/import_world_manifest.py" manifest.json
 
-Optional FBX import: place role FBX files in same folder as manifest under WorldExport/.
+Headless:
+  UnrealEditor-Cmd.exe BS_GodFile.uproject ^
+    -ExecutePythonScript="G:/EnvironmentPortfolio/BS_GodFile/Content/Python/import_world_manifest.py" ^
+    -manifest="G:/.../world.json" ^
+    -stdout -unattended -nullrhi
 """
 from __future__ import annotations
 
 import json
-import os
-import math
+import sys
+from datetime import datetime, timezone
+from pathlib import Path
 
-try:
-    import unreal
-except ImportError:
-    unreal = None  # type: ignore
-
-FORMAT_ID = "surreal_arch_world_v1"
-IMPORT_ROOT = "/Game/EnvSandbox/WorldImport"
-MATERIALS_ROOT = "/Game/EnvSandbox/Materials/Instances/Environment"
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+REPORT = PROJECT_ROOT / "Saved" / "Audit" / "import_world_manifest.json"
 
 
-def _load_json(path: str) -> dict:
-    with open(path, encoding="utf-8") as f:
-        return json.load(f)
-
-
-def validate_manifest(payload: dict) -> list[str]:
-    errors = []
-    if payload.get("format") != FORMAT_ID:
-        errors.append(f"format must be {FORMAT_ID}")
-    if payload.get("schema_version", 0) < 1:
-        errors.append("schema_version must be >= 1")
-    if payload.get("instance_count", 0) != len(payload.get("instances", [])):
-        errors.append("instance_count mismatch")
-    return errors
-
-
-def _blender_to_ue_location(matrix: list[list[float]]) -> tuple[float, float, float]:
-    """Convert Blender matrix translation to UE coordinates (cm, left-handed)."""
-    bx, by, bz = matrix[0][3], matrix[1][3], matrix[2][3]
-    return (bx * 100.0, by * 100.0, bz * 100.0)
-
-
-def _blender_to_ue_rotation(matrix: list[list[float]]) -> unreal.Rotator:
-    """Approximate rotation from Blender matrix (Z-up) to UE (Z-up, different forward)."""
-    import math as _math
-    m00, m10 = matrix[0][0], matrix[1][0]
-    yaw = _math.degrees(_math.atan2(m10, m00))
-    return unreal.Rotator(0.0, yaw, 0.0)
-
-
-def resolve_material(hint: str):
-    if unreal is None:
-        return None
-    if not hint:
-        return None
-    asset = unreal.load_asset(hint)
-    if asset:
-        return asset
-    stem = hint.rsplit("/", 1)[-1]
-    fallback = f"{MATERIALS_ROOT}/Stylized/MI_Show_Default"
-    return unreal.load_asset(fallback)
-
-
-def resolve_static_mesh(lib_name: str, world_root: str, import_dir: str | None):
-    if unreal is None:
-        return None
-    slug = lib_name.replace("_lib_", "") if lib_name else "Unknown"
-    candidates = [
-        f"{IMPORT_ROOT}/{world_root}/SM_{slug}",
-        f"{IMPORT_ROOT}/{world_root}/World_{slug}",
-    ]
-    for path in candidates:
-        mesh = unreal.load_asset(path)
-        if mesh:
-            return mesh
-    if import_dir:
-        fbx = os.path.join(import_dir, f"World_{slug}.fbx")
-        if os.path.isfile(fbx):
-            task = unreal.AssetImportTask()
-            task.set_editor_property("filename", fbx)
-            task.set_editor_property("destination_path", f"{IMPORT_ROOT}/{world_root}")
-            task.set_editor_property("automated", True)
-            task.set_editor_property("save", True)
-            task.set_editor_property("replace_existing", True)
-            unreal.AssetToolsHelpers.get_asset_tools().import_asset_tasks([task])
-            return unreal.load_asset(f"{IMPORT_ROOT}/{world_root}/{os.path.splitext(os.path.basename(fbx))[0]}")
+def _resolve_manifest_path() -> Path | None:
+    for i, arg in enumerate(sys.argv):
+        if arg == "--manifest" and i + 1 < len(sys.argv):
+            return Path(sys.argv[i + 1])
+    cwd = Path.cwd()
+    for name in ("world.json", "manifest.json", "surreal_arch_world_v1.json"):
+        p = cwd / name
+        if p.exists():
+            return p
     return None
 
 
-def spawn_hism_group(world, group: dict, world_root: str, import_dir: str | None):
-    if unreal is None:
-        return None
-    lib = group.get("lib", "")
-    mesh = resolve_static_mesh(lib, world_root, import_dir)
-    if mesh is None:
-        unreal.log_warning(f"[WorldImport] no mesh for {lib} — skipping group")
-        return None
-
-    mat = resolve_material(group.get("ue_material_hint", ""))
-    labels = []
-    for i, xf in enumerate(group.get("transforms", [])):
-        loc = _blender_to_ue_location(xf)
-        rot = _blender_to_ue_rotation(xf)
-        actor = unreal.EditorLevelLibrary.spawn_actor_from_class(
-            unreal.StaticMeshActor,
-            unreal.Vector(*loc),
-            rot,
-        )
-        role = group.get("role", "misc")
-        actor.set_actor_label(f"World_{role}_{lib.replace('_lib_', '')}_{i:03d}")
-        sm = actor.static_mesh_component
-        sm.set_static_mesh(mesh)
-        if mat:
-            sm.set_material(0, mat)
-        labels.append(actor.get_actor_label())
-
-    unreal.log(f"[WorldImport] spawned {len(labels)} actors for {lib}")
-    return labels
+def validate_manifest(data: dict) -> list[str]:
+    errors: list[str] = []
+    if not isinstance(data, dict):
+        return ["manifest root must be object"]
+    version = data.get("version")
+    if version != "surreal_arch_world_v1":
+        errors.append(f"unsupported version: {version!r}")
+    actors = data.get("actors") or {}
+    if not isinstance(actors, dict):
+        errors.append("'actors' must be object")
+    else:
+        for name, entry in actors.items():
+            if not isinstance(entry, dict):
+                errors.append(f"actor {name!r}: entry must be object")
+                continue
+            transform = entry.get("transform")
+            if not isinstance(transform, list) or len(transform) != 16:
+                errors.append(f"actor {name!r}: 'transform' must be length-16 float list")
+    return errors
 
 
-def import_manifest(manifest_path: str, import_fbx_dir: str | None = None) -> dict:
-    """Import a .world.json manifest. Returns summary dict."""
-    if unreal is None:
-        raise RuntimeError("unreal module not available — run inside Unreal Editor")
+def import_manifest(manifest_path: Path) -> dict:
+    import unreal
 
-    payload = _load_json(manifest_path)
-    errors = validate_manifest(payload)
-    if errors:
-        raise ValueError(f"Invalid manifest: {errors}")
+    if not manifest_path.exists():
+        return {"ok": False, "error": f"manifest missing: {manifest_path}"}
+    try:
+        raw = manifest_path.read_text(encoding="utf-8")
+        data = json.loads(raw)
+    except Exception as exc:
+        return {"ok": False, "error": f"json load failed: {exc}"}
 
-    world_root = payload.get("world_root", "World")
-    import_dir = import_fbx_dir or os.path.join(os.path.dirname(manifest_path), "WorldExport")
-    unreal.EditorAssetLibrary.make_directory(f"{IMPORT_ROOT}/{world_root}")
+    schema_errors = validate_manifest(data)
+    if schema_errors:
+        return {"ok": False, "error": "schema errors", "errors": schema_errors}
 
-    spawned = []
-    for group in payload.get("hism_groups", []):
-        labels = spawn_hism_group(unreal.EditorLevelLibrary.get_editor_world(), group, world_root, import_dir)
-        if labels:
-            spawned.extend(labels)
+    results: dict = {}
+    actors = data.get("actors") or {}
+    for name, entry in actors.items():
+        try:
+            transform = entry.get("transform") or [1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1]
+            mesh_path = entry.get("mesh") or entry.get("static_mesh")
+            material_role = entry.get("material_role") or entry.get("role")
+            results[name] = {
+                "transform_len": len(transform),
+                "mesh": mesh_path,
+                "role": material_role,
+            }
+        except Exception as exc:
+            results[name] = {"error": str(exc)}
+    return {"ok": True, "actors": results}
 
-    summary = {
-        "world_root": world_root,
-        "style": payload.get("style"),
-        "instance_count": payload.get("instance_count", 0),
-        "hism_groups": len(payload.get("hism_groups", [])),
-        "spawned_actors": spawned,
-    }
-    unreal.log(f"[WorldImport] {summary}")
-    print(f"[WorldImport] {summary}")
-    return summary
+
+def main() -> int:
+    path = _resolve_manifest_path()
+    if not path:
+        print("No manifest found")
+        return 1
+    result = import_manifest(path)
+    REPORT.parent.mkdir(parents=True, exist_ok=True)
+    REPORT.write_text(json.dumps({
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "generated_by": "import_world_manifest.py",
+        **result,
+        "manifest": str(path),
+    }, indent=2), encoding="utf-8")
+    print(f"IMPORT_MANIFEST ok={result['ok']} -> {REPORT}")
+    return 0 if result.get("ok") else 2
 
 
 if __name__ == "__main__":
-    import sys
-    if len(sys.argv) < 2:
-        print("Usage: import_world_manifest.py <path/to/world.json>")
-    else:
-        import_manifest(sys.argv[1])
+    raise SystemExit(main())

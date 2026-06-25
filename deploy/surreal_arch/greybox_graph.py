@@ -65,17 +65,38 @@ GRAPH_ZEN_ROJI_PATH = [
     ("GB_ZEN_ROJI_STEP", {"gb_length": 5.0, "gb_width": 1.8, "gb_trim_mode": "RECESS", "unit_size": 2.0}),
     ("GB_ZEN_ROJI_STEP", {"gb_length": 4.0, "gb_width": 1.8}),
     ("GB_ZEN_TSUKUBAI", {"gb_width": 1.6, "gb_depth": 1.6, "gb_height": 0.45, "gb_trim_mode": "RECESS"}),
-    ("ZEN_LANTERN", {"zen_lantern_height": 1.4, "zen_lantern_style": "KASUGA"}),
+    ("GB_ZEN_LANTERN", {"zen_lantern_height": 1.4, "zen_lantern_style": "KASUGA", "gb_trim_mode": "RECESS"}),
 ]
 
 GRAPH_ZEN_SHRINE_COURTYARD = [
     ("GB_ZEN_TORII_GATE", {"torii_width": 4.0, "torii_height": 4.5}),
     ("GB_ZEN_BAMBOO_FENCE", {"gb_length": 8.0, "zen_fence_height": 1.2, "gb_trim_mode": "RECESS"}),
-    ("ZEN_STONE_GARDEN", {"stone_garden_size": 8.0}),
+    ("GB_ZEN_KARESANSUI", {"gb_width": 8.0, "gb_depth": 6.0, "gb_trim_mode": "RECESS"}),
     ("ZEN_BRIDGE", {"zen_bridge_span": 5.0, "zen_bridge_rise": 0.6}),
     ("GB_ZEN_ENGAWA", {"gb_width": 5.5, "gb_depth": 2.5, "gb_height": 0.35, "gb_trim_mode": "RECESS"}),
+    ("GB_ZEN_MACHIAI", {"gb_width": 3.2, "gb_depth": 2.4, "gb_height": 2.2, "gb_trim_mode": "RECESS"}),
     ("ZEN_TEAHOUSE", {"teahouse_depth": 4.5, "teahouse_width": 5.0}),
-    ("ZEN_LANTERN", {}),
+    ("GB_ZEN_LANTERN", {}),
+]
+
+GRAPH_ZEN_KARESANSHUI_WALK = [
+    ("GB_ZEN_TORII_GATE", {"torii_width": 3.4, "torii_height": 4.0, "gb_trim_mode": "RECESS"}),
+    ("GB_ZEN_ROJI_STEP", {"gb_length": 5.0, "gb_width": 1.8, "gb_trim_mode": "RECESS"}),
+    ("GB_ZEN_KARESANSUI", {"gb_width": 8.0, "gb_depth": 6.0, "gb_trim_mode": "RECESS"}),
+    ("GB_ZEN_MACHIAI", {"gb_width": 3.2, "gb_depth": 2.4, "gb_height": 2.2, "gb_trim_mode": "RECESS"}),
+    ("GB_ZEN_LANTERN", {"zen_lantern_height": 1.4}),
+]
+
+GRAPH_ZEN_SAKURA_WALK = [
+    ("GB_ZEN_SAKURA_TORII", {"torii_width": 3.4, "torii_height": 4.0, "gb_trim_mode": "RECESS"}),
+    ("GB_ZEN_ROJI_STEP", {"gb_length": 5.0, "gb_width": 1.8, "gb_trim_mode": "RECESS"}),
+    ("GB_ZEN_CHERRY_ALLEE", {"gb_length": 6.0, "gb_width": 2.6, "gb_height": 0.32, "gb_trim_mode": "RECESS"}),
+    ("GB_ZEN_WATER_EDGE", {"gb_length": 2.8, "gb_width": 2.4, "zen_stream_depth": 0.35, "gb_trim_mode": "RECESS"}),
+    ("GB_ZEN_STONE_BRIDGE", {"zen_bridge_span": 5.0, "zen_bridge_rise": 0.55, "gb_width": 1.8, "gb_trim_mode": "RECESS"}),
+    ("GB_ZEN_KARESANSUI", {"gb_width": 8.0, "gb_depth": 6.0, "gb_trim_mode": "RECESS"}),
+    ("GB_ZEN_MACHIAI", {"gb_width": 3.2, "gb_depth": 2.4, "gb_height": 2.2, "gb_trim_mode": "RECESS"}),
+    ("GB_ZEN_ENGAWA", {"gb_width": 5.0, "gb_depth": 2.3, "gb_height": 0.35, "gb_trim_mode": "RECESS"}),
+    ("GB_ZEN_LANTERN", {"zen_lantern_height": 1.5}),
 ]
 
 GRAPH_ZEN_TEA_GARDEN = [
@@ -85,7 +106,7 @@ GRAPH_ZEN_TEA_GARDEN = [
     ("GB_ZEN_TSUKUBAI", {"gb_width": 1.4, "gb_depth": 1.4, "gb_height": 0.4, "gb_trim_mode": "RECESS"}),
     ("GB_ZEN_ENGAWA", {"gb_width": 4.5, "gb_depth": 2.2, "gb_trim_mode": "RECESS"}),
     ("ZEN_TEAHOUSE", {"teahouse_depth": 4.0, "teahouse_width": 4.5}),
-    ("ZEN_LANTERN", {"zen_lantern_height": 1.2}),
+    ("GB_ZEN_LANTERN", {"zen_lantern_height": 1.2, "gb_trim_mode": "RECESS"}),
 ]
 
 def _preview_chain(spec):
@@ -173,6 +194,22 @@ GRAPH_REGISTRY = {
         "module_count": len(GRAPH_ZEN_TEA_GARDEN),
         "spec": GRAPH_ZEN_TEA_GARDEN,
     },
+    "ZEN_KARESANSHUI_WALK": {
+        "label": "Zen Karesansui Walk",
+        "description": "Torii → roji path → dry garden → machiai waiting pavilion",
+        "preview": _preview_chain(GRAPH_ZEN_KARESANSHUI_WALK),
+        "style": "zen",
+        "module_count": len(GRAPH_ZEN_KARESANSHUI_WALK),
+        "spec": GRAPH_ZEN_KARESANSHUI_WALK,
+    },
+    "ZEN_SAKURA_WALK": {
+        "label": "Zen Sakura Walk",
+        "description": "Cherry blossom garden route — allee, stream edge, stone bridge, karesansui",
+        "preview": _preview_chain(GRAPH_ZEN_SAKURA_WALK),
+        "style": "zen",
+        "module_count": len(GRAPH_ZEN_SAKURA_WALK),
+        "spec": GRAPH_ZEN_SAKURA_WALK,
+    },
 }
 
 
@@ -221,7 +258,7 @@ def resolve_graph_spacing(context, default=10.0):
     return default
 
 
-def spawn_graph(context, monolith, graph_spec, spacing=None):
+def spawn_graph(context, monolith, graph_spec, spacing=None, graph_id=None):
     if spacing is None:
         spacing = resolve_graph_spacing(context)
     col = context.collection
@@ -242,10 +279,33 @@ def spawn_graph(context, monolith, graph_spec, spacing=None):
         bpy.ops.surreal_arch.generate()
         objs.append(obj)
         x += spacing
+    snap_fn = best_snap_pair
+    try:
+        import sys
+        import os
+        deploy = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        if deploy not in sys.path:
+            sys.path.insert(0, deploy)
+        from surreal_os import rules_engine as os_rules
+        snap_fn = os_rules.best_snap_pair
+    except Exception:
+        pass
     for i in range(1, len(objs)):
-        pair = best_snap_pair(monolith, objs[i], objs[i - 1])
+        pair = snap_fn(monolith, objs[i], objs[i - 1])
         if pair:
             monolith._gb_apply_snap_pair(objs[i], objs[i - 1], pair)
+    genome = getattr(monolith, "_active_style_genome", None)
+    transform_id = None
+    if genome:
+        transform_id = genome.get("surreal_transform")
+        if not transform_id and graph_id:
+            transform_id = None
+    if transform_id:
+        try:
+            from surreal_os import rules_engine as os_rules
+            os_rules.apply_surreal_transform(objs, transform_id, genome, graph_id=graph_id)
+        except Exception:
+            pass
     return objs
 
 
@@ -263,7 +323,7 @@ def register_graph_operators(monolith):
 
                 def execute(self, context):
                     spacing = resolve_graph_spacing(context)
-                    objs = spawn_graph(context, monolith, gspec, spacing=spacing)
+                    objs = spawn_graph(context, monolith, gspec, spacing=spacing, graph_id=gid)
                     self.report({"INFO"}, f"Spawned {len(objs)} modules ({gid}) @ {spacing:.1f}m")
                     return {"FINISHED"}
 

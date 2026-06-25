@@ -41,7 +41,11 @@ from surreal_world import compose, export, library, plans, verify_hooks
 
 all_ok = True
 export_root = None
+city_export_root = None
+brutalist_export_root = None
 castle_root = None
+art_nouveau_export_root = None
+moorish_export_root = None
 
 print("\n--- Library init ---")
 try:
@@ -168,10 +172,47 @@ except Exception as e:
     print(f"  village compose error: {e}")
     all_ok = False
 
+print("\n--- Art Nouveau plan compose ---")
+try:
+    from surreal_os import genome as os_genome
+    art_plan = plans.spawn_village_plan(location=(100, 0, 0))
+    s._active_style_genome = os_genome.load_genome("art_nouveau_v1")
+    aroot, amsg = compose.compose_world(s, bpy.context, art_plan, "ART_NOUVEAU", 0.85, "COLLECTION")
+    art_nouveau_export_root = aroot
+    s._active_style_genome = None
+    print(f"  art_nouveau_compose: {amsg} metrics={verify_hooks.compose_metrics(aroot)}")
+    if aroot.get("surreal_style_genome_id") != "art_nouveau_v1":
+        print(f"  !! FAIL: art_nouveau genome stamp got {aroot.get('surreal_style_genome_id')}")
+        all_ok = False
+    else:
+        print("  art_nouveau_compose: OK")
+except Exception as e:
+    print(f"  art_nouveau compose error: {e}")
+    all_ok = False
+
+print("\n--- Moorish courtyard plan compose ---")
+try:
+    from surreal_os import genome as os_genome
+    moor_plan = plans.spawn_village_plan(location=(120, 0, 0))
+    s._active_style_genome = os_genome.load_genome("moorish_courtyard_v1")
+    mroot, mmsg = compose.compose_world(s, bpy.context, moor_plan, "MOORISH_COURTYARD", 0.85, "COLLECTION")
+    moorish_export_root = mroot
+    s._active_style_genome = None
+    print(f"  moorish_compose: {mmsg} metrics={verify_hooks.compose_metrics(mroot)}")
+    if mroot.get("surreal_style_genome_id") != "moorish_courtyard_v1":
+        print(f"  !! FAIL: moorish genome stamp got {mroot.get('surreal_style_genome_id')}")
+        all_ok = False
+    else:
+        print("  moorish_compose: OK")
+except Exception as e:
+    print(f"  moorish compose error: {e}")
+    all_ok = False
+
 print("\n--- Grid city plan compose ---")
 try:
     city = plans.spawn_grid_city_plan(location=(60, 0, 0), grid=4, plot=4.0, street=1.5)
     croot, cmsg = compose.compose_world(s, bpy.context, city, "ASIAN_CITY", 0.85, "COLLECTION")
+    city_export_root = croot
     cfails = verify_hooks.check_city_ld_metrics(croot)
     print(f"  city_compose: {cmsg} metrics={verify_hooks.compose_metrics(croot)}")
     if cfails:
@@ -185,8 +226,12 @@ except Exception as e:
 
 print("\n--- Motte/bailey plan compose ---")
 try:
+    from surreal_os import genome as os_genome
+    s._active_style_genome = os_genome.load_genome("brutalist_plaza_v1")
     motte = plans.spawn_motte_bailey_plan(location=(80, 0, 0))
     mroot, mmsg = compose.compose_world(s, bpy.context, motte, "WESTERN_CASTLE", 0.85, "COLLECTION")
+    brutalist_export_root = mroot
+    s._active_style_genome = None
     mfails = verify_hooks.check_motte_ld_metrics(mroot)
     print(f"  motte_compose: {mmsg} metrics={verify_hooks.compose_metrics(mroot)}")
     if mfails:
@@ -231,7 +276,7 @@ print("\n--- World export manifest ---")
 try:
     if export_root is None:
         raise RuntimeError("no export_root from compose tests")
-    manifest = export.build_world_manifest(export_root)
+    manifest = export.build_world_manifest(export_root, monolith=s)
     assert manifest.get("format") == "surreal_arch_world_v1"
     assert manifest.get("schema_version", 0) >= 1
     assert manifest.get("instance_count", 0) >= 3
@@ -242,9 +287,72 @@ try:
     hints = {i["ue_material_hint"] for i in manifest["instances"]}
     if not any("/Game/EnvSandbox/" in h for h in hints):
         raise RuntimeError("ue_material_hint paths missing EnvSandbox prefix")
+    if export_root.get("surreal_compose_style") == "ZEN_SHRINE":
+        sg = manifest.get("style_genome") or {}
+        if sg.get("id") != "zen_shrine_v1":
+            raise RuntimeError(f"style_genome missing zen_shrine_v1: {sg}")
+        if not sg.get("sacred_sequence"):
+            raise RuntimeError("style_genome sacred_sequence empty")
+        if not sg.get("resolved_compose_roles"):
+            raise RuntimeError("style_genome resolved_compose_roles missing")
+        if sg["resolved_compose_roles"].get("sacred") != "_lib_GB_ZEN_HONDEN":
+            raise RuntimeError("resolved_compose_roles sacred mismatch")
+    city_root = city_export_root
+    if city_root is not None:
+        cm = export.build_world_manifest(city_root, monolith=s)
+        csg = cm.get("style_genome") or {}
+        if csg.get("id") != "asian_city_v1":
+            raise RuntimeError(f"ASIAN_CITY style_genome expected asian_city_v1: {csg}")
+        if csg.get("family") != "Asian":
+            raise RuntimeError(f"ASIAN_CITY family mismatch: {csg.get('family')}")
+        if csg.get("resolved_compose_roles", {}).get("gate") != "_lib_CN_PAILOU":
+            raise RuntimeError("ASIAN_CITY resolved gate mismatch")
+        print("  asian_city manifest embed: OK")
+    if brutalist_export_root is not None:
+        bm = export.build_world_manifest(brutalist_export_root, monolith=s)
+        bsg = bm.get("style_genome") or {}
+        if bsg.get("id") != "brutalist_plaza_v1":
+            raise RuntimeError(f"brutalist style_genome expected brutalist_plaza_v1: {bsg}")
+        if bsg.get("family") != "Brutalist":
+            raise RuntimeError(f"brutalist family mismatch: {bsg.get('family')}")
+        if bsg.get("grammar_id") != "BRUTALIST_PLAZA":
+            raise RuntimeError("brutalist grammar_id mismatch")
+        if bsg.get("surreal_transform") != "axis_compression":
+            raise RuntimeError("brutalist surreal_transform mismatch")
+        print("  brutalist_plaza manifest embed: OK")
+    if castle_root is not None and castle_root.get("surreal_compose_style") == "WESTERN_CASTLE":
+        wcm = export.build_world_manifest(castle_root, monolith=s)
+        wsg = wcm.get("style_genome") or {}
+        if wsg.get("id") != "western_castle_v1":
+            raise RuntimeError(f"WESTERN_CASTLE style_genome expected western_castle_v1: {wsg}")
+        if wsg.get("family") != "Western":
+            raise RuntimeError(f"western family mismatch: {wsg.get('family')}")
+        if wsg.get("resolved_compose_roles", {}).get("gate") != "_lib_GATEHOUSE":
+            raise RuntimeError("WESTERN_CASTLE resolved gate mismatch")
+        print("  western_castle manifest embed: OK")
+    if art_nouveau_export_root is not None:
+        am = export.build_world_manifest(art_nouveau_export_root, monolith=s)
+        asg = am.get("style_genome") or {}
+        if asg.get("id") != "art_nouveau_v1":
+            raise RuntimeError(f"ART_NOUVEAU style_genome expected art_nouveau_v1: {asg}")
+        if asg.get("family") != "ArtNouveau":
+            raise RuntimeError(f"art_nouveau family mismatch: {asg.get('family')}")
+        if asg.get("resolved_compose_roles", {}).get("gate") != "_lib_OGEE_ARCH":
+            raise RuntimeError("ART_NOUVEAU resolved gate mismatch")
+        print("  art_nouveau manifest embed: OK")
+    if moorish_export_root is not None:
+        mm = export.build_world_manifest(moorish_export_root, monolith=s)
+        msg = mm.get("style_genome") or {}
+        if msg.get("id") != "moorish_courtyard_v1":
+            raise RuntimeError(f"MOORISH_COURTYARD style_genome expected moorish_courtyard_v1: {msg}")
+        if msg.get("family") != "Moorish":
+            raise RuntimeError(f"moorish family mismatch: {msg.get('family')}")
+        if msg.get("resolved_compose_roles", {}).get("gate") != "_lib_ARCHWAY_ADV":
+            raise RuntimeError("MOORISH_COURTYARD resolved gate mismatch")
+        print("  moorish_courtyard manifest embed: OK")
     with tempfile.TemporaryDirectory() as td:
         path = os.path.join(td, "test.world.json")
-        export.write_world_manifest(export_root, path)
+        export.write_world_manifest(export_root, path, monolith=s)
         with open(path, encoding="utf-8") as f:
             side = json.load(f)
         assert side.get("format") == "surreal_arch_world_v1"

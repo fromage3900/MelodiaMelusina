@@ -69,3 +69,19 @@ def count_world_ism() -> int:
 
 def within_bounds(count: int, minimum: int, maximum: int) -> bool:
     return minimum <= count <= maximum
+
+
+SCATTER_CHAIN_META_KEYS = frozenset({
+    "surface_sampler",
+    "density_filter",
+    "spacing_prune",
+    "pcgex_exclusion",
+    "transform_jitter",
+})
+
+
+def scatter_chain_meta_valid(meta: dict | None) -> bool:
+    """Static check that wire_scatter_chain metadata is complete."""
+    if not meta:
+        return False
+    return SCATTER_CHAIN_META_KEYS.issubset(meta.keys())

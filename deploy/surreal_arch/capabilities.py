@@ -60,6 +60,21 @@ def is_available(name: str) -> bool:
             return True
         except Exception:
             return False
+    if name == "miouv":
+        if hasattr(bpy.ops, "miouv"):
+            return True
+        for addon_name in bpy.context.preferences.addons.keys():
+            if "miouv" in addon_name.lower():
+                return True
+        return False
+    if name == "uvpackmaster":
+        for mod_name in ("uvpackmaster3", "uvpackmaster2", "uvpackmaster"):
+            if hasattr(bpy.ops, mod_name):
+                return True
+        for addon_name in bpy.context.preferences.addons.keys():
+            if "uvpackmaster" in addon_name.lower():
+                return True
+        return False
     return False
 
 

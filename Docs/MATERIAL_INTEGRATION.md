@@ -32,6 +32,8 @@ Groups in the Material Editor (rebuild master with `--force` after group renames
 | **Audio** | `MPC_Portfolio_Audio` reactivity — emissive, layer blend, roughness, BeatPhase hooks |
 | **FairyDust** | Highlight motif styles (heart/star/flower/moon) |
 | **Magical** | Henshin wipe, `MotifMask`, palette shift, transform glow |
+| **Madoka** | Ethereal witch barrier: voronoi veins, cute/corrupt color blend, radial spectral rings, SSS fake glow; feeds emissive and base color |
+| **Itto** | Heavy mythic carved: truchet ornament cracks, curvature wear mask, surface breakup, ink lines, height deltas added to landscape competition |
 | **Character** | Skin wrap, cheek warmth, eye highlight, hair sheen |
 | **Elemental / Cinematic** | Hydro/py/etc., contact rim, distance fade |
 

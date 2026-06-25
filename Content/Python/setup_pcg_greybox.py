@@ -196,9 +196,18 @@ def apply_greybox_pcg(
     if not unreal.EditorAssetLibrary.does_asset_exist(level_asset):
         raise RuntimeError(f"level missing: {level}")
 
-    les = unreal.get_editor_subsystem(unreal.LevelEditorSubsystem)
-    eas = unreal.get_editor_subsystem(unreal.EditorActorSubsystem)
-    les.load_level(level)
+    try:
+        les = unreal.get_editor_subsystem(unreal.LevelEditorSubsystem)
+    except Exception as exc:
+        return {"passed": False, "error": f"LevelEditorSubsystem unavailable: {exc}"}
+    try:
+        eas = unreal.get_editor_subsystem(unreal.EditorActorSubsystem)
+    except Exception as exc:
+        return {"passed": False, "error": f"EditorActorSubsystem unavailable: {exc}"}
+    try:
+        les.load_level(level)
+    except Exception as exc:
+        return {"passed": False, "error": f"load_level failed: {exc}"}
 
     _destroy_prefix(eas, std.ACTOR_GROUND_COVER)
     _destroy_prefix(eas, std.ACTOR_ROCKS)
@@ -227,7 +236,9 @@ def apply_greybox_pcg(
         foliage_meta = build_preset_graphs(force=True).get(preset, {})
         foliage_graph = _foliage_graph_for_preset(preset)
 
-    foliage_vol, foliage_comp = _spawn_volume(eas, std.ACTOR_GROUND_COVER, foliage_graph, seed=4242)
+    foliage_vol, foliage_comp = _spawn_volume(
+        eas, std.ACTOR_GROUND_COVER, foliage_graph, seed=std.SEED_FOLIAGE,
+    )
     gb.fit_volume_to_ground(foliage_vol, eas, preset=preset)
     ism_foliage = 0
     gen_ok = False
@@ -241,7 +252,9 @@ def apply_greybox_pcg(
 
     ism_rocks = 0
     if cfg.get("spawn_rocks"):
-        rock_vol, rock_comp = _spawn_volume(eas, std.ACTOR_ROCKS, std.GRAPH_ROCK, seed=5150)
+        rock_vol, rock_comp = _spawn_volume(
+            eas, std.ACTOR_ROCKS, std.GRAPH_ROCK, seed=std.SEED_ROCKS,
+        )
         gb.fit_volume_to_ground(rock_vol, eas, preset=preset)
         if generate:
             try:
@@ -301,7 +314,12 @@ def main() -> int:
     result = apply_greybox_pcg(level, preset=preset, generate="--no-generate" not in sys.argv)
     out = PROJECT_ROOT / "Saved" / "Audit" / "pcg_greybox_apply.json"
     out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(json.dumps({**result, "timestamp": datetime.now(timezone.utc).isoformat()}, indent=2), encoding="utf-8")
+    out.write_text(json.dumps({
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "generated_by": "setup_pcg_greybox.py",
+        "ok": result.get("passed", False),
+        **result,
+    }, indent=2), encoding="utf-8")
     print(f"GREYBOX_PCG preset={preset} passed={result['passed']} ism={result['ism_total']}")
     return 0 if result["passed"] else 1
 

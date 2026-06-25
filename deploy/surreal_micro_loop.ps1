@@ -8,7 +8,7 @@ $deploy = $PSScriptRoot
 $stopFile = Join-Path $deploy "SURREAL_ARCH_LOOP_STOP"
 $pidFile = Join-Path $deploy "SURREAL_ARCH_LOOP.pid"
 $logFile = Join-Path $deploy "SURREAL_ARCH_LOOP.log"
-$tickPrompt = "10m micro-cycle: read SURREAL_ARCH_LOOP_STATE.md, pick one slice, implement, run deploy/run_verify.ps1 -Mode overhaul"
+$tickPrompt = "Surreal Architecture micro-cycle: read SURREAL_ARCH_LOOP_STATE.md, pick one Tier B slice (new genome, grammar graph, or kit polish), node design + taxonomy before code; sync; verify; update LOOP_STATE"
 
 function Write-Log([string]$msg) {
     $line = "[{0}] {1}" -f (Get-Date -Format "yyyy-MM-dd HH:mm:ss"), $msg

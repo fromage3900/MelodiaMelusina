@@ -19,6 +19,7 @@ if "--" in sys.argv:
 SCRIPTS = {
     "overhaul": os.path.join(DEPLOY, "_mcp_verify_overhaul.py"),
     "world": os.path.join(DEPLOY, "_mcp_verify_world.py"),
+    "os": os.path.join(DEPLOY, "_mcp_verify_os.py"),
 }
 
 print(f"=== SURREAL VERIFY ALL (mode={MODE}) ===")
@@ -46,6 +47,17 @@ if MODE in ("all", "world"):
     except Exception as e:
         print(f"world verify error: {e}")
         failed.append("world")
+
+if MODE in ("all", "os"):
+    print("\n>>> Running OS verify...")
+    try:
+        runpy.run_path(SCRIPTS["os"], run_name="__main__")
+    except SystemExit as e:
+        if e.code:
+            failed.append("os")
+    except Exception as e:
+        print(f"os verify error: {e}")
+        failed.append("os")
 
 if failed:
     print(f"\n=== VERIFY FAILED: {', '.join(failed)} ===")

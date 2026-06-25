@@ -21,6 +21,19 @@ UPROJECT = PROJECT_ROOT / "BS_GodFile.uproject"
 import pcg_graph_builder as gb
 
 
+def _is_null_rhi() -> bool:
+    for arg in sys.argv:
+        if "nullrhi" in arg.lower():
+            return True
+    try:
+        import unreal
+
+        rhi = str(unreal.SystemLibrary.get_console_variable_string("r.RHI.Name") or "").lower()
+        return rhi == "null" or "null" in rhi
+    except Exception:
+        return False
+
+
 def _scan_level_volumes(level_path: str) -> list[dict]:
     import unreal
 
@@ -31,7 +44,10 @@ def _scan_level_volumes(level_path: str) -> list[dict]:
 
     les = unreal.get_editor_subsystem(unreal.LevelEditorSubsystem)
     eas = unreal.get_editor_subsystem(unreal.EditorActorSubsystem)
-    les.load_level(level_path)
+    try:
+        les.load_level(level_path)
+    except Exception as exc:
+        return [{"level": level_path, "error": f"load_failed: {exc}"}]
     for actor in eas.get_all_level_actors() or []:
         comp = actor.get_component_by_class(unreal.PCGComponent) if hasattr(unreal, "PCGComponent") else None
         if not comp:
@@ -104,6 +120,21 @@ def _dead_systems(inventory: list[dict], volumes: list[dict]) -> list[dict]:
                 "path": std.ORPHAN_MEADOW_SCATTER,
                 "message": "Root-level orphan — move to _Deprecated",
             })
+    if unreal.EditorAssetLibrary.does_asset_exist(std.ORPHAN_SAKURA_GROVE):
+        if unreal.EditorAssetLibrary.does_asset_exist(std.GRAPH_SAKURA_GROVE):
+            issues.append({
+                "id": "stale_orphan",
+                "severity": "warn",
+                "path": std.ORPHAN_SAKURA_GROVE,
+                "message": "Stale root-level redirect — delete duplicate at PCG root",
+            })
+        else:
+            issues.append({
+                "id": "orphan_graph",
+                "severity": "warn",
+                "path": std.ORPHAN_SAKURA_GROVE,
+                "message": "Root-level orphan — move to Styles/Sakura",
+            })
     for vol in volumes:
         if vol.get("missing_graph"):
             issues.append({
@@ -128,17 +159,30 @@ def _dead_systems(inventory: list[dict], volumes: list[dict]) -> list[dict]:
 def _audit_in_ue() -> dict:
     import unreal
 
+    null_rhi = _is_null_rhi()
     plugin_health = []
-    for name in ("PCG", "PCGExtendedToolkit", "PCGPythonInterop"):
-        try:
-            plugin_health.append({"name": name, "enabled": unreal.PluginBlueprintLibrary.is_plugin_enabled(name)})
-        except Exception:
-            plugin_health.append({"name": name, "enabled": None})
+    if not null_rhi:
+        for name in ("PCG", "PCGExtendedToolkit", "PCGPythonInterop"):
+            try:
+                plugin_health.append({
+                    "name": name,
+                    "enabled": unreal.PluginBlueprintLibrary.is_plugin_enabled(name),
+                })
+            except Exception:
+                plugin_health.append({"name": name, "enabled": None})
+    else:
+        plugin_health = [
+            {"name": name, "enabled": None, "note": "skipped_null_rhi"}
+            for name in ("PCG", "PCGExtendedToolkit", "PCGPythonInterop")
+        ]
 
     inventory = _inventory_envsandbox()
     volumes: list[dict] = []
-    for level in std.SHIPPING_LEVELS:
-        volumes.extend(_scan_level_volumes(level))
+    if null_rhi:
+        volumes.append({"note": "level_scan_skipped", "reason": "null_rhi"})
+    else:
+        for level in std.SHIPPING_LEVELS:
+            volumes.extend(_scan_level_volumes(level))
 
     dead = _dead_systems(inventory, volumes)
     critical = sum(1 for d in dead if d.get("severity") == "critical")
@@ -153,6 +197,7 @@ def _audit_in_ue() -> dict:
 
     return {
         "timestamp": datetime.now(timezone.utc).isoformat(),
+        "null_rhi": null_rhi,
         "plugin_health": plugin_health,
         "envsandbox_inventory": inventory,
         "inventory_count": len(inventory),

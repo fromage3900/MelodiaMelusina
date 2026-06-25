@@ -50,11 +50,29 @@ def _timestamp_slug() -> str:
     return datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
 
 
+def _get_editor_world():
+    """Return the editor world, preferring the UE 5.8 subsystem API."""
+    import unreal
+
+    try:
+        ues = unreal.get_editor_subsystem(unreal.UnrealEditorSubsystem)
+        if ues:
+            world = ues.get_editor_world()
+            if world:
+                return world
+    except Exception:
+        pass
+    try:
+        return unreal.EditorLevelLibrary.get_editor_world()
+    except Exception:
+        return None
+
+
 def _get_level_slug() -> str:
     import unreal
 
     try:
-        world = unreal.EditorLevelLibrary.get_editor_world()
+        world = _get_editor_world()
         if world:
             level = world.get_current_level()
             if level:

@@ -52,8 +52,14 @@ def load_or_create_graph(asset_path: str, folder: str, *, force: bool = False):
     if exists and not force:
         return unreal.load_asset(asset_path), False
     if exists and force:
+        try:
+            from material_lib import close_open_material_editors
+            close_open_material_editors((name,))
+        except Exception:
+            pass
         graph = unreal.load_asset(asset_path)
-        clear_graph_nodes(graph)
+        if graph:
+            clear_graph_nodes(graph)
         return graph, True
     if not unreal.EditorAssetLibrary.does_directory_exist(folder):
         unreal.EditorAssetLibrary.make_directory(folder)
@@ -158,6 +164,9 @@ def configure_spawner(spawner_settings, role: str, material_path: str | None) ->
     """Configure spawner with weighted entries from SCATTER_MESHES."""
     import unreal
 
+    if not spawner_settings:
+        unreal.log_error(f"[PCG] configure_spawner: spawner_settings is None for role {role}")
+        return False
     resolved: list[str] = []
     for path in std.SCATTER_MESHES.get(role, []):
         try:
@@ -196,9 +205,14 @@ def configure_spawner(spawner_settings, role: str, material_path: str | None) ->
         weight = max(1, weight - 1)
 
     if not entries:
+        unreal.log_warning(f"[PCG] spawner has no valid entries for role {role}")
         return False
-    selector = spawner_settings.get_editor_property("mesh_selector_parameters")
-    selector.set_editor_property("mesh_entries", entries)
+    try:
+        selector = spawner_settings.get_editor_property("mesh_selector_parameters")
+        selector.set_editor_property("mesh_entries", entries)
+    except Exception as exc:
+        unreal.log_warning(f"[PCG] spawner mesh_selector_parameters failed for role {role}: {exc}")
+        return False
     return True
 
 
@@ -333,7 +347,9 @@ def wire_scatter_chain(
         try:
             prune_s.set_editor_property("pruning_type", unreal.PCGSelfPruningType.LARGEST_TO_SMALLEST)
             prune_s.set_editor_property("radius_similarity_factor", 0.25)
-            prune_s.set_editor_property("comparison_source", unreal.PCGSelfPruningComparisonSource.Random)
+            prune_s.set_editor_property(
+                "comparison_source", unreal.PCGSelfPruningComparisonSource.Largest,
+            )
         except Exception:
             pass
         try:
@@ -440,10 +456,22 @@ def fit_volume_to_ground(volume_actor, eas, *, preset: str | None = None) -> dic
 
     if not ground:
         _set_actor_location(volume_actor, std.PCG_VOLUME_CENTER)
-        volume_actor.set_actor_scale3d(unreal.Vector(*scale))
+        try:
+            volume_actor.set_actor_scale3d(unreal.Vector(*scale))
+        except Exception as exc:
+            unreal.log_warning(f"[PCG] fit_volume_to_ground scale failed: {exc}")
         return {"fitted": False, "reason": "no_ground", "scale": scale}
 
-    origin, extent = ground.get_actor_bounds(False)
+    try:
+        origin, extent = ground.get_actor_bounds(False)
+    except Exception as exc:
+        unreal.log_warning(f"[PCG] get_actor_bounds failed on Ground: {exc}")
+        _set_actor_location(volume_actor, std.PCG_VOLUME_CENTER)
+        try:
+            volume_actor.set_actor_scale3d(unreal.Vector(*scale))
+        except Exception:
+            pass
+        return {"fitted": False, "reason": "bounds_failed", "scale": scale}
     sx = max(8.0, (extent.x * 2.0) / 100.0)
     sy = max(8.0, (extent.y * 2.0) / 100.0)
     sz = float(scale[2]) if len(scale) > 2 else 1.8

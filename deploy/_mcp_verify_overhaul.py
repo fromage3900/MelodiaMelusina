@@ -1,4 +1,4 @@
-"""Extended verify for Surreal Architecture v2.71 — kits, bridges, polyhedra, zen expansion.
+"""Extended verify for Surreal Architecture v2.75 — kits, bridges, polyhedra, zen expansion.
 
 Launch with --factory-startup for reliable headless runs:
   blender --background --factory-startup --python deploy/_mcp_verify_overhaul.py
@@ -6,7 +6,7 @@ Launch with --factory-startup for reliable headless runs:
 import json
 import bpy
 
-print("=== SURREAL OVERHAUL VERIFY v2.71 ===")
+print("=== SURREAL OVERHAUL VERIFY v2.75 ===")
 print("Blender", bpy.app.version_string)
 
 if "surreal_architecture_gen" not in bpy.context.preferences.addons:
@@ -55,6 +55,19 @@ KIT_TESTS = [
     ("GB_ZEN_ENGAWA", {"gb_width": 5.0, "gb_depth": 2.4, "gb_height": 0.35, "gb_trim_mode": "RECESS"}),
     ("GB_ZEN_BAMBOO_FENCE", {"gb_length": 4.0, "zen_fence_height": 1.2, "gb_trim_mode": "RECESS"}),
     ("GB_ZEN_TOBIISHI", {"gb_length": 5.0, "gb_width": 1.6, "gb_trim_mode": "RECESS"}),
+    ("GB_ZEN_KARESANSUI", {"gb_width": 8.0, "gb_depth": 6.0, "gb_trim_mode": "RECESS", "gb_trim_recess": 0.03}),
+    ("GB_ZEN_MACHIAI", {"gb_width": 3.2, "gb_depth": 2.4, "gb_height": 2.2, "gb_trim_mode": "RECESS"}),
+    ("GB_ZEN_STONE_BRIDGE", {"zen_bridge_span": 5.0, "zen_bridge_rise": 0.55, "gb_width": 1.8, "gb_trim_mode": "RECESS"}),
+    ("GB_ZEN_CHERRY_ALLEE", {"gb_length": 6.0, "gb_width": 2.6, "gb_height": 0.32, "gb_trim_mode": "RECESS"}),
+    ("GB_ZEN_WATER_EDGE", {"gb_length": 2.8, "gb_width": 2.4, "zen_stream_depth": 0.35, "gb_trim_mode": "RECESS"}),
+    ("GB_ZEN_SANDO", {"gb_length": 8.0, "gb_width": 2.2, "gb_trim_mode": "RECESS"}),
+    ("GB_ZEN_KAIRO", {"gb_length": 6.0, "gb_width": 2.4, "gb_height": 2.8, "gb_trim_mode": "RECESS"}),
+    ("GB_ZEN_HAIDEN", {"gb_width": 5.0, "gb_depth": 4.0, "gb_height": 3.2, "zen_genkan_rise": 0.45, "gb_trim_mode": "RECESS"}),
+    ("GB_ZEN_GOJU_PAGODA", {"pagoda_tiers": 5, "pagoda_base_radius": 2.0, "pagoda_tier_height": 1.2, "pagoda_taper": 0.82, "gb_trim_mode": "RECESS"}),
+    ("GB_ZEN_SAKURA_TORII", {"torii_width": 3.4, "torii_height": 4.0, "gb_trim_mode": "RECESS"}),
+    ("GB_ZEN_TAHOTO", {"gb_width": 3.2, "gb_height": 6.5, "zen_tahoto_roof_span": 0.35, "gb_trim_mode": "RECESS"}),
+    ("GB_ZEN_HONDEN", {"gb_width": 5.5, "gb_depth": 4.5, "gb_height": 3.6, "zen_honden_platform_rise": 0.55, "gb_trim_mode": "RECESS"}),
+    ("GB_ZEN_LANTERN", {"zen_lantern_height": 1.6, "zen_lantern_style": "KASUGA", "gb_trim_mode": "RECESS"}),
 ]
 
 print("\n--- Kit smoke ---")
@@ -81,7 +94,7 @@ for atype, overrides in KIT_TESTS:
     if atype.startswith(("GB_", "GREYBOX_")) and len(snaps) == 0:
         print(f"  !! FAIL: {atype} wrote 0 snap points")
         all_ok = False
-    if atype.startswith("GB_") and atype in ("GB_CORRIDOR_OFFSET", "GB_ROMANESQUE_APSE", "GB_SCIFI_PRESSURE_DOOR", "GB_ZEN_ROJI_STEP", "GB_ZEN_TORII_GATE", "GB_ZEN_TSUKUBAI", "GB_ZEN_ENGAWA", "GB_ZEN_BAMBOO_FENCE", "GB_ZEN_TOBIISHI") and len(trim) == 0:
+    if atype.startswith("GB_") and atype in ("GB_CORRIDOR_OFFSET", "GB_ROMANESQUE_APSE", "GB_SCIFI_PRESSURE_DOOR", "GB_ZEN_ROJI_STEP", "GB_ZEN_TORII_GATE", "GB_ZEN_TSUKUBAI", "GB_ZEN_ENGAWA", "GB_ZEN_BAMBOO_FENCE", "GB_ZEN_TOBIISHI", "GB_ZEN_KARESANSUI", "GB_ZEN_MACHIAI", "GB_ZEN_STONE_BRIDGE", "GB_ZEN_CHERRY_ALLEE", "GB_ZEN_WATER_EDGE", "GB_ZEN_SANDO", "GB_ZEN_KAIRO", "GB_ZEN_HAIDEN", "GB_ZEN_GOJU_PAGODA", "GB_ZEN_SAKURA_TORII", "GB_ZEN_TAHOTO", "GB_ZEN_HONDEN", "GB_ZEN_LANTERN") and len(trim) == 0:
         print(f"  !! FAIL: {atype} wrote 0 trim_groups")
         all_ok = False
 
@@ -91,6 +104,28 @@ for gid in GRAPH_REGISTRY:
     op_name = f"surreal_arch.spawn_graph_{gid.lower()}"
     has_op = hasattr(bpy.ops.surreal_arch, f"spawn_graph_{gid.lower()}")
     print(f"  {gid}: operator={has_op}")
+
+print("\n--- UV modifiers (Tier B) ---")
+for op_id in (
+    "uv_create_edit_proxy",
+    "uv_commit_from_proxy",
+    "uv_invoke_miouv",
+    "uv_invoke_uvpackmaster",
+):
+    has_op = hasattr(bpy.ops.surreal_arch, op_id)
+    print(f"  {op_id}: operator={has_op}")
+    if not has_op:
+        all_ok = False
+try:
+    from surreal_arch.capabilities import is_available
+    from surreal_arch.pipeline import uv_pack_hint
+
+    print(f"  miouv_detect: {is_available('miouv')}")
+    print(f"  uvpackmaster_detect: {is_available('uvpackmaster')}")
+    hint = uv_pack_hint(obj.surreal_arch_props) if hasattr(obj, "surreal_arch_props") else None
+    print(f"  uv_pack_hint_trim: {hint is not None}")
+except Exception as e:
+    print(f"  uv modifier probe skipped: {e}")
 
 print("\n--- Research presets ---")
 from surreal_arch.research_presets import RESEARCH_PRESETS

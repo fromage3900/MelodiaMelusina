@@ -133,6 +133,17 @@ def register_livelink_menus():
     add_entry(
         live,
         "Portfolio",
+        "CapturePortfolioOutputs",
+        "Capture Portfolio Outputs (screenshots + previews + metadata)",
+        "import export_screenshot, capture_material_previews, capture_scene_metadata; "
+        "ss = export_screenshot.capture_screenshot(); "
+        "mp = capture_material_previews.capture_material_previews(); "
+        "md = capture_scene_metadata.capture_scene_metadata(); "
+        "unreal.log('[Portfolio] Capture complete: ' + str({'screenshot': ss.get('ok'), 'materials': mp.get('count'), 'metadata': md.get('ok')}))",
+    )
+    add_entry(
+        live,
+        "Portfolio",
         "RunSakuraNiagaraRebuild",
         "Run Sakura Dream Niagara (--rebuild)",
         "import run_sakura_niagara_plan; "

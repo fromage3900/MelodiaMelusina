@@ -54,6 +54,19 @@ Topology-driven placement: plan mesh faces → buildings (area + vertex tags), b
 - WFC grid city plans for organic street networks
 - Wave Function Collapse references: grid constraint propagation for plot assignment
 
+## UE import — `resolved_compose_roles`
+
+The `.world.json` `style_genome.resolved_compose_roles` block maps compose face roles to `_lib_*` pieces used at export time (OS style + genome overrides merged).
+
+| Manifest role | UE usage |
+|---------------|----------|
+| `gate`, `sacred`, `large`, … | HISM group key / static mesh batch per role |
+| `resolved_compose_roles[role]` | Library mesh path (`_lib_GB_ZEN_HONDEN` → import that kit FBX) |
+| `instances[].role` | Per-instance placement; cross-check against resolved map |
+| `hism_groups` | Pre-batched transforms per role for `UHierarchicalInstancedStaticMeshComponent` |
+
+Import flow: read `resolved_compose_roles` → load each unique `_lib_*` mesh once → spawn HISM per role using `hism_groups` transforms and `ue_material_hint` from instances.
+
 ## References
 
 - Blender Collection Instances + parent empty scaling for non-uniform wall modules

@@ -21,6 +21,8 @@ METADATA_DIR = PORTFOLIO_ROOT / "Metadata"
 RENDERS_DIR = PORTFOLIO_ROOT / "Renders"
 HERO_DIR = RENDERS_DIR / "Hero"
 BREAKDOWN_DIR = RENDERS_DIR / "Breakdown"
+MATERIALS_DIR = RENDERS_DIR / "Materials"
+TRIMS_DIR = RENDERS_DIR / "Trims"
 SCENE_METADATA_PATH = METADATA_DIR / "scene_metadata.json"
 
 _LAYOUT_DIRS = (
@@ -29,6 +31,8 @@ _LAYOUT_DIRS = (
     RENDERS_DIR,
     HERO_DIR,
     BREAKDOWN_DIR,
+    MATERIALS_DIR,
+    TRIMS_DIR,
 )
 
 
@@ -44,6 +48,8 @@ def portfolio_paths(*, project_root: Path | None = None) -> dict[str, Path]:
         "renders_dir": renders_dir,
         "hero_dir": renders_dir / "Hero",
         "breakdown_dir": renders_dir / "Breakdown",
+        "materials_dir": renders_dir / "Materials",
+        "trims_dir": renders_dir / "Trims",
         "scene_metadata": metadata_dir / "scene_metadata.json",
     }
 
@@ -52,7 +58,15 @@ def ensure_portfolio_layout(*, project_root: Path | None = None) -> dict[str, Pa
     """Create Saved/Portfolio layout if missing. Returns canonical paths."""
     paths = portfolio_paths(project_root=project_root)
     created: list[str] = []
-    for key in ("portfolio_root", "metadata_dir", "renders_dir", "hero_dir", "breakdown_dir"):
+    for key in (
+        "portfolio_root",
+        "metadata_dir",
+        "renders_dir",
+        "hero_dir",
+        "breakdown_dir",
+        "materials_dir",
+        "trims_dir",
+    ):
         directory = paths[key]
         if not directory.exists():
             directory.mkdir(parents=True, exist_ok=True)
@@ -101,6 +115,9 @@ def organize_portfolio_outputs(*, project_root: Path | None = None, dry_run: boo
     patterns = (
         ("hero_*.png", paths["hero_dir"]),
         ("breakdown_*.png", paths["breakdown_dir"]),
+        ("grid_*.png", paths["materials_dir"]),
+        ("material_*.png", paths["materials_dir"]),
+        ("trim_*.png", paths["trims_dir"]),
     )
     seen: set[Path] = set()
     for search_dir in search_dirs:

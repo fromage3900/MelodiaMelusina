@@ -29,7 +29,7 @@ ROLE_UE_HINTS = {
 STYLE_ROLE_OVERRIDES = {
     "ZEN_SHRINE": {
         "gate": f"{MATERIALS_ROOT}/Zen/MI_Zen_ToriiVermillion",
-        "sacred": f"{MATERIALS_ROOT}/Zen/MI_Zen_Karesansui",
+        "sacred": f"{MATERIALS_ROOT}/Zen/MI_Zen_HondenSanctum",
         "large": f"{MATERIALS_ROOT}/Zen/MI_Zen_MossGarden",
         "monument": f"{MATERIALS_ROOT}/Zen/MI_Zen_SakuraDrift",
     },
@@ -104,13 +104,40 @@ def validate_manifest(payload):
     return errors
 
 
-def build_world_manifest(world_root):
+def build_world_manifest(world_root, monolith=None):
     from . import instance
 
     if world_root is None:
         return None
     plan_name = world_root.get("surreal_composed_from", "")
     style = world_root.get("surreal_compose_style", "")
+    genome_id = world_root.get("surreal_style_genome_id", "")
+    style_genome = {}
+    if monolith is not None or genome_id:
+        try:
+            import sys
+            import os
+            deploy = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            if deploy not in sys.path:
+                sys.path.insert(0, deploy)
+            from surreal_os.genome import resolve_genome_manifest
+            style_genome = resolve_genome_manifest(monolith, style, genome_id or None)
+            if style_genome and monolith is not None:
+                try:
+                    from .compose import resolve_compose_style
+                    compose_style = style_genome.get("compose_style") or style
+                    gid = style_genome.get("id")
+                    if gid and not getattr(monolith, "_active_style_genome", None):
+                        from surreal_os.genome import load_genome
+                        monolith._active_style_genome = load_genome(gid)
+                    roles = resolve_compose_style(monolith, compose_style)
+                    if roles:
+                        style_genome = dict(style_genome)
+                        style_genome["resolved_compose_roles"] = dict(roles)
+                except Exception as exc:
+                    print(f"[SurrealWorld] resolved_compose_roles skipped: {exc}")
+        except Exception as exc:
+            print(f"[SurrealWorld] style_genome embed skipped: {exc}")
     entries = []
     collections = []
     for inst in instance.iter_world_instances(world_root):
@@ -140,10 +167,12 @@ def build_world_manifest(world_root):
         "hism_groups": build_hism_groups(entries),
         "collections": collections,
     }
+    if style_genome:
+        payload["style_genome"] = style_genome
     return payload
 
 
-def write_world_manifest(obj, filepath=None):
+def write_world_manifest(obj, filepath=None, monolith=None):
     root = find_world_root(obj)
     if root is None and obj and obj.type == "MESH":
         style = obj.get("surreal_compose_style", "")
@@ -168,7 +197,7 @@ def write_world_manifest(obj, filepath=None):
             "collections": [c.name for c in obj.users_collection],
         }
     else:
-        payload = build_world_manifest(root)
+        payload = build_world_manifest(root, monolith=monolith)
     if payload is None:
         return None
     errors = validate_manifest(payload)

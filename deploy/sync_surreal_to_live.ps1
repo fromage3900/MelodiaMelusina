@@ -24,4 +24,9 @@ if (Test-Path (Join-Path $deploy "surreal_world")) {
         Copy-Item $_.FullName $dest -Force
     }
 }
+if (Test-Path (Join-Path $deploy "surreal_os")) {
+    $destOs = Join-Path $live "surreal_os"
+    if (Test-Path $destOs) { Remove-Item $destOs -Recurse -Force }
+    Copy-Item (Join-Path $deploy "surreal_os") $destOs -Recurse -Force
+}
 Write-Host "Synced deploy -> live Blender addons"

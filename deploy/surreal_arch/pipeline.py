@@ -25,6 +25,16 @@ def run_post_generate(obj, props, monolith, *, skip_bevel: bool = False, bevel_b
         print(f"[Surreal Architecture] bevel pass skipped: {exc}")
 
 
+def uv_pack_hint(props) -> str | None:
+    """Return workflow hint when trim-sheet UV expects external pack (MioUV / UVPackmaster)."""
+    mode = getattr(props, "uv_unwrap_mode", "")
+    if mode not in ("TRIM_SHEET", "MODULAR", "ARCHITECTURAL"):
+        return None
+    if getattr(props, "gb_trim_mode", "NONE") == "NONE":
+        return None
+    return "trim_sheet_ready: use Level Design → UV Proxy → MioUV Pack → Commit UV"
+
+
 def apply_pipeline_batch(objects, monolith, *, bevel_backend: str = "BEAVEL") -> int:
     """Run export-time Beavel bake on a selection of objects."""
     count = 0

@@ -46,6 +46,26 @@ SURREAL_LIBRARY_SPEC = {
     "ZEN_LANTERN": {"zen_lantern_height": 1.6},
     "ZEN_STONE_GARDEN": {"stone_garden_size": 6.0},
     "ZEN_BRIDGE": {"zen_bridge_span": 4.0, "zen_bridge_rise": 0.6},
+    "GB_ZEN_MACHIAI": {"gb_width": 3.2, "gb_depth": 2.4, "gb_height": 2.2, "gb_trim_mode": "RECESS"},
+    "GB_ZEN_KARESANSUI": {"gb_width": 8.0, "gb_depth": 6.0, "gb_trim_mode": "RECESS"},
+    "GB_ZEN_CHERRY_ALLEE": {"gb_length": 6.0, "gb_width": 2.6, "gb_height": 0.32, "gb_trim_mode": "RECESS"},
+    "GB_ZEN_STONE_BRIDGE": {"zen_bridge_span": 5.0, "zen_bridge_rise": 0.55, "gb_width": 1.8, "gb_trim_mode": "RECESS"},
+    "GB_ZEN_SANDO": {"gb_length": 8.0, "gb_width": 2.2, "gb_trim_mode": "RECESS"},
+    "GB_ZEN_KAIRO": {"gb_length": 6.0, "gb_width": 2.4, "gb_height": 2.8, "gb_trim_mode": "RECESS"},
+    "GB_ZEN_HAIDEN": {"gb_width": 5.0, "gb_depth": 4.0, "gb_height": 3.2, "zen_genkan_rise": 0.45, "gb_trim_mode": "RECESS"},
+    "GB_ZEN_GOJU_PAGODA": {"pagoda_tiers": 5, "pagoda_base_radius": 2.0, "pagoda_tier_height": 1.2, "pagoda_taper": 0.82, "gb_trim_mode": "RECESS"},
+    "GB_ZEN_SAKURA_TORII": {"torii_width": 3.4, "torii_height": 4.0, "gb_trim_mode": "RECESS"},
+    "GB_ZEN_TORII_GATE": {"torii_width": 3.6, "torii_height": 4.2, "gb_trim_mode": "RECESS"},
+    "GB_ZEN_TAHOTO": {"gb_width": 3.2, "gb_height": 6.5, "zen_tahoto_roof_span": 0.35, "gb_trim_mode": "RECESS"},
+    "GB_ZEN_HONDEN": {"gb_width": 5.5, "gb_depth": 4.5, "gb_height": 3.6, "zen_honden_platform_rise": 0.55, "gb_trim_mode": "RECESS"},
+    "GB_ZEN_LANTERN": {"zen_lantern_height": 1.6, "zen_lantern_style": "KASUGA", "gb_trim_mode": "RECESS"},
+    "BAROQUE_FACADE": {"baroque_facade_bays": 3, "baroque_facade_height": 10.0, "baroque_ornament_density": 0.65},
+    "BALCONY": {"balcony_width": 2.4, "balcony_depth": 0.8, "balcony_baluster_count": 10},
+    "FILIGREE_PANEL": {"filigree_style": "ARTNOUVEAU_VINE", "filigree_width": 1.4, "filigree_height": 1.8, "filigree_density": 0.6},
+    "OGEE_ARCH": {"ogee_width": 2.0, "ogee_height": 3.5, "ogee_swell": 0.45},
+    "PALAZZO": {"gothic_width": 3.0, "gb_height": 12.0, "gb_trim_mode": "RECESS"},
+    "ARCHWAY_ADV": {"archway_style": "HORSESHOE", "archway_width": 2.4, "archway_height": 2.0, "archway_depth": 0.5},
+    "GB_ROMANESQUE_ARCADE": {"gb_width": 3.2, "gb_height": 4.0, "gb_trim_mode": "RECESS", "unit_size": 3.2},
 }
 
 
@@ -149,6 +169,8 @@ VERIFY_LIBRARY_TYPES = frozenset({
     "TOWN_HALL", "TAVERN", "BLACKSMITH", "VILLAGE_WELL", "BELL_TOWER",
     "KR_HANOK", "CN_TING_PAVILION", "JP_KURA_STOREHOUSE", "CN_TIERED_PAGODA", "CN_PAILOU", "CN_MOON_GATE",
     "ZEN_TORII", "ZEN_TEAHOUSE", "ZEN_LANTERN", "ZEN_STONE_GARDEN", "ZEN_BRIDGE", "BOULDER_PILE",
+    "GB_ZEN_MACHIAI", "GB_ZEN_KARESANSUI", "GB_ZEN_CHERRY_ALLEE", "GB_ZEN_STONE_BRIDGE",
+    "GB_ZEN_SANDO", "GB_ZEN_KAIRO", "GB_ZEN_HAIDEN", "GB_ZEN_GOJU_PAGODA", "GB_ZEN_SAKURA_TORII", "GB_ZEN_TORII_GATE", "GB_ZEN_TAHOTO", "GB_ZEN_HONDEN", "GB_ZEN_LANTERN",
 })
 
 

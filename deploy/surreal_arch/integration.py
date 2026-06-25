@@ -155,6 +155,14 @@ def patch_monolith(monolith):
     )
     register_kit(
         monolith,
+        "GB_ZEN_SAKURA_TORII",
+        zen_kit.build_zen_sakura_torii,
+        snap_fn=zen_kit.compute_zen_kit_snaps,
+        builder_attr="build_zen_sakura_torii",
+        material_key="WOOD",
+    )
+    register_kit(
+        monolith,
         "GB_ZEN_TSUKUBAI",
         zen_kit.build_zen_tsukubai,
         snap_fn=zen_kit.compute_zen_kit_snaps,
@@ -183,6 +191,102 @@ def patch_monolith(monolith):
         zen_kit.build_zen_tobiishi,
         snap_fn=zen_kit.compute_zen_kit_snaps,
         builder_attr="build_zen_tobiishi",
+        material_key="STONE",
+    )
+    register_kit(
+        monolith,
+        "GB_ZEN_KARESANSUI",
+        zen_kit.build_zen_karesansui,
+        snap_fn=zen_kit.compute_zen_kit_snaps,
+        builder_attr="build_zen_karesansui",
+        material_key="STONE",
+    )
+    register_kit(
+        monolith,
+        "GB_ZEN_MACHIAI",
+        zen_kit.build_zen_machiai,
+        snap_fn=zen_kit.compute_zen_kit_snaps,
+        builder_attr="build_zen_machiai",
+        material_key="WOOD",
+    )
+    register_kit(
+        monolith,
+        "GB_ZEN_STONE_BRIDGE",
+        zen_kit.build_zen_stone_bridge,
+        snap_fn=zen_kit.compute_zen_kit_snaps,
+        builder_attr="build_zen_stone_bridge",
+        material_key="STONE",
+    )
+    register_kit(
+        monolith,
+        "GB_ZEN_CHERRY_ALLEE",
+        zen_kit.build_zen_cherry_allee,
+        snap_fn=zen_kit.compute_zen_kit_snaps,
+        builder_attr="build_zen_cherry_allee",
+        material_key="STONE",
+    )
+    register_kit(
+        monolith,
+        "GB_ZEN_WATER_EDGE",
+        zen_kit.build_zen_water_edge,
+        snap_fn=zen_kit.compute_zen_kit_snaps,
+        builder_attr="build_zen_water_edge",
+        material_key="STONE",
+    )
+    register_kit(
+        monolith,
+        "GB_ZEN_SANDO",
+        zen_kit.build_zen_sando,
+        snap_fn=zen_kit.compute_zen_kit_snaps,
+        builder_attr="build_zen_sando",
+        material_key="STONE",
+    )
+    register_kit(
+        monolith,
+        "GB_ZEN_KAIRO",
+        zen_kit.build_zen_kairo,
+        snap_fn=zen_kit.compute_zen_kit_snaps,
+        builder_attr="build_zen_kairo",
+        material_key="WOOD",
+    )
+    register_kit(
+        monolith,
+        "GB_ZEN_HAIDEN",
+        zen_kit.build_zen_haiden,
+        snap_fn=zen_kit.compute_zen_kit_snaps,
+        builder_attr="build_zen_haiden",
+        material_key="WOOD",
+    )
+    register_kit(
+        monolith,
+        "GB_ZEN_GOJU_PAGODA",
+        zen_kit.build_zen_goju_pagoda,
+        snap_fn=zen_kit.compute_zen_kit_snaps,
+        builder_attr="build_zen_goju_pagoda",
+        material_key="WOOD",
+    )
+    register_kit(
+        monolith,
+        "GB_ZEN_TAHOTO",
+        zen_kit.build_zen_tahoto,
+        snap_fn=zen_kit.compute_zen_kit_snaps,
+        builder_attr="build_zen_tahoto",
+        material_key="WOOD",
+    )
+    register_kit(
+        monolith,
+        "GB_ZEN_HONDEN",
+        zen_kit.build_zen_honden,
+        snap_fn=zen_kit.compute_zen_kit_snaps,
+        builder_attr="build_zen_honden",
+        material_key="WOOD",
+    )
+    register_kit(
+        monolith,
+        "GB_ZEN_LANTERN",
+        zen_kit.build_zen_lantern,
+        snap_fn=zen_kit.compute_zen_kit_snaps,
+        builder_attr="build_zen_lantern_gb",
         material_key="STONE",
     )
 
@@ -263,6 +367,42 @@ def patch_monolith(monolith):
         print(f"[Surreal Architecture] surreal_world patch skipped: {_world_err}")
 
     _wire_pipeline_and_bridges(monolith)
+    register_os_layer(monolith)
+
+
+def register_os_layer(monolith):
+    """Wire Surreal Architecture OS — genomes, grammar graphs, rules."""
+    try:
+        import sys
+        import os
+        deploy = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        if deploy not in sys.path:
+            sys.path.insert(0, deploy)
+        from surreal_os.grammar_loader import merge_grammar_into_registry
+        from surreal_os import genome as os_genome
+        from surreal_arch.greybox_graph import GRAPH_REGISTRY
+
+        n = merge_grammar_into_registry(GRAPH_REGISTRY)
+        monolith._STYLE_GENOMES = os_genome.list_genomes()
+        monolith._STYLE_GENOME_META = {}
+        groups: dict[str, list[str]] = {}
+        for gid in monolith._STYLE_GENOMES:
+            try:
+                g = os_genome.load_genome(gid)
+                monolith._STYLE_GENOME_META[gid] = {
+                    "graph": g.get("default_graph", ""),
+                    "transform": g.get("surreal_transform") or "none",
+                    "family": os_genome.genome_family(g),
+                }
+                fam = os_genome.genome_family(g)
+            except Exception:
+                fam = "Other"
+            groups.setdefault(fam, []).append(gid)
+        monolith._STYLE_GENOME_GROUPS = {k: sorted(v) for k, v in sorted(groups.items())}
+        monolith._active_style_genome = None
+        print(f"[SurrealOS] merged {n} grammar graph(s); genomes={len(monolith._STYLE_GENOMES)}")
+    except Exception as err:
+        print(f"[SurrealOS] register skipped: {err}")
 
 
 def _wire_pipeline_and_bridges(monolith):
@@ -422,6 +562,8 @@ def register_overhaul(monolith):
     from .asset_browser import register_asset_ops
     from .catalog_enum import register_catalog_enum_ops
     from .workflow_polls import patch_workflow_polls
+    from .os_ops import register_os_operators
+    from . import uv_ops
 
     patch_workflow_polls(monolith)
     register_preferences()
@@ -432,6 +574,8 @@ def register_overhaul(monolith):
     _EXTRA_CLASSES.extend(register_research_preset_operators(monolith))
     _EXTRA_CLASSES.extend(register_asset_ops(monolith))
     _EXTRA_CLASSES.extend(register_catalog_enum_ops(monolith))
+    _EXTRA_CLASSES.extend(register_os_operators(monolith))
+    _EXTRA_CLASSES.extend(uv_ops.UV_OPERATOR_CLASSES)
 
     try:
         from surreal_world.patch import register_world_operators

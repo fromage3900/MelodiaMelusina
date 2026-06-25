@@ -227,7 +227,66 @@ def draw_level_design(layout, context, monolith):
     qa.operator("surreal_arch.validate_assembly", text="Check Assembly", icon="VIEWZOOM")
     for hint in monolith._gb_validate_assembly(context)[:3]:
         qa.label(text=hint, icon="INFO" if "passed" in hint.lower() else "ERROR")
+    genome_box = layout.box()
+    genome_box.label(text="Style Genome (OS)", icon="RNA")
+    gcol = genome_box.column(align=True)
+    gcol.prop(props, "style_genome_id", text="Active")
+    genomes = sorted(getattr(monolith, "_STYLE_GENOMES", None) or [])
+    genome_groups = getattr(monolith, "_STYLE_GENOME_GROUPS", None) or {}
+    if genomes:
+        catalog = genome_box.column(align=True)
+        catalog.label(text=f"Catalog ({len(genomes)})", icon="PRESET")
+        active_gid = getattr(props, "style_genome_id", "")
+        genome_meta = getattr(monolith, "_STYLE_GENOME_META", {}) or {}
+
+        def _draw_genome_button(gid):
+            row = catalog.row(align=True)
+            op = row.operator(
+                "surreal_arch.select_style_genome",
+                text=gid,
+                depress=(gid == active_gid),
+            )
+            op.genome_id = gid
+            meta = genome_meta.get(gid, {})
+            graph = meta.get("graph", "")
+            xf = meta.get("transform", "")
+            if graph or xf:
+                catalog.label(text=f"  {graph} · {xf}", icon="DOT")
+
+        if genome_groups:
+            for family, gids in genome_groups.items():
+                catalog.label(text=f"{family} ({len(gids)})", icon="OUTLINER_COLLECTION")
+                for gid in gids:
+                    _draw_genome_button(gid)
+        else:
+            for gid in genomes:
+                _draw_genome_button(gid)
+    grow = genome_box.row(align=True)
+    grow.operator("surreal_arch.apply_style_genome", text="Apply", icon="CHECKMARK")
+    grow.operator("surreal_arch.spawn_genome_graph", text="Spawn Graph", icon="NODETREE")
+    genome_box.operator("surreal_arch.spawn_zen_shrine_plan", text="Spawn Shrine Plan", icon="WORLD")
+    if getattr(monolith, "_active_style_genome", None):
+        g = monolith._active_style_genome
+        genome_box.label(text=f"Active: {g.get('id', '?')} → {g.get('default_graph', '')}", icon="INFO")
     draw_graph_library(layout, context)
+    uvbox = layout.box()
+    uvbox.label(text="UV / Trimsheet", icon="UV")
+    ucol = uvbox.column(align=True)
+    ucol.prop(props, "uv_unwrap_mode", text="Mode")
+    if props.gb_trim_mode != "NONE":
+        ucol.prop(props, "gb_bake_trim_colors", text="Bake trim colors")
+    urow1 = uvbox.row(align=True)
+    urow1.operator("surreal_arch.uv_create_edit_proxy", text="UV Proxy", icon="DUPLICATE")
+    urow1.operator("surreal_arch.uv_commit_from_proxy", text="Commit UV", icon="IMPORT")
+    urow2 = uvbox.row(align=True)
+    urow2.operator("surreal_arch.uv_invoke_miouv", text="MioUV Pack", icon="UV_ISLANDSEL")
+    urow2.operator("surreal_arch.uv_invoke_uvpackmaster", text="UVPM Pack", icon="UV")
+    try:
+        from .capabilities import status_line
+        uvbox.label(text=status_line("miouv"), icon="PLUGIN")
+        uvbox.label(text=status_line("uvpackmaster"), icon="PLUGIN")
+    except Exception:
+        pass
     assets = layout.box()
     assets.label(text="Asset Browser", icon="ASSET_MANAGER")
     assets.operator("surreal_arch.publish_greybox_assets", text="Publish Greybox Assets", icon="FILE_BLEND")

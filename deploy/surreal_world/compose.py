@@ -8,6 +8,40 @@ import bpy
 
 from . import instance, library, tags
 
+_OS_COMPOSE_CACHE: dict | None = None
+
+
+def _load_os_compose_styles() -> dict:
+    global _OS_COMPOSE_CACHE
+    if _OS_COMPOSE_CACHE is not None:
+        return _OS_COMPOSE_CACHE
+    try:
+        import sys
+        import os
+        deploy = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        if deploy not in sys.path:
+            sys.path.insert(0, deploy)
+        from surreal_os.rules_engine import load_compose_styles
+        _OS_COMPOSE_CACHE = load_compose_styles()
+    except Exception:
+        _OS_COMPOSE_CACHE = {}
+    return _OS_COMPOSE_CACHE
+
+
+def resolve_compose_style(monolith, style_key: str) -> dict | None:
+    """Merge hardcoded COMPOSE_STYLES with surreal_os compose_roles + genome override."""
+    base = dict(COMPOSE_STYLES.get(style_key) or {})
+    os_styles = _load_os_compose_styles()
+    if style_key in os_styles:
+        base.update(os_styles[style_key])
+    genome = getattr(monolith, "_active_style_genome", None)
+    if genome and genome.get("compose_style") == style_key:
+        role_map = genome.get("compose_roles")
+        if isinstance(role_map, dict):
+            base.update(role_map)
+    return base if base else None
+
+
 COMPOSE_STYLES = {
     "WESTERN_CASTLE": {
         "large": "_lib_KEEP",
@@ -40,14 +74,34 @@ COMPOSE_STYLES = {
         "sacred": "_lib_CN_TIERED_PAGODA",
     },
     "ZEN_SHRINE": {
-        "large": "_lib_ZEN_TEAHOUSE",
-        "medium": "_lib_ZEN_STONE_GARDEN",
-        "small": "_lib_ZEN_LANTERN",
+        "large": "_lib_GB_ZEN_MACHIAI",
+        "medium": "_lib_GB_ZEN_KARESANSUI",
+        "small": "_lib_GB_ZEN_LANTERN",
+        "wall": "_lib_GB_ZEN_CHERRY_ALLEE",
+        "corner_tower": "_lib_GB_ZEN_GOJU_PAGODA",
+        "gate": "_lib_GB_ZEN_TORII_GATE",
+        "monument": "_lib_GB_ZEN_TAHOTO",
+        "sacred": "_lib_GB_ZEN_HONDEN",
+    },
+    "ART_NOUVEAU": {
+        "large": "_lib_BAROQUE_FACADE",
+        "medium": "_lib_BALCONY",
+        "small": "_lib_FILIGREE_PANEL",
         "wall": "_lib_CURTAIN_WALL",
-        "corner_tower": "_lib_ZEN_TORII",
-        "gate": "_lib_ZEN_TORII",
-        "monument": "_lib_ZEN_BRIDGE",
-        "sacred": "_lib_ZEN_STONE_GARDEN",
+        "corner_tower": "_lib_BELL_TOWER",
+        "gate": "_lib_OGEE_ARCH",
+        "monument": "_lib_PUBLIC_FOUNTAIN",
+        "sacred": "_lib_CHAPEL",
+    },
+    "MOORISH_COURTYARD": {
+        "large": "_lib_PALAZZO",
+        "medium": "_lib_GB_ROMANESQUE_ARCADE",
+        "small": "_lib_FILIGREE_PANEL",
+        "wall": "_lib_CURVED_WALL",
+        "corner_tower": "_lib_BELL_TOWER",
+        "gate": "_lib_ARCHWAY_ADV",
+        "monument": "_lib_PUBLIC_FOUNTAIN",
+        "sacred": "_lib_CHAPEL",
     },
 }
 
@@ -92,7 +146,7 @@ def compose_world(
     detail_scale=1.0,
     compose_mode="COLLECTION",
 ):
-    style = COMPOSE_STYLES.get(style_key)
+    style = resolve_compose_style(monolith, style_key)
     if style is None:
         return None, f"Unknown style: {style_key}"
     if library.library_collection(create=False) is None:
@@ -110,6 +164,19 @@ def compose_world(
 
     world_root = instance.create_instance_root(plan_obj, style_key) if compose_mode == "COLLECTION" else None
     if world_root:
+        genome = getattr(monolith, "_active_style_genome", None)
+        if genome and genome.get("id"):
+            world_root["surreal_style_genome_id"] = genome["id"]
+        elif style_key == "ZEN_SHRINE":
+            world_root["surreal_style_genome_id"] = "zen_shrine_v1"
+        elif style_key == "ASIAN_CITY":
+            world_root["surreal_style_genome_id"] = "asian_city_v1"
+        elif style_key == "WESTERN_CASTLE":
+            world_root["surreal_style_genome_id"] = "western_castle_v1"
+        elif style_key == "ART_NOUVEAU":
+            world_root["surreal_style_genome_id"] = "art_nouveau_v1"
+        elif style_key == "MOORISH_COURTYARD":
+            world_root["surreal_style_genome_id"] = "moorish_courtyard_v1"
         try:
             if world_root not in list(out_coll.objects):
                 out_coll.objects.link(world_root)

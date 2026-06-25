@@ -64,6 +64,12 @@ def build_trim_groups(props, monolith=None):
         _g("hashira", "TRIM_COLUMN", "M_Trim_Column", snap_bind="gate")
         _g("nuki", "TRIM_BEAM", "M_Trim_Beam")
         _g("kasagi", "TRIM_LINTEL", "M_Trim_Lintel", snap_bind="gate")
+    elif at == "GB_ZEN_SAKURA_TORII":
+        _g("hashira", "TRIM_COLUMN", "M_Trim_Column", snap_bind="gate")
+        _g("nuki", "TRIM_BEAM", "M_Trim_Beam")
+        _g("kasagi", "TRIM_LINTEL", "M_Trim_Lintel", snap_bind="gate")
+        _g("blossom_band", "TRIM_BLOSSOM", "M_Trim_Blossom", notes="Sakura blossom band on kasagi")
+        _g("petal_accent", "TRIM_PETAL", "M_Trim_Petal", notes="Petal accent strips on hashira")
     elif at == "GB_ZEN_TSUKUBAI":
         _g("basin", "TRIM_BASIN", "M_Trim_Basin", snap_bind="basin",
            notes="Recess bowl — UE trim sheet basin band")
@@ -79,6 +85,67 @@ def build_trim_groups(props, monolith=None):
     elif at == "GB_ZEN_TOBIISHI":
         _g("stepping_stone", "TRIM_FLOOR", "M_Trim_Floor", notes="Scattered tobi-ishi stones")
         _g("path_bed", "TRIM_EDGE", "M_Trim_Edge", snap_bind="floor")
+    elif at == "GB_ZEN_KARESANSUI":
+        _g("sand_bed", "TRIM_FLOOR", "M_Trim_Floor", snap_bind="floor", notes="Raked gravel plane")
+        _g("border_stone", "TRIM_EDGE", "M_Trim_Edge", notes="Ishigumi border collar")
+        _g("rake_groove", "TRIM_PANEL_RECESS", "M_Trim_Rake", notes="Parallel rake grooves")
+    elif at == "GB_ZEN_MACHIAI":
+        _g("post", "TRIM_COLUMN", "M_Trim_Column")
+        _g("roof", "TRIM_BEAM", "M_Trim_Beam", snap_bind="floor")
+        _g("bench", "TRIM_FLOOR", "M_Trim_Bench", notes="Machiai waiting bench")
+    elif at == "GB_ZEN_STONE_BRIDGE":
+        _g("deck", "TRIM_FLOOR", "M_Trim_Floor", snap_bind="deck", notes="Bridge deck slab")
+        _g("rail", "TRIM_RAIL", "M_Trim_Rail", notes="Low stone bridge rail")
+        _g("abutment", "TRIM_EDGE", "M_Trim_Edge", notes="Bank abutment blocks")
+    elif at == "GB_ZEN_CHERRY_ALLEE":
+        _g("trunk_base", "TRIM_COLUMN", "M_Trim_Trunk", notes="Cherry trunk bases along path")
+        _g("blossom_canopy", "TRIM_PANEL_RECESS", "M_Trim_Blossom", snap_bind="canopy", notes="Canopy blossom trim zone")
+        _g("petal_scatter", "TRIM_FLOOR", "M_Trim_Petal", notes="Fallen petal scatter strip")
+    elif at == "GB_ZEN_WATER_EDGE":
+        _g("stream_bed", "TRIM_BASIN", "M_Trim_Basin", snap_bind="floor", notes="Depressed stream channel")
+        _g("stream_bank", "TRIM_EDGE", "M_Trim_Edge", notes="Raised stream banks")
+        _g("stepping_stone", "TRIM_FLAGSTONE", "M_Trim_Flagstone", notes="Bridge landing stepping stones")
+    elif at == "GB_ZEN_SANDO":
+        _g("paving", "TRIM_FLOOR", "M_Trim_Floor", snap_bind="floor", notes="Shrine approach paving")
+        _g("edge_stone", "TRIM_EDGE", "M_Trim_Edge", notes="Path border stones")
+        _g("toro_post", "TRIM_COLUMN", "M_Trim_Column", notes="Stone lantern posts along sando")
+        _g("toro_base", "TRIM_FLAGSTONE", "M_Trim_Flagstone", notes="Lantern plinth bases")
+    elif at == "GB_ZEN_KAIRO":
+        _g("floor", "TRIM_FLOOR", "M_Trim_Floor", snap_bind="floor", notes="Cloister walkway slab")
+        _g("column", "TRIM_COLUMN", "M_Trim_Column", notes="Courtyard-facing column row")
+        _g("beam", "TRIM_BEAM", "M_Trim_Beam", notes="Horizontal tie beam")
+        _g("noki_eave", "TRIM_EAVE", "M_Trim_Eave", notes="Roof eave overhang volume")
+        _g("wall_panel", "TRIM_PANEL_RECESS", "M_Trim_Panel_Recess", notes="Garden-side low wall")
+    elif at == "GB_ZEN_HAIDEN":
+        _g("haijo_floor", "TRIM_FLOOR", "M_Trim_Floor", snap_bind="floor", notes="Raised worship floor")
+        _g("genkan_step", "TRIM_STEP", "M_Trim_Step", notes="Entry genkan steps")
+        _g("post", "TRIM_COLUMN", "M_Trim_Column", notes="Haiden corner and front posts")
+        _g("ranma", "TRIM_PANEL_RECESS", "M_Trim_Ranma", notes="Transom panel above threshold")
+        _g("noki", "TRIM_EAVE", "M_Trim_Eave", notes="Roof eave overhang")
+    elif at == "GB_ZEN_GOJU_PAGODA":
+        _g("plinth", "TRIM_FLOOR", "M_Trim_Floor", snap_bind="floor", notes="Stone plinth base")
+        _g("tier_core", "TRIM_COLUMN", "M_Trim_Column", notes="Pagoda story core volume")
+        _g("tier_roof", "TRIM_EAVE", "M_Trim_Eave", notes="Flared eave slab per tier")
+        _g("sorin", "TRIM_SPIRE", "M_Trim_Sorin", notes="Finial spire (sōrin)")
+    elif at == "GB_ZEN_TAHOTO":
+        _g("plinth", "TRIM_FLOOR", "M_Trim_Floor", snap_bind="floor", notes="Stone plinth")
+        _g("mokoshi_base", "TRIM_PANEL_RECESS", "M_Trim_Panel_Recess", notes="Square mokoshi skirt story")
+        _g("drum_body", "TRIM_COLUMN", "M_Trim_Column", notes="Round drum body (greybox)")
+        _g("roof_lower", "TRIM_EAVE", "M_Trim_Eave", notes="Lower roof slab")
+        _g("roof_upper", "TRIM_EAVE", "M_Trim_Eave", notes="Upper roof slab")
+        _g("sorin", "TRIM_SPIRE", "M_Trim_Sorin", notes="Finial spire")
+    elif at == "GB_ZEN_HONDEN":
+        _g("sanctum_floor", "TRIM_FLOOR", "M_Trim_Floor", snap_bind="floor", notes="Raised sacred platform")
+        _g("sanctuary_wall", "TRIM_PANEL_RECESS", "M_Trim_Panel_Recess", notes="Enclosed moya walls")
+        _g("engawa_margin", "TRIM_FLOOR", "M_Trim_Engawa", notes="Veranda margin strip")
+        _g("threshold", "TRIM_FRAME", "M_Trim_Frame", notes="Entry threshold from haiden")
+        _g("noki_eave", "TRIM_EAVE", "M_Trim_Eave", notes="Deep roof eave")
+    elif at == "GB_ZEN_LANTERN":
+        _g("kiso", "TRIM_FLOOR", "M_Trim_Floor", snap_bind="floor", notes="Stone plinth base")
+        _g("sao", "TRIM_COLUMN", "M_Trim_Column", notes="Lantern shaft post")
+        _g("hibukuro", "TRIM_PANEL_RECESS", "M_Trim_Panel_Recess", notes="Fire chamber body")
+        _g("kasa", "TRIM_EAVE", "M_Trim_Eave", notes="Roof cap slab")
+        _g("hoju", "TRIM_SPIRE", "M_Trim_Sorin", notes="Jewel finial")
     elif at in ("GB_GOTHIC_PORTAL", "GB_GOTHIC_BAY", "GB_CORRIDOR_DOOR_END"):
         _g("door_frame", "TRIM_FRAME", "M_Trim_Frame", snap_bind="door")
         if at == "GB_GOTHIC_BAY":

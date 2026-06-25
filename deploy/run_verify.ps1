@@ -1,6 +1,6 @@
 # Headless verify runner — always uses --factory-startup.
 param(
-    [ValidateSet("all", "world", "overhaul")]
+    [ValidateSet("all", "world", "overhaul", "os")]
     [string]$Mode = "all"
 )
 

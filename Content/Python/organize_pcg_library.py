@@ -40,6 +40,21 @@ def organize(*, move_orphan: bool = True) -> dict:
             if ok:
                 moved.append(f"{std.ORPHAN_MEADOW_SCATTER} -> {dest}")
 
+    if move_orphan and unreal.EditorAssetLibrary.does_asset_exist(std.ORPHAN_SAKURA_GROVE):
+        sakura_dir = f"{std.DIR_STYLES}/Sakura"
+        if not unreal.EditorAssetLibrary.does_directory_exist(sakura_dir):
+            unreal.EditorAssetLibrary.make_directory(sakura_dir)
+        dest = std.GRAPH_SAKURA_GROVE
+        if unreal.EditorAssetLibrary.does_asset_exist(dest):
+            if unreal.EditorAssetLibrary.delete_asset(std.ORPHAN_SAKURA_GROVE):
+                moved.append(f"deleted stale root orphan {std.ORPHAN_SAKURA_GROVE}")
+            else:
+                moved.append(f"failed_delete_stale_orphan {std.ORPHAN_SAKURA_GROVE}")
+        else:
+            ok = unreal.EditorAssetLibrary.rename_asset(std.ORPHAN_SAKURA_GROVE, dest)
+            if ok:
+                moved.append(f"{std.ORPHAN_SAKURA_GROVE} -> {dest}")
+
     inventory: list[dict] = []
     ar = unreal.AssetRegistryHelpers.get_asset_registry()
     filt = unreal.ARFilter(package_paths=[std.PCG_ROOT], recursive_paths=True)

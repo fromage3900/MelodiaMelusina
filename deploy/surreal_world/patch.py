@@ -167,7 +167,7 @@ def register_world_operators(monolith):
                 self.report({"WARNING"}, "No COLLECTION world root found")
                 return {"CANCELLED"}
             path = self.filepath or bpy.path.abspath(f"//{root.name}.world.json")
-            written = export.write_world_manifest(obj, path)
+            written = export.write_world_manifest(obj, path, monolith=monolith)
             fbx_paths = []
             if self.export_fbx:
                 fbx_paths = export.export_role_fbx_batches(context, root)

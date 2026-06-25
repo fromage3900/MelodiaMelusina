@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """
 Surreal Architecture Generator - Geometry Node System for Blender 5.1
 
@@ -24,7 +24,7 @@ bl_info = {
     "blender": (5, 1, 0),
     "author": "Claude Code",
     "description": "Procedural geometry node system for surreal architecture",
-    "version": (2, 71, 0),
+    "version": (2, 116, 0),
     "location": "Properties > Modifiers",
     "category": "Geometry Nodes",
 }
@@ -1038,6 +1038,19 @@ DEFAULT_MATERIAL_FOR_TYPE = {
     'GB_ZEN_ENGAWA': 'WOOD',
     'GB_ZEN_BAMBOO_FENCE': 'WOOD',
     'GB_ZEN_TOBIISHI': 'STONE',
+    'GB_ZEN_KARESANSUI': 'STONE',
+    'GB_ZEN_MACHIAI': 'WOOD',
+    'GB_ZEN_STONE_BRIDGE': 'STONE',
+    'GB_ZEN_CHERRY_ALLEE': 'STONE',
+    'GB_ZEN_WATER_EDGE': 'STONE',
+    'GB_ZEN_SANDO': 'STONE',
+    'GB_ZEN_KAIRO': 'WOOD',
+    'GB_ZEN_HAIDEN': 'WOOD',
+    'GB_ZEN_GOJU_PAGODA': 'WOOD',
+    'GB_ZEN_SAKURA_TORII': 'WOOD',
+    'GB_ZEN_TAHOTO': 'WOOD',
+    'GB_ZEN_HONDEN': 'WOOD',
+    'GB_ZEN_LANTERN': 'STONE',
     # v2.51
     'WALL_RUINED':        'STONE',
     'ARCH_BROKEN':        'STONE',
@@ -1051,6 +1064,8 @@ DEFAULT_MATERIAL_FOR_TYPE = {
     'CRATE_PILE':         'STONE',
     'CAMPFIRE':           'STONE',
     'HALF_TIMBER_WALL':   'STONE',
+    'FILIGREE_PANEL':     'GOLD',
+    'FILIGREE_RAIL_INSET': 'IRIDESCENT',
 }
 
 
@@ -1358,10 +1373,23 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
             ('GB_SCIFI_PRESSURE_DOOR', "🚀 Sci-Fi Pressure Door", "Gasket ring recess + frame offset + MUST_CONNECT door snap"),
             ('GB_ZEN_ROJI_STEP', "🍵 Zen Roji Step", "Dew-path stone segment — edge trim + path snaps"),
             ('GB_ZEN_TORII_GATE', "⛩ Zen Torii Gate", "Modular torii greybox — hashira/nuki/kasagi + gate snap"),
+            ('GB_ZEN_SAKURA_TORII', "🌸 Zen Sakura Torii", "Torii variant — blossom band on kasagi + petal accents"),
+            ('GB_ZEN_TAHOTO', "🛕 Zen Tahoto", "Treasure pagoda — mokoshi base, drum, double roof"),
+            ('GB_ZEN_HONDEN', "⛩ Zen Honden", "Main sanctuary — raised moya, engawa, deep noki"),
+            ('GB_ZEN_LANTERN', "🏮 Zen Stone Lantern", "Greybox tōrō — kiso, sao, hibukuro, kasa, hōju"),
             ('GB_ZEN_TSUKUBAI', "🪨 Zen Tsukubai", "Stone water basin pad — recess bowl + flagstones"),
             ('GB_ZEN_ENGAWA', "🏯 Zen Engawa", "Veranda deck — posts, railing, roji/garden snaps"),
             ('GB_ZEN_BAMBOO_FENCE', "🎋 Zen Bamboo Fence", "Tileable bamboo screen — post + rail rhythm"),
             ('GB_ZEN_TOBIISHI', "🪨 Zen Tobi-ishi", "Stepping stone path — scattered flat stones + path snaps"),
+            ('GB_ZEN_KARESANSUI', "🪨 Zen Karesansui", "Dry rock garden — raked gravel, border stones, groove trim"),
+            ('GB_ZEN_MACHIAI', "🏯 Zen Machiai", "Waiting pavilion — posts, roof beam, bench slab"),
+            ('GB_ZEN_STONE_BRIDGE', "🌉 Zen Stone Bridge", "Greybox garden bridge — deck, rails, abutments"),
+            ('GB_ZEN_CHERRY_ALLEE', "🌸 Zen Cherry Allee", "Sakura path — walk slab, blossom canopy trim strips"),
+            ('GB_ZEN_WATER_EDGE', "💧 Zen Water Edge", "Stream bank strip — channel bed + stepping stones"),
+            ('GB_ZEN_SANDO', "⛩ Zen Sando", "Shrine approach — paving, edge stones, tōrō rhythm"),
+            ('GB_ZEN_KAIRO', "🏯 Zen Kairo", "Covered cloister — columns, beam, eave, garden wall"),
+            ('GB_ZEN_HAIDEN', "⛩ Zen Haiden", "Worship hall — genkan steps, haijo floor, ranma, noki"),
+            ('GB_ZEN_GOJU_PAGODA', "🗼 Zen Goju Pagoda", "Five-story pagoda greybox — tapered tiers, sorin finial"),
             # v2.51 — Ruins
             ('WALL_RUINED',     "🏚 Ruined Wall",        "Stone wall with crumbled top and rubble scatter"),
             ('ARCH_BROKEN',     "🏚 Broken Arch",        "Arch with missing ring section and fallen keystone"),
@@ -1377,6 +1405,9 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
             ('CRATE_PILE',      "📦 Crate Pile",         "Stack of wooden crates with scatter and plank lines"),
             ('CAMPFIRE',        "🔥 Campfire",           "Radial log pile with stone ring and flame stand-in"),
             ('HALF_TIMBER_WALL',"🏠 Half-Timber Wall",  "Tudor X-brace timber wall panel with plaster infill"),
+            # v2.115 — Filigree ornament
+            ('FILIGREE_PANEL',      "✨ Filigree Panel",      "Flat ornamental ironwork screen — vine, gothic, or geometric"),
+            ('FILIGREE_RAIL_INSET', "✨ Filigree Rail Inset", "Railing-span ironwork infill between posts"),
         ],
         default='TOWER',
         update=auto_update_callback,
@@ -1642,6 +1673,10 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
 
     zen_bridge_span:   bpy.props.FloatProperty(name="Bridge Span",    default=4.0, min=1.5, max=12.0, update=auto_update_callback)
     zen_bridge_rise:   bpy.props.FloatProperty(name="Arc Rise",       default=0.8, min=0.1, max=3.0, update=auto_update_callback)
+    zen_stream_depth:  bpy.props.FloatProperty(name="Stream Depth",   default=0.35, min=0.1, max=1.2, update=auto_update_callback)
+    zen_genkan_rise:   bpy.props.FloatProperty(name="Genkan Rise",    default=0.45, min=0.1, max=1.5, update=auto_update_callback)
+    zen_tahoto_roof_span: bpy.props.FloatProperty(name="Tahoto Roof Span", default=0.35, min=0.1, max=0.8, subtype='FACTOR', update=auto_update_callback)
+    zen_honden_platform_rise: bpy.props.FloatProperty(name="Honden Platform Rise", default=0.55, min=0.2, max=1.5, update=auto_update_callback)
     zen_bridge_width:  bpy.props.FloatProperty(name="Bridge Width",   default=1.2, min=0.4, max=4.0, update=auto_update_callback)
     zen_bridge_planks: bpy.props.IntProperty(name="Plank Count",     default=20, min=6, max=80, update=auto_update_callback)
     zen_bridge_railings: bpy.props.BoolProperty(name="Side Railings",default=True, update=auto_update_callback)
@@ -1870,6 +1905,39 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
         name="Balustrade Length", default=4.0, min=0.5, max=20.0, update=auto_update_callback)
     baroque_balustrade_posts: bpy.props.IntProperty(
         name="Baluster Count", default=9, min=3, max=30, update=auto_update_callback)
+
+    # === Filigree ornament (v2.115) ===
+    filigree_style: bpy.props.EnumProperty(
+        name="Filigree Style",
+        items=[
+            ('ARTNOUVEAU_VINE',    "Art Nouveau Vine",    "Whiplash vine scrollwork"),
+            ('GOTHIC_IRON',        "Gothic Iron",         "Radial spokes + ring tracery"),
+            ('GEOMETRIC_ARABESQUE',"Geometric Arabesque", "Intersecting arc lattice"),
+        ],
+        default='ARTNOUVEAU_VINE',
+        update=auto_update_callback,
+    )
+    filigree_width: bpy.props.FloatProperty(
+        name="Filigree Width", default=1.6, min=0.3, max=8.0, update=auto_update_callback)
+    filigree_height: bpy.props.FloatProperty(
+        name="Filigree Height", default=2.0, min=0.3, max=8.0, update=auto_update_callback)
+    filigree_thickness: bpy.props.FloatProperty(
+        name="Filigree Thickness", default=0.018, min=0.004, max=0.12, update=auto_update_callback)
+    filigree_density: bpy.props.FloatProperty(
+        name="Filigree Density", default=0.55, min=0.1, max=1.0, subtype='FACTOR',
+        update=auto_update_callback)
+    filigree_symmetry: bpy.props.EnumProperty(
+        name="Filigree Symmetry",
+        items=[
+            ('NONE',   "None",   "Single-sided curves"),
+            ('MIRROR', "Mirror", "Mirror curves across vertical axis"),
+            ('RADIAL', "Radial", "Radial repeat (gothic/geometric)"),
+        ],
+        default='MIRROR',
+        update=auto_update_callback,
+    )
+    filigree_include_frame: bpy.props.BoolProperty(
+        name="Include Frame", default=True, update=auto_update_callback)
 
     # === Advanced walls (multi-pane, arched, bay) ===
     wall_window_grid_x:   bpy.props.IntProperty(name="Window Grid Cols", default=3, min=1, max=10, update=auto_update_callback)
@@ -2121,6 +2189,17 @@ class SurrealArchProperties(bpy.types.PropertyGroup):
         default=10.0, min=2.0, max=80.0,
         update=auto_update_callback,
     )
+    style_genome_id: bpy.props.StringProperty(
+        name="Style Genome",
+        description="Active Style Genome id (surreal_os)",
+        default="zen_shrine_v1",
+    )
+    genome_verticality: bpy.props.FloatProperty(name="Genome Verticality", default=0.85, min=0.0, max=1.0, subtype='FACTOR')
+    genome_symmetry: bpy.props.FloatProperty(name="Genome Symmetry", default=0.7, min=0.0, max=1.0, subtype='FACTOR')
+    genome_ornament_density: bpy.props.FloatProperty(name="Genome Ornament", default=0.5, min=0.0, max=1.0, subtype='FACTOR')
+    genome_structural_logic: bpy.props.FloatProperty(name="Genome Structure", default=0.8, min=0.0, max=1.0, subtype='FACTOR')
+    genome_organic_growth: bpy.props.FloatProperty(name="Genome Organic", default=0.4, min=0.0, max=1.0, subtype='FACTOR')
+    genome_cosmic_influence: bpy.props.FloatProperty(name="Genome Cosmic", default=0.15, min=0.0, max=1.0, subtype='FACTOR')
     gb_corridor_profile: bpy.props.EnumProperty(
         name="Corridor Profile",
         description="Width preset for corridor kit pieces (trim-sheet friendly bays)",
@@ -5146,6 +5225,179 @@ def build_gothic_buttress_kit(tree, props, base_x=-1400):
 
 def build_gothic_tracery_panel(tree, props, base_x=-1400):
     return build_trefoil(tree, props, base_x)
+
+
+# ----------------------------------------------------------------------
+# BUILDER: FILIGREE (panel + rail inset)
+# ----------------------------------------------------------------------
+
+def _filigree_profile(tree, radius, base_x, y_off, label="ornament"):
+    prof = _safe_node(tree, 'GeometryNodeCurvePrimitiveCircle', (base_x, y_off))
+    if prof:
+        try:
+            prof.inputs['Resolution'].default_value = 8
+            prof.inputs['Radius'].default_value = radius
+        except Exception:
+            pass
+        color_node(prof, label)
+    return prof
+
+
+def _filigree_sweep_line(tree, p0, p1, prof, base_x, y_off, label="ornament"):
+    line = _safe_node(tree, 'GeometryNodeCurvePrimitiveLine', (base_x, y_off))
+    if not line or prof is None:
+        return None
+    try:
+        line.inputs['Start'].default_value = tuple(p0)
+        line.inputs['End'].default_value = tuple(p1)
+    except Exception:
+        return None
+    sw = _safe_node(tree, 'GeometryNodeCurveToMesh', (base_x + 220, y_off))
+    if not sw:
+        return None
+    _link(tree, line.outputs['Curve'], sw.inputs['Curve'])
+    _link(tree, prof.outputs['Curve'], sw.inputs['Profile Curve'])
+    try:
+        sw.inputs['Fill Caps'].default_value = True
+    except Exception:
+        pass
+    color_node(sw, label)
+    return sw.outputs['Mesh']
+
+
+def _filigree_scurve(tree, prof, cx, cy, span_w, span_h, base_x, y_off, flip=False):
+    parts = []
+    n = 12
+    sign = 1.0 if not flip else -1.0
+    pts = []
+    for i in range(n + 1):
+        t = i / n
+        x = cx - span_w * 0.45 + t * span_w * 0.9
+        y = cy + sign * span_h * 0.32 * math.sin(t * math.pi)
+        pts.append((x, y, 0.02))
+    for i in range(len(pts) - 1):
+        seg = _filigree_sweep_line(tree, pts[i], pts[i + 1], prof, base_x, y_off - i * 4)
+        if seg:
+            parts.append(seg)
+    return parts
+
+
+def _filigree_frame_edges(tree, span_w, span_h, prof, base_x):
+    margin = max(0.04, min(span_w, span_h) * 0.06)
+    hw, hh = span_w / 2 - margin, span_h / 2 - margin
+    edges = (
+        ((-hw, -hh, 0), (hw, -hh, 0)),
+        ((hw, -hh, 0), (hw, hh, 0)),
+        ((hw, hh, 0), (-hw, hh, 0)),
+        ((-hw, hh, 0), (-hw, -hh, 0)),
+    )
+    parts = []
+    for i, (a, b) in enumerate(edges):
+        seg = _filigree_sweep_line(tree, a, b, prof, base_x, 800 + i * 40)
+        if seg:
+            parts.append(seg)
+    return parts
+
+
+def _build_filigree_interior(tree, props, span_w, span_h, prof, base_x):
+    style = getattr(props, 'filigree_style', 'ARTNOUVEAU_VINE')
+    density = max(0.1, min(1.0, getattr(props, 'filigree_density', 0.5)))
+    symmetry = getattr(props, 'filigree_symmetry', 'MIRROR')
+    parts = []
+    n_curves = max(2, int(3 + density * 8))
+
+    if style == 'ARTNOUVEAU_VINE':
+        for i in range(n_curves):
+            cy = -span_h * 0.35 + (span_h * 0.7) * (i / max(1, n_curves - 1))
+            parts.extend(_filigree_scurve(
+                tree, prof, 0, cy, span_w, span_h, base_x, 100 + i * 70, flip=(i % 2 == 1)))
+            if symmetry == 'MIRROR':
+                for side in (-1, 1):
+                    ox = side * span_w * 0.22
+                    parts.extend(_filigree_scurve(
+                        tree, prof, ox, cy, span_w * 0.55, span_h,
+                        base_x, 500 + i * 70 + side * 20, flip=(i % 2 == 0)))
+    elif style == 'GOTHIC_IRON':
+        n_spokes = max(4, int(4 + density * 8))
+        for i in range(n_spokes):
+            ang = math.pi * 2 * i / n_spokes
+            r0 = min(span_w, span_h) * 0.08
+            r1 = min(span_w, span_h) * 0.42
+            a = (math.cos(ang) * r0, math.sin(ang) * r0, 0.02)
+            b = (math.cos(ang) * r1, math.sin(ang) * r1, 0.02)
+            seg = _filigree_sweep_line(tree, a, b, prof, base_x, 200 + i * 25)
+            if seg:
+                parts.append(seg)
+        ring_r = min(span_w, span_h) * 0.32
+        n_ring = 20
+        for i in range(n_ring):
+            a1 = math.pi * 2 * i / n_ring
+            a2 = math.pi * 2 * (i + 1) / n_ring
+            p0 = (math.cos(a1) * ring_r, math.sin(a1) * ring_r, 0.02)
+            p1 = (math.cos(a2) * ring_r, math.sin(a2) * ring_r, 0.02)
+            seg = _filigree_sweep_line(tree, p0, p1, prof, base_x, 900 + i * 12)
+            if seg:
+                parts.append(seg)
+        if symmetry == 'RADIAL' and n_spokes >= 6:
+            inner_r = ring_r * 0.55
+            for i in range(0, n_spokes, 2):
+                ang = math.pi * 2 * i / n_spokes
+                p0 = (math.cos(ang) * inner_r, math.sin(ang) * inner_r, 0.02)
+                p1 = (math.cos(ang + math.pi) * inner_r, math.sin(ang + math.pi) * inner_r, 0.02)
+                seg = _filigree_sweep_line(tree, p0, p1, prof, base_x, 1400 + i * 15)
+                if seg:
+                    parts.append(seg)
+    else:
+        rows = max(2, int(2 + density * 5))
+        cols = max(2, int(2 + density * 5))
+        cell_w = span_w * 0.8 / max(1, cols - 1) if cols > 1 else span_w * 0.4
+        cell_h = span_h * 0.8 / max(1, rows - 1) if rows > 1 else span_h * 0.4
+        for r in range(rows):
+            for c in range(cols):
+                if (r + c) % 2:
+                    continue
+                cx = -span_w * 0.4 + cell_w * c
+                cy = -span_h * 0.4 + cell_h * r
+                d = min(cell_w, cell_h) * 0.35
+                for da in (0, math.pi / 2):
+                    p0 = (cx + math.cos(da) * d, cy + math.sin(da) * d, 0.02)
+                    p1 = (cx + math.cos(da + math.pi / 2) * d, cy + math.sin(da + math.pi / 2) * d, 0.02)
+                    seg = _filigree_sweep_line(tree, p0, p1, prof, base_x, 300 + r * 50 + c * 10)
+                    if seg:
+                        parts.append(seg)
+        if symmetry == 'MIRROR':
+            for r in range(rows):
+                cy = -span_h * 0.4 + cell_h * r
+                seg = _filigree_sweep_line(
+                    tree, (0, cy - cell_h * 0.2, 0.02), (0, cy + cell_h * 0.2, 0.02),
+                    prof, base_x, 1800 + r * 30)
+                if seg:
+                    parts.append(seg)
+    return parts
+
+
+def build_filigree_core(tree, props, base_x=-1400, rail_mode=False):
+    thick = max(0.005, getattr(props, 'filigree_thickness', 0.02))
+    if rail_mode:
+        span_w = max(0.5, getattr(props, 'rail_length', 2.5))
+        span_h = max(0.3, getattr(props, 'rail_height', 1.0) * 0.85)
+    else:
+        span_w = max(0.4, getattr(props, 'filigree_width', 1.6))
+        span_h = max(0.4, getattr(props, 'filigree_height', 2.0))
+    prof = _filigree_profile(tree, thick, base_x, -400)
+    parts = []
+    if getattr(props, 'filigree_include_frame', True):
+        parts.extend(_filigree_frame_edges(tree, span_w, span_h, prof, base_x))
+    parts.extend(_build_filigree_interior(tree, props, span_w, span_h, prof, base_x))
+    return _join_all(tree, parts, (base_x + 1200, 0), label="ornament", weld=0.0)
+
+
+def build_filigree_panel(tree, props, base_x=-1400):
+    return build_filigree_core(tree, props, base_x=base_x, rail_mode=False)
+
+
+def build_filigree_rail_inset(tree, props, base_x=-1400):
+    return build_filigree_core(tree, props, base_x=base_x, rail_mode=True)
 
 
 def build_greybox_corridor_offset(tree, props, base_x=-1400):
@@ -18111,6 +18363,8 @@ def apply_geometry_nodes_to_object(obj, props):
         'CRATE_PILE':         build_crate_pile,
         'CAMPFIRE':           build_campfire,
         'HALF_TIMBER_WALL':   build_half_timber_wall,
+        'FILIGREE_PANEL':     build_filigree_panel,
+        'FILIGREE_RAIL_INSET': build_filigree_rail_inset,
     }
     builder = dispatch.get(props.arch_type, build_tower)
     kit_dispatch = getattr(globals(), "_KIT_DISPATCH", {})
@@ -27288,6 +27542,36 @@ def _make_preset_op(class_name, op_id, label, params, description=None):
     return cls
 
 
+def _make_graph_preset_op(class_name, op_id, label, research_preset_id, description=None):
+    """Factory for curated presets that spawn a full OS grammar graph chain."""
+    def execute(self, context):
+        import sys
+        monolith = sys.modules.get("surreal_architecture_gen")
+        from surreal_arch.research_presets import run_research_preset
+        try:
+            result = run_research_preset(context, research_preset_id, monolith=monolith)
+        except Exception as err:
+            self.report({'ERROR'}, str(err))
+            return {'CANCELLED'}
+        if result.get("mode") == "graph":
+            self.report(
+                {'INFO'},
+                f"Spawned {result['count']} modules ({result['graph_id']})",
+            )
+        return {'FINISHED'}
+
+    cls_dict = {
+        'bl_idname': op_id,
+        'bl_label': label,
+        'bl_options': {'REGISTER', 'UNDO'},
+        'execute': execute,
+        'poll': classmethod(lambda c, ctx: ctx.view_layer is not None),
+    }
+    if description:
+        cls_dict['bl_description'] = description
+    return type(class_name, (bpy.types.Operator,), cls_dict)
+
+
 SURREAL_ARCH_OT_preset_tower = _make_preset_op(
     "SURREAL_ARCH_OT_preset_tower", "surreal_arch.preset_tower", "Tower",
     dict(arch_type='TOWER', base_radius=1.2, height=5.0, taper_ratio=0.7,
@@ -27643,14 +27927,11 @@ SURREAL_ARCH_OT_preset_gb_arc_cross = _make_preset_op(
 )
 
 # === v2.60 — Playable architecture presets (research-backed metres) ===
-SURREAL_ARCH_OT_preset_basilica_nave = _make_preset_op(
+SURREAL_ARCH_OT_preset_basilica_nave = _make_graph_preset_op(
     "SURREAL_ARCH_OT_preset_basilica_nave", "surreal_arch.preset_basilica_nave",
     "Basilica Nave",
-    dict(arch_type='GB_ROOM_APSIDAL', gb_width=12.0, gb_depth=28.0, gb_height=14.0,
-         gb_wall_thick=0.9, gb_door_width=2.4, gb_door_height=4.2,
-         gb_windows_enabled=True, gb_window_count=4, gb_window_width=1.2,
-         gb_window_height=2.0, gb_window_sill=3.5, gb_ceiling=False,
-         auto_smooth=True, material_choice='STONE'),
+    "romanesque_apse_graph",
+    description="Romanesque choir + apse — nave terminating in semicircular apse",
 )
 SURREAL_ARCH_OT_preset_town_square = _make_preset_op(
     "SURREAL_ARCH_OT_preset_town_square", "surreal_arch.preset_town_square",
@@ -27658,23 +27939,17 @@ SURREAL_ARCH_OT_preset_town_square = _make_preset_op(
     dict(arch_type='GREYBOX_ARENA', gb_radius=14.0, gb_tiers=4, gb_sides=20,
          gb_rise=0.45, gb_run=1.2, auto_smooth=True, material_choice='STONE'),
 )
-SURREAL_ARCH_OT_preset_gothic_chapel = _make_preset_op(
+SURREAL_ARCH_OT_preset_gothic_chapel = _make_graph_preset_op(
     "SURREAL_ARCH_OT_preset_gothic_chapel", "surreal_arch.preset_gothic_chapel",
     "Gothic Chapel",
-    dict(arch_type='CHAPEL', base_radius=4.2, height=11.0,
-         crenel_merlon_count=4, seed=2,
-         bevel_amount=0.025, bevel_subdiv_level=2, auto_smooth=True,
-         material_choice='GOTHIC_DARK'),
+    "romanesque_apse_graph",
+    description="Romanesque choir + apse chain — arcade walk into semicircular terminus",
 )
-SURREAL_ARCH_OT_preset_japanese_gate_compound = _make_preset_op(
+SURREAL_ARCH_OT_preset_japanese_gate_compound = _make_graph_preset_op(
     "SURREAL_ARCH_OT_preset_japanese_gate_compound",
     "surreal_arch.preset_japanese_gate_compound", "Japanese Temple Gate",
-    dict(arch_type='ZEN_TORII', torii_width=4.8, torii_height=5.5,
-         torii_post_radius=0.22, torii_style='MYOJIN', torii_top_curve=0.32,
-         torii_nuki_height=0.72, torii_show_gakuzuka=True, torii_show_kusabi=True,
-         torii_show_shimenawa=True,
-         bevel_amount=0.03, bevel_subdiv_level=2, auto_smooth=True,
-         material_choice='STONE'),
+    "zen_roji_path_graph",
+    description="Torii → roji steps → tsukubai → lantern — tea garden entry",
 )
 SURREAL_ARCH_OT_preset_baroque_plaza = _make_preset_op(
     "SURREAL_ARCH_OT_preset_baroque_plaza", "surreal_arch.preset_baroque_plaza",
@@ -27710,14 +27985,11 @@ SURREAL_ARCH_OT_preset_arc_cross_junction = _make_preset_op(
          gb_windows_enabled=True, gb_window_count=2,
          auto_smooth=True, material_choice='STONE'),
 )
-SURREAL_ARCH_OT_preset_zen_courtyard = _make_preset_op(
+SURREAL_ARCH_OT_preset_zen_courtyard = _make_graph_preset_op(
     "SURREAL_ARCH_OT_preset_zen_courtyard", "surreal_arch.preset_zen_courtyard",
     "Zen Courtyard",
-    dict(arch_type='ZEN_STONE_GARDEN', stone_garden_size=12.0,
-         stone_garden_stones=9, stone_garden_ripples=16,
-         stone_garden_sansonseki=True, stone_garden_tsukubai=True,
-         bevel_amount=0.015, bevel_subdiv_level=1, auto_smooth=True,
-         material_choice='STONE'),
+    "zen_shrine_courtyard",
+    description="Torii, bamboo fence, karesansui, bridge, engawa, teahouse, lantern",
 )
 SURREAL_ARCH_OT_preset_castle_bailey = _make_preset_op(
     "SURREAL_ARCH_OT_preset_castle_bailey", "surreal_arch.preset_castle_bailey",
@@ -27727,19 +27999,17 @@ SURREAL_ARCH_OT_preset_castle_bailey = _make_preset_op(
          bevel_amount=0.02, bevel_subdiv_level=1, auto_smooth=True,
          material_choice='STONE'),
 )
-SURREAL_ARCH_OT_preset_monastery_cloister = _make_preset_op(
+SURREAL_ARCH_OT_preset_monastery_cloister = _make_graph_preset_op(
     "SURREAL_ARCH_OT_preset_monastery_cloister",
     "surreal_arch.preset_monastery_cloister", "Monastery Cloister",
-    dict(arch_type='MONASTERY', base_radius=10.0, height=12.0,
-         bevel_amount=0.025, bevel_subdiv_level=2, auto_smooth=True,
-         material_choice='STONE'),
+    "romanesque_cloister_graph",
+    description="Romanesque arcade chain — bays alternating with offset corridor legs",
 )
-SURREAL_ARCH_OT_preset_civic_hypostyle = _make_preset_op(
+SURREAL_ARCH_OT_preset_civic_hypostyle = _make_graph_preset_op(
     "SURREAL_ARCH_OT_preset_civic_hypostyle", "surreal_arch.preset_civic_hypostyle",
     "Hypostyle Hall",
-    dict(arch_type='GREYBOX_PILLAR_HALL', gb_cols_x=6, gb_cols_y=4,
-         gb_spacing=4.0, gb_height=8.0, gb_leg_thick=0.6, gb_wall_thick=0.4,
-         auto_smooth=True, material_choice='MARBLE'),
+    "brutalist_plaza_graph",
+    description="Pilotis grid + panel wall rhythm — hypostyle civic hall blockout",
 )
 SURREAL_ARCH_OT_preset_greybox_basilica_block = _make_preset_op(
     "SURREAL_ARCH_OT_preset_greybox_basilica_block",
@@ -27752,34 +28022,29 @@ SURREAL_ARCH_OT_preset_greybox_basilica_block = _make_preset_op(
 )
 
 # === v2.60.1 — tick 61: four more metre-scale presets ===
-SURREAL_ARCH_OT_preset_japanese_temple_compound = _make_preset_op(
+SURREAL_ARCH_OT_preset_japanese_temple_compound = _make_graph_preset_op(
     "SURREAL_ARCH_OT_preset_japanese_temple_compound",
     "surreal_arch.preset_japanese_temple_compound", "Temple Compound",
-    dict(arch_type='CN_TIERED_PAGODA', pagoda_tiers=5, pagoda_base_radius=3.8,
-         pagoda_tier_height=2.4, pagoda_roof_overhang=1.1, pagoda_taper=0.78,
-         bevel_amount=0.025, bevel_subdiv_level=2, auto_smooth=True,
-         material_choice='GOLD'),
+    "asian_city_graph",
+    description="East Asian street chain — pailou gate, lane, pavilion, hanok bays",
 )
-SURREAL_ARCH_OT_preset_civic_town_hall = _make_preset_op(
+SURREAL_ARCH_OT_preset_civic_town_hall = _make_graph_preset_op(
     "SURREAL_ARCH_OT_preset_civic_town_hall", "surreal_arch.preset_civic_town_hall",
     "Civic Town Hall",
-    dict(arch_type='TOWN_HALL', base_radius=3.2, height=8.5,
-         bevel_amount=0.02, bevel_subdiv_level=2, auto_smooth=True,
-         material_choice='STONE'),
+    "venetian_canal_graph",
+    description="Loggia colonnade frontage along canal-side civic corridor",
 )
-SURREAL_ARCH_OT_preset_baroque_piazza_facade = _make_preset_op(
+SURREAL_ARCH_OT_preset_baroque_piazza_facade = _make_graph_preset_op(
     "SURREAL_ARCH_OT_preset_baroque_piazza_facade",
     "surreal_arch.preset_baroque_piazza_facade", "Baroque Piazza",
-    dict(arch_type='BAROQUE_FACADE', baroque_facade_bays=7, baroque_facade_height=14.0,
-         bevel_amount=0.025, bevel_subdiv_level=2, auto_smooth=True,
-         material_choice='MARBLE'),
+    "venetian_canal_graph",
+    description="Loggia bays along canal-side piazza frontage",
 )
-SURREAL_ARCH_OT_preset_gothic_cloister_walk = _make_preset_op(
+SURREAL_ARCH_OT_preset_gothic_cloister_walk = _make_graph_preset_op(
     "SURREAL_ARCH_OT_preset_gothic_cloister_walk",
     "surreal_arch.preset_gothic_cloister_walk", "Gothic Cloister",
-    dict(arch_type='MONASTERY', base_radius=8.5, height=10.0,
-         bevel_amount=0.025, bevel_subdiv_level=2, auto_smooth=True,
-         material_choice='GOTHIC_DARK'),
+    "gothic_cloister_graph",
+    description="Gothic cloister walk — double corridor, bend, portal termination",
 )
 
 # === v2.60.1 — tick 63: six architecturally accurate gap-fill presets ===
@@ -27791,25 +28056,23 @@ SURREAL_ARCH_OT_preset_escher_courtyard = _make_preset_op(
          bevel_amount=0.015, bevel_subdiv_level=1, auto_smooth=True,
          material_choice='STONE'),
 )
-SURREAL_ARCH_OT_preset_shinto_shrine = _make_preset_op(
+SURREAL_ARCH_OT_preset_shinto_shrine = _make_graph_preset_op(
     "SURREAL_ARCH_OT_preset_shinto_shrine", "surreal_arch.preset_shinto_shrine",
     "Shinto Shrine",
-    dict(arch_type='WAYSIDE_SHRINE', base_radius=2.4, height=5.5,
-         bevel_amount=0.02, bevel_subdiv_level=2, auto_smooth=True,
-         material_choice='STONE'),
+    "zen_shrine_axis",
+    description="Torii → sando → kairo → karesansui — shrine approach spine",
 )
-SURREAL_ARCH_OT_preset_moorish_courtyard = _make_preset_op(
+SURREAL_ARCH_OT_preset_moorish_courtyard = _make_graph_preset_op(
     "SURREAL_ARCH_OT_preset_moorish_courtyard", "surreal_arch.preset_moorish_courtyard",
     "Moorish Courtyard",
-    dict(arch_type='MONASTERY', base_radius=12.0, height=9.0,
-         bevel_amount=0.025, bevel_subdiv_level=2, auto_smooth=True,
-         material_choice='MARBLE'),
+    "moorish_courtyard_graph",
+    description="Horseshoe portal, arabesque screen, arcade colonnade, fountain court",
 )
-SURREAL_ARCH_OT_preset_brutalist_plaza = _make_preset_op(
+SURREAL_ARCH_OT_preset_brutalist_plaza = _make_graph_preset_op(
     "SURREAL_ARCH_OT_preset_brutalist_plaza", "surreal_arch.preset_brutalist_plaza",
     "Brutalist Plaza",
-    dict(arch_type='GREYBOX_ARENA', gb_radius=14.0, gb_tiers=3, gb_sides=8,
-         gb_rise=0.55, gb_run=1.8, auto_smooth=True, material_choice='STONE'),
+    "brutalist_plaza_graph",
+    description="Pilotis hall, panel wall rhythm, offset slab corridor",
 )
 SURREAL_ARCH_OT_preset_medieval_keep = _make_preset_op(
     "SURREAL_ARCH_OT_preset_medieval_keep", "surreal_arch.preset_medieval_keep",
@@ -27818,24 +28081,25 @@ SURREAL_ARCH_OT_preset_medieval_keep = _make_preset_op(
          bevel_amount=0.02, bevel_subdiv_level=1, auto_smooth=True,
          material_choice='STONE'),
 )
-SURREAL_ARCH_OT_preset_scifi_atrium = _make_preset_op(
+SURREAL_ARCH_OT_preset_scifi_atrium = _make_graph_preset_op(
     "SURREAL_ARCH_OT_preset_scifi_atrium", "surreal_arch.preset_scifi_atrium",
     "Sci-Fi Atrium",
-    dict(arch_type='GREYBOX_PILLAR_HALL', gb_cols_x=5, gb_cols_y=5,
-         gb_spacing=5.5, gb_height=18.0, gb_leg_thick=0.75, gb_wall_thick=0.35,
-         auto_smooth=True, material_choice='MARBLE'),
+    "scifi_deck_graph",
+    description="Sci-fi deck spine — corridor trunk, T-junction, hab module",
+)
+SURREAL_ARCH_OT_preset_scifi_airlock = _make_graph_preset_op(
+    "SURREAL_ARCH_OT_preset_scifi_airlock", "surreal_arch.preset_scifi_airlock",
+    "Sci-Fi Airlock",
+    "scifi_airlock_graph",
+    description="Pressure doors flanking sealed chamber — double-door airlock chain",
 )
 
 # === v2.60.2 — tick 64: five more metre-scale presets ===
-SURREAL_ARCH_OT_preset_zen_teahouse_pavilion = _make_preset_op(
+SURREAL_ARCH_OT_preset_zen_teahouse_pavilion = _make_graph_preset_op(
     "SURREAL_ARCH_OT_preset_zen_teahouse_pavilion",
     "surreal_arch.preset_zen_teahouse_pavilion", "Tea Pavilion",
-    dict(arch_type='ZEN_TEAHOUSE', teahouse_width=5.5, teahouse_depth=4.8,
-         teahouse_height=3.2, teahouse_pitch_factor=0.62,
-         teahouse_engawa=True, teahouse_engawa_width=1.4,
-         teahouse_tokonoma=True, teahouse_nijiriguchi=True, teahouse_ro=True,
-         bevel_amount=0.03, bevel_subdiv_level=2, auto_smooth=True,
-         material_choice='STONE'),
+    "zen_tea_garden",
+    description="Compact roji — torii, tobi-ishi, bamboo, tsukubai, engawa, teahouse",
 )
 SURREAL_ARCH_OT_preset_modular_village_house = _make_preset_op(
     "SURREAL_ARCH_OT_preset_modular_village_house",
@@ -27871,28 +28135,23 @@ SURREAL_ARCH_OT_preset_castle_gatehouse = _make_preset_op(
 )
 
 # === v2.60.2 — tick 64b: four more playable presets ===
-SURREAL_ARCH_OT_preset_guild_hall_blockout = _make_preset_op(
+SURREAL_ARCH_OT_preset_guild_hall_blockout = _make_graph_preset_op(
     "SURREAL_ARCH_OT_preset_guild_hall_blockout",
     "surreal_arch.preset_guild_hall_blockout", "Guild Hall",
-    dict(arch_type='GUILD_HALL', base_radius=3.0, height=6.0,
-         bevel_amount=0.02, bevel_subdiv_level=2, auto_smooth=True,
-         material_choice='MARBLE'),
+    "brutalist_plaza_graph",
+    description="Pilotis hall + panel wall rhythm — civic guild block massing",
 )
-SURREAL_ARCH_OT_preset_venetian_palazzo = _make_preset_op(
+SURREAL_ARCH_OT_preset_venetian_palazzo = _make_graph_preset_op(
     "SURREAL_ARCH_OT_preset_venetian_palazzo",
     "surreal_arch.preset_venetian_palazzo", "Venetian Palazzo",
-    dict(arch_type='PALAZZO', palazzo_floors=4, palazzo_width=14.0,
-         palazzo_floor_h=3.6, palazzo_arches_per_floor=5,
-         palazzo_arch_style='BIFORA', palazzo_string_courses=True,
-         bevel_amount=0.03, bevel_subdiv_level=2, auto_smooth=True,
-         material_choice='MARBLE'),
+    "venetian_canal_graph",
+    description="Loggia bays along canal-side corridor rhythm",
 )
-SURREAL_ARCH_OT_preset_chinese_pailou = _make_preset_op(
+SURREAL_ARCH_OT_preset_chinese_pailou = _make_graph_preset_op(
     "SURREAL_ARCH_OT_preset_chinese_pailou",
     "surreal_arch.preset_chinese_pailou", "Chinese Pailou",
-    dict(arch_type='CN_PAILOU', base_radius=2.8, height=7.5,
-         bevel_amount=0.025, bevel_subdiv_level=2, auto_smooth=True,
-         material_choice='GOLD'),
+    "asian_city_graph",
+    description="Pailou gate through market lane into pavilion bays",
 )
 SURREAL_ARCH_OT_preset_corner_watchtower = _make_preset_op(
     "SURREAL_ARCH_OT_preset_corner_watchtower",
@@ -27911,12 +28170,11 @@ SURREAL_ARCH_OT_preset_roman_bath = _make_preset_op(
          gb_door_height=3.6, gb_windows_enabled=True, gb_window_count=10,
          auto_smooth=True, material_choice='MARBLE'),
 )
-SURREAL_ARCH_OT_preset_market_colonnade = _make_preset_op(
+SURREAL_ARCH_OT_preset_market_colonnade = _make_graph_preset_op(
     "SURREAL_ARCH_OT_preset_market_colonnade",
     "surreal_arch.preset_market_colonnade", "Market Colonnade",
-    dict(arch_type='GREYBOX_PILLAR_HALL', gb_cols_x=8, gb_cols_y=3,
-         gb_spacing=3.8, gb_height=6.5, gb_leg_thick=0.55, gb_wall_thick=0.3,
-         auto_smooth=True, material_choice='MARBLE'),
+    "romanesque_cloister_graph",
+    description="Arcade bays alternating with offset corridor legs — souk colonnade",
 )
 SURREAL_ARCH_OT_preset_lighthouse_tower = _make_preset_op(
     "SURREAL_ARCH_OT_preset_lighthouse_tower",
@@ -27935,20 +28193,55 @@ SURREAL_ARCH_OT_preset_amphitheatre = _make_preset_op(
          gb_rise=0.38, gb_run=1.0, auto_smooth=True, material_choice='STONE'),
     description='~40 m dia GREYBOX_ARENA — 6 tiers, r=20 m pit; walkable centre floor top at Z=0',
 )
-SURREAL_ARCH_OT_preset_covered_bazaar = _make_preset_op(
+SURREAL_ARCH_OT_preset_covered_bazaar = _make_graph_preset_op(
     "SURREAL_ARCH_OT_preset_covered_bazaar",
     "surreal_arch.preset_covered_bazaar", "Covered Bazaar",
-    dict(arch_type='MONASTERY', base_radius=14.0, height=6.5,
-         bevel_amount=0.02, bevel_subdiv_level=2, auto_smooth=True,
+    "romanesque_cloister_graph",
+    description="Arcaded souk wings — romanesque cloister arcade chain blockout",
+)
+
+SURREAL_ARCH_OT_preset_filigree_vine_panel = _make_preset_op(
+    "SURREAL_ARCH_OT_preset_filigree_vine_panel",
+    "surreal_arch.preset_filigree_vine_panel", "Filigree Vine Panel",
+    dict(arch_type='FILIGREE_PANEL', filigree_style='ARTNOUVEAU_VINE',
+         filigree_width=1.8, filigree_height=2.4, filigree_density=0.65,
+         filigree_symmetry='MIRROR', filigree_include_frame=True,
          material_choice='GOLD'),
-    description='~28 m square souk — MONASTERY cloister (r=14 m), ~6.5 m arcaded wings + courtyard',
+    description="Art Nouveau whiplash vine ironwork screen",
+)
+
+SURREAL_ARCH_OT_preset_filigree_geometric_panel = _make_preset_op(
+    "SURREAL_ARCH_OT_preset_filigree_geometric_panel",
+    "surreal_arch.preset_filigree_geometric_panel", "Filigree Geometric Panel",
+    dict(arch_type='FILIGREE_PANEL', filigree_style='GEOMETRIC_ARABESQUE',
+         filigree_width=1.4, filigree_height=1.8, filigree_density=0.7,
+         filigree_symmetry='MIRROR', filigree_include_frame=True,
+         material_choice='IRIDESCENT'),
+    description="Geometric arabesque lattice panel",
+)
+
+SURREAL_ARCH_OT_preset_filigree_rail_vine = _make_preset_op(
+    "SURREAL_ARCH_OT_preset_filigree_rail_vine",
+    "surreal_arch.preset_filigree_rail_vine", "Filigree Rail Inset",
+    dict(arch_type='FILIGREE_RAIL_INSET', filigree_style='ARTNOUVEAU_VINE',
+         rail_length=2.8, rail_height=1.0, filigree_density=0.6,
+         filigree_symmetry='MIRROR', filigree_include_frame=True,
+         material_choice='IRIDESCENT'),
+    description="Railing-span vine ironwork infill",
+)
+
+SURREAL_ARCH_OT_preset_art_nouveau_facade = _make_graph_preset_op(
+    "SURREAL_ARCH_OT_preset_art_nouveau_facade",
+    "surreal_arch.preset_art_nouveau_facade", "Art Nouveau Facade",
+    "art_nouveau_graph",
+    description="Ogee arch, filigree panels, balcony, facade bay chain",
 )
 
 # Curated playable presets — group, label, operator id, short description
 _ARCH_PRESETS = {
     'BASILICA_NAVE': {
         'group': 'GREYBOX', 'label': '⛪ Basilica Nave',
-        'desc': '~28 m apsidal nave — Romanesque/Gothic hall blockout',
+        'desc': 'ROMANESQUE_APSE graph — choir arcade into apse terminus',
         'op_id': 'surreal_arch.preset_basilica_nave',
     },
     'TOWN_SQUARE': {
@@ -27958,22 +28251,22 @@ _ARCH_PRESETS = {
     },
     'GOTHIC_CHAPEL': {
         'group': 'GOTHIC', 'label': '⛪ Gothic Chapel',
-        'desc': '~18 m nave + apse + bell tower',
+        'desc': 'ROMANESQUE_APSE graph — arcade choir into semicircular apse',
         'op_id': 'surreal_arch.preset_gothic_chapel',
     },
     'GOTHIC_CLOISTER': {
         'group': 'GOTHIC', 'label': '🌙 Gothic Cloister',
-        'desc': '~20 m square monastery cloister walk',
+        'desc': 'CLOISTER graph chain — corridor bend into portal bay',
         'op_id': 'surreal_arch.preset_gothic_cloister_walk',
     },
     'JAPANESE_GATE': {
         'group': 'ASIAN', 'label': '⛩ Japanese Temple Gate',
-        'desc': '~5.5 m Myojin torii — kasagi curve, nuki, gakuzuka + shimenawa',
+        'desc': 'ZEN_ROJI_PATH graph — torii, dew path, tsukubai, lantern',
         'op_id': 'surreal_arch.preset_japanese_gate_compound',
     },
     'TEMPLE_COMPOUND': {
         'group': 'ASIAN', 'label': '🛕 Temple Compound',
-        'desc': '~22 m Chinese tiered pagoda compound',
+        'desc': 'ASIAN_CITY graph — pailou, lane, pavilion, hanok street rhythm',
         'op_id': 'surreal_arch.preset_japanese_temple_compound',
     },
     'BAROQUE_PLAZA': {
@@ -27983,12 +28276,12 @@ _ARCH_PRESETS = {
     },
     'BAROQUE_PIAZZA': {
         'group': 'CIVIC', 'label': '🏛 Baroque Piazza',
-        'desc': '~14 m seven-bay Baroque facade frontage',
+        'desc': 'VENETIAN_CANAL graph — loggia piazza frontage chain',
         'op_id': 'surreal_arch.preset_baroque_piazza_facade',
     },
     'CIVIC_TOWN_HALL': {
         'group': 'CIVIC', 'label': '🏛 Civic Town Hall',
-        'desc': '~14 m hall + clock tower + portico',
+        'desc': 'VENETIAN_CANAL graph — loggia civic colonnade frontage',
         'op_id': 'surreal_arch.preset_civic_town_hall',
     },
     'COMBAT_ARENA': {
@@ -28008,7 +28301,7 @@ _ARCH_PRESETS = {
     },
     'ZEN_COURTYARD': {
         'group': 'ASIAN', 'label': '🪨 Zen Courtyard',
-        'desc': '~12 m karesansui — ishigumi, tsukubai + raked ripple bands',
+        'desc': 'ZEN_SHRINE_COURTYARD graph — torii, karesansui, engawa, teahouse',
         'op_id': 'surreal_arch.preset_zen_courtyard',
     },
     'CASTLE_BAILEY': {
@@ -28018,12 +28311,12 @@ _ARCH_PRESETS = {
     },
     'MONASTERY_CLOISTER': {
         'group': 'GOTHIC', 'label': '⛪ Monastery Cloister',
-        'desc': '~20 m four-wing cloister quadrangle',
+        'desc': 'ROMANESQUE_CLOISTER graph — arcade bays + offset corridor legs',
         'op_id': 'surreal_arch.preset_monastery_cloister',
     },
     'HYPOSTYLE_HALL': {
         'group': 'CIVIC', 'label': '🏛 Hypostyle Hall',
-        'desc': '~24 m colonnaded civic hall grid',
+        'desc': 'BRUTALIST_PLAZA graph — pilotis grid + panel wall hall',
         'op_id': 'surreal_arch.preset_civic_hypostyle',
     },
     'GREYBOX_BASILICA': {
@@ -28039,17 +28332,17 @@ _ARCH_PRESETS = {
     },
     'SHINTO_SHRINE': {
         'group': 'ASIAN', 'label': '⛩ Shinto Shrine',
-        'desc': '~5 m wayside honden + plinth + finial',
+        'desc': 'ZEN_SHRINE_AXIS graph — torii, sando, kairo, karesansui',
         'op_id': 'surreal_arch.preset_shinto_shrine',
     },
     'MOORISH_COURTYARD': {
         'group': 'CIVIC', 'label': '🌙 Moorish Courtyard',
-        'desc': '~24 m riyad colonnade — four arcaded wings around open court',
+        'desc': 'MOORISH_COURTYARD graph — horseshoe gate, arabesque, arcade, fountain',
         'op_id': 'surreal_arch.preset_moorish_courtyard',
     },
     'BRUTALIST_PLAZA': {
         'group': 'CIVIC', 'label': '🧱 Brutalist Plaza',
-        'desc': '~28 m octagonal stepped concrete civic plaza',
+        'desc': 'BRUTALIST_PLAZA graph — pilotis grid + panel wall rhythm',
         'op_id': 'surreal_arch.preset_brutalist_plaza',
     },
     'MEDIEVAL_KEEP': {
@@ -28059,13 +28352,18 @@ _ARCH_PRESETS = {
     },
     'SCIFI_ATRIUM': {
         'group': 'GREYBOX', 'label': '🚀 Sci-Fi Atrium',
-        'desc': '~28 m hypostyle atrium — 5×5 column grid, 18 m clear height',
+        'desc': 'SCI_FI_DECK graph — corridor spine, junction, hab module',
         'op_id': 'surreal_arch.preset_scifi_atrium',
+    },
+    'SCIFI_AIRLOCK': {
+        'group': 'GREYBOX', 'label': '🚪 Sci-Fi Airlock',
+        'desc': 'SCIFI_AIRLOCK graph — corridor, pressure doors, sealed chamber',
+        'op_id': 'surreal_arch.preset_scifi_airlock',
     },
     # v2.60.2 — tick 64 additions
     'ZEN_TEAHOUSE': {
         'group': 'ASIAN', 'label': '🍵 Tea Pavilion',
-        'desc': '~6 m chashitsu with engawa + tokonoma',
+        'desc': 'ZEN_TEA_GARDEN graph — roji path into teahouse',
         'op_id': 'surreal_arch.preset_zen_teahouse_pavilion',
     },
     'MODULAR_VILLAGE': {
@@ -28091,17 +28389,17 @@ _ARCH_PRESETS = {
     # v2.60.2 — tick 66 additions
     'GUILD_HALL': {
         'group': 'CIVIC', 'label': '⚜ Guild Hall',
-        'desc': '~12 m columned guild assembly + portico',
+        'desc': 'BRUTALIST_PLAZA graph — pilotis hall + panel wall civic block',
         'op_id': 'surreal_arch.preset_guild_hall_blockout',
     },
     'VENETIAN_PALAZZO': {
         'group': 'CIVIC', 'label': '🏛 Venetian Palazzo',
-        'desc': '~14 m four-storey bifora facade row',
+        'desc': 'VENETIAN_CANAL graph — loggia waterfront facade chain',
         'op_id': 'surreal_arch.preset_venetian_palazzo',
     },
     'CHINESE_PAILOU': {
         'group': 'ASIAN', 'label': '🏮 Chinese Pailou',
-        'desc': '~7.5 m ceremonial arch gate',
+        'desc': 'ASIAN_CITY graph — ceremonial gate into market street',
         'op_id': 'surreal_arch.preset_chinese_pailou',
     },
     'CORNER_WATCHTOWER': {
@@ -28117,7 +28415,7 @@ _ARCH_PRESETS = {
     },
     'MARKET_COLONNADE': {
         'group': 'CIVIC', 'label': '🏛 Market Colonnade',
-        'desc': '~30×11 m stoa — open-air market colonnade',
+        'desc': 'ROMANESQUE_CLOISTER graph — arcaded souk colonnade chain',
         'op_id': 'surreal_arch.preset_market_colonnade',
     },
     'LIGHTHOUSE_TOWER': {
@@ -28133,8 +28431,28 @@ _ARCH_PRESETS = {
     },
     'COVERED_BAZAAR': {
         'group': 'CIVIC', 'label': '🏪 Covered Bazaar',
-        'desc': '~28 m monastery cloister massing — four arcaded wings (covered bazaar blockout)',
+        'desc': 'ROMANESQUE_CLOISTER graph — arcaded souk wing chain',
         'op_id': 'surreal_arch.preset_covered_bazaar',
+    },
+    'FILIGREE_VINE_PANEL': {
+        'group': 'CIVIC', 'label': '✨ Filigree Vine Panel',
+        'desc': 'Art Nouveau whiplash vine ironwork screen',
+        'op_id': 'surreal_arch.preset_filigree_vine_panel',
+    },
+    'FILIGREE_GEOMETRIC_PANEL': {
+        'group': 'CIVIC', 'label': '✨ Filigree Geometric',
+        'desc': 'Geometric arabesque lattice panel',
+        'op_id': 'surreal_arch.preset_filigree_geometric_panel',
+    },
+    'FILIGREE_RAIL_VINE': {
+        'group': 'CIVIC', 'label': '✨ Filigree Rail',
+        'desc': 'Railing-span vine ironwork infill',
+        'op_id': 'surreal_arch.preset_filigree_rail_vine',
+    },
+    'ART_NOUVEAU_FACADE': {
+        'group': 'CIVIC', 'label': '🌿 Art Nouveau Facade',
+        'desc': 'ART_NOUVEAU graph — ogee arch, filigree, balcony, facade bay',
+        'op_id': 'surreal_arch.preset_art_nouveau_facade',
     },
 }
 
@@ -32952,6 +33270,19 @@ _ARCH_CATEGORIES = [
         ('GB_ZEN_ENGAWA', "🏯 Engawa"),
         ('GB_ZEN_BAMBOO_FENCE', "🎋 Bamboo Fence"),
         ('GB_ZEN_TOBIISHI', "🪨 Tobi-ishi"),
+        ('GB_ZEN_KARESANSUI', "🪨 Karesansui"),
+        ('GB_ZEN_MACHIAI', "🏯 Machiai"),
+        ('GB_ZEN_STONE_BRIDGE', "🌉 Stone Bridge"),
+        ('GB_ZEN_CHERRY_ALLEE', "🌸 Cherry Allee"),
+        ('GB_ZEN_WATER_EDGE', "💧 Water Edge"),
+        ('GB_ZEN_SANDO', "⛩ Sando"),
+        ('GB_ZEN_KAIRO', "🏯 Kairo"),
+        ('GB_ZEN_HAIDEN', "⛩ Haiden"),
+        ('GB_ZEN_GOJU_PAGODA', "🗼 Goju"),
+        ('GB_ZEN_SAKURA_TORII', "🌸 Sakura Torii"),
+        ('GB_ZEN_TAHOTO', "🛕 Tahoto"),
+        ('GB_ZEN_HONDEN', "⛩ Honden"),
+        ('GB_ZEN_LANTERN', "🏮 Lantern"),
         # ─ Traversal ─
         ('GREYBOX_RAMP',        "📦 Ramp"),
         ('GREYBOX_STAIR_BLOCK', "📦 Stair Block"),
@@ -33205,7 +33536,7 @@ def _draw_arch_presets_grouped(layout):
     intro = layout.row()
     intro.scale_y = 0.92
     intro.label(
-        text="Style buckets show typology hints; presets set arch_type + defaults — then Generate.",
+        text="Style buckets — graph presets spawn module chains; single-module presets need a selected mesh.",
         icon='INFO',
     )
     for group_id, group_label, group_icon in _ARCH_PRESET_GROUPS:
@@ -33677,6 +34008,8 @@ _GREYBOX_QUICK_LAUNCH_GROUPS = (
         ('GB_ZEN_ENGAWA', "Engawa"),
         ('GB_ZEN_BAMBOO_FENCE', "Bamboo Fence"),
         ('GB_ZEN_TOBIISHI', "Tobi-ishi"),
+        ('GB_ZEN_KARESANSUI', "Karesansui"),
+        ('GB_ZEN_MACHIAI', "Machiai"),
     )),
     ('Gothic kit', (
         ('GB_GOTHIC_PORTAL', "Portal"),
@@ -33774,6 +34107,19 @@ _ZEN_QUICK_LAUNCH = (
     ('GB_ZEN_ENGAWA', 'Engawa'),
     ('GB_ZEN_BAMBOO_FENCE', 'Bamboo Fence'),
     ('GB_ZEN_TOBIISHI', 'Tobi-ishi'),
+    ('GB_ZEN_KARESANSUI', 'Karesansui'),
+    ('GB_ZEN_MACHIAI', 'Machiai'),
+    ('GB_ZEN_STONE_BRIDGE', 'Stone Bridge'),
+    ('GB_ZEN_CHERRY_ALLEE', 'Cherry Allee'),
+    ('GB_ZEN_WATER_EDGE', 'Water Edge'),
+    ('GB_ZEN_SANDO', 'Sando'),
+    ('GB_ZEN_KAIRO', 'Kairo'),
+    ('GB_ZEN_HAIDEN', 'Haiden'),
+    ('GB_ZEN_GOJU_PAGODA', 'Goju Pagoda'),
+    ('GB_ZEN_SAKURA_TORII', 'Sakura Torii'),
+    ('GB_ZEN_TAHOTO', 'Tahoto'),
+    ('GB_ZEN_HONDEN', 'Honden'),
+    ('GB_ZEN_LANTERN', 'Stone Lantern'),
 )
 
 
@@ -37551,6 +37897,7 @@ classes = (
     SURREAL_ARCH_OT_preset_brutalist_plaza,
     SURREAL_ARCH_OT_preset_medieval_keep,
     SURREAL_ARCH_OT_preset_scifi_atrium,
+    SURREAL_ARCH_OT_preset_scifi_airlock,
     # v2.60.2 — tick 64 additions
     SURREAL_ARCH_OT_preset_zen_teahouse_pavilion,
     SURREAL_ARCH_OT_preset_modular_village_house,
@@ -37569,6 +37916,10 @@ classes = (
     # v2.60.5 — tick 86: amphitheatre + covered bazaar preset descriptions
     SURREAL_ARCH_OT_preset_amphitheatre,
     SURREAL_ARCH_OT_preset_covered_bazaar,
+    SURREAL_ARCH_OT_preset_filigree_vine_panel,
+    SURREAL_ARCH_OT_preset_filigree_geometric_panel,
+    SURREAL_ARCH_OT_preset_filigree_rail_vine,
+    SURREAL_ARCH_OT_preset_art_nouveau_facade,
     # v2.53 — Lebbeus Woods presets
     SURREAL_ARCH_OT_preset_gb_woods_parasite,
     SURREAL_ARCH_OT_preset_gb_woods_freespace,
