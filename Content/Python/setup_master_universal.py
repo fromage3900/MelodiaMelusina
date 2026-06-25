@@ -523,13 +523,57 @@ def build():
     )
     rim_power = lib.scalar_param(m, "RimPower", "Nikki", 3.0, -2100, 1140, desc="Rim falloff exponent")
     rim_int = lib.scalar_param(m, "RimIntensity", "Nikki", 0.0, -2100, 1240, desc="Rim brightness (0=off)")
+    rim_width = lib.scalar_param(
+        m, "RimWidth", "Nikki", 1.0, -2100, 1290,
+        desc="Rim remap width (1=neutral, higher=tighter)",
+    )
+    rim_bias = lib.scalar_param(
+        m, "RimBias", "Nikki", 0.0, -2100, 1315,
+        desc="Rim remap bias (-inward / +outward)",
+    )
+    rim_clamp = lib.scalar_param(
+        m, "RimClamp", "Nikki", 10.0, -2100, 1335,
+        desc="Clamp for rim emissive (high=neutral)",
+    )
     dream_tint = lib.vector_param(
         m, "DreamTint", "Nikki", (1.00, 0.85, 0.92, 1.0), -2100, 1340,
         desc="Pastel color lift target",
     )
     pastel = lib.scalar_param(m, "PastelLift", "Nikki", 0.0, -2100, 1440, desc="Blend toward DreamTint")
+    dream_sat = lib.scalar_param(
+        m, "DreamSaturation", "Nikki", 0.0, -2100, 1490,
+        desc="Saturation adjustment (0=off)",
+    )
+    dream_contrast = lib.scalar_param(
+        m, "DreamContrast", "Nikki", 0.0, -2100, 1515,
+        desc="Contrast adjustment (0=off)",
+    )
+    dream_shadow_lift = lib.scalar_param(
+        m, "DreamShadowLift", "Nikki", 0.0, -2100, 1535,
+        desc="Shadow lift (0=off)",
+    )
+    dream_high_soft = lib.scalar_param(
+        m, "DreamHighlightSoft", "Nikki", 0.0, -2100, 1555,
+        desc="Highlight softening (0=off)",
+    )
+    dream_hue = lib.scalar_param(
+        m, "DreamHueShift", "Nikki", 0.0, -2100, 1575,
+        desc="Hue shift (0=off; subtle)",
+    )
     irid = lib.scalar_param(m, "Iridescence", "Nikki", 0.0, -2100, 1540, desc="View-dependent rainbow sheen")
     irid_tint = lib.vector_param(m, "IridescenceTint", "Nikki", (0.80, 0.60, 1.00, 1.0), -2100, 1640)
+    irid_pow = lib.scalar_param(
+        m, "IridescencePower", "Nikki", 1.0, -2100, 1680,
+        desc="Iridescence mask exponent (1=neutral)",
+    )
+    irid_bias = lib.scalar_param(
+        m, "IridescenceBias", "Nikki", 0.0, -2100, 1700,
+        desc="Iridescence mask bias (0=neutral)",
+    )
+    irid_rough_atten = lib.scalar_param(
+        m, "IridescenceRoughnessAtten", "Nikki", 0.0, -2100, 1720,
+        desc="Reduce iridescence on rough surfaces (0=off)",
+    )
     spark_mask = lib.texture_param(
         m, "SparkleMask", "Nikki", -2100, 1740,
         desc="Alpha sparkles / bokeh (T_Spark_*)",
@@ -538,15 +582,63 @@ def build():
     spark_scale = lib.scalar_param(m, "SparkleScale", "Nikki", 8.0, -2100, 1840)
     spark_int = lib.scalar_param(m, "SparkleIntensity", "Nikki", 0.0, -2100, 1940)
     spark_color = lib.vector_param(m, "SparkleColor", "Nikki", (1.00, 0.95, 0.80, 1.0), -2100, 2040)
+    spark_thresh = lib.scalar_param(
+        m, "SparkleThreshold", "Nikki", 0.0, -2100, 2080,
+        desc="Mask cutoff (0=off)",
+    )
+    spark_contrast = lib.scalar_param(
+        m, "SparkleContrast", "Nikki", 0.0, -2100, 2100,
+        desc="Tighten sparkle mask (0=off)",
+    )
+    spark_drift = lib.scalar_param(
+        m, "SparkleDriftSpeed", "Nikki", 0.0, -2100, 2120,
+        desc="UV drift speed (0=off)",
+    )
+    spark_twinkle = lib.scalar_param(
+        m, "SparkleTwinkleSpeed", "Nikki", 0.0, -2100, 2140,
+        desc="Twinkle speed (0=off)",
+    )
+    spark_noise = lib.scalar_param(
+        m, "SparkleNoiseScale", "Nikki", 0.0, -2100, 2160,
+        desc="Procedural breakup scale (0=off)",
+    )
+    spark_col_lo = lib.vector_param(
+        m, "SparkleColorLow", "Nikki", (1.00, 1.00, 1.00, 1.0), -2100, 2180,
+        desc="Optional sparkle gradient low (default neutral)",
+    )
+    spark_col_hi = lib.vector_param(
+        m, "SparkleColorHigh", "Nikki", (1.00, 1.00, 1.00, 1.0), -2100, 2200,
+        desc="Optional sparkle gradient high (default neutral)",
+    )
+    spark_col_lerp = lib.scalar_param(
+        m, "SparkleColorLerp", "Nikki", 0.0, -2100, 2220,
+        desc="Blend sparkle gradient (0=off)",
+    )
     glow_color = lib.vector_param(m, "GlowColor", "Nikki", (1.00, 0.90, 0.95, 1.0), -2100, 2140)
     glow_int = lib.scalar_param(m, "GlowIntensity", "Nikki", 0.0, -2100, 2240)
     rim_soft = lib.scalar_param(m, "RimSoftness", "Nikki", 0.35, -2100, 2340)
     inner_glow = lib.scalar_param(m, "InnerGlowIntensity", "Nikki", 0.0, -2100, 2440)
+    inner_width = lib.scalar_param(
+        m, "InnerGlowWidth", "Nikki", 1.0, -2100, 2490,
+        desc="Inner glow falloff width (1=neutral)",
+    )
     inner_color = lib.vector_param(m, "InnerGlowColor", "Nikki", (1.00, 0.92, 0.98, 1.0), -2100, 2540)
     bloom = lib.scalar_param(m, "BloomBoost", "Nikki", 0.0, -2100, 2640, desc="Extra emissive for post bloom")
     sheen = lib.scalar_param(m, "FabricSheen", "Nikki", 0.0, -2100, 2740)
     sheen_tint = lib.vector_param(m, "SheenTint", "Nikki", (1.00, 1.00, 1.00, 1.0), -2100, 2840)
     sheen_power = lib.scalar_param(m, "SheenPower", "Nikki", 6.0, -2100, 2940)
+    sheen_width = lib.scalar_param(
+        m, "SheenWidth", "Nikki", 1.0, -2100, 2990,
+        desc="Sheen remap width (1=neutral)",
+    )
+    sheen_bias = lib.scalar_param(
+        m, "SheenBias", "Nikki", 0.0, -2100, 3010,
+        desc="Sheen remap bias (0=neutral)",
+    )
+    nikki_fast = static_switch(m, "bNikkiFast", "Nikki", -2100, 3040, default=True)
+    nikki_hero = static_switch(m, "bNikkiHero", "Nikki", -2100, 3080, default=False)
+    sparkle_adv = static_switch(m, "bSparkleAdvanced", "Nikki", -2100, 3120, default=False)
+    sheen_use_normal = static_switch(m, "bSheenUsesNormal", "Nikki", -2100, 3160, default=False)
 
     # ---- Celestial / nebula (MF_SpaceParallax: parallax stars + toon-banded nebula + galaxy) ----
     const_low = lib.vector_param(m, "ConstellationRampLow", "Celestial", (0.02, 0.03, 0.10, 1.0), -2100, 3060)
@@ -625,6 +717,49 @@ def build():
     wire("nikki_base_A", color, color_nikki, "A")
     wire("nikki_base_B", dream_tint, color_nikki, "B")
     wire("nikki_base_alpha", pastel, color_nikki, "Alpha")
+
+    # Nikki grading (environment-safe): optional pastel grading before emissive adds.
+    # Defaults are neutral (all 0).
+    lum = lib.create_expression(m, unreal.MaterialExpressionDotProduct, 60, 200)
+    wire("dream_lumA", color_nikki, lum, "A")
+    lum_w = const3(m, -40, 280, 0.299, 0.587, 0.114)
+    wire("dream_lumB", lum_w, lum, "B")
+    gray = lib.create_expression(m, unreal.MaterialExpressionMultiply, 220, 200)
+    wire("dream_grayA", lum, gray, "A")
+    wire("dream_grayB", const1(m, 60, 280, 1.0), gray, "B")
+    sat_lerp = lib.create_expression(m, unreal.MaterialExpressionLinearInterpolate, 400, 200)
+    wire("dream_satA", color_nikki, sat_lerp, "A")
+    wire("dream_satB", gray, sat_lerp, "B")
+    wire("dream_satAlpha", dream_sat, sat_lerp, "Alpha")
+    mid = const1(m, 400, 320, 0.5)
+    sub = lib.create_expression(m, unreal.MaterialExpressionSubtract, 560, 200)
+    wire("dream_con_subA", sat_lerp, sub, "A")
+    wire("dream_con_subB", mid, sub, "B")
+    c_mul = lib.create_expression(m, unreal.MaterialExpressionMultiply, 720, 200)
+    wire("dream_con_mulA", sub, c_mul, "A")
+    con_scale = lib.create_expression(m, unreal.MaterialExpressionAdd, 560, 320)
+    wire("dream_con_scaleA", const1(m, 560, 360, 1.0), con_scale, "A")
+    wire("dream_con_scaleB", dream_contrast, con_scale, "B")
+    wire("dream_con_mulB", con_scale, c_mul, "B")
+    con_add = lib.create_expression(m, unreal.MaterialExpressionAdd, 880, 200)
+    wire("dream_con_addA", c_mul, con_add, "A")
+    wire("dream_con_addB", mid, con_add, "B")
+    # shadow lift / highlight soft from luminance
+    sh_mask = lib.create_expression(m, unreal.MaterialExpressionOneMinus, 560, 420)
+    wire("dream_sh_inv", lum, sh_mask, "Input")
+    sh = lib.create_expression(m, unreal.MaterialExpressionMultiply, 720, 420)
+    wire("dream_shA", sh_mask, sh, "A")
+    wire("dream_shB", dream_shadow_lift, sh, "B")
+    hi = lib.create_expression(m, unreal.MaterialExpressionMultiply, 720, 500)
+    wire("dream_hiA", lum, hi, "A")
+    wire("dream_hiB", dream_high_soft, hi, "B")
+    grade_add = lib.create_expression(m, unreal.MaterialExpressionAdd, 1040, 260)
+    wire("dream_gradeA", sh, grade_add, "A")
+    wire("dream_gradeB", hi, grade_add, "B")
+    dream_grade = lib.create_expression(m, unreal.MaterialExpressionAdd, 1200, 200)
+    wire("dream_gradeAddA", con_add, dream_grade, "A")
+    wire("dream_gradeAddB", grade_add, dream_grade, "B")
+    color_nikki = dream_grade
 
     # ---- celestial: MF_SpaceParallax ----
     space_px = mf_call(m, MF_SPACE_PARALLAX, 400, 300)
@@ -743,59 +878,187 @@ def build():
     wire("fl_eA", flower_w, flower_e, "A")
     wire("fl_eB", flower_color, flower_e, "B")
 
-    # fresnel + Nikki emissive stack
+    # fresnel + Nikki stack (rim/glow/sparkle grading) — defaults are neutral/off.
     fres = lib.create_expression(m, unreal.MaterialExpressionFresnel, 220, 1100)
     wire("fresnel_exp", rim_power, fres, "ExponentIn")
-    rim_soft_m = lib.create_expression(m, unreal.MaterialExpressionLinearInterpolate, 220, 1180)
-    wire("rim_soft_A", fres, rim_soft_m, "A")
-    rim_inv = lib.create_expression(m, unreal.MaterialExpressionOneMinus, 60, 1240)
-    wire("rim_soft_inv", rim_soft, rim_inv, "Input")
-    rim_soft_b = lib.create_expression(m, unreal.MaterialExpressionMultiply, 60, 1300)
-    wire("rim_soft_bA", fres, rim_soft_b, "A")
-    wire("rim_soft_bB", rim_inv, rim_soft_b, "B")
-    wire("rim_soft_alpha", rim_soft, rim_soft_m, "Alpha")
-    wire("rim_soft_B", rim_soft_b, rim_soft_m, "B")
-    rim_m = lib.create_expression(m, unreal.MaterialExpressionMultiply, 400, 1100)
-    wire("rim_mA", rim_soft_m, rim_m, "A")
+    fres_sat = lib.create_expression(m, unreal.MaterialExpressionSaturate, 60, 1100)
+    wire("fres_sat", fres, fres_sat, "Input")
+
+    # Rim remap: (fres - bias) * width -> saturate -> multiply intensity
+    rim_bias_sub = lib.create_expression(m, unreal.MaterialExpressionSubtract, 220, 1180)
+    wire("rim_bias_subA", fres_sat, rim_bias_sub, "A")
+    wire("rim_bias_subB", rim_bias, rim_bias_sub, "B")
+    rim_width_mul = lib.create_expression(m, unreal.MaterialExpressionMultiply, 400, 1180)
+    wire("rim_width_mulA", rim_bias_sub, rim_width_mul, "A")
+    wire("rim_width_mulB", rim_width, rim_width_mul, "B")
+    rim_mask = lib.create_expression(m, unreal.MaterialExpressionSaturate, 580, 1180)
+    wire("rim_mask_sat", rim_width_mul, rim_mask, "Input")
+
+    rim_m = lib.create_expression(m, unreal.MaterialExpressionMultiply, 740, 1100)
+    wire("rim_mA", rim_mask, rim_m, "A")
     wire("rim_mB", rim_int, rim_m, "B")
-    rim_e = lib.create_expression(m, unreal.MaterialExpressionMultiply, 580, 1100)
+    rim_e = lib.create_expression(m, unreal.MaterialExpressionMultiply, 920, 1100)
     wire("rim_eA", rim_m, rim_e, "A")
     wire("rim_eB", rim_color, rim_e, "B")
-    irid_m = lib.create_expression(m, unreal.MaterialExpressionMultiply, 400, 1280)
-    wire("irid_mA", rim_soft_m, irid_m, "A")
+    rim_e_clamp = lib.create_expression(m, unreal.MaterialExpressionMin, 1100, 1100)
+    wire("rim_clampA", rim_e, rim_e_clamp, "A")
+    wire("rim_clampB", rim_clamp, rim_e_clamp, "B")
+    rim_e = rim_e_clamp
+
+    # Iridescence mask: rim_mask^(IridescencePower) with bias; atten by roughness if requested
+    irid_bias_add = lib.create_expression(m, unreal.MaterialExpressionAdd, 740, 1280)
+    wire("irid_biasA", rim_mask, irid_bias_add, "A")
+    wire("irid_biasB", irid_bias, irid_bias_add, "B")
+    irid_bias_sat = lib.create_expression(m, unreal.MaterialExpressionSaturate, 920, 1280)
+    wire("irid_bias_sat", irid_bias_add, irid_bias_sat, "Input")
+    irid_pow_node = lib.create_expression(m, unreal.MaterialExpressionPower, 1100, 1280)
+    wire("irid_powA", irid_bias_sat, irid_pow_node, "Base")
+    wire("irid_powB", irid_pow, irid_pow_node, "Exp")
+    rough_mul = lib.create_expression(m, unreal.MaterialExpressionMultiply, 1100, 1440)
+    wire("irid_rA", rough, rough_mul, "A")
+    wire("irid_rB", irid_rough_atten, rough_mul, "B")
+    rough_inv = lib.create_expression(m, unreal.MaterialExpressionOneMinus, 1280, 1440)
+    wire("irid_r_inv", rough_mul, rough_inv, "Input")
+    irid_mask = lib.create_expression(m, unreal.MaterialExpressionMultiply, 1280, 1280)
+    wire("irid_maskA", irid_pow_node, irid_mask, "A")
+    wire("irid_maskB", rough_inv, irid_mask, "B")
+    irid_m = lib.create_expression(m, unreal.MaterialExpressionMultiply, 1460, 1280)
+    wire("irid_mA", irid_mask, irid_m, "A")
     wire("irid_mB", irid, irid_m, "B")
-    irid_e = lib.create_expression(m, unreal.MaterialExpressionMultiply, 580, 1280)
+    irid_e = lib.create_expression(m, unreal.MaterialExpressionMultiply, 1640, 1280)
     wire("irid_eA", irid_m, irid_e, "A")
     wire("irid_eB", irid_tint, irid_e, "B")
 
-    spark_uv = lib.create_expression(m, unreal.MaterialExpressionMultiply, 220, 1420)
-    wire("spark_uvA", uv, spark_uv, "A")
-    wire("spark_uvB", spark_scale, spark_uv, "B")
+    # Sparkles: base mask with optional drift/twinkle/threshold/contrast (gated)
+    t = lib.create_expression(m, unreal.MaterialExpressionTime, 220, 1380)
+    drift_mul = lib.create_expression(m, unreal.MaterialExpressionMultiply, 400, 1380)
+    wire("spark_driftA", t, drift_mul, "A")
+    wire("spark_driftB", spark_drift, drift_mul, "B")
+    drift_add = lib.create_expression(m, unreal.MaterialExpressionAdd, 580, 1380)
+    wire("spark_drift_addA", drift_mul, drift_add, "A")
+    wire("spark_drift_addB", const1(m, 400, 1460, 1.0), drift_add, "B")
+    drift_sin = lib.create_expression(m, unreal.MaterialExpressionSine, 740, 1380)
+    drift_sin.set_editor_property("period", 1.0)
+    wire("spark_drift_sin", drift_add, drift_sin, "Input")
+    drift_uv = lib.create_expression(m, unreal.MaterialExpressionMultiply, 920, 1380)
+    wire("spark_drift_uvA", drift_sin, drift_uv, "A")
+    wire("spark_drift_uvB", const1(m, 740, 1460, 0.015), drift_uv, "B")
+    uv_scaled = lib.create_expression(m, unreal.MaterialExpressionMultiply, 220, 1420)
+    wire("spark_uvA", uv, uv_scaled, "A")
+    wire("spark_uvB", spark_scale, uv_scaled, "B")
+    uv_adv = lib.create_expression(m, unreal.MaterialExpressionAdd, 400, 1420)
+    wire("spark_uv_advA", uv_scaled, uv_adv, "A")
+    wire("spark_uv_advB", drift_uv, uv_adv, "B")
+    # gate advanced UV
+    spark_uv = lib.create_expression(m, unreal.MaterialExpressionStaticSwitchParameter, 580, 1420)
+    spark_uv.set_editor_property("parameter_name", "bSparkleAdvanced")
+    spark_uv.set_editor_property("group", "Nikki")
+    spark_uv.set_editor_property("default_value", False)
+    WIRES["spark_uv_sw"] = lib.connect_static_switch(spark_uv, uv_adv, uv_scaled)
+
     wire("spark_mask_uv", spark_uv, spark_mask, "UVs", "Coordinates")
-    spark_m = lib.create_expression(m, unreal.MaterialExpressionMultiply, 400, 1420)
-    wire("spark_mA", spark_mask, spark_m, "A")
+    spark_base = spark_mask
+    spark_cut = lib.create_expression(m, unreal.MaterialExpressionSubtract, 740, 1420)
+    wire("spark_cutA", spark_base, spark_cut, "A")
+    wire("spark_cutB", spark_thresh, spark_cut, "B")
+    spark_cut_sat = lib.create_expression(m, unreal.MaterialExpressionSaturate, 920, 1420)
+    wire("spark_cut_sat", spark_cut, spark_cut_sat, "Input")
+    spark_pow = lib.create_expression(m, unreal.MaterialExpressionPower, 1100, 1420)
+    wire("spark_powA", spark_cut_sat, spark_pow, "Base")
+    wire("spark_powB", const1(m, 920, 1500, 1.0), spark_pow, "Exp")
+    # contrast via exponent (1 + contrast*6)
+    con_mul = lib.create_expression(m, unreal.MaterialExpressionMultiply, 920, 1540)
+    wire("spark_conA", spark_contrast, con_mul, "A")
+    wire("spark_conB", const1(m, 740, 1540, 6.0), con_mul, "B")
+    con_add = lib.create_expression(m, unreal.MaterialExpressionAdd, 1100, 1540)
+    wire("spark_con_addA", const1(m, 920, 1620, 1.0), con_add, "A")
+    wire("spark_con_addB", con_mul, con_add, "B")
+    spark_pow2 = lib.create_expression(m, unreal.MaterialExpressionPower, 1280, 1420)
+    wire("spark_pow2A", spark_pow, spark_pow2, "Base")
+    wire("spark_pow2B", con_add, spark_pow2, "Exp")
+    # twinkle mod
+    tw_mul = lib.create_expression(m, unreal.MaterialExpressionMultiply, 740, 1600)
+    wire("spark_twA", t, tw_mul, "A")
+    wire("spark_twB", spark_twinkle, tw_mul, "B")
+    tw_sin = lib.create_expression(m, unreal.MaterialExpressionSine, 920, 1600)
+    tw_sin.set_editor_property("period", 1.0)
+    wire("spark_tw_sin", tw_mul, tw_sin, "Input")
+    tw_abs = lib.create_expression(m, unreal.MaterialExpressionAbs, 1100, 1600)
+    wire("spark_tw_abs", tw_sin, tw_abs, "Input")
+    spark_tw = lib.create_expression(m, unreal.MaterialExpressionLinearInterpolate, 1280, 1600)
+    wire("spark_twA", const1(m, 1100, 1680, 1.0), spark_tw, "A")
+    wire("spark_twB", tw_abs, spark_tw, "B")
+    wire("spark_twAlpha", spark_twinkle, spark_tw, "Alpha")
+    spark_mask_final = lib.create_expression(m, unreal.MaterialExpressionMultiply, 1460, 1420)
+    wire("spark_mask_finalA", spark_pow2, spark_mask_final, "A")
+    wire("spark_mask_finalB", spark_tw, spark_mask_final, "B")
+
+    spark_col_grad = lib.create_expression(m, unreal.MaterialExpressionLinearInterpolate, 1640, 1480)
+    wire("spark_col_gradA", spark_col_lo, spark_col_grad, "A")
+    wire("spark_col_gradB", spark_col_hi, spark_col_grad, "B")
+    wire("spark_col_gradAlpha", spark_col_lerp, spark_col_grad, "Alpha")
+    spark_col = lib.create_expression(m, unreal.MaterialExpressionMultiply, 1820, 1480)
+    wire("spark_colA", spark_color, spark_col, "A")
+    wire("spark_colB", spark_col_grad, spark_col, "B")
+
+    spark_m = lib.create_expression(m, unreal.MaterialExpressionMultiply, 1640, 1420)
+    wire("spark_mA", spark_mask_final, spark_m, "A")
     wire("spark_mB", spark_int, spark_m, "B")
-    spark_e = lib.create_expression(m, unreal.MaterialExpressionMultiply, 580, 1420)
+    spark_e = lib.create_expression(m, unreal.MaterialExpressionMultiply, 1820, 1420)
     wire("spark_eA", spark_m, spark_e, "A")
-    wire("spark_eB", spark_color, spark_e, "B")
+    wire("spark_eB", spark_col, spark_e, "B")
 
     glow_e = lib.create_expression(m, unreal.MaterialExpressionMultiply, 400, 1580)
     wire("glow_eA", glow_color, glow_e, "A")
     wire("glow_eB", glow_int, glow_e, "B")
 
+    # Inner glow uses separate width control (1=neutral)
     inner_inv = lib.create_expression(m, unreal.MaterialExpressionOneMinus, 220, 1280)
-    wire("inner_inv", rim_soft_m, inner_inv, "Input")
+    wire("inner_inv", rim_mask, inner_inv, "Input")
+    inner_w_mul = lib.create_expression(m, unreal.MaterialExpressionMultiply, 60, 1360)
+    wire("inner_wA", inner_inv, inner_w_mul, "A")
+    wire("inner_wB", inner_width, inner_w_mul, "B")
+    inner_mask = lib.create_expression(m, unreal.MaterialExpressionSaturate, 220, 1360)
+    wire("inner_mask_sat", inner_w_mul, inner_mask, "Input")
     inner_m = lib.create_expression(m, unreal.MaterialExpressionMultiply, 400, 1360)
-    wire("inner_mA", inner_inv, inner_m, "A")
+    wire("inner_mA", inner_mask, inner_m, "A")
     wire("inner_mB", inner_glow, inner_m, "B")
     inner_e = lib.create_expression(m, unreal.MaterialExpressionMultiply, 580, 1360)
     wire("inner_eA", inner_m, inner_e, "A")
     wire("inner_eB", inner_color, inner_e, "B")
 
+    # Sheen remap: fresnel with width/bias; optional normal influence
     sheen_f = lib.create_expression(m, unreal.MaterialExpressionFresnel, 220, 1520)
     wire("sheen_exp", sheen_power, sheen_f, "ExponentIn")
-    sheen_m = lib.create_expression(m, unreal.MaterialExpressionMultiply, 400, 1520)
-    wire("sheen_mA", sheen_f, sheen_m, "A")
+    sheen_sat = lib.create_expression(m, unreal.MaterialExpressionSaturate, 60, 1520)
+    wire("sheen_sat", sheen_f, sheen_sat, "Input")
+    sheen_bias_sub = lib.create_expression(m, unreal.MaterialExpressionSubtract, 220, 1600)
+    wire("sheen_biasA", sheen_sat, sheen_bias_sub, "A")
+    wire("sheen_biasB", sheen_bias, sheen_bias_sub, "B")
+    sheen_w_mul = lib.create_expression(m, unreal.MaterialExpressionMultiply, 400, 1600)
+    wire("sheen_wA", sheen_bias_sub, sheen_w_mul, "A")
+    wire("sheen_wB", sheen_width, sheen_w_mul, "B")
+    sheen_mask = lib.create_expression(m, unreal.MaterialExpressionSaturate, 580, 1600)
+    wire("sheen_mask_sat", sheen_w_mul, sheen_mask, "Input")
+    # optional normal influence (cheap): saturate(dot(N, V))
+    pn = lib.create_expression(m, unreal.MaterialExpressionPixelNormalWS, 60, 1680)
+    cv = lib.create_expression(m, unreal.MaterialExpressionCameraVectorWS, 60, 1760)
+    ndv = lib.create_expression(m, unreal.MaterialExpressionDotProduct, 220, 1720)
+    wire("sheen_ndvA", pn, ndv, "A")
+    wire("sheen_ndvB", cv, ndv, "B")
+    ndv_sat = lib.create_expression(m, unreal.MaterialExpressionSaturate, 400, 1720)
+    wire("sheen_ndv_sat", ndv, ndv_sat, "Input")
+    sheen_mask_n = lib.create_expression(m, unreal.MaterialExpressionMultiply, 580, 1720)
+    wire("sheen_mask_nA", sheen_mask, sheen_mask_n, "A")
+    wire("sheen_mask_nB", ndv_sat, sheen_mask_n, "B")
+    sheen_mask_gated = lib.create_expression(m, unreal.MaterialExpressionStaticSwitchParameter, 740, 1680)
+    sheen_mask_gated.set_editor_property("parameter_name", "bSheenUsesNormal")
+    sheen_mask_gated.set_editor_property("group", "Nikki")
+    sheen_mask_gated.set_editor_property("default_value", False)
+    WIRES["sheen_mask_sw"] = lib.connect_static_switch(sheen_mask_gated, sheen_mask_n, sheen_mask)
+
+    sheen_m = lib.create_expression(m, unreal.MaterialExpressionMultiply, 920, 1520)
+    wire("sheen_mA", sheen_mask_gated, sheen_m, "A")
     wire("sheen_mB", sheen, sheen_m, "B")
     sheen_e = lib.create_expression(m, unreal.MaterialExpressionMultiply, 580, 1520)
     wire("sheen_eA", sheen_m, sheen_e, "A")
@@ -886,7 +1149,7 @@ def build():
     wire("motif_texA", motif, motif_tex, "A")
     wire("motif_texB", fairy_glyph, motif_tex, "B")
     highlight = lib.create_expression(m, unreal.MaterialExpressionSubtract, 1220, 1580)
-    wire("hl_A", rim_soft_m, highlight, "A")
+    wire("hl_A", rim_mask, highlight, "A")
     wire("hl_B", fairy_thresh, highlight, "B")
     highlight_sat = lib.create_expression(m, unreal.MaterialExpressionSaturate, 1380, 1580)
     wire("hl_sat", highlight, highlight_sat, "Input")
