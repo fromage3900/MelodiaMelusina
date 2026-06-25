@@ -39,13 +39,8 @@ MPC_DIR = f"{MATERIALS_ROOT}/Functions"
 
 
 def ensure_directory(path: str) -> None:
-    if not path:
-        return
-    try:
-        if not unreal.EditorAssetLibrary.does_directory_exist(path):
-            unreal.EditorAssetLibrary.make_directory(path)
-    except Exception as exc:
-        unreal.log_warning(f"[material_lib] ensure_directory failed for {path}: {exc}")
+    if not unreal.EditorAssetLibrary.does_directory_exist(path):
+        unreal.EditorAssetLibrary.make_directory(path)
 
 
 def asset_class_name(asset_data) -> str:
@@ -105,59 +100,9 @@ def create_expression(owner, expression_class, x: int, y: int):
         return unreal.MaterialEditingLibrary.create_material_expression_in_function(
             owner, expression_class, x, y
         )
-    try:
-        result = unreal.MaterialEditingLibrary.create_material_expression(
-            owner, expression_class, x, y
-        )
-        if result is not None:
-            _modify_expression_owner(result)
-        return result
-    except Exception as exc:
-        unreal.log_warning(f"[material_lib] create_expression failed ({expression_class.__name__}): {exc}")
-        return None
-
-
-def create_edge_detect_scalar(m, source_expr, x: int, y: int, tag: str = "edge"):
-    """Scalar edge detect; UE 5.8 uses |DDX|+|DDY| when MaterialExpressionEdgeDetect is absent."""
-    import unreal
-
-    edge_cls = getattr(unreal, "MaterialExpressionEdgeDetect", None)
-    if edge_cls is not None:
-        node = create_expression(m, edge_cls, x, y)
-        if node:
-            connect(source_expr, "", node, "Input")
-        return node
-
-    unreal.log_warning(f"[material_lib] EdgeDetect unavailable — DDX/DDY fallback ({tag})")
-    ddx = create_expression(m, unreal.MaterialExpressionDDX, x, y)
-    ddy = create_expression(m, unreal.MaterialExpressionDDY, x + 120, y)
-    for pin in ("Input", "Value", "Coordinates"):
-        if connect(source_expr, "", ddx, pin):
-            break
-    for pin in ("Input", "Value", "Coordinates"):
-        connect(source_expr, "", ddy, pin)
-    abs_a = create_expression(m, unreal.MaterialExpressionAbs, x + 280, y - 20)
-    abs_b = create_expression(m, unreal.MaterialExpressionAbs, x + 280, y + 20)
-    connect_unary(ddx, abs_a)
-    connect_unary(ddy, abs_b)
-    edge = create_expression(m, unreal.MaterialExpressionAdd, x + 420, y)
-    connect(abs_a, "", edge, "A")
-    connect(abs_b, "", edge, "B")
-    return edge
-
-
-def create_blur(m, source_expr, x: int, y: int, sigma: float = 8.0, tag: str = "blur"):
-    """Blur node; passthrough when MaterialExpressionBlur is absent from UE Python."""
-    blur_cls = getattr(unreal, "MaterialExpressionBlur", None)
-    if blur_cls is not None:
-        node = create_expression(m, blur_cls, x, y)
-        if node:
-            try_set_editor_property(node, "sigma", sigma)
-            connect(source_expr, "", node, "Input")
-        return node
-
-    unreal.log_warning(f"[material_lib] Blur unavailable — passthrough ({tag})")
-    return source_expr
+    return unreal.MaterialEditingLibrary.create_material_expression(
+        owner, expression_class, x, y
+    )
 
 
 def _owner_material(expr):
@@ -293,12 +238,11 @@ def texture_parameter_names(material) -> list[str]:
 
 
 def connect(from_expr, from_output: str, to_expr, to_input: str) -> bool:
-    if from_expr is None or to_expr is None:
-        return False
     try:
         result = unreal.MaterialEditingLibrary.connect_material_expressions(
             from_expr, from_output, to_expr, to_input
         )
+        # UE Python often returns None on success; only explicit False is failure.
         return result is not False
     except Exception:
         return False
@@ -698,20 +642,14 @@ def set_instance_toon_profile(instance, profile: unreal.ToonProfile) -> None:
     try_set_editor_property(instance, "override_toon_profile", True)
 
 
-def create_material_instance(name: str, folder: str, parent_path: str) -> unreal.MaterialInstanceConstant | None:
+def create_material_instance(name: str, folder: str, parent_path: str) -> unreal.MaterialInstanceConstant:
     ensure_directory(folder)
     inst_path = asset_path(folder, name)
     if unreal.EditorAssetLibrary.does_asset_exist(inst_path):
         return unreal.load_asset(inst_path)
-    if not parent_path or not unreal.EditorAssetLibrary.does_asset_exist(parent_path):
-        unreal.log_error(f"[material_lib] create_material_instance: parent missing {parent_path}")
-        return None
     factory = unreal.MaterialInstanceConstantFactoryNew()
     asset_tools = unreal.AssetToolsHelpers.get_asset_tools()
     parent = unreal.load_asset(parent_path)
-    if not parent:
-        unreal.log_error(f"[material_lib] create_material_instance: parent load failed {parent_path}")
-        return None
     instance = asset_tools.create_asset(
         name, folder, unreal.MaterialInstanceConstant, factory
     )

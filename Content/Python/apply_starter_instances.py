@@ -48,8 +48,6 @@ def _resolve_texture_keys(spec: dict, alphas) -> dict[str, list[str]]:
             wires[pname] = [sparkle[key]] if isinstance(sparkle[key], str) else list(sparkle[key])
         elif pname == "FairyGlyphMask" and key in fairy:
             wires[pname] = list(fairy[key])
-        elif pname in ("ShadowFlowerMask",) and key in fairy:
-            wires[pname] = list(fairy[key])
         elif pname == "MotifMask" and key in motif:
             wires[pname] = list(motif[key])
     return wires
@@ -66,14 +64,11 @@ def build_starter_instances() -> list[dict]:
     except ImportError:
         alphas = None
 
-    if not MASTER or not unreal.EditorAssetLibrary.does_asset_exist(MASTER):
+    if not unreal.EditorAssetLibrary.does_asset_exist(MASTER):
         raise RuntimeError(f"Missing master: {MASTER} — run setup_master_universal.py first")
 
     if alphas:
-        try:
-            alphas.ensure_alpha_imports()
-        except Exception as exc:
-            unreal.log_warning(f"[StarterInstances] alpha import warning: {exc}")
+        alphas.ensure_alpha_imports()
 
     profile_names = sorted({spec.get("profile", "TP_Default") for spec in STARTER_INSTANCES})
     profiles = lib.create_toon_profiles(profile_names)
@@ -99,30 +94,12 @@ def build_starter_instances() -> list[dict]:
             texture_wires.update(alphas.INSTANCE_TEXTURE_WIRES.get(name, {}))
         texture_wires.update(_resolve_texture_keys(spec, alphas))
         for pname, candidates in texture_wires.items():
-            try:
-                path = lib.set_instance_texture(inst, pname, candidates)
-                if path:
-                    wired_textures[pname] = path
-            except Exception as exc:
-                unreal.log_warning(f"[StarterInstances] texture {pname} on {name}: {exc}")
-        try:
-            extra = tex_catalog.apply_instance_texture_defaults(inst, name, wired_textures)
-            wired_textures.update(extra)
-        except Exception as exc:
-            unreal.log_warning(f"[StarterInstances] catalog defaults {name}: {exc}")
-        if spec.get("layer_a") and spec.get("layer_b"):
-            try:
-                import zen_trim_textures as zt
-
-                wired_textures.update(
-                    zt.apply_zen_trim_layers(inst, spec["layer_a"], spec["layer_b"]),
-                )
-            except Exception as exc:
-                unreal.log_warning(f"[StarterInstances] zen trim {name}: {exc}")
-        try:
-            lib.save_package(inst)
-        except Exception as exc:
-            unreal.log_warning(f"[StarterInstances] save {name}: {exc}")
+            path = lib.set_instance_texture(inst, pname, candidates)
+            if path:
+                wired_textures[pname] = path
+        extra = tex_catalog.apply_instance_texture_defaults(inst, name, wired_textures)
+        wired_textures.update(extra)
+        lib.save_package(inst)
         results.append({
             "instance": name,
             "purpose": spec.get("purpose", ""),
@@ -143,9 +120,7 @@ def _run_in_ue() -> int:
 
     texture_pass = catalog.refresh_starter_instance_textures()
     report = {
-        "generated_at": datetime.now(timezone.utc).isoformat(),
-        "generated_by": "apply_starter_instances.py",
-        "ok": True,
+        "timestamp": datetime.now(timezone.utc).isoformat(),
         "starter_count": len(instances),
         "instances": instances,
         "texture_refresh": texture_pass,
@@ -167,10 +142,7 @@ def main() -> int:
         print(f"ERROR: UE not found at {UE_CMD}")
         print("Run in-editor: py Content/Python/apply_starter_instances.py")
         return 1
-    try:
-        subprocess.run([sys.executable, str(PROJECT_ROOT / "Content/Python/portfolio_texture_catalog.py")], check=False)
-    except Exception as exc:
-        print(f"[StarterInstances] catalog pre-run warning: {exc}")
+    subprocess.run([sys.executable, str(PROJECT_ROOT / "Content/Python/portfolio_texture_catalog.py")], check=False)
     log = PROJECT_ROOT / "Saved" / "Logs" / "starter_instances.log"
     log.parent.mkdir(parents=True, exist_ok=True)
     cmd = [

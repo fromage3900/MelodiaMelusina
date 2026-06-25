@@ -302,10 +302,7 @@ INSTANCE_TEXTURE_DEFAULTS: dict[str, dict[str, list[str]]] = {
     "MI_Zen_LanternWarm": {
         "MotifMask": _chain(JAPANESE_ORNAMENT["zen_stone"]),
         "FairyGlyphMask": _chain(JAPANESE_ORNAMENT["zen_circle"]),
-        "SparkleMask": _chain(
-            "/Game/Alphas_Sparkles/T_Spark_Glow.T_Spark_Glow",
-            "/Game/Alphas_Sparkles/T_Spark_Twinkle8.T_Spark_Twinkle8",
-        ),
+        "SparkleMask": _chain("/Game/Alphas_Sparkles/T_Spark_Glow.T_Spark_Glow"),
     },
     "MI_Zen_TeaHouseCedar": {
         "MotifMask": _chain(JAPANESE_ORNAMENT["zen_bamboo"]),
@@ -328,14 +325,8 @@ INSTANCE_TEXTURE_DEFAULTS: dict[str, dict[str, list[str]]] = {
     },
     "MI_Zen_MoonlitGarden": {
         "MotifMask": _chain(JAPANESE_ORNAMENT["zen_circle"]),
-        "FairyGlyphMask": _chain(
-            "/Game/Alphas_Sparkles/T_Spark_Glow.T_Spark_Glow",
-            "/Game/Alphas_Sparkles/T_Spark_Twinkle8.T_Spark_Twinkle8",
-        ),
-        "SparkleMask": _chain(
-            "/Game/Alphas_Sparkles/T_Spark_Twinkle8.T_Spark_Twinkle8",
-            "/Game/Alphas_Sparkles/T_Spark_Sparkle4.T_Spark_Sparkle4",
-        ),
+        "FairyGlyphMask": _chain("/Game/Alphas_Sparkles/T_Spark_Glow.T_Spark_Glow"),
+        "SparkleMask": _chain("/Game/Alphas_Sparkles/T_Spark_Twinkle8.T_Spark_Twinkle8"),
     },
     "MI_Zen_RojiPath": {
         "MotifMask": _chain(JAPANESE_ORNAMENT["zen_sand"]),
@@ -357,26 +348,6 @@ INSTANCE_TEXTURE_DEFAULTS: dict[str, dict[str, list[str]]] = {
         "LayerB_Albedo": _chain(COMPOSITING["crack_overlay"]),
         "HeightMap": _chain(HEIGHT["perlin"]),
         "LayerB_HeightMap": _chain(COMPOSITING["crack_heavy"]),
-    },
-    "MI_Trimsheet_ParallaxPOM": {
-        "Albedo": _chain(MARBLE["cool_stone"], MARBLE["worn"]),
-        "LayerB_Albedo": _chain(COMPOSITING["crack_heavy"], MASK["voronoi_crack"]),
-        "HeightMap": _chain(HEIGHT["perlin_sdf"], HEIGHT["perlin"]),
-        "LayerB_HeightMap": _chain(COMPOSITING["crack_heavy"], MASK["voronoi_crack"]),
-        "DetailNormal": _chain(COMPOSITING["noise_fine"], MASK["voronoi_swirl"]),
-    },
-    "MI_Universal_TrimsheetBlend": {
-        "Albedo": _chain(MARBLE["warm_stone"], MARBLE["light"]),
-        "LayerB_Albedo": _chain(COMPOSITING["crack_overlay"], MASK["voronoi_crack"]),
-        "HeightMap": _chain(HEIGHT["perlin"], COMPOSITING["noise_fine"]),
-        "LayerB_HeightMap": _chain(COMPOSITING["crack_overlay"], HEIGHT["perlin"]),
-    },
-    "MI_Trimsheet_HeavyWear": {
-        "Albedo": _chain(MARBLE["dark"], MARBLE["worn"]),
-        "LayerB_Albedo": _chain(COMPOSITING["crack_heavy"], MASK["voronoi_crack"]),
-        "HeightMap": _chain(MASK["voronoi_crack"], HEIGHT["perlin"]),
-        "LayerB_HeightMap": _chain(COMPOSITING["crack_heavy"], MASK["voronoi_swirl"]),
-        "DetailNormal": _chain(COMPOSITING["crack_heavy"], COMPOSITING["noise_fine"]),
     },
 }
 
@@ -420,16 +391,6 @@ INSTANCE_TEXTURE_RULES: list[tuple[tuple[str, ...], dict[str, list[str]]]] = [
             "LayerB_Albedo": _chain(COMPOSITING["crack_heavy"], COMPOSITING["crack_overlay"]),
             "LayerB_HeightMap": _chain(COMPOSITING["crack_heavy"], MASK["voronoi_crack"]),
             "HeightMap": _chain(HEIGHT["perlin"], MASK["voronoi_crack"]),
-        },
-    ),
-    (
-        ("trimsheet", "parallaxpom", "heavywear", "trimsheetblend"),
-        {
-            "Albedo": _chain(MARBLE["warm_stone"], MARBLE["worn"]),
-            "LayerB_Albedo": _chain(COMPOSITING["crack_heavy"], COMPOSITING["crack_overlay"]),
-            "LayerB_HeightMap": _chain(COMPOSITING["crack_heavy"], MASK["voronoi_crack"]),
-            "HeightMap": _chain(HEIGHT["perlin"], MASK["voronoi_crack"]),
-            "DetailNormal": _chain(COMPOSITING["noise_fine"], HEIGHT["perlin"]),
         },
     ),
     (
