@@ -8,7 +8,7 @@ Editor:
 Headless:
   UnrealEditor-Cmd.exe BS_GodFile.uproject ^
     -ExecutePythonScript="G:/EnvironmentPortfolio/BS_GodFile/Content/Python/apply_starter_instances.py" ^
-    -unattended -nullrhi -DisablePlugins=Monolith
+    -unattended -nullrhi
 """
 from __future__ import annotations
 
@@ -153,7 +153,6 @@ def main() -> int:
         "-unattended",
         "-nosplash",
         "-nullrhi",
-        "-DisablePlugins=Monolith",
         f"-log={log}",
     ]
     print(f"Starter instances -> {log}")

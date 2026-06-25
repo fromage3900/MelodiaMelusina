@@ -562,24 +562,6 @@ def set_instance_texture(instance, param_name: str, candidates: list[str] | str)
         return None
 
 
-def close_open_material_editors(asset_names: tuple[str, ...] = ()) -> None:
-    """Best-effort close of material editor tabs that block create_asset."""
-    try:
-        subsystem = unreal.get_editor_subsystem(unreal.AssetEditorSubsystem)
-    except Exception:
-        return
-    if not subsystem:
-        return
-    for name in asset_names:
-        for folder in (POST_DIR, MASTER_DIR):
-            path = asset_path(folder, name)
-            if unreal.EditorAssetLibrary.does_asset_exist(path):
-                try:
-                    subsystem.close_all_editors_for_asset(unreal.load_asset(path))
-                except Exception:
-                    pass
-
-
 def post_process_blendable_location():
     """Match M_PP_ToonOutline stack point for UE 5.8 blendable ordering."""
     for name in ("BL_REPLACING_TONEMAPPER", "BL_SCENE_COLOR_AFTER_TONEMAP"):

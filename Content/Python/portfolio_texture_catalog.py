@@ -32,15 +32,9 @@ def jro_mask(stem: str) -> str:
 # Curated masks from 70_Japanese_Ornament_Alphas_vfxMed (baroque = ornate, zen = minimal)
 JAPANESE_ORNAMENT = {
     "zen_minimal": jro_mask("JRO_JP_Ornament01_out"),
-    "zen_branch": jro_mask("JRO_JP_Ornament02_out"),
     "zen_circle": jro_mask("JRO_JP_Ornament03_out"),
-    "zen_leaf": jro_mask("JRO_JP_Ornament05_out"),
     "zen_wave": jro_mask("JRO_JP_Ornament07_out"),
-    "zen_cloud": jro_mask("JRO_JP_Ornament10_out"),
-    "zen_gate": jro_mask("JRO_JP_Ornament15_out"),
-    "zen_pine": jro_mask("JRO_JP_Ornament18_out"),
     "zen_bamboo": jro_mask("JRO_JP_Ornament23_out"),
-    "zen_lotus": jro_mask("JRO_JP_Ornament28_out"),
     "zen_stone": jro_mask("JRO_JP_Ornament30_out"),
     "zen_sand": jro_mask("JRO_JP_Ornament35_out"),
     "baroque_filigree": jro_mask("JRO_JP_Ornament04_out"),
@@ -288,60 +282,6 @@ INSTANCE_TEXTURE_DEFAULTS: dict[str, dict[str, list[str]]] = {
     "MI_Zen_Karesansui": {
         "MotifMask": _chain(JAPANESE_ORNAMENT["zen_sand"]),
         "FairyGlyphMask": _chain(JAPANESE_ORNAMENT["zen_stone"]),
-    },
-    "MI_Zen_ToriiVermillion": {
-        "MotifMask": _chain(JAPANESE_ORNAMENT["zen_circle"]),
-        "FairyGlyphMask": _chain(JAPANESE_ORNAMENT["zen_minimal"]),
-        "Albedo": _chain(MARBLE["warm_stone"]),
-    },
-    "MI_Zen_SakuraDrift": {
-        "MotifMask": _chain(JAPANESE_ORNAMENT["zen_wave"]),
-        "FairyGlyphMask": _chain("/Game/Sakura/T_Sakura_Petal.T_Sakura_Petal"),
-        "SparkleMask": _chain("/Game/Alphas_Sparkles/T_Spark_Twinkle8.T_Spark_Twinkle8"),
-    },
-    "MI_Zen_LanternWarm": {
-        "MotifMask": _chain(JAPANESE_ORNAMENT["zen_stone"]),
-        "FairyGlyphMask": _chain(JAPANESE_ORNAMENT["zen_circle"]),
-        "SparkleMask": _chain("/Game/Alphas_Sparkles/T_Spark_Glow.T_Spark_Glow"),
-    },
-    "MI_Zen_TeaHouseCedar": {
-        "MotifMask": _chain(JAPANESE_ORNAMENT["zen_bamboo"]),
-        "FairyGlyphMask": _chain(JAPANESE_ORNAMENT["zen_leaf"]),
-    },
-    "MI_Zen_PondStill": {
-        "MotifMask": _chain(JAPANESE_ORNAMENT["zen_wave"]),
-        "FairyGlyphMask": _chain(JAPANESE_ORNAMENT["zen_branch"]),
-        "Albedo": _chain(MARBLE["cool_stone"]),
-    },
-    "MI_Zen_ShojiPaper": {
-        "MotifMask": _chain(JAPANESE_ORNAMENT["zen_minimal"]),
-        "FairyGlyphMask": _chain(JAPANESE_ORNAMENT["zen_minimal"]),
-        "Albedo": _chain(MARBLE["light"]),
-    },
-    "MI_Zen_TempleStep": {
-        "MotifMask": _chain(JAPANESE_ORNAMENT["zen_stone"]),
-        "FairyGlyphMask": _chain(JAPANESE_ORNAMENT["zen_sand"]),
-        "Albedo": _chain(MARBLE["cool_stone"], MARBLE["dark"]),
-    },
-    "MI_Zen_MoonlitGarden": {
-        "MotifMask": _chain(JAPANESE_ORNAMENT["zen_circle"]),
-        "FairyGlyphMask": _chain("/Game/Alphas_Sparkles/T_Spark_Glow.T_Spark_Glow"),
-        "SparkleMask": _chain("/Game/Alphas_Sparkles/T_Spark_Twinkle8.T_Spark_Twinkle8"),
-    },
-    "MI_Zen_RojiPath": {
-        "MotifMask": _chain(JAPANESE_ORNAMENT["zen_sand"]),
-        "FairyGlyphMask": _chain(JAPANESE_ORNAMENT["zen_stone"]),
-        "Albedo": _chain(MARBLE["cool_stone"], MARBLE["dark"]),
-    },
-    "MI_Zen_TsukubaiBasin": {
-        "MotifMask": _chain(JAPANESE_ORNAMENT["zen_branch"]),
-        "FairyGlyphMask": _chain(JAPANESE_ORNAMENT["zen_wave"]),
-        "Albedo": _chain(MARBLE["cool_stone"]),
-    },
-    "MI_Zen_ToriiGreybox": {
-        "MotifMask": _chain(JAPANESE_ORNAMENT["zen_minimal"]),
-        "FairyGlyphMask": _chain(JAPANESE_ORNAMENT["zen_circle"]),
-        "Albedo": _chain(MARBLE["warm_stone"]),
     },
     "MI_Trimsheet_VariationCracks": {
         "Albedo": _chain(MARBLE["warm_stone"]),
