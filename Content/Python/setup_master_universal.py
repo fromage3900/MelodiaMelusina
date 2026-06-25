@@ -74,6 +74,8 @@ GROUP_WORLD = "World"
 GROUP_CINEMATIC = "Cinematic"
 GROUP_AUDIO = "Audio"
 GROUP_TEXTURES = "Textures"
+GROUP_MADOKA = "Madoka"
+GROUP_ITTO = "Itto"
 
 PARAM_GROUPS = {
     "nikki": GROUP_NIKKI,
@@ -795,6 +797,26 @@ def build():
     sparkle_adv = static_switch(m, "bSparkleAdvanced", "Nikki", -2100, 3120, default=False)
     sheen_use_normal = static_switch(m, "bSheenUsesNormal", "Nikki", -2100, 3160, default=False)
 
+    # ---- Madoka (Ethereal / witch barrier) ----
+    madoka_glow = lib.scalar_param(m, "MadokaGlowAmount", "Madoka", 0.0, -2100, 3260)
+    madoka_radial_bands = lib.scalar_param(m, "MadokaRadialBands", "Madoka", 3.0, -2100, 3360)
+    madoka_radial_speed = lib.scalar_param(m, "MadokaRadialSpeed", "Madoka", 0.0, -2100, 3460)
+    madoka_emissive_bright = lib.scalar_param(m, "MadokaEmissiveBrightness", "Madoka", 0.0, -2100, 3560)
+    madoka_cute_bias = lib.scalar_param(m, "MadokaCuteBias", "Madoka", 0.5, -2100, 3660)
+    madoka_vein_emissive = lib.scalar_param(m, "MadokaVeinEmissive", "Madoka", 0.0, -2100, 3760)
+    witch_wallpaper_scale = lib.scalar_param(m, "WitchBarrierWallpaperScale", "Madoka", 4.0, -2100, 3860)
+    witch_maze_tightness = lib.scalar_param(m, "WitchBarrierMazeTightness", "Madoka", 0.5, -2100, 3960)
+    witch_phase_speed = lib.scalar_param(m, "WitchBarrierPhaseSpeed", "Madoka", 0.45, -2100, 4060)
+
+    # ---- Itto (Heavy / mythic / carved) ----
+    itto_pattern_scale = lib.scalar_param(m, "IttoPatternScale", "Itto", 3.0, -2100, 4160)
+    itto_crack_depth = lib.scalar_param(m, "IttoCrackDepth", "Itto", 0.0, -2100, 4260)
+    itto_wear_amount = lib.scalar_param(m, "IttoWearAmount", "Itto", 0.0, -2100, 4360)
+    itto_breakup = lib.scalar_param(m, "IttoBreakupAmount", "Itto", 0.0, -2100, 4460)
+    itto_erosion = lib.scalar_param(m, "IttoErosionStrength", "Itto", 0.0, -2100, 4560)
+    itto_wear_depth = lib.scalar_param(m, "IttoWearDepth", "Itto", 0.0, -2100, 4660)
+    itto_ink = lib.scalar_param(m, "IttoInkStrength", "Itto", 0.0, -2100, 4760)
+
     # ---- Celestial / nebula (MF_SpaceParallax: parallax stars + toon-banded nebula + galaxy) ----
     const_low = lib.vector_param(m, "ConstellationRampLow", "Celestial", (0.02, 0.03, 0.10, 1.0), -2100, 3060)
     const_mid = lib.vector_param(m, "ConstellationRampMid", "Celestial", (0.45, 0.22, 0.55, 1.0), -2100, 3160)
@@ -961,6 +983,87 @@ def build():
     wire("stars_B", celestial, color_stars, "B")
     wire("stars_alpha", const_str, color_stars, "Alpha")
 
+    # ---- Madoka graph: witch barrier voronoi + veins + emissive ----
+    madoka_wxy = world_xy(m, 2200, 300)
+    madoka_voronoi = lib.create_expression(m, unreal.MaterialExpressionNoise, 2200, 400)
+    wire("madoka_vor_wxy", madoka_wxy, madoka_voronoi, "Position", "")
+    madoka_vor_scale = lib.create_expression(m, unreal.MaterialExpressionMultiply, 2200, 500)
+    wire("madoka_vor_scaleA", madoka_voronoi, madoka_vor_scale, "A")
+    wire("madoka_vor_scaleB", witch_wallpaper_scale, madoka_vor_scale, "B")
+    madoka_vor_sat = lib.create_expression(m, unreal.MaterialExpressionSaturate, 2200, 600)
+    wire("madoka_vor_sat", madoka_vor_scale, madoka_vor_sat, "Input")
+    madoka_veins = lib.create_edge_detect_scalar(m, madoka_vor_sat, 2200, 700, "madoka_veins")
+    madoka_vein_mask = lib.create_expression(m, unreal.MaterialExpressionMultiply, 2200, 800)
+    wire("madoka_vein_maskA", madoka_veins, madoka_vein_mask, "A")
+    wire("madoka_vein_maskB", madoka_vein_emissive, madoka_vein_mask, "B")
+    madoka_vein_glow = lib.create_expression(m, unreal.MaterialExpressionMultiply, 2200, 900)
+    wire("madoka_vein_glowA", madoka_vein_mask, madoka_vein_glow, "A")
+    madoka_glow_tint = lib.create_expression(m, unreal.MaterialExpressionConstant3Vector, 2200, 1000)
+    madoka_glow_tint.set_editor_property("constant", unreal.LinearColor(0.6, 0.3, 0.8, 1.0))
+    wire("madoka_glow_tintB", madoka_glow_tint, madoka_vein_glow, "B")
+    madoka_glow_scaled = lib.create_expression(m, unreal.MaterialExpressionMultiply, 2200, 1100)
+    wire("madoka_glow_scaledA", madoka_vein_glow, madoka_glow_scaled, "A")
+    wire("madoka_glow_scaledB", madoka_glow, madoka_glow_scaled, "B")
+    madoka_emi_base = const1(m, 2200, 1150, 0.0)
+    madoka_emissive_add = lib.create_expression(m, unreal.MaterialExpressionAdd, 2200, 1200)
+    wire("madoka_emi_addA", madoka_emi_base, madoka_emissive_add, "A")
+    wire("madoka_emi_addB", madoka_glow_scaled, madoka_emissive_add, "B")
+    madoka_color_blend = lib.create_expression(m, unreal.MaterialExpressionLinearInterpolate, 2200, 1300)
+    wire("madoka_cA", color_stars, madoka_color_blend, "A")
+    wire("madoka_cB", madoka_glow_tint, madoka_color_blend, "B")
+    wire("madoka_cAlpha", madoka_glow, madoka_color_blend, "Alpha")
+    color_stars = madoka_color_blend
+
+    # ---- Madoka: cute/corrupt + radial rings + SSS glow extension ----
+    madoka_cute = lib.create_expression(m, unreal.MaterialExpressionConstant3Vector, 2200, 1900)
+    madoka_cute.set_editor_property("constant", unreal.LinearColor(0.92, 0.55, 0.88, 1.0))
+    madoka_corrupt = lib.create_expression(m, unreal.MaterialExpressionConstant3Vector, 2200, 2000)
+    madoka_corrupt.set_editor_property("constant", unreal.LinearColor(0.55, 0.12, 0.18, 1.0))
+    madoka_color_mix = lib.create_expression(m, unreal.MaterialExpressionLinearInterpolate, 2200, 2100)
+    wire("mk_cA", madoka_cute, madoka_color_mix, "A")
+    wire("mk_cB", madoka_corrupt, madoka_color_mix, "B")
+    wire("mk_cAlpha", madoka_cute_bias, madoka_color_mix, "Alpha")
+
+    madoka_radial_c = lib.create_expression(m, unreal.MaterialExpressionConstant2Vector, 2200, 2200)
+    madoka_radial_c.set_editor_property("r", 0.5)
+    madoka_radial_c.set_editor_property("g", 0.5)
+    madoka_dist = lib.create_expression(m, unreal.MaterialExpressionDistance, 2200, 2300)
+    wire("mk_distA", madoka_wxy, madoka_dist, "A")
+    wire("mk_distB", madoka_radial_c, madoka_dist, "B")
+    madoka_dist_scaled = lib.create_expression(m, unreal.MaterialExpressionMultiply, 2200, 2400)
+    wire("mk_dist_sA", madoka_dist, madoka_dist_scaled, "A")
+    wire("mk_dist_sB", madoka_radial_bands, madoka_dist_scaled, "B")
+    madoka_rings_sin = lib.create_expression(m, unreal.MaterialExpressionSine, 2200, 2500)
+    madoka_rings_sin.set_editor_property("period", 1.0)
+    wire("mk_rings_sin", madoka_dist_scaled, madoka_rings_sin, "Input")
+    madoka_rings_abs = lib.create_expression(m, unreal.MaterialExpressionAbs, 2200, 2600)
+    wire("mk_rings_abs", madoka_rings_sin, madoka_rings_abs, "Input")
+    madoka_rings_radial = lib.create_expression(m, unreal.MaterialExpressionMultiply, 2200, 2700)
+    wire("mk_rings_A", madoka_rings_abs, madoka_rings_radial, "A")
+    wire("mk_rings_B", madoka_glow, madoka_rings_radial, "B")
+    madoka_rings_add = lib.create_expression(m, unreal.MaterialExpressionAdd, 2200, 2800)
+    wire("mk_rings_addA", madoka_color_mix, madoka_rings_add, "A")
+    wire("mk_rings_addB", madoka_rings_radial, madoka_rings_add, "B")
+    madoka_color_final = madoka_rings_add
+
+    madoka_blur = lib.create_blur(m, madoka_color_final, 2200, 2900, sigma=8.0, tag="madoka")
+    madoka_glow_add = lib.create_expression(m, unreal.MaterialExpressionAdd, 2200, 3000)
+    wire("mk_glowA", madoka_glow_scaled, madoka_glow_add, "A")
+    wire("mk_glowB", madoka_blur, madoka_glow_add, "B")
+    madoka_glow_final = lib.create_expression(m, unreal.MaterialExpressionMultiply, 2200, 3100)
+    wire("mk_gfA", madoka_glow_add, madoka_glow_final, "A")
+    wire("mk_gfB", madoka_glow, madoka_glow_final, "B")
+
+    madoka_emissive_extend = lib.create_expression(m, unreal.MaterialExpressionAdd, 2200, 3200)
+    wire("mk_emiA", madoka_emissive_add, madoka_emissive_extend, "A")
+    wire("mk_emiB", madoka_glow_final, madoka_emissive_extend, "B")
+
+    madoka_final_blend = lib.create_expression(m, unreal.MaterialExpressionLinearInterpolate, 2200, 3300)
+    wire("mk_fA", color_stars, madoka_final_blend, "A")
+    wire("mk_fB", madoka_color_final, madoka_final_blend, "B")
+    wire("mk_fAlpha", madoka_glow, madoka_final_blend, "Alpha")
+    color_stars = madoka_final_blend
+
     # curvature gold leaf
     pnormal = lib.create_expression(m, unreal.MaterialExpressionPixelNormalWS, 220, 520)
     ddx = lib.create_expression(m, unreal.MaterialExpressionDDX, 400, 460)
@@ -994,6 +1097,34 @@ def build():
     gold_emis_m = lib.create_expression(m, unreal.MaterialExpressionMultiply, 1220, 640)
     wire("gold_eA", gold_mask, gold_emis_m, "A")
     wire("gold_eB", gold_emis, gold_emis_m, "B")
+
+    # ---- Itto graph: truchet + cracks + wear (after gold leaf so roughness stacks correctly) ----
+    itto_wxy = world_xy(m, 2400, 1080)
+    itto_truchet = lib.create_expression(m, unreal.MaterialExpressionNoise, 2400, 1180)
+    wire("itto_tru_wxy", itto_wxy, itto_truchet, "Position", "")
+    itto_tru_scale = lib.create_expression(m, unreal.MaterialExpressionMultiply, 2400, 1280)
+    wire("itto_tru_scaleA", itto_truchet, itto_tru_scale, "A")
+    wire("itto_tru_scaleB", itto_pattern_scale, itto_tru_scale, "B")
+    itto_tru_sat = lib.create_expression(m, unreal.MaterialExpressionSaturate, 2400, 1380)
+    wire("itto_tru_sat", itto_tru_scale, itto_tru_sat, "Input")
+    itto_cracks = lib.create_edge_detect_scalar(m, itto_tru_sat, 2400, 1480, "itto_cracks")
+    itto_crack_mask = lib.create_expression(m, unreal.MaterialExpressionMultiply, 2400, 1580)
+    wire("itto_crack_maskA", itto_cracks, itto_crack_mask, "A")
+    wire("itto_crack_maskB", itto_crack_depth, itto_crack_mask, "B")
+    itto_wear = lib.create_expression(m, unreal.MaterialExpressionMultiply, 2400, 1680)
+    wire("itto_wearA", curve_abs, itto_wear, "A")
+    wire("itto_wearB", itto_wear_amount, itto_wear, "B")
+    itto_surface_blend = lib.create_expression(m, unreal.MaterialExpressionAdd, 2400, 1780)
+    wire("itto_surfA", itto_crack_mask, itto_surface_blend, "A")
+    wire("itto_surfB", itto_wear, itto_surface_blend, "B")
+    itto_surface_scaled = lib.create_expression(m, unreal.MaterialExpressionMultiply, 2400, 1880)
+    wire("itto_surf_scaledA", itto_surface_blend, itto_surface_scaled, "A")
+    wire("itto_surf_scaledB", itto_breakup, itto_surface_scaled, "B")
+    itto_rough_add = lib.create_expression(m, unreal.MaterialExpressionAdd, 2400, 1980)
+    wire("itto_roughA", rough_gold, itto_rough_add, "A")
+    wire("itto_roughB", itto_surface_scaled, itto_rough_add, "B")
+    rough_gold = itto_rough_add
+    # Note: IttoInkStrength / IttoErosionStrength / IttoWearDepth reserved for Phase 2 (height + ink)
 
     # ShadowDream MF (replaces inline N·L tint)
     light_dir_fixed = lib.create_expression(m, unreal.MaterialExpressionConstant3Vector, 220, 760)
@@ -1397,6 +1528,10 @@ def build():
     emissive = lib.create_expression(m, unreal.MaterialExpressionMultiply, 3840, 1760)
     wire("bloom_mul_A", emissive_raw, emissive, "A")
     wire("bloom_mul_B", bloom_m, emissive, "B")
+    emissive_madoka = lib.create_expression(m, unreal.MaterialExpressionAdd, 4000, 1760)
+    wire("madoka_emi_mergeA", emissive, emissive_madoka, "A")
+    wire("madoka_emi_mergeB", madoka_emissive_extend, emissive_madoka, "B")
+    emissive = emissive_madoka
 
     # ---- Macro variation + detail (MF_MacroDetail) ----
     macro_mf_node = None
