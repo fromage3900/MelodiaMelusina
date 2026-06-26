@@ -47,7 +47,7 @@ from surreal_arch.greybox_graph import GRAPH_REGISTRY
 
 merged = merge_grammar_into_registry(GRAPH_REGISTRY)
 print(f"  merged_into_registry: {merged}")
-for gid in ("ZEN_SHRINE_AXIS", "ZEN_SAKURA_WALK", "ZEN_SHRINE_COURTYARD", "ZEN_ROJI_PATH", "ZEN_KARESANSHUI_WALK", "ZEN_TEA_GARDEN", "CLOISTER", "SCIFI_AIRLOCK", "SCI_FI_DECK", "ROMANESQUE_CLOISTER", "VENETIAN_CANAL", "ROMANESQUE_APSE", "SCI_FI_DECK_EXPANSION", "ASIAN_CITY", "BRUTALIST_PLAZA", "ART_NOUVEAU", "MOORISH_COURTYARD"):
+for gid in ("ZEN_SHRINE_AXIS", "ZEN_SAKURA_WALK", "ZEN_SHRINE_COURTYARD", "ZEN_ROJI_PATH", "ZEN_KARESANSHUI_WALK", "ZEN_TEA_GARDEN", "ZEN_STREAM_GARDEN", "ZEN_PAGODA_SPIRE", "ZEN_KAIRO_ENCLOSURE", "CLOISTER", "GOTHIC_CHAPTER_HOUSE", "GOTHIC_NAVE_CROSSING", "SCIFI_AIRLOCK", "SCI_FI_DECK", "ROMANESQUE_CLOISTER", "VENETIAN_CANAL", "ROMANESQUE_APSE", "SCI_FI_DECK_EXPANSION", "SCI_FI_INDUSTRIAL_YARD", "ASIAN_CITY", "ASIAN_CITY_RECURSIVE", "BRUTALIST_PLAZA", "ART_NOUVEAU", "ART_DECO", "MOORISH_COURTYARD", "RENAISSANCE_PIAZZA", "BYZANTINE_BASILICA", "BAROQUE_CHURCH"):
     if gid not in GRAPH_REGISTRY:
         print(f"  !! FAIL: {gid} not in GRAPH_REGISTRY")
         all_ok = False
@@ -169,9 +169,44 @@ if gt.get("default_graph") != "ZEN_TEA_GARDEN":
 else:
     print("  zen_tea_garden genome: OK")
 
+zk = os_genome.load_genome("zen_karesansui_v1")
+if zk.get("grammar_id") != "ZEN_KARESANSHUI_WALK" or zk.get("surreal_transform") != "axis_compression":
+    print(f"  !! FAIL: zen_karesansui_v1 grammar/transform")
+    all_ok = False
+else:
+    print("  zen_karesansui_v1: OK")
+
+zs = os_genome.load_genome("zen_stream_garden_v1")
+if zs.get("grammar_id") != "ZEN_STREAM_GARDEN" or not zs.get("compose_roles"):
+    print(f"  !! FAIL: zen_stream_garden_v1")
+    all_ok = False
+else:
+    print("  zen_stream_garden_v1: OK")
+
+zp = os_genome.load_genome("zen_pagoda_spire_v1")
+if zp.get("grammar_id") != "ZEN_PAGODA_SPIRE" or zp.get("surreal_transform") != "vertical_stretch":
+    print(f"  !! FAIL: zen_pagoda_spire_v1")
+    all_ok = False
+else:
+    print("  zen_pagoda_spire_v1: OK")
+
+zke = os_genome.load_genome("zen_kairo_enclosure_v1")
+if zke.get("grammar_id") != "ZEN_KAIRO_ENCLOSURE" or zke.get("compose_roles", {}).get("sacred") != "_lib_GB_ZEN_HONDEN":
+    print(f"  !! FAIL: zen_kairo_enclosure_v1")
+    all_ok = False
+else:
+    print("  zen_kairo_enclosure_v1: OK")
+
+siy = os_genome.load_genome("scifi_industrial_yard_v1")
+if siy.get("grammar_id") != "SCI_FI_INDUSTRIAL_YARD" or siy.get("family") != "Sci-Fi":
+    print(f"  !! FAIL: scifi_industrial_yard_v1")
+    all_ok = False
+else:
+    print("  scifi_industrial_yard_v1: OK")
+
 genome_ids = os_genome.list_genomes()
-if len(genome_ids) < 19:
-    print(f"  !! FAIL: expected >=19 genomes got {len(genome_ids)}")
+if len(genome_ids) < 29:
+    print(f"  !! FAIL: expected >=29 genomes got {len(genome_ids)}")
     all_ok = False
 else:
     print(f"  genome catalog: {len(genome_ids)} entries")
@@ -180,13 +215,13 @@ groups = getattr(s, "_STYLE_GENOME_GROUPS", {}) or {}
 if not groups or sum(len(v) for v in groups.values()) < len(genome_ids):
     print(f"  !! FAIL: _STYLE_GENOME_GROUPS incomplete: {groups}")
     all_ok = False
-elif groups.get("Zen", []) and groups.get("Gothic", []):
+elif groups.get("Zen", []) and len(groups.get("Zen", [])) >= 10 and groups.get("Gothic", []):
     print(f"  _STYLE_GENOME_GROUPS: {', '.join(f'{k}={len(v)}' for k, v in groups.items())}")
 else:
     print(f"  !! FAIL: _STYLE_GENOME_GROUPS missing families: {groups}")
     all_ok = False
 
-if not hasattr(s, "_STYLE_GENOMES") or len(s._STYLE_GENOMES) < 17:
+if not hasattr(s, "_STYLE_GENOMES") or len(s._STYLE_GENOMES) < 21:
     print("  !! FAIL: _STYLE_GENOMES not populated")
     all_ok = False
 else:
@@ -217,6 +252,12 @@ try:
     if len(asian_objs) < 2:
         print(f"  !! FAIL: ASIAN_CITY spawn got {len(asian_objs)}")
         all_ok = False
+    asian_r_spec = GRAPH_REGISTRY["ASIAN_CITY_RECURSIVE"]["spec"]
+    asian_r_objs = spawn_graph(bpy.context, s, asian_r_spec[:4], spacing=9.0, graph_id="ASIAN_CITY_RECURSIVE")
+    print(f"  spawn_graph ASIAN_CITY_RECURSIVE partial: {len(asian_r_objs)} objects")
+    if len(asian_r_objs) < 3:
+        print(f"  !! FAIL: ASIAN_CITY_RECURSIVE spawn got {len(asian_r_objs)}")
+        all_ok = False
     brutal_spec = GRAPH_REGISTRY["BRUTALIST_PLAZA"]["spec"]
     brutal_objs = spawn_graph(bpy.context, s, brutal_spec[:3], spacing=12.0, graph_id="BRUTALIST_PLAZA")
     print(f"  spawn_graph BRUTALIST_PLAZA partial: {len(brutal_objs)} objects")
@@ -229,11 +270,47 @@ try:
     if len(art_objs) < 2:
         print(f"  !! FAIL: ART_NOUVEAU spawn got {len(art_objs)}")
         all_ok = False
+    deco_spec = GRAPH_REGISTRY["ART_DECO"]["spec"]
+    deco_objs = spawn_graph(bpy.context, s, deco_spec[:3], spacing=10.0, graph_id="ART_DECO")
+    print(f"  spawn_graph ART_DECO partial: {len(deco_objs)} objects")
+    if len(deco_objs) < 2:
+        print(f"  !! FAIL: ART_DECO spawn got {len(deco_objs)}")
+        all_ok = False
     moor_spec = GRAPH_REGISTRY["MOORISH_COURTYARD"]["spec"]
     moor_objs = spawn_graph(bpy.context, s, moor_spec[:3], spacing=10.0, graph_id="MOORISH_COURTYARD")
     print(f"  spawn_graph MOORISH_COURTYARD partial: {len(moor_objs)} objects")
     if len(moor_objs) < 2:
         print(f"  !! FAIL: MOORISH_COURTYARD spawn got {len(moor_objs)}")
+        all_ok = False
+    ren_spec = GRAPH_REGISTRY["RENAISSANCE_PIAZZA"]["spec"]
+    ren_objs = spawn_graph(bpy.context, s, ren_spec[:3], spacing=11.0, graph_id="RENAISSANCE_PIAZZA")
+    print(f"  spawn_graph RENAISSANCE_PIAZZA partial: {len(ren_objs)} objects")
+    if len(ren_objs) < 2:
+        print(f"  !! FAIL: RENAISSANCE_PIAZZA spawn got {len(ren_objs)}")
+        all_ok = False
+    byz_spec = GRAPH_REGISTRY["BYZANTINE_BASILICA"]["spec"]
+    byz_objs = spawn_graph(bpy.context, s, byz_spec[:4], spacing=11.0, graph_id="BYZANTINE_BASILICA")
+    print(f"  spawn_graph BYZANTINE_BASILICA partial: {len(byz_objs)} objects")
+    if len(byz_objs) < 3:
+        print(f"  !! FAIL: BYZANTINE_BASILICA spawn got {len(byz_objs)}")
+        all_ok = False
+    bar_spec = GRAPH_REGISTRY["BAROQUE_CHURCH"]["spec"]
+    bar_objs = spawn_graph(bpy.context, s, bar_spec[:4], spacing=11.0, graph_id="BAROQUE_CHURCH")
+    print(f"  spawn_graph BAROQUE_CHURCH partial: {len(bar_objs)} objects")
+    if len(bar_objs) < 3:
+        print(f"  !! FAIL: BAROQUE_CHURCH spawn got {len(bar_objs)}")
+        all_ok = False
+    gch_spec = GRAPH_REGISTRY["GOTHIC_CHAPTER_HOUSE"]["spec"]
+    gch_objs = spawn_graph(bpy.context, s, gch_spec[:4], spacing=10.0, graph_id="GOTHIC_CHAPTER_HOUSE")
+    print(f"  spawn_graph GOTHIC_CHAPTER_HOUSE partial: {len(gch_objs)} objects")
+    if len(gch_objs) < 3:
+        print(f"  !! FAIL: GOTHIC_CHAPTER_HOUSE spawn got {len(gch_objs)}")
+        all_ok = False
+    gnc_spec = GRAPH_REGISTRY["GOTHIC_NAVE_CROSSING"]["spec"]
+    gnc_objs = spawn_graph(bpy.context, s, gnc_spec[:4], spacing=10.0, graph_id="GOTHIC_NAVE_CROSSING")
+    print(f"  spawn_graph GOTHIC_NAVE_CROSSING partial: {len(gnc_objs)} objects")
+    if len(gnc_objs) < 3:
+        print(f"  !! FAIL: GOTHIC_NAVE_CROSSING spawn got {len(gnc_objs)}")
         all_ok = False
     from surreal_arch.research_presets import run_research_preset
     rp = run_research_preset(bpy.context, "gothic_cloister_graph", monolith=s)
@@ -248,6 +325,48 @@ try:
         all_ok = False
     else:
         print(f"  research_preset scifi_airlock_graph: {rp2['count']} modules")
+    rp2b = run_research_preset(bpy.context, "scifi_industrial_yard_graph", monolith=s)
+    if rp2b.get("mode") != "graph" or rp2b.get("count", 0) < 4:
+        print(f"  !! FAIL: scifi_industrial_yard_graph spawn: {rp2b}")
+        all_ok = False
+    else:
+        print(f"  research_preset scifi_industrial_yard_graph: {rp2b['count']} modules")
+    rp3 = run_research_preset(bpy.context, "zen_pagoda_spire_graph", monolith=s)
+    if rp3.get("mode") != "graph" or rp3.get("count", 0) < 5:
+        print(f"  !! FAIL: zen_pagoda_spire_graph spawn: {rp3}")
+        all_ok = False
+    else:
+        print(f"  research_preset zen_pagoda_spire_graph: {rp3['count']} modules")
+    rp4 = run_research_preset(bpy.context, "byzantine_basilica_graph", monolith=s)
+    if rp4.get("mode") != "graph" or rp4.get("count", 0) < 4:
+        print(f"  !! FAIL: byzantine_basilica_graph spawn: {rp4}")
+        all_ok = False
+    else:
+        print(f"  research_preset byzantine_basilica_graph: {rp4['count']} modules")
+    rp5 = run_research_preset(bpy.context, "baroque_church_graph", monolith=s)
+    if rp5.get("mode") != "graph" or rp5.get("count", 0) < 4:
+        print(f"  !! FAIL: baroque_church_graph spawn: {rp5}")
+        all_ok = False
+    else:
+        print(f"  research_preset baroque_church_graph: {rp5['count']} modules")
+    rp6 = run_research_preset(bpy.context, "gothic_chapter_house_graph", monolith=s)
+    if rp6.get("mode") != "graph" or rp6.get("count", 0) < 4:
+        print(f"  !! FAIL: gothic_chapter_house_graph spawn: {rp6}")
+        all_ok = False
+    else:
+        print(f"  research_preset gothic_chapter_house_graph: {rp6['count']} modules")
+    rp7 = run_research_preset(bpy.context, "gothic_nave_crossing_graph", monolith=s)
+    if rp7.get("mode") != "graph" or rp7.get("count", 0) < 4:
+        print(f"  !! FAIL: gothic_nave_crossing_graph spawn: {rp7}")
+        all_ok = False
+    else:
+        print(f"  research_preset gothic_nave_crossing_graph: {rp7['count']} modules")
+    pagoda_spec = GRAPH_REGISTRY["ZEN_PAGODA_SPIRE"]["spec"]
+    pagoda_objs = spawn_graph(bpy.context, s, pagoda_spec[:4], spacing=10.0, graph_id="ZEN_PAGODA_SPIRE")
+    print(f"  spawn_graph ZEN_PAGODA_SPIRE partial: {len(pagoda_objs)} objects")
+    if len(pagoda_objs) < 3:
+        print(f"  !! FAIL: ZEN_PAGODA_SPIRE spawn got {len(pagoda_objs)}")
+        all_ok = False
 except Exception as err:
     print(f"  !! FAIL spawn_graph: {err}")
     all_ok = False
@@ -261,8 +380,8 @@ if audit_errs:
     for line in audit_errs:
         print(f"  !! FAIL {line}")
     all_ok = False
-elif len(graph_preset_ids) < 19:
-    print(f"  !! FAIL: expected >=19 graph research presets got {len(graph_preset_ids)}")
+elif len(graph_preset_ids) < 24:
+    print(f"  !! FAIL: expected >=24 graph research presets got {len(graph_preset_ids)}")
     all_ok = False
 else:
     print(f"  graph_research_presets: {len(graph_preset_ids)} OK")
@@ -285,6 +404,9 @@ if not xf:
 elif "BRUTALIST_PLAZA" not in (xf.get("applies_to") or []):
     print("  !! FAIL: axis_compression missing BRUTALIST_PLAZA")
     all_ok = False
+elif "ZEN_STREAM_GARDEN" not in (xf.get("applies_to") or []):
+    print("  !! FAIL: axis_compression missing ZEN_STREAM_GARDEN")
+    all_ok = False
 else:
     print(f"  axis_compression type={xf.get('type')} BRUTALIST_PLAZA: OK")
 
@@ -292,8 +414,11 @@ xf2 = get_transform("vertical_stretch")
 if not xf2:
     print("  !! FAIL: vertical_stretch missing")
     all_ok = False
+elif "ZEN_PAGODA_SPIRE" not in (xf2.get("applies_to") or []):
+    print("  !! FAIL: vertical_stretch missing ZEN_PAGODA_SPIRE")
+    all_ok = False
 else:
-    print(f"  vertical_stretch type={xf2.get('type')}")
+    print(f"  vertical_stretch type={xf2.get('type')} ZEN_PAGODA_SPIRE: OK")
 
 xf3 = get_transform("recursive_interior")
 if not xf3 or "CLOISTER" not in (xf3.get("applies_to") or []):
@@ -312,8 +437,37 @@ if os_genome.genome_family(gothic) != "Gothic":
 elif gothic.get("surreal_transform") != "recursive_interior":
     print(f"  !! FAIL: gothic_cloister_v1 transform={gothic.get('surreal_transform')}")
     all_ok = False
+elif gothic.get("compose_style") != "GOTHIC_CLOISTER":
+    print(f"  !! FAIL: gothic_cloister_v1 compose={gothic.get('compose_style')}")
+    all_ok = False
+elif os_styles.get("GOTHIC_CLOISTER", {}).get("gate") != "_lib_GB_GOTHIC_PORTAL":
+    print("  !! FAIL: GOTHIC_CLOISTER compose_roles missing")
+    all_ok = False
 else:
-    print("  gothic_cloister_v1 + genome_family: OK")
+    print("  gothic_cloister_v1 + GOTHIC_CLOISTER compose_roles: OK")
+
+gch = os_genome.load_genome("gothic_chapter_house_v1")
+if gch.get("grammar_id") != "GOTHIC_CHAPTER_HOUSE" or gch.get("compose_style") != "GOTHIC_CHAPTER_HOUSE":
+    print(f"  !! FAIL: gothic_chapter_house_v1")
+    all_ok = False
+elif os_styles.get("GOTHIC_CHAPTER_HOUSE", {}).get("gate") != "_lib_GB_GOTHIC_PORTAL":
+    print("  !! FAIL: GOTHIC_CHAPTER_HOUSE compose_roles missing")
+    all_ok = False
+else:
+    print("  gothic_chapter_house_v1 + GOTHIC_CHAPTER_HOUSE compose_roles: OK")
+
+gnc = os_genome.load_genome("gothic_nave_crossing_v1")
+if gnc.get("grammar_id") != "GOTHIC_NAVE_CROSSING" or gnc.get("compose_style") != "GOTHIC_NAVE_CROSSING":
+    print(f"  !! FAIL: gothic_nave_crossing_v1")
+    all_ok = False
+elif gnc.get("surreal_transform") != "vertical_stretch":
+    print(f"  !! FAIL: gothic nave transform={gnc.get('surreal_transform')}")
+    all_ok = False
+elif os_styles.get("GOTHIC_NAVE_CROSSING", {}).get("monument") != "_lib_ROSE_WINDOW":
+    print("  !! FAIL: GOTHIC_NAVE_CROSSING compose_roles missing")
+    all_ok = False
+else:
+    print("  gothic_nave_crossing_v1 + GOTHIC_NAVE_CROSSING compose_roles: OK")
 
 scifi = os_genome.load_genome("scifi_airlock_v1")
 if scifi.get("default_graph") != "SCIFI_AIRLOCK":
@@ -322,25 +476,57 @@ if scifi.get("default_graph") != "SCIFI_AIRLOCK":
 else:
     print("  scifi_airlock_v1: OK")
 
-rom = os_genome.load_genome("romanesque_cloister_v1")
-ven = os_genome.load_genome("venetian_canal_v1")
-if rom.get("grammar_id") != "ROMANESQUE_CLOISTER" or ven.get("grammar_id") != "VENETIAN_CANAL":
-    print("  !! FAIL: romanesque/venetian genome grammar_id")
+sdeck = os_genome.load_genome("scifi_deck_v1")
+sdspine = os_genome.load_genome("scifi_deck_spine_v1")
+if sdeck.get("compose_style") != "SCIFI_DECK" or sdspine.get("compose_style") != "SCIFI_DECK":
+    print(f"  !! FAIL: scifi deck compose bleed deck={sdeck.get('compose_style')} spine={sdspine.get('compose_style')}")
+    all_ok = False
+elif os_styles.get("SCIFI_DECK", {}).get("gate") != "_lib_GB_SCIFI_PRESSURE_DOOR":
+    print("  !! FAIL: SCIFI_DECK compose_roles missing")
     all_ok = False
 else:
-    print("  romanesque_cloister_v1 + venetian_canal_v1: OK")
+    print("  scifi_deck_v1 + scifi_deck_spine_v1 + SCIFI_DECK compose_roles: OK")
 
-s._active_style_genome = os_genome.load_genome("romanesque_apse_v1")
-wc = resolve_compose_style(s, "WESTERN_CASTLE")
-if wc.get("sacred") != "_lib_CHAPEL":
-    print(f"  !! FAIL: romanesque_apse sacred override got {wc.get('sacred')}")
+sair = os_genome.load_genome("scifi_airlock_v1")
+siy2 = os_genome.load_genome("scifi_industrial_yard_v1")
+if sair.get("compose_style") != "SCIFI_DECK" or siy2.get("compose_style") != "SCIFI_DECK":
+    print(f"  !! FAIL: scifi compose bleed airlock={sair.get('compose_style')} industrial={siy2.get('compose_style')}")
     all_ok = False
-elif os_styles.get("WESTERN_CASTLE", {}).get("gate") != "_lib_GATEHOUSE":
-    print("  !! FAIL: WESTERN_CASTLE compose_roles missing")
+elif siy2.get("compose_roles", {}).get("gate") != "_lib_GB_SCIFI_PRESSURE_DOOR":
+    print(f"  !! FAIL: scifi_industrial_yard_v1 gate role={siy2.get('compose_roles')}")
     all_ok = False
 else:
-    print("  WESTERN_CASTLE + genome compose_roles: OK")
-s._active_style_genome = None
+    print("  scifi_airlock_v1 + scifi_industrial_yard_v1 SCIFI_DECK retarget: OK")
+
+rom = os_genome.load_genome("romanesque_cloister_v1")
+rapp = os_genome.load_genome("romanesque_apse_v1")
+if rom.get("grammar_id") != "ROMANESQUE_CLOISTER" or rom.get("compose_style") != "ROMANESQUE_CLOISTER":
+    print(f"  !! FAIL: romanesque_cloister_v1 compose/grammar")
+    all_ok = False
+elif rapp.get("grammar_id") != "ROMANESQUE_APSE" or rapp.get("compose_style") != "ROMANESQUE_APSE":
+    print(f"  !! FAIL: romanesque_apse_v1 compose/grammar")
+    all_ok = False
+elif os_styles.get("ROMANESQUE_CLOISTER", {}).get("medium") != "_lib_GB_ROMANESQUE_ARCADE":
+    print("  !! FAIL: ROMANESQUE_CLOISTER compose_roles missing")
+    all_ok = False
+elif os_styles.get("ROMANESQUE_APSE", {}).get("sacred") != "_lib_GB_ROMANESQUE_APSE":
+    print("  !! FAIL: ROMANESQUE_APSE compose_roles missing")
+    all_ok = False
+else:
+    print("  romanesque_cloister_v1 + romanesque_apse_v1 ROMANESQUE compose: OK")
+
+ven = os_genome.load_genome("venetian_canal_v1")
+if ven.get("compose_style") != "VENETIAN_CANAL" or os_genome.genome_family(ven) != "Venetian":
+    print(f"  !! FAIL: venetian_canal_v1 compose/family")
+    all_ok = False
+elif ven.get("grammar_id") != "VENETIAN_CANAL":
+    print(f"  !! FAIL: venetian_canal_v1 grammar={ven.get('grammar_id')}")
+    all_ok = False
+elif os_styles.get("VENETIAN_CANAL", {}).get("medium") != "_lib_GB_VENETIAN_LOGGIA":
+    print("  !! FAIL: VENETIAN_CANAL compose_roles missing")
+    all_ok = False
+else:
+    print("  venetian_canal_v1 + VENETIAN_CANAL compose_roles: OK")
 
 asian = os_genome.load_genome("asian_city_v1")
 if asian.get("compose_style") != "ASIAN_CITY" or os_genome.genome_family(asian) != "Asian":
@@ -356,21 +542,30 @@ else:
     print("  asian_city_v1 + ASIAN_CITY compose_roles: OK")
 
 asian_r = os_genome.load_genome("asian_city_recursive_v1")
-if asian_r.get("surreal_transform") != "recursive_interior" or asian_r.get("grammar_id") != "ASIAN_CITY":
-    print(f"  !! FAIL: asian_city_recursive_v1 transform/grammar")
+if asian_r.get("compose_style") != "ASIAN_CITY_RECURSIVE" or asian_r.get("grammar_id") != "ASIAN_CITY_RECURSIVE":
+    print(f"  !! FAIL: asian_city_recursive_v1 compose/grammar")
+    all_ok = False
+elif asian_r.get("surreal_transform") != "recursive_interior":
+    print(f"  !! FAIL: asian_city_recursive_v1 transform={asian_r.get('surreal_transform')}")
+    all_ok = False
+elif os_styles.get("ASIAN_CITY_RECURSIVE", {}).get("medium") != "_lib_JP_KURA_STOREHOUSE":
+    print("  !! FAIL: ASIAN_CITY_RECURSIVE compose_roles missing")
     all_ok = False
 else:
-    print("  asian_city_recursive_v1: OK")
+    print("  asian_city_recursive_v1 + ASIAN_CITY_RECURSIVE compose_roles: OK")
 
 brut = os_genome.load_genome("brutalist_plaza_v1")
 if brut.get("surreal_transform") != "axis_compression" or os_genome.genome_family(brut) != "Brutalist":
     print(f"  !! FAIL: brutalist_plaza_v1 transform/family")
     all_ok = False
-elif brut.get("grammar_id") != "BRUTALIST_PLAZA":
-    print(f"  !! FAIL: brutalist_plaza_v1 grammar={brut.get('grammar_id')}")
+elif brut.get("grammar_id") != "BRUTALIST_PLAZA" or brut.get("compose_style") != "BRUTALIST_PLAZA":
+    print(f"  !! FAIL: brutalist_plaza_v1 grammar/compose={brut.get('grammar_id')}/{brut.get('compose_style')}")
+    all_ok = False
+elif os_styles.get("BRUTALIST_PLAZA", {}).get("medium") != "_lib_GB_BRUTALIST_PANEL_WALL":
+    print("  !! FAIL: BRUTALIST_PLAZA compose_roles missing")
     all_ok = False
 else:
-    print("  brutalist_plaza_v1: OK")
+    print("  brutalist_plaza_v1 + BRUTALIST_PLAZA compose: OK")
 
 wc = os_genome.load_genome("western_castle_v1")
 if wc.get("compose_style") != "WESTERN_CASTLE" or os_genome.genome_family(wc) != "Western":
@@ -379,8 +574,14 @@ if wc.get("compose_style") != "WESTERN_CASTLE" or os_genome.genome_family(wc) !=
 elif wc.get("grammar_id") != "CLOISTER":
     print(f"  !! FAIL: western_castle_v1 grammar={wc.get('grammar_id')}")
     all_ok = False
+elif wc.get("surreal_transform") != "recursive_interior":
+    print(f"  !! FAIL: western_castle_v1 surreal_transform={wc.get('surreal_transform')}")
+    all_ok = False
+elif wc.get("compose_roles", {}).get("gate") != "_lib_GB_GOTHIC_PORTAL":
+    print(f"  !! FAIL: western_castle_v1 gate role={wc.get('compose_roles')}")
+    all_ok = False
 else:
-    print("  western_castle_v1: OK")
+    print("  western_castle_v1 + recursive_interior compose: OK")
 
 an = os_genome.load_genome("art_nouveau_v1")
 if an.get("compose_style") != "ART_NOUVEAU" or os_genome.genome_family(an) != "ArtNouveau":
@@ -395,6 +596,22 @@ elif os_styles.get("ART_NOUVEAU", {}).get("gate") != "_lib_OGEE_ARCH":
 else:
     print("  art_nouveau_v1 + ART_NOUVEAU compose_roles: OK")
 
+ad = os_genome.load_genome("art_deco_lobby_v1")
+if ad.get("compose_style") != "ART_DECO" or os_genome.genome_family(ad) != "ArtDeco":
+    print(f"  !! FAIL: art_deco_lobby_v1 compose/family")
+    all_ok = False
+elif ad.get("grammar_id") != "ART_DECO":
+    print(f"  !! FAIL: art_deco_lobby_v1 grammar={ad.get('grammar_id')}")
+    all_ok = False
+elif ad.get("surreal_transform") != "vertical_stretch":
+    print(f"  !! FAIL: art_deco_lobby_v1 transform={ad.get('surreal_transform')}")
+    all_ok = False
+elif os_styles.get("ART_DECO", {}).get("gate") != "_lib_CUSPED_ARCH":
+    print("  !! FAIL: ART_DECO compose_roles missing")
+    all_ok = False
+else:
+    print("  art_deco_lobby_v1 + ART_DECO compose_roles: OK")
+
 mc = os_genome.load_genome("moorish_courtyard_v1")
 if mc.get("compose_style") != "MOORISH_COURTYARD" or os_genome.genome_family(mc) != "Moorish":
     print(f"  !! FAIL: moorish_courtyard_v1 compose/family")
@@ -407,6 +624,58 @@ elif os_styles.get("MOORISH_COURTYARD", {}).get("gate") != "_lib_ARCHWAY_ADV":
     all_ok = False
 else:
     print("  moorish_courtyard_v1 + MOORISH_COURTYARD compose_roles: OK")
+
+rp = os_genome.load_genome("renaissance_piazza_v1")
+if rp.get("compose_style") != "RENAISSANCE_PIAZZA" or os_genome.genome_family(rp) != "Renaissance":
+    print(f"  !! FAIL: renaissance_piazza_v1 compose/family")
+    all_ok = False
+elif rp.get("grammar_id") != "RENAISSANCE_PIAZZA":
+    print(f"  !! FAIL: renaissance_piazza_v1 grammar={rp.get('grammar_id')}")
+    all_ok = False
+elif os_styles.get("RENAISSANCE_PIAZZA", {}).get("sacred") != "_lib_DOME":
+    print("  !! FAIL: RENAISSANCE_PIAZZA compose_roles missing")
+    all_ok = False
+else:
+    print("  renaissance_piazza_v1 + RENAISSANCE_PIAZZA compose_roles: OK")
+
+bb = os_genome.load_genome("byzantine_basilica_v1")
+if bb.get("grammar_id") != "BYZANTINE_BASILICA" or bb.get("compose_style") != "BYZANTINE_BASILICA":
+    print(f"  !! FAIL: byzantine_basilica_v1")
+    all_ok = False
+elif bb.get("surreal_transform") != "vertical_stretch":
+    print(f"  !! FAIL: byzantine transform={bb.get('surreal_transform')}")
+    all_ok = False
+elif os_styles.get("BYZANTINE_BASILICA", {}).get("sacred") != "_lib_DOME":
+    print("  !! FAIL: BYZANTINE_BASILICA compose_roles missing")
+    all_ok = False
+else:
+    print("  byzantine_basilica_v1 + BYZANTINE_BASILICA compose_roles: OK")
+
+bc = os_genome.load_genome("baroque_church_v1")
+if bc.get("grammar_id") != "BAROQUE_CHURCH" or bc.get("compose_style") != "BAROQUE_CHURCH":
+    print(f"  !! FAIL: baroque_church_v1")
+    all_ok = False
+elif bc.get("surreal_transform") != "recursive_interior":
+    print(f"  !! FAIL: baroque transform={bc.get('surreal_transform')}")
+    all_ok = False
+elif os_styles.get("BAROQUE_CHURCH", {}).get("gate") != "_lib_OGEE_ARCH":
+    print("  !! FAIL: BAROQUE_CHURCH compose_roles missing")
+    all_ok = False
+else:
+    print("  baroque_church_v1 + BAROQUE_CHURCH compose_roles: OK")
+
+ven = os_genome.load_genome("venetian_canal_v1")
+if ven.get("compose_style") != "VENETIAN_CANAL" or os_genome.genome_family(ven) != "Venetian":
+    print(f"  !! FAIL: venetian_canal_v1 compose/family")
+    all_ok = False
+elif ven.get("grammar_id") != "VENETIAN_CANAL":
+    print(f"  !! FAIL: venetian_canal_v1 grammar={ven.get('grammar_id')}")
+    all_ok = False
+elif os_styles.get("VENETIAN_CANAL", {}).get("medium") != "_lib_GB_VENETIAN_LOGGIA":
+    print("  !! FAIL: VENETIAN_CANAL compose_roles missing")
+    all_ok = False
+else:
+    print("  venetian_canal_v1 + VENETIAN_CANAL compose_roles: OK")
 
 if all_ok:
     print("\n=== OS VERIFY OK ===")

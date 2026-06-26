@@ -11,6 +11,11 @@
   "compose_style": "WESTERN_CASTLE",
   "default_graph": "CLOISTER",
   "grammar_id": "CLOISTER",
+  "surreal_transform": "recursive_interior",
+  "compose_roles": {
+    "gate": "_lib_GB_GOTHIC_PORTAL",
+    "medium": "_lib_GREYBOX_CORRIDOR"
+  },
   "prop_defaults": {
     "gb_trim_mode": "RECESS",
     "gb_bake_trim_colors": true,

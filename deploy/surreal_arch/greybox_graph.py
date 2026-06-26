@@ -59,6 +59,15 @@ GRAPH_SCI_FI_DECK_EXPANSION = [
     ("GB_SCIFI_PRESSURE_DOOR", {"gb_length": 3.5, "gb_trim_mode": "RECESS"}),
 ]
 
+GRAPH_SCI_FI_INDUSTRIAL_YARD = [
+    ("GREYBOX_PILLAR_HALL", {"gb_cols_x": 4, "gb_cols_y": 3, "gb_spacing": 4.0, "gb_height": 4.2, "gb_trim_mode": "RECESS", "material_choice": "AUTO", "unit_size": 4.0}),
+    ("GREYBOX_CATWALK", {"gb_length": 12.0, "gb_width": 1.6, "gb_rail_height": 1.0, "material_choice": "AUTO"}),
+    ("GB_SCIFI_PRESSURE_DOOR", {"gb_length": 3.5, "gb_door_width": 1.6, "gb_trim_mode": "RECESS", "material_choice": "AUTO"}),
+    ("GREYBOX_CORRIDOR", {"gb_length": 10.0, "gb_corridor_profile": "DOUBLE", "gb_trim_mode": "RECESS", "material_choice": "AUTO"}),
+    ("GB_CORRIDOR_OFFSET", {"gb_length": 8.0, "gb_trim_mode": "RECESS", "material_choice": "AUTO"}),
+    ("GREYBOX_CATWALK", {"gb_length": 8.0, "gb_width": 1.4, "material_choice": "AUTO"}),
+]
+
 GRAPH_ZEN_ROJI_PATH = [
     ("GB_ZEN_TORII_GATE", {"torii_width": 3.6, "torii_height": 4.2, "gb_trim_mode": "RECESS"}),
     ("GB_ZEN_TOBIISHI", {"gb_length": 4.5, "gb_width": 1.6, "gb_trim_mode": "RECESS", "unit_size": 2.0}),
@@ -169,6 +178,14 @@ GRAPH_REGISTRY = {
         "style": "scifi",
         "module_count": len(GRAPH_SCI_FI_DECK_EXPANSION),
         "spec": GRAPH_SCI_FI_DECK_EXPANSION,
+    },
+    "SCI_FI_INDUSTRIAL_YARD": {
+        "label": "Sci-Fi Industrial Yard",
+        "description": "Hypostyle atrium, catwalk spine, bulkhead, service corridor return",
+        "preview": _preview_chain(GRAPH_SCI_FI_INDUSTRIAL_YARD),
+        "style": "scifi",
+        "module_count": len(GRAPH_SCI_FI_INDUSTRIAL_YARD),
+        "spec": GRAPH_SCI_FI_INDUSTRIAL_YARD,
     },
     "ZEN_ROJI_PATH": {
         "label": "Zen Roji Approach",

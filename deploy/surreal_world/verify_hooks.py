@@ -87,7 +87,7 @@ def check_village_ld_metrics(world_root):
 
 
 def check_motte_ld_metrics(world_root):
-    """Return list of LD failures for motte/bailey WESTERN_CASTLE compose."""
+    """Return list of LD failures for motte/bailey compose (WESTERN_CASTLE or BRUTALIST_PLAZA)."""
     m = compose_metrics(world_root)
     fails = []
     if m["instance_count"] < 10:

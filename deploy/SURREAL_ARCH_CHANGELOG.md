@@ -1,5 +1,104 @@
 # Surreal Architecture — Changelog
 
+## v2.131.0 — Art Deco lobby architecture set
+
+- **`art_deco_lobby_v1`** genome + **`ART_DECO`** grammar chain (6 modules)
+- **`ART_DECO`** compose style + library bake for **`TESSELLATION_TOWER`**
+- Research preset `art_deco_lobby_graph` + curated playable preset; `vertical_stretch` transform
+- World manifest embed verify; genome catalog **30**
+
+## v2.130.0 — Asian city recursive compose polish
+
+- **`ASIAN_CITY_RECURSIVE`** grammar — offset alley lanes, kura bays, bend, moon gate terminus
+- **`ASIAN_CITY_RECURSIVE`** compose style — kura medium / pavilion small role inversion vs street grid
+- **`asian_city_recursive_v1`** retargeted to dedicated grammar + compose; manifest embed verify
+
+## v2.129.0 — Brutalist + Western compose retarget
+
+- **`BRUTALIST_PLAZA`** compose style + library bake for **`GB_BRUTALIST_PANEL_WALL`**
+- **`brutalist_plaza_v1`** retargeted to native `BRUTALIST_PLAZA` compose (was WESTERN_CASTLE bleed)
+- **`western_castle_v1`** — `recursive_interior` + CLOISTER gate/corridor compose role overrides
+- World manifest embed verify for brutalist plaza + western castle compose exports
+
+## v2.128.0 — Romanesque compose polish
+
+- **`ROMANESQUE_CLOISTER`** + **`ROMANESQUE_APSE`** compose styles in `compose_roles.json`
+- Library bake for **`GB_ROMANESQUE_APSE`**; arcade-medium + apse-sacred role maps
+- **`romanesque_cloister_v1`** + **`romanesque_apse_v1`** compose_style fixed (was WESTERN_CASTLE bleed)
+- World manifest embed verify for Romanesque cloister + apse compose exports
+
+## v2.127.0 — Gothic nave crossing variant
+
+- **`gothic_nave_crossing_v1`** genome + **`GOTHIC_NAVE_CROSSING`** grammar (T-crossing junction, transept arm, rose clerestory, aisle bay)
+- **`GOTHIC_NAVE_CROSSING`** compose style — rose window monument role; `vertical_stretch` transform
+- Research preset + curated playable preset; world manifest embed verify; catalog **29**
+
+## v2.126.0 — Gothic chapter house variant
+
+- **`gothic_chapter_house_v1`** genome + **`GOTHIC_CHAPTER_HOUSE`** grammar (7 modules: portal nave, window bay, buttress, transept, tracery)
+- **`GOTHIC_CHAPTER_HOUSE`** compose style + research preset + curated playable preset
+- World manifest embed verify; genome catalog **28** entries
+
+## v2.125.0 — Baroque church monolithic set
+
+- **`baroque_church_v1`** genome + **`BAROQUE_CHURCH`** grammar (ornate facade, ogee portal, ribbed vault, niche chapel, balustrade choir, crossing dome)
+- **`BAROQUE_CHURCH`** compose style + library bake for baroque niche
+- Research preset `baroque_church_graph` + curated playable preset; `recursive_interior` transform
+- Genome catalog **27** entries
+
+## v2.124.0 — Byzantine basilica monolithic set
+
+- **`byzantine_basilica_v1`** genome + **`BYZANTINE_BASILICA`** grammar (horseshoe narthex, cusped arch, vault nave, rose clerestory, crossing dome)
+- **`BYZANTINE_BASILICA`** compose style + library bake for cusped arch, rose window, baroque vault
+- Research preset `byzantine_basilica_graph` + curated playable preset; `vertical_stretch` transform
+- Genome catalog **26** entries
+
+## v2.123.0 — Sci-Fi compose family complete
+
+- **`scifi_airlock_v1`** + **`scifi_industrial_yard_v1`** compose_style fixed to **`SCIFI_DECK`**
+- Per-genome `compose_roles` overrides with library-prefixed greybox modules
+- World manifest embed verify for airlock + industrial yard compose exports
+- Sci-Fi catalog **4/4** genomes on dedicated compose style
+
+## v2.122.0 — Sci-Fi deck compose style
+
+- **`SCIFI_DECK`** compose style in `compose_roles.json` — greybox corridor spine, pressure-door gate, pillar-hall large, room sacred
+- Library bake for `GREYBOX_ROOM`, `GREYBOX_CATWALK`, `GREYBOX_PILLAR_HALL`, `GB_SCIFI_PRESSURE_DOOR`
+- **`scifi_deck_v1`** + **`scifi_deck_spine_v1`** compose_style fixed (was WESTERN_CASTLE bleed)
+- World manifest embed verify for Sci-Fi deck compose export
+
+## v2.121.0 — Sci-Fi industrial yard + endless tier-B loop
+
+- **Endless loop:** `cursor_surreal_tierb_loop.ps1` tick prompt retargeted to AAA genome expansion; monitored 300s cadence
+- **`scifi_industrial_yard_v1`** genome + **`SCI_FI_INDUSTRIAL_YARD`** grammar (pillar atrium, catwalk spine, bulkhead, service corridor)
+- Research preset `scifi_industrial_yard_graph` + curated playable preset; `recursive_interior` transform coverage
+- Genome catalog **25** entries
+
+## v2.120.0 — Zen monolithic genome expansion
+
+- **`zen_karesansui_v1`** genome wired to existing **`ZEN_KARESANSHUI_WALK`** grammar
+- **`zen_stream_garden_v1`** + **`ZEN_STREAM_GARDEN`** — strolling water garden graph (8 modules)
+- **`zen_pagoda_spire_v1`** + **`ZEN_PAGODA_SPIRE`** — vertical monument spine with `vertical_stretch`
+- **`zen_kairo_enclosure_v1`** + **`ZEN_KAIRO_ENCLOSURE`** — cloister temple compound graph
+- 4 research graph presets + 4 curated playable presets; Zen catalog **10** genomes
+
+## v2.119.0 — Gothic cloister compose style
+
+- **`gothic_cloister_v1`** compose_style fixed to **`GOTHIC_CLOISTER`** with dedicated compose roles + auto-stamp
+- Library bake for greybox corridor + gothic portal; world manifest embed verify (`recursive_interior`)
+
+## v2.118.0 — Venetian canal compose style
+
+- **`venetian_canal_v1`** compose_style fixed to **`VENETIAN_CANAL`** with dedicated compose roles + auto-stamp
+- Library bake for loggia, bifora, bridge; world manifest embed verify
+- **Hotfix:** restored truncated `surreal_architecture_gen.py` tail from git HEAD
+
+## v2.117.0 — Renaissance piazza architecture set
+
+- **`renaissance_piazza_v1`** genome + **`RENAISSANCE_PIAZZA`** grammar chain (6 modules)
+- **`RENAISSANCE_PIAZZA`** compose style — dome as sacred role, baroque facade as hero
+- Curated **Renaissance Piazza** graph preset + world manifest embed verify
+
 ## v2.116.0 — Moorish courtyard architecture set
 
 - **`moorish_courtyard_v1`** genome + **`MOORISH_COURTYARD`** grammar chain (6 modules)

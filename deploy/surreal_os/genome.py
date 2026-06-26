@@ -48,10 +48,14 @@ def genome_family(genome: dict) -> str:
         return "Brutalist"
     if gid.startswith("western_"):
         return "Western"
+    if gid.startswith("art_deco_"):
+        return "ArtDeco"
     if gid.startswith("art_nouveau_"):
         return "ArtNouveau"
     if gid.startswith("moorish_"):
         return "Moorish"
+    if gid.startswith("renaissance_"):
+        return "Renaissance"
     return "Other"
 
 
@@ -153,12 +157,36 @@ def resolve_genome_manifest(monolith, style_key: str, genome_id: str | None = No
         gid = "zen_shrine_v1"
     if not gid and style_key == "ASIAN_CITY":
         gid = "asian_city_v1"
+    if not gid and style_key == "ASIAN_CITY_RECURSIVE":
+        gid = "asian_city_recursive_v1"
     if not gid and style_key == "WESTERN_CASTLE":
         gid = "western_castle_v1"
+    if not gid and style_key == "ART_DECO":
+        gid = "art_deco_lobby_v1"
     if not gid and style_key == "ART_NOUVEAU":
         gid = "art_nouveau_v1"
     if not gid and style_key == "MOORISH_COURTYARD":
         gid = "moorish_courtyard_v1"
+    if not gid and style_key == "RENAISSANCE_PIAZZA":
+        gid = "renaissance_piazza_v1"
+    if not gid and style_key == "VENETIAN_CANAL":
+        gid = "venetian_canal_v1"
+    if not gid and style_key == "GOTHIC_CLOISTER":
+        gid = "gothic_cloister_v1"
+    if not gid and style_key == "GOTHIC_CHAPTER_HOUSE":
+        gid = "gothic_chapter_house_v1"
+    if not gid and style_key == "GOTHIC_NAVE_CROSSING":
+        gid = "gothic_nave_crossing_v1"
+    if not gid and style_key == "ROMANESQUE_CLOISTER":
+        gid = "romanesque_cloister_v1"
+    if not gid and style_key == "ROMANESQUE_APSE":
+        gid = "romanesque_apse_v1"
+    if not gid and style_key == "SCIFI_DECK":
+        gid = "scifi_deck_v1"
+    if not gid and style_key == "BYZANTINE_BASILICA":
+        gid = "byzantine_basilica_v1"
+    if not gid and style_key == "BAROQUE_CHURCH":
+        gid = "baroque_church_v1"
     if gid:
         try:
             return build_genome_manifest(load_genome(gid))

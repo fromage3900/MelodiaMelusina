@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 """
 Surreal Architecture Generator - Geometry Node System for Blender 5.1
 
@@ -24,7 +24,7 @@ bl_info = {
     "blender": (5, 1, 0),
     "author": "Claude Code",
     "description": "Procedural geometry node system for surreal architecture",
-    "version": (2, 116, 0),
+    "version": (2, 131, 0),
     "location": "Properties > Modifiers",
     "category": "Geometry Nodes",
 }
@@ -13754,9 +13754,12 @@ def _baroque_barrel_vault(tree, span, depth, rise, base_x=-1400):
                         return sc.outputs['Geometry']
                 return c2m.outputs['Mesh']
     cube = _node(tree, 'GeometryNodeMeshCube', (base_x, 0))
-    cube.inputs['Size X'].default_value = span * 0.95
-    cube.inputs['Size Y'].default_value = depth * 0.95
-    cube.inputs['Size Z'].default_value = rise * 0.65
+    try:
+        cube.inputs['Size'].default_value = (span * 0.95, depth * 0.95, rise * 0.65)
+    except Exception:
+        cube.inputs['Size X'].default_value = span * 0.95
+        cube.inputs['Size Y'].default_value = depth * 0.95
+        cube.inputs['Size Z'].default_value = rise * 0.65
     color_node(cube, 'vault')
     tr = _node(tree, 'GeometryNodeTransform', (base_x + 200, 0))
     tr.inputs['Translation'].default_value = (0, 0, rise * 0.35)
@@ -13809,9 +13812,12 @@ def _baroque_pilaster_geom(tree, width, height, base_x=-1400, y=0):
         ('cap', cap_h, height - cap_h * 0.5, width * 1.2),
     ):
         c = _node(tree, 'GeometryNodeMeshCube', (base_x, y))
-        c.inputs['Size X'].default_value = sx
-        c.inputs['Size Y'].default_value = width * 0.35
-        c.inputs['Size Z'].default_value = h
+        try:
+            c.inputs['Size'].default_value = (sx, width * 0.35, h)
+        except Exception:
+            c.inputs['Size X'].default_value = sx
+            c.inputs['Size Y'].default_value = width * 0.35
+            c.inputs['Size Z'].default_value = h
         color_node(c, 'pilaster')
         tr = _node(tree, 'GeometryNodeTransform', (base_x + 100, y))
         tr.inputs['Translation'].default_value = (0, 0, z)
@@ -28046,6 +28052,18 @@ SURREAL_ARCH_OT_preset_gothic_cloister_walk = _make_graph_preset_op(
     "gothic_cloister_graph",
     description="Gothic cloister walk — double corridor, bend, portal termination",
 )
+SURREAL_ARCH_OT_preset_gothic_chapter_house = _make_graph_preset_op(
+    "SURREAL_ARCH_OT_preset_gothic_chapter_house",
+    "surreal_arch.preset_gothic_chapter_house", "Gothic Chapter House",
+    "gothic_chapter_house_graph",
+    description="Portal nave, window bay, buttress, transept bend, tracery screen",
+)
+SURREAL_ARCH_OT_preset_gothic_nave_crossing = _make_graph_preset_op(
+    "SURREAL_ARCH_OT_preset_gothic_nave_crossing",
+    "surreal_arch.preset_gothic_nave_crossing", "Gothic Nave Crossing",
+    "gothic_nave_crossing_graph",
+    description="Long nave, T-crossing junction, transept arm, rose clerestory, aisle bay",
+)
 
 # === v2.60.1 — tick 63: six architecturally accurate gap-fill presets ===
 SURREAL_ARCH_OT_preset_escher_courtyard = _make_preset_op(
@@ -28092,6 +28110,13 @@ SURREAL_ARCH_OT_preset_scifi_airlock = _make_graph_preset_op(
     "Sci-Fi Airlock",
     "scifi_airlock_graph",
     description="Pressure doors flanking sealed chamber — double-door airlock chain",
+)
+
+SURREAL_ARCH_OT_preset_scifi_industrial_yard = _make_graph_preset_op(
+    "SURREAL_ARCH_OT_preset_scifi_industrial_yard",
+    "surreal_arch.preset_scifi_industrial_yard", "Sci-Fi Industrial Yard",
+    "scifi_industrial_yard_graph",
+    description="Pillar atrium, catwalk spine, bulkhead, service corridor return",
 )
 
 # === v2.60.2 — tick 64: five more metre-scale presets ===
@@ -28237,6 +28262,59 @@ SURREAL_ARCH_OT_preset_art_nouveau_facade = _make_graph_preset_op(
     description="Ogee arch, filigree panels, balcony, facade bay chain",
 )
 
+SURREAL_ARCH_OT_preset_art_deco_lobby = _make_graph_preset_op(
+    "SURREAL_ARCH_OT_preset_art_deco_lobby",
+    "surreal_arch.preset_art_deco_lobby", "Art Deco Lobby",
+    "art_deco_lobby_graph",
+    description="Tessellation tower, geometric panels, chevron filigree, cusped portal, obelisk",
+)
+
+SURREAL_ARCH_OT_preset_renaissance_piazza = _make_graph_preset_op(
+    "SURREAL_ARCH_OT_preset_renaissance_piazza",
+    "surreal_arch.preset_renaissance_piazza", "Renaissance Piazza",
+    "renaissance_piazza_graph",
+    description="Baroque facade, arcade colonnade, balustrade, fountain, dome",
+)
+
+SURREAL_ARCH_OT_preset_byzantine_basilica = _make_graph_preset_op(
+    "SURREAL_ARCH_OT_preset_byzantine_basilica",
+    "surreal_arch.preset_byzantine_basilica", "Byzantine Basilica",
+    "byzantine_basilica_graph",
+    description="Horseshoe narthex, cusped arch, vault nave, rose clerestory, crossing dome",
+)
+
+SURREAL_ARCH_OT_preset_baroque_church = _make_graph_preset_op(
+    "SURREAL_ARCH_OT_preset_baroque_church",
+    "surreal_arch.preset_baroque_church", "Baroque Church",
+    "baroque_church_graph",
+    description="Ornate facade, ogee portal, ribbed vault, niche chapel, balustrade, dome",
+)
+
+SURREAL_ARCH_OT_preset_zen_stream_garden = _make_graph_preset_op(
+    "SURREAL_ARCH_OT_preset_zen_stream_garden",
+    "surreal_arch.preset_zen_stream_garden", "Zen Stream Garden",
+    "zen_stream_garden_graph",
+    description="Sando, stream edge, stone bridge, cherry allée, karesansui, engawa",
+)
+SURREAL_ARCH_OT_preset_zen_pagoda_spire = _make_graph_preset_op(
+    "SURREAL_ARCH_OT_preset_zen_pagoda_spire",
+    "surreal_arch.preset_zen_pagoda_spire", "Zen Pagoda Spire",
+    "zen_pagoda_spire_graph",
+    description="Torii, sando ascent, goju pagoda, tahoto, honden sanctuary",
+)
+SURREAL_ARCH_OT_preset_zen_karesansui_walk = _make_graph_preset_op(
+    "SURREAL_ARCH_OT_preset_zen_karesansui_walk",
+    "surreal_arch.preset_zen_karesansui_walk", "Zen Karesansui Walk",
+    "zen_karesansui_graph",
+    description="Torii, roji step, dry garden, machiai, lantern contemplation spine",
+)
+SURREAL_ARCH_OT_preset_zen_kairo_enclosure = _make_graph_preset_op(
+    "SURREAL_ARCH_OT_preset_zen_kairo_enclosure",
+    "surreal_arch.preset_zen_kairo_enclosure", "Zen Kairo Enclosure",
+    "zen_kairo_enclosure_graph",
+    description="Torii, cloister L-turn, karesansui court, haiden, honden",
+)
+
 # Curated playable presets — group, label, operator id, short description
 _ARCH_PRESETS = {
     'BASILICA_NAVE': {
@@ -28258,6 +28336,16 @@ _ARCH_PRESETS = {
         'group': 'GOTHIC', 'label': '🌙 Gothic Cloister',
         'desc': 'CLOISTER graph chain — corridor bend into portal bay',
         'op_id': 'surreal_arch.preset_gothic_cloister_walk',
+    },
+    'GOTHIC_CHAPTER_HOUSE': {
+        'group': 'GOTHIC', 'label': '📜 Gothic Chapter House',
+        'desc': 'GOTHIC_CHAPTER_HOUSE graph — nave bay, buttress, transept bend, tracery',
+        'op_id': 'surreal_arch.preset_gothic_chapter_house',
+    },
+    'GOTHIC_NAVE_CROSSING': {
+        'group': 'GOTHIC', 'label': '✝ Gothic Nave Crossing',
+        'desc': 'GOTHIC_NAVE_CROSSING graph — T-crossing, transept arm, rose clerestory',
+        'op_id': 'surreal_arch.preset_gothic_nave_crossing',
     },
     'JAPANESE_GATE': {
         'group': 'ASIAN', 'label': '⛩ Japanese Temple Gate',
@@ -28360,6 +28448,11 @@ _ARCH_PRESETS = {
         'desc': 'SCIFI_AIRLOCK graph — corridor, pressure doors, sealed chamber',
         'op_id': 'surreal_arch.preset_scifi_airlock',
     },
+    'SCIFI_INDUSTRIAL_YARD': {
+        'group': 'GREYBOX', 'label': '🏭 Sci-Fi Industrial Yard',
+        'desc': 'SCI_FI_INDUSTRIAL_YARD graph — pillar atrium, catwalk, bulkhead, service leg',
+        'op_id': 'surreal_arch.preset_scifi_industrial_yard',
+    },
     # v2.60.2 — tick 64 additions
     'ZEN_TEAHOUSE': {
         'group': 'ASIAN', 'label': '🍵 Tea Pavilion',
@@ -28453,6 +28546,46 @@ _ARCH_PRESETS = {
         'group': 'CIVIC', 'label': '🌿 Art Nouveau Facade',
         'desc': 'ART_NOUVEAU graph — ogee arch, filigree, balcony, facade bay',
         'op_id': 'surreal_arch.preset_art_nouveau_facade',
+    },
+    'ART_DECO_LOBBY': {
+        'group': 'CIVIC', 'label': '🏙 Art Deco Lobby',
+        'desc': 'ART_DECO graph — tessellation tower, geometric panels, chevron filigree, obelisk',
+        'op_id': 'surreal_arch.preset_art_deco_lobby',
+    },
+    'RENAISSANCE_PIAZZA': {
+        'group': 'CIVIC', 'label': '🏛 Renaissance Piazza',
+        'desc': 'RENAISSANCE_PIAZZA graph — facade, arcade, balustrade, fountain, dome',
+        'op_id': 'surreal_arch.preset_renaissance_piazza',
+    },
+    'BYZANTINE_BASILICA': {
+        'group': 'CIVIC', 'label': '⛪ Byzantine Basilica',
+        'desc': 'BYZANTINE_BASILICA graph — narthex, cusped arch, vault nave, rose window, dome',
+        'op_id': 'surreal_arch.preset_byzantine_basilica',
+    },
+    'BAROQUE_CHURCH': {
+        'group': 'CIVIC', 'label': '🏛 Baroque Church',
+        'desc': 'BAROQUE_CHURCH graph — facade, ogee portal, vault nave, niche, balustrade, dome',
+        'op_id': 'surreal_arch.preset_baroque_church',
+    },
+    'ZEN_STREAM_GARDEN': {
+        'group': 'ASIAN', 'label': '💧 Zen Stream Garden',
+        'desc': 'ZEN_STREAM_GARDEN graph — sando, stream, bridge, cherry, karesansui',
+        'op_id': 'surreal_arch.preset_zen_stream_garden',
+    },
+    'ZEN_PAGODA_SPIRE': {
+        'group': 'ASIAN', 'label': '🗼 Zen Pagoda Spire',
+        'desc': 'ZEN_PAGODA_SPIRE graph — sando ascent, goju pagoda, tahoto, honden',
+        'op_id': 'surreal_arch.preset_zen_pagoda_spire',
+    },
+    'ZEN_KARESANSHUI_WALK': {
+        'group': 'ASIAN', 'label': '🪨 Zen Karesansui Walk',
+        'desc': 'ZEN_KARESANSHUI_WALK graph — torii, roji, dry garden, machiai',
+        'op_id': 'surreal_arch.preset_zen_karesansui_walk',
+    },
+    'ZEN_KAIRO_ENCLOSURE': {
+        'group': 'ASIAN', 'label': '🏯 Zen Kairo Enclosure',
+        'desc': 'ZEN_KAIRO_ENCLOSURE graph — cloister L-turn, court, haiden, honden',
+        'op_id': 'surreal_arch.preset_zen_kairo_enclosure',
     },
 }
 
@@ -33536,7 +33669,7 @@ def _draw_arch_presets_grouped(layout):
     intro = layout.row()
     intro.scale_y = 0.92
     intro.label(
-        text="Style buckets — graph presets spawn module chains; single-module presets need a selected mesh.",
+        text="Style buckets show typology hints; presets set arch_type + defaults — then Generate.",
         icon='INFO',
     )
     for group_id, group_label, group_icon in _ARCH_PRESET_GROUPS:
@@ -34010,6 +34143,17 @@ _GREYBOX_QUICK_LAUNCH_GROUPS = (
         ('GB_ZEN_TOBIISHI', "Tobi-ishi"),
         ('GB_ZEN_KARESANSUI', "Karesansui"),
         ('GB_ZEN_MACHIAI', "Machiai"),
+        ('GB_ZEN_STONE_BRIDGE', "Stone Bridge"),
+        ('GB_ZEN_CHERRY_ALLEE', "Cherry Allee"),
+        ('GB_ZEN_WATER_EDGE', "Water Edge"),
+        ('GB_ZEN_SANDO', "Sando"),
+        ('GB_ZEN_KAIRO', "Kairo"),
+        ('GB_ZEN_HAIDEN', "Haiden"),
+        ('GB_ZEN_GOJU_PAGODA', "Goju"),
+        ('GB_ZEN_SAKURA_TORII', "Sakura Torii"),
+        ('GB_ZEN_TAHOTO', "Tahoto"),
+        ('GB_ZEN_HONDEN', "Honden"),
+        ('GB_ZEN_LANTERN', "Lantern"),
     )),
     ('Gothic kit', (
         ('GB_GOTHIC_PORTAL', "Portal"),
@@ -34115,11 +34259,11 @@ _ZEN_QUICK_LAUNCH = (
     ('GB_ZEN_SANDO', 'Sando'),
     ('GB_ZEN_KAIRO', 'Kairo'),
     ('GB_ZEN_HAIDEN', 'Haiden'),
-    ('GB_ZEN_GOJU_PAGODA', 'Goju Pagoda'),
+    ('GB_ZEN_GOJU_PAGODA', 'Goju'),
     ('GB_ZEN_SAKURA_TORII', 'Sakura Torii'),
     ('GB_ZEN_TAHOTO', 'Tahoto'),
     ('GB_ZEN_HONDEN', 'Honden'),
-    ('GB_ZEN_LANTERN', 'Stone Lantern'),
+    ('GB_ZEN_LANTERN', 'Lantern'),
 )
 
 
@@ -37890,6 +38034,8 @@ classes = (
     SURREAL_ARCH_OT_preset_civic_town_hall,
     SURREAL_ARCH_OT_preset_baroque_piazza_facade,
     SURREAL_ARCH_OT_preset_gothic_cloister_walk,
+    SURREAL_ARCH_OT_preset_gothic_chapter_house,
+    SURREAL_ARCH_OT_preset_gothic_nave_crossing,
     # v2.60.1 — tick 63 gap-fill presets
     SURREAL_ARCH_OT_preset_escher_courtyard,
     SURREAL_ARCH_OT_preset_shinto_shrine,
@@ -37897,7 +38043,6 @@ classes = (
     SURREAL_ARCH_OT_preset_brutalist_plaza,
     SURREAL_ARCH_OT_preset_medieval_keep,
     SURREAL_ARCH_OT_preset_scifi_atrium,
-    SURREAL_ARCH_OT_preset_scifi_airlock,
     # v2.60.2 — tick 64 additions
     SURREAL_ARCH_OT_preset_zen_teahouse_pavilion,
     SURREAL_ARCH_OT_preset_modular_village_house,
@@ -37916,10 +38061,21 @@ classes = (
     # v2.60.5 — tick 86: amphitheatre + covered bazaar preset descriptions
     SURREAL_ARCH_OT_preset_amphitheatre,
     SURREAL_ARCH_OT_preset_covered_bazaar,
+    # v2.115+ — filigree + graph presets
+    SURREAL_ARCH_OT_preset_scifi_airlock,
+    SURREAL_ARCH_OT_preset_scifi_industrial_yard,
     SURREAL_ARCH_OT_preset_filigree_vine_panel,
     SURREAL_ARCH_OT_preset_filigree_geometric_panel,
     SURREAL_ARCH_OT_preset_filigree_rail_vine,
     SURREAL_ARCH_OT_preset_art_nouveau_facade,
+    SURREAL_ARCH_OT_preset_art_deco_lobby,
+    SURREAL_ARCH_OT_preset_renaissance_piazza,
+    SURREAL_ARCH_OT_preset_byzantine_basilica,
+    SURREAL_ARCH_OT_preset_baroque_church,
+    SURREAL_ARCH_OT_preset_zen_stream_garden,
+    SURREAL_ARCH_OT_preset_zen_pagoda_spire,
+    SURREAL_ARCH_OT_preset_zen_karesansui_walk,
+    SURREAL_ARCH_OT_preset_zen_kairo_enclosure,
     # v2.53 — Lebbeus Woods presets
     SURREAL_ARCH_OT_preset_gb_woods_parasite,
     SURREAL_ARCH_OT_preset_gb_woods_freespace,

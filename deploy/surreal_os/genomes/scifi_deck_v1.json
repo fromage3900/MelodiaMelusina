@@ -8,14 +8,13 @@
   "organic_growth": 0.08,
   "cosmic_influence": 0.45,
   "sacred_sequence": [],
-  "compose_style": "WESTERN_CASTLE",
+  "compose_style": "SCIFI_DECK",
   "default_graph": "SCI_FI_DECK_EXPANSION",
   "grammar_id": "SCI_FI_DECK_EXPANSION",
   "surreal_transform": "recursive_interior",
   "compose_roles": {
-    "large": "_lib_WATCHTOWER",
-    "gate": "_lib_GATEHOUSE",
-    "monument": "_lib_OBELISK"
+    "large": "_lib_GREYBOX_ROOM",
+    "monument": "_lib_GREYBOX_CATWALK"
   },
   "prop_defaults": {
     "gb_trim_mode": "RECESS",

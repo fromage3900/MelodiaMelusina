@@ -42,10 +42,25 @@ from surreal_world import compose, export, library, plans, verify_hooks
 all_ok = True
 export_root = None
 city_export_root = None
+asian_recursive_export_root = None
 brutalist_export_root = None
 castle_root = None
 art_nouveau_export_root = None
+art_deco_export_root = None
 moorish_export_root = None
+renaissance_export_root = None
+byzantine_export_root = None
+baroque_export_root = None
+venetian_export_root = None
+romanesque_cloister_export_root = None
+romanesque_apse_export_root = None
+gothic_export_root = None
+gothic_chapter_export_root = None
+gothic_nave_crossing_export_root = None
+scifi_deck_export_root = None
+scifi_airlock_export_root = None
+scifi_industrial_export_root = None
+zen_pagoda_export_root = None
 
 print("\n--- Library init ---")
 try:
@@ -78,9 +93,13 @@ except Exception as e:
 
 print("\n--- Compose COLLECTION ---")
 try:
+    from surreal_os import genome as os_genome
+    library.init_library(s, types_only={"GB_GOTHIC_PORTAL", "GREYBOX_CORRIDOR"})
+    s._active_style_genome = os_genome.load_genome("western_castle_v1")
     bpy.context.view_layer.objects.active = plan
     plan.select_set(True)
     root, msg = compose.compose_world(s, bpy.context, plan, "WESTERN_CASTLE", 0.8, "COLLECTION")
+    s._active_style_genome = None
     castle_root = root
     print(f"  {msg}")
     inst_count = root.get("surreal_instance_count", 0) if root else 0
@@ -190,6 +209,34 @@ except Exception as e:
     print(f"  art_nouveau compose error: {e}")
     all_ok = False
 
+print("\n--- Art Deco lobby plan compose ---")
+try:
+    from surreal_os import genome as os_genome
+    library.init_library(
+        s,
+        types_only={
+            "TESSELLATION_TOWER",
+            "GB_BRUTALIST_PANEL_WALL",
+            "FILIGREE_PANEL",
+            "CUSPED_ARCH",
+            "OBELISK",
+        },
+    )
+    deco_plan = plans.spawn_village_plan(location=(110, 0, 0))
+    s._active_style_genome = os_genome.load_genome("art_deco_lobby_v1")
+    droot, dmsg = compose.compose_world(s, bpy.context, deco_plan, "ART_DECO", 0.85, "COLLECTION")
+    art_deco_export_root = droot
+    s._active_style_genome = None
+    print(f"  art_deco_compose: {dmsg} metrics={verify_hooks.compose_metrics(droot)}")
+    if droot.get("surreal_style_genome_id") != "art_deco_lobby_v1":
+        print(f"  !! FAIL: art_deco genome stamp got {droot.get('surreal_style_genome_id')}")
+        all_ok = False
+    else:
+        print("  art_deco_compose: OK")
+except Exception as e:
+    print(f"  art_deco compose error: {e}")
+    all_ok = False
+
 print("\n--- Moorish courtyard plan compose ---")
 try:
     from surreal_os import genome as os_genome
@@ -208,6 +255,248 @@ except Exception as e:
     print(f"  moorish compose error: {e}")
     all_ok = False
 
+print("\n--- Renaissance piazza plan compose ---")
+try:
+    from surreal_os import genome as os_genome
+    ren_plan = plans.spawn_village_plan(location=(140, 0, 0))
+    s._active_style_genome = os_genome.load_genome("renaissance_piazza_v1")
+    rroot, rmsg = compose.compose_world(s, bpy.context, ren_plan, "RENAISSANCE_PIAZZA", 0.85, "COLLECTION")
+    renaissance_export_root = rroot
+    s._active_style_genome = None
+    print(f"  renaissance_compose: {rmsg} metrics={verify_hooks.compose_metrics(rroot)}")
+    if rroot.get("surreal_style_genome_id") != "renaissance_piazza_v1":
+        print(f"  !! FAIL: renaissance genome stamp got {rroot.get('surreal_style_genome_id')}")
+        all_ok = False
+    else:
+        print("  renaissance_compose: OK")
+except Exception as e:
+    print(f"  renaissance compose error: {e}")
+    all_ok = False
+
+print("\n--- Byzantine basilica plan compose ---")
+try:
+    from surreal_os import genome as os_genome
+    byz_plan = plans.spawn_village_plan(location=(150, 0, 0))
+    s._active_style_genome = os_genome.load_genome("byzantine_basilica_v1")
+    bzroot, bzmsg = compose.compose_world(s, bpy.context, byz_plan, "BYZANTINE_BASILICA", 0.85, "COLLECTION")
+    byzantine_export_root = bzroot
+    s._active_style_genome = None
+    print(f"  byzantine_compose: {bzmsg} metrics={verify_hooks.compose_metrics(bzroot)}")
+    if bzroot.get("surreal_style_genome_id") != "byzantine_basilica_v1":
+        print(f"  !! FAIL: byzantine genome stamp got {bzroot.get('surreal_style_genome_id')}")
+        all_ok = False
+    else:
+        print("  byzantine_compose: OK")
+except Exception as e:
+    print(f"  byzantine compose error: {e}")
+    all_ok = False
+
+print("\n--- Baroque church plan compose ---")
+try:
+    from surreal_os import genome as os_genome
+    bar_plan = plans.spawn_village_plan(location=(155, 0, 0))
+    s._active_style_genome = os_genome.load_genome("baroque_church_v1")
+    barroot, barmsg = compose.compose_world(s, bpy.context, bar_plan, "BAROQUE_CHURCH", 0.85, "COLLECTION")
+    baroque_export_root = barroot
+    s._active_style_genome = None
+    print(f"  baroque_compose: {barmsg} metrics={verify_hooks.compose_metrics(barroot)}")
+    if barroot.get("surreal_style_genome_id") != "baroque_church_v1":
+        print(f"  !! FAIL: baroque genome stamp got {barroot.get('surreal_style_genome_id')}")
+        all_ok = False
+    else:
+        print("  baroque_compose: OK")
+except Exception as e:
+    print(f"  baroque compose error: {e}")
+    all_ok = False
+
+print("\n--- Romanesque cloister plan compose ---")
+try:
+    from surreal_os import genome as os_genome
+    rom_plan = plans.spawn_village_plan(location=(158, 0, 0))
+    s._active_style_genome = os_genome.load_genome("romanesque_cloister_v1")
+    romroot, rommsg = compose.compose_world(s, bpy.context, rom_plan, "ROMANESQUE_CLOISTER", 0.85, "COLLECTION")
+    romanesque_cloister_export_root = romroot
+    s._active_style_genome = None
+    print(f"  romanesque_cloister_compose: {rommsg} metrics={verify_hooks.compose_metrics(romroot)}")
+    if romroot.get("surreal_style_genome_id") != "romanesque_cloister_v1":
+        print(f"  !! FAIL: romanesque cloister genome stamp got {romroot.get('surreal_style_genome_id')}")
+        all_ok = False
+    else:
+        print("  romanesque_cloister_compose: OK")
+except Exception as e:
+    print(f"  romanesque cloister compose error: {e}")
+    all_ok = False
+
+print("\n--- Romanesque apse plan compose ---")
+try:
+    from surreal_os import genome as os_genome
+    rapp_plan = plans.spawn_village_plan(location=(162, 0, 0))
+    s._active_style_genome = os_genome.load_genome("romanesque_apse_v1")
+    rapproot, rappmsg = compose.compose_world(s, bpy.context, rapp_plan, "ROMANESQUE_APSE", 0.85, "COLLECTION")
+    romanesque_apse_export_root = rapproot
+    s._active_style_genome = None
+    print(f"  romanesque_apse_compose: {rappmsg} metrics={verify_hooks.compose_metrics(rapproot)}")
+    if rapproot.get("surreal_style_genome_id") != "romanesque_apse_v1":
+        print(f"  !! FAIL: romanesque apse genome stamp got {rapproot.get('surreal_style_genome_id')}")
+        all_ok = False
+    else:
+        print("  romanesque_apse_compose: OK")
+except Exception as e:
+    print(f"  romanesque apse compose error: {e}")
+    all_ok = False
+
+print("\n--- Venetian canal plan compose ---")
+try:
+    from surreal_os import genome as os_genome
+    ven_plan = plans.spawn_village_plan(location=(160, 0, 0))
+    s._active_style_genome = os_genome.load_genome("venetian_canal_v1")
+    vroot, vmsg = compose.compose_world(s, bpy.context, ven_plan, "VENETIAN_CANAL", 0.85, "COLLECTION")
+    venetian_export_root = vroot
+    s._active_style_genome = None
+    print(f"  venetian_compose: {vmsg} metrics={verify_hooks.compose_metrics(vroot)}")
+    if vroot.get("surreal_style_genome_id") != "venetian_canal_v1":
+        print(f"  !! FAIL: venetian genome stamp got {vroot.get('surreal_style_genome_id')}")
+        all_ok = False
+    else:
+        print("  venetian_compose: OK")
+except Exception as e:
+    print(f"  venetian compose error: {e}")
+    all_ok = False
+
+print("\n--- Gothic cloister plan compose ---")
+try:
+    from surreal_os import genome as os_genome
+    goth_plan = plans.spawn_village_plan(location=(180, 0, 0))
+    s._active_style_genome = os_genome.load_genome("gothic_cloister_v1")
+    groot, gmsg = compose.compose_world(s, bpy.context, goth_plan, "GOTHIC_CLOISTER", 0.85, "COLLECTION")
+    gothic_export_root = groot
+    s._active_style_genome = None
+    print(f"  gothic_compose: {gmsg} metrics={verify_hooks.compose_metrics(groot)}")
+    if groot.get("surreal_style_genome_id") != "gothic_cloister_v1":
+        print(f"  !! FAIL: gothic genome stamp got {groot.get('surreal_style_genome_id')}")
+        all_ok = False
+    else:
+        print("  gothic_compose: OK")
+except Exception as e:
+    print(f"  gothic compose error: {e}")
+    all_ok = False
+
+print("\n--- Gothic chapter house plan compose ---")
+try:
+    from surreal_os import genome as os_genome
+    gch_plan = plans.spawn_village_plan(location=(190, 0, 0))
+    s._active_style_genome = os_genome.load_genome("gothic_chapter_house_v1")
+    gchroot, gchmsg = compose.compose_world(s, bpy.context, gch_plan, "GOTHIC_CHAPTER_HOUSE", 0.85, "COLLECTION")
+    gothic_chapter_export_root = gchroot
+    s._active_style_genome = None
+    print(f"  gothic_chapter_compose: {gchmsg} metrics={verify_hooks.compose_metrics(gchroot)}")
+    if gchroot.get("surreal_style_genome_id") != "gothic_chapter_house_v1":
+        print(f"  !! FAIL: gothic chapter genome stamp got {gchroot.get('surreal_style_genome_id')}")
+        all_ok = False
+    else:
+        print("  gothic_chapter_compose: OK")
+except Exception as e:
+    print(f"  gothic chapter compose error: {e}")
+    all_ok = False
+
+print("\n--- Gothic nave crossing plan compose ---")
+try:
+    from surreal_os import genome as os_genome
+    gnc_plan = plans.spawn_village_plan(location=(195, 0, 0))
+    s._active_style_genome = os_genome.load_genome("gothic_nave_crossing_v1")
+    gncroot, gncmsg = compose.compose_world(s, bpy.context, gnc_plan, "GOTHIC_NAVE_CROSSING", 0.85, "COLLECTION")
+    gothic_nave_crossing_export_root = gncroot
+    s._active_style_genome = None
+    print(f"  gothic_nave_crossing_compose: {gncmsg} metrics={verify_hooks.compose_metrics(gncroot)}")
+    if gncroot.get("surreal_style_genome_id") != "gothic_nave_crossing_v1":
+        print(f"  !! FAIL: gothic nave crossing genome stamp got {gncroot.get('surreal_style_genome_id')}")
+        all_ok = False
+    else:
+        print("  gothic_nave_crossing_compose: OK")
+except Exception as e:
+    print(f"  gothic nave crossing compose error: {e}")
+    all_ok = False
+
+print("\n--- Sci-Fi deck plan compose ---")
+try:
+    from surreal_os import genome as os_genome
+    scifi_plan = plans.spawn_village_plan(location=(200, 0, 0))
+    s._active_style_genome = os_genome.load_genome("scifi_deck_v1")
+    sciroot, scimsg = compose.compose_world(s, bpy.context, scifi_plan, "SCIFI_DECK", 0.85, "COLLECTION")
+    scifi_deck_export_root = sciroot
+    s._active_style_genome = None
+    print(f"  scifi_deck_compose: {scimsg} metrics={verify_hooks.compose_metrics(sciroot)}")
+    if sciroot.get("surreal_style_genome_id") != "scifi_deck_v1":
+        print(f"  !! FAIL: scifi deck genome stamp got {sciroot.get('surreal_style_genome_id')}")
+        all_ok = False
+    else:
+        print("  scifi_deck_compose: OK")
+except Exception as e:
+    print(f"  scifi deck compose error: {e}")
+    all_ok = False
+
+print("\n--- Sci-Fi airlock plan compose ---")
+try:
+    from surreal_os import genome as os_genome
+    air_plan = plans.spawn_village_plan(location=(220, 0, 0))
+    s._active_style_genome = os_genome.load_genome("scifi_airlock_v1")
+    aroot, amsg = compose.compose_world(s, bpy.context, air_plan, "SCIFI_DECK", 0.85, "COLLECTION")
+    scifi_airlock_export_root = aroot
+    s._active_style_genome = None
+    print(f"  scifi_airlock_compose: {amsg} metrics={verify_hooks.compose_metrics(aroot)}")
+    if aroot.get("surreal_style_genome_id") != "scifi_airlock_v1":
+        print(f"  !! FAIL: scifi airlock genome stamp got {aroot.get('surreal_style_genome_id')}")
+        all_ok = False
+    else:
+        print("  scifi_airlock_compose: OK")
+except Exception as e:
+    print(f"  scifi airlock compose error: {e}")
+    all_ok = False
+
+print("\n--- Sci-Fi industrial yard plan compose ---")
+try:
+    from surreal_os import genome as os_genome
+    ind_plan = plans.spawn_village_plan(location=(240, 0, 0))
+    s._active_style_genome = os_genome.load_genome("scifi_industrial_yard_v1")
+    iroot, imsg = compose.compose_world(s, bpy.context, ind_plan, "SCIFI_DECK", 0.85, "COLLECTION")
+    scifi_industrial_export_root = iroot
+    s._active_style_genome = None
+    print(f"  scifi_industrial_compose: {imsg} metrics={verify_hooks.compose_metrics(iroot)}")
+    if iroot.get("surreal_style_genome_id") != "scifi_industrial_yard_v1":
+        print(f"  !! FAIL: scifi industrial genome stamp got {iroot.get('surreal_style_genome_id')}")
+        all_ok = False
+    else:
+        print("  scifi_industrial_compose: OK")
+except Exception as e:
+    print(f"  scifi industrial compose error: {e}")
+    all_ok = False
+
+print("\n--- Zen pagoda spire plan compose ---")
+try:
+    from surreal_os import genome as os_genome
+    from surreal_arch.research_presets import run_research_preset
+    temple = plans.spawn_zen_temple_plan(location=(200, 0, 0))
+    s._active_style_genome = os_genome.load_genome("zen_pagoda_spire_v1")
+    zproot, zpmsg = compose.compose_world(s, bpy.context, temple, "ZEN_SHRINE", 0.9, "COLLECTION")
+    zen_pagoda_export_root = zproot
+    s._active_style_genome = None
+    print(f"  zen_pagoda_compose: {zpmsg} metrics={verify_hooks.compose_metrics(zproot)}")
+    if zproot.get("surreal_style_genome_id") != "zen_pagoda_spire_v1":
+        print(f"  !! FAIL: zen_pagoda genome stamp got {zproot.get('surreal_style_genome_id')}")
+        all_ok = False
+    else:
+        print("  zen_pagoda_compose: OK")
+    rp = run_research_preset(bpy.context, "zen_pagoda_spire_graph", monolith=s)
+    if rp.get("mode") != "graph" or rp.get("count", 0) < 5:
+        print(f"  !! FAIL: zen_pagoda_spire_graph spawn: {rp}")
+        all_ok = False
+    else:
+        print(f"  zen_pagoda_spire_graph: {rp['count']} modules")
+    s._active_style_genome = None
+except Exception as e:
+    print(f"  zen_pagoda compose error: {e}")
+    all_ok = False
+
 print("\n--- Grid city plan compose ---")
 try:
     city = plans.spawn_grid_city_plan(location=(60, 0, 0), grid=4, plot=4.0, street=1.5)
@@ -224,12 +513,31 @@ except Exception as e:
     print(f"  city compose error: {e}")
     all_ok = False
 
+print("\n--- Asian city recursive plan compose ---")
+try:
+    from surreal_os import genome as os_genome
+    rec_city = plans.spawn_village_plan(location=(70, 0, 0))
+    s._active_style_genome = os_genome.load_genome("asian_city_recursive_v1")
+    arroot, armsg = compose.compose_world(s, bpy.context, rec_city, "ASIAN_CITY_RECURSIVE", 0.85, "COLLECTION")
+    asian_recursive_export_root = arroot
+    s._active_style_genome = None
+    print(f"  asian_recursive_compose: {armsg} metrics={verify_hooks.compose_metrics(arroot)}")
+    if arroot.get("surreal_style_genome_id") != "asian_city_recursive_v1":
+        print(f"  !! FAIL: asian recursive genome stamp got {arroot.get('surreal_style_genome_id')}")
+        all_ok = False
+    else:
+        print("  asian_recursive_compose: OK")
+except Exception as e:
+    print(f"  asian recursive compose error: {e}")
+    all_ok = False
+
 print("\n--- Motte/bailey plan compose ---")
 try:
     from surreal_os import genome as os_genome
+    library.init_library(s, types_only={"GREYBOX_PILLAR_HALL", "GB_BRUTALIST_PANEL_WALL"})
     s._active_style_genome = os_genome.load_genome("brutalist_plaza_v1")
     motte = plans.spawn_motte_bailey_plan(location=(80, 0, 0))
-    mroot, mmsg = compose.compose_world(s, bpy.context, motte, "WESTERN_CASTLE", 0.85, "COLLECTION")
+    mroot, mmsg = compose.compose_world(s, bpy.context, motte, "BRUTALIST_PLAZA", 0.85, "COLLECTION")
     brutalist_export_root = mroot
     s._active_style_genome = None
     mfails = verify_hooks.check_motte_ld_metrics(mroot)
@@ -308,6 +616,18 @@ try:
         if csg.get("resolved_compose_roles", {}).get("gate") != "_lib_CN_PAILOU":
             raise RuntimeError("ASIAN_CITY resolved gate mismatch")
         print("  asian_city manifest embed: OK")
+    if asian_recursive_export_root is not None:
+        arm = export.build_world_manifest(asian_recursive_export_root, monolith=s)
+        arsg = arm.get("style_genome") or {}
+        if arsg.get("id") != "asian_city_recursive_v1":
+            raise RuntimeError(f"ASIAN_CITY_RECURSIVE style_genome expected asian_city_recursive_v1: {arsg}")
+        if arsg.get("family") != "Asian":
+            raise RuntimeError(f"asian recursive family mismatch: {arsg.get('family')}")
+        if arsg.get("surreal_transform") != "recursive_interior":
+            raise RuntimeError("asian recursive surreal_transform mismatch")
+        if arsg.get("resolved_compose_roles", {}).get("medium") != "_lib_JP_KURA_STOREHOUSE":
+            raise RuntimeError("ASIAN_CITY_RECURSIVE resolved medium mismatch")
+        print("  asian_city_recursive manifest embed: OK")
     if brutalist_export_root is not None:
         bm = export.build_world_manifest(brutalist_export_root, monolith=s)
         bsg = bm.get("style_genome") or {}
@@ -317,8 +637,12 @@ try:
             raise RuntimeError(f"brutalist family mismatch: {bsg.get('family')}")
         if bsg.get("grammar_id") != "BRUTALIST_PLAZA":
             raise RuntimeError("brutalist grammar_id mismatch")
+        if bsg.get("compose_style") != "BRUTALIST_PLAZA":
+            raise RuntimeError(f"brutalist compose_style mismatch: {bsg.get('compose_style')}")
         if bsg.get("surreal_transform") != "axis_compression":
             raise RuntimeError("brutalist surreal_transform mismatch")
+        if bsg.get("resolved_compose_roles", {}).get("medium") != "_lib_GB_BRUTALIST_PANEL_WALL":
+            raise RuntimeError("brutalist resolved medium role mismatch")
         print("  brutalist_plaza manifest embed: OK")
     if castle_root is not None and castle_root.get("surreal_compose_style") == "WESTERN_CASTLE":
         wcm = export.build_world_manifest(castle_root, monolith=s)
@@ -327,7 +651,9 @@ try:
             raise RuntimeError(f"WESTERN_CASTLE style_genome expected western_castle_v1: {wsg}")
         if wsg.get("family") != "Western":
             raise RuntimeError(f"western family mismatch: {wsg.get('family')}")
-        if wsg.get("resolved_compose_roles", {}).get("gate") != "_lib_GATEHOUSE":
+        if wsg.get("surreal_transform") != "recursive_interior":
+            raise RuntimeError(f"western surreal_transform mismatch: {wsg.get('surreal_transform')}")
+        if wsg.get("resolved_compose_roles", {}).get("gate") != "_lib_GB_GOTHIC_PORTAL":
             raise RuntimeError("WESTERN_CASTLE resolved gate mismatch")
         print("  western_castle manifest embed: OK")
     if art_nouveau_export_root is not None:
@@ -340,6 +666,18 @@ try:
         if asg.get("resolved_compose_roles", {}).get("gate") != "_lib_OGEE_ARCH":
             raise RuntimeError("ART_NOUVEAU resolved gate mismatch")
         print("  art_nouveau manifest embed: OK")
+    if art_deco_export_root is not None:
+        dm = export.build_world_manifest(art_deco_export_root, monolith=s)
+        dsg = dm.get("style_genome") or {}
+        if dsg.get("id") != "art_deco_lobby_v1":
+            raise RuntimeError(f"ART_DECO style_genome expected art_deco_lobby_v1: {dsg}")
+        if dsg.get("family") != "ArtDeco":
+            raise RuntimeError(f"art_deco family mismatch: {dsg.get('family')}")
+        if dsg.get("surreal_transform") != "vertical_stretch":
+            raise RuntimeError("ART_DECO surreal_transform mismatch")
+        if dsg.get("resolved_compose_roles", {}).get("gate") != "_lib_CUSPED_ARCH":
+            raise RuntimeError("ART_DECO resolved gate mismatch")
+        print("  art_deco manifest embed: OK")
     if moorish_export_root is not None:
         mm = export.build_world_manifest(moorish_export_root, monolith=s)
         msg = mm.get("style_genome") or {}
@@ -350,6 +688,134 @@ try:
         if msg.get("resolved_compose_roles", {}).get("gate") != "_lib_ARCHWAY_ADV":
             raise RuntimeError("MOORISH_COURTYARD resolved gate mismatch")
         print("  moorish_courtyard manifest embed: OK")
+    if renaissance_export_root is not None:
+        rm = export.build_world_manifest(renaissance_export_root, monolith=s)
+        rsg = rm.get("style_genome") or {}
+        if rsg.get("id") != "renaissance_piazza_v1":
+            raise RuntimeError(f"RENAISSANCE_PIAZZA style_genome expected renaissance_piazza_v1: {rsg}")
+        if rsg.get("family") != "Renaissance":
+            raise RuntimeError(f"renaissance family mismatch: {rsg.get('family')}")
+        if rsg.get("resolved_compose_roles", {}).get("sacred") != "_lib_DOME":
+            raise RuntimeError("RENAISSANCE_PIAZZA resolved sacred mismatch")
+        print("  renaissance_piazza manifest embed: OK")
+    if byzantine_export_root is not None:
+        bm = export.build_world_manifest(byzantine_export_root, monolith=s)
+        bsg = bm.get("style_genome") or {}
+        if bsg.get("id") != "byzantine_basilica_v1":
+            raise RuntimeError(f"BYZANTINE_BASILICA style_genome expected byzantine_basilica_v1: {bsg}")
+        if bsg.get("family") != "Byzantine":
+            raise RuntimeError(f"byzantine family mismatch: {bsg.get('family')}")
+        if bsg.get("surreal_transform") != "vertical_stretch":
+            raise RuntimeError("byzantine surreal_transform mismatch")
+        if bsg.get("resolved_compose_roles", {}).get("sacred") != "_lib_DOME":
+            raise RuntimeError("BYZANTINE_BASILICA resolved sacred mismatch")
+        print("  byzantine_basilica manifest embed: OK")
+    if baroque_export_root is not None:
+        bcm = export.build_world_manifest(baroque_export_root, monolith=s)
+        bcsg = bcm.get("style_genome") or {}
+        if bcsg.get("id") != "baroque_church_v1":
+            raise RuntimeError(f"BAROQUE_CHURCH style_genome expected baroque_church_v1: {bcsg}")
+        if bcsg.get("family") != "Baroque":
+            raise RuntimeError(f"baroque family mismatch: {bcsg.get('family')}")
+        if bcsg.get("surreal_transform") != "recursive_interior":
+            raise RuntimeError("baroque surreal_transform mismatch")
+        if bcsg.get("resolved_compose_roles", {}).get("gate") != "_lib_OGEE_ARCH":
+            raise RuntimeError("BAROQUE_CHURCH resolved gate mismatch")
+        print("  baroque_church manifest embed: OK")
+    if romanesque_cloister_export_root is not None:
+        rcm = export.build_world_manifest(romanesque_cloister_export_root, monolith=s)
+        rcsg = rcm.get("style_genome") or {}
+        if rcsg.get("id") != "romanesque_cloister_v1":
+            raise RuntimeError(f"ROMANESQUE_CLOISTER style_genome expected romanesque_cloister_v1: {rcsg}")
+        if rcsg.get("family") != "Romanesque":
+            raise RuntimeError(f"romanesque cloister family mismatch: {rcsg.get('family')}")
+        if rcsg.get("resolved_compose_roles", {}).get("medium") != "_lib_GB_ROMANESQUE_ARCADE":
+            raise RuntimeError("ROMANESQUE_CLOISTER resolved medium mismatch")
+        print("  romanesque_cloister manifest embed: OK")
+    if romanesque_apse_export_root is not None:
+        ram = export.build_world_manifest(romanesque_apse_export_root, monolith=s)
+        rasg = ram.get("style_genome") or {}
+        if rasg.get("id") != "romanesque_apse_v1":
+            raise RuntimeError(f"ROMANESQUE_APSE style_genome expected romanesque_apse_v1: {rasg}")
+        if rasg.get("family") != "Romanesque":
+            raise RuntimeError(f"romanesque apse family mismatch: {rasg.get('family')}")
+        if rasg.get("resolved_compose_roles", {}).get("sacred") != "_lib_GB_ROMANESQUE_APSE":
+            raise RuntimeError("ROMANESQUE_APSE resolved sacred mismatch")
+        print("  romanesque_apse manifest embed: OK")
+    if venetian_export_root is not None:
+        vm = export.build_world_manifest(venetian_export_root, monolith=s)
+        vsg = vm.get("style_genome") or {}
+        if vsg.get("id") != "venetian_canal_v1":
+            raise RuntimeError(f"VENETIAN_CANAL style_genome expected venetian_canal_v1: {vsg}")
+        if vsg.get("family") != "Venetian":
+            raise RuntimeError(f"venetian family mismatch: {vsg.get('family')}")
+        if vsg.get("surreal_transform") != "recursive_interior":
+            raise RuntimeError("venetian surreal_transform mismatch")
+        if vsg.get("resolved_compose_roles", {}).get("gate") != "_lib_BRIDGE":
+            raise RuntimeError("VENETIAN_CANAL resolved gate mismatch")
+        print("  venetian_canal manifest embed: OK")
+    if gothic_export_root is not None:
+        gm = export.build_world_manifest(gothic_export_root, monolith=s)
+        gsg = gm.get("style_genome") or {}
+        if gsg.get("id") != "gothic_cloister_v1":
+            raise RuntimeError(f"GOTHIC_CLOISTER style_genome expected gothic_cloister_v1: {gsg}")
+        if gsg.get("family") != "Gothic":
+            raise RuntimeError(f"gothic family mismatch: {gsg.get('family')}")
+        if gsg.get("surreal_transform") != "recursive_interior":
+            raise RuntimeError("gothic surreal_transform mismatch")
+        if gsg.get("resolved_compose_roles", {}).get("gate") != "_lib_GB_GOTHIC_PORTAL":
+            raise RuntimeError("GOTHIC_CLOISTER resolved gate mismatch")
+        print("  gothic_cloister manifest embed: OK")
+    if gothic_chapter_export_root is not None:
+        gcm = export.build_world_manifest(gothic_chapter_export_root, monolith=s)
+        gcsg = gcm.get("style_genome") or {}
+        if gcsg.get("id") != "gothic_chapter_house_v1":
+            raise RuntimeError(f"GOTHIC_CHAPTER_HOUSE style_genome expected gothic_chapter_house_v1: {gcsg}")
+        if gcsg.get("family") != "Gothic":
+            raise RuntimeError(f"gothic chapter family mismatch: {gcsg.get('family')}")
+        if gcsg.get("resolved_compose_roles", {}).get("gate") != "_lib_GB_GOTHIC_PORTAL":
+            raise RuntimeError("GOTHIC_CHAPTER_HOUSE resolved gate mismatch")
+        print("  gothic_chapter_house manifest embed: OK")
+    if gothic_nave_crossing_export_root is not None:
+        gnm = export.build_world_manifest(gothic_nave_crossing_export_root, monolith=s)
+        gnsg = gnm.get("style_genome") or {}
+        if gnsg.get("id") != "gothic_nave_crossing_v1":
+            raise RuntimeError(f"GOTHIC_NAVE_CROSSING style_genome expected gothic_nave_crossing_v1: {gnsg}")
+        if gnsg.get("family") != "Gothic":
+            raise RuntimeError(f"gothic nave crossing family mismatch: {gnsg.get('family')}")
+        if gnsg.get("surreal_transform") != "vertical_stretch":
+            raise RuntimeError("gothic nave crossing surreal_transform mismatch")
+        if gnsg.get("resolved_compose_roles", {}).get("monument") != "_lib_ROSE_WINDOW":
+            raise RuntimeError("GOTHIC_NAVE_CROSSING resolved monument mismatch")
+        print("  gothic_nave_crossing manifest embed: OK")
+    if scifi_deck_export_root is not None:
+        sm = export.build_world_manifest(scifi_deck_export_root, monolith=s)
+        ssg = sm.get("style_genome") or {}
+        if ssg.get("id") != "scifi_deck_v1":
+            raise RuntimeError(f"SCIFI_DECK style_genome expected scifi_deck_v1: {ssg}")
+        if ssg.get("family") != "Sci-Fi":
+            raise RuntimeError(f"scifi family mismatch: {ssg.get('family')}")
+        if ssg.get("surreal_transform") != "recursive_interior":
+            raise RuntimeError("scifi deck surreal_transform mismatch")
+        if ssg.get("resolved_compose_roles", {}).get("gate") != "_lib_GB_SCIFI_PRESSURE_DOOR":
+            raise RuntimeError("SCIFI_DECK resolved gate mismatch")
+        print("  scifi_deck manifest embed: OK")
+    if scifi_airlock_export_root is not None:
+        am = export.build_world_manifest(scifi_airlock_export_root, monolith=s)
+        asg = am.get("style_genome") or {}
+        if asg.get("id") != "scifi_airlock_v1":
+            raise RuntimeError(f"SCIFI airlock style_genome expected scifi_airlock_v1: {asg}")
+        if asg.get("resolved_compose_roles", {}).get("gate") != "_lib_GB_SCIFI_PRESSURE_DOOR":
+            raise RuntimeError("SCIFI airlock resolved gate mismatch")
+        print("  scifi_airlock manifest embed: OK")
+    if scifi_industrial_export_root is not None:
+        im = export.build_world_manifest(scifi_industrial_export_root, monolith=s)
+        isg = im.get("style_genome") or {}
+        if isg.get("id") != "scifi_industrial_yard_v1":
+            raise RuntimeError(f"SCIFI industrial style_genome expected scifi_industrial_yard_v1: {isg}")
+        if isg.get("resolved_compose_roles", {}).get("large") != "_lib_GREYBOX_PILLAR_HALL":
+            raise RuntimeError("SCIFI industrial resolved large mismatch")
+        print("  scifi_industrial_yard manifest embed: OK")
     with tempfile.TemporaryDirectory() as td:
         path = os.path.join(td, "test.world.json")
         export.write_world_manifest(export_root, path, monolith=s)

@@ -7,33 +7,47 @@ $ErrorActionPreference = "Continue"
 $deploy = $PSScriptRoot
 $pidFile = Join-Path $deploy "SURREAL_TIERB_LOOP.pid"
 $stopFile = Join-Path $deploy "SURREAL_TIERB_LOOP_STOP"
-$tickPrompt = "Surreal Architecture micro-cycle: read SURREAL_ARCH_LOOP_STATE.md, pick one slice from Next loop targets, node design + taxonomy before code if new kit; sync; verify; update LOOP_STATE. Do NOT edit plan files."
+$logFile = Join-Path $deploy "SURREAL_ARCH_LOOP.log"
+$tickPrompt = "AAA Architecture Genome Expansion micro-cycle: read deploy/SURREAL_ARCH_LOOP_STATE.md + CHANGELOG + AGENTS.md; research first in research/; pick ONE impactful slice (new genome+grammar, compose polish, or hero preset); sync deploy/sync_surreal_to_live.ps1; run deploy/run_verify.ps1 -Mode all; update LOOP_STATE + CHANGELOG; bump bl_info patch; do NOT edit .cursor/plans/ files."
+
+function Write-Log([string]$msg) {
+    $line = "[{0}] {1}" -f (Get-Date -Format "yyyy-MM-dd HH:mm:ss"), $msg
+    Add-Content -Path $logFile -Value $line -Encoding UTF8
+    Write-Output $line
+}
 
 $PID | Out-File -FilePath $pidFile -Encoding ascii -Force
-Write-Output "AGENT_LOOP_START_surreal_tierb pid=$PID interval=${IntervalSeconds}s"
+Write-Log "AGENT_LOOP_START_surreal_tierb pid=$PID interval=${IntervalSeconds}s"
 
 if (Test-Path $stopFile) {
     Remove-Item $stopFile -Force
 }
 
+function Emit-Tick([int]$n) {
+    $json = @{ prompt = $tickPrompt } | ConvertTo-Json -Compress
+    Write-Log "AGENT_LOOP_TICK_surreal_tierb tick=$n $json"
+}
+
+# Tick 0 immediately — "starting now" without waiting for first sleep
 $tick = 0
+Emit-Tick $tick
+
 while ($true) {
     try {
         Start-Sleep -Seconds $IntervalSeconds
     } catch {
-        Write-Output "sleep interrupted: $_"
+        Write-Log "sleep interrupted: $_"
         continue
     }
 
     if (Test-Path $stopFile) {
-        Write-Output "AGENT_LOOP_STOP_surreal_tierb stop sentinel detected"
+        Write-Log "AGENT_LOOP_STOP_surreal_tierb stop sentinel detected"
         break
     }
 
     $tick++
-    $json = @{ prompt = $tickPrompt } | ConvertTo-Json -Compress
-    Write-Output "AGENT_LOOP_TICK_surreal_tierb $json"
+    Emit-Tick $tick
 }
 
 if (Test-Path $pidFile) { Remove-Item $pidFile -Force }
-Write-Output "AGENT_LOOP_EXIT_surreal_tierb"
+Write-Log "AGENT_LOOP_EXIT_surreal_tierb"

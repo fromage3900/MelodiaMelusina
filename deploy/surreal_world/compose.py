@@ -73,6 +73,16 @@ COMPOSE_STYLES = {
         "monument": "_lib_CN_MOON_GATE",
         "sacred": "_lib_CN_TIERED_PAGODA",
     },
+    "ASIAN_CITY_RECURSIVE": {
+        "large": "_lib_KR_HANOK",
+        "medium": "_lib_JP_KURA_STOREHOUSE",
+        "small": "_lib_CN_TING_PAVILION",
+        "wall": "_lib_CURTAIN_WALL",
+        "corner_tower": "_lib_CN_TIERED_PAGODA",
+        "gate": "_lib_CN_PAILOU",
+        "monument": "_lib_CN_MOON_GATE",
+        "sacred": "_lib_CN_TIERED_PAGODA",
+    },
     "ZEN_SHRINE": {
         "large": "_lib_GB_ZEN_MACHIAI",
         "medium": "_lib_GB_ZEN_KARESANSUI",
@@ -93,6 +103,16 @@ COMPOSE_STYLES = {
         "monument": "_lib_PUBLIC_FOUNTAIN",
         "sacred": "_lib_CHAPEL",
     },
+    "ART_DECO": {
+        "large": "_lib_TESSELLATION_TOWER",
+        "medium": "_lib_GB_BRUTALIST_PANEL_WALL",
+        "small": "_lib_FILIGREE_PANEL",
+        "wall": "_lib_CURTAIN_WALL",
+        "corner_tower": "_lib_TESSELLATION_TOWER",
+        "gate": "_lib_CUSPED_ARCH",
+        "monument": "_lib_OBELISK",
+        "sacred": "_lib_PUBLIC_FOUNTAIN",
+    },
     "MOORISH_COURTYARD": {
         "large": "_lib_PALAZZO",
         "medium": "_lib_GB_ROMANESQUE_ARCADE",
@@ -100,6 +120,116 @@ COMPOSE_STYLES = {
         "wall": "_lib_CURVED_WALL",
         "corner_tower": "_lib_BELL_TOWER",
         "gate": "_lib_ARCHWAY_ADV",
+        "monument": "_lib_PUBLIC_FOUNTAIN",
+        "sacred": "_lib_CHAPEL",
+    },
+    "RENAISSANCE_PIAZZA": {
+        "large": "_lib_BAROQUE_FACADE",
+        "medium": "_lib_GB_ROMANESQUE_ARCADE",
+        "small": "_lib_PILLAR",
+        "wall": "_lib_CURTAIN_WALL",
+        "corner_tower": "_lib_BELL_TOWER",
+        "gate": "_lib_ARCHWAY_ADV",
+        "monument": "_lib_PUBLIC_FOUNTAIN",
+        "sacred": "_lib_DOME",
+    },
+    "VENETIAN_CANAL": {
+        "large": "_lib_PALAZZO",
+        "medium": "_lib_GB_VENETIAN_LOGGIA",
+        "small": "_lib_BIFORA",
+        "wall": "_lib_CURTAIN_WALL",
+        "corner_tower": "_lib_BELL_TOWER",
+        "gate": "_lib_BRIDGE",
+        "monument": "_lib_PUBLIC_FOUNTAIN",
+        "sacred": "_lib_CHAPEL",
+    },
+    "GOTHIC_CLOISTER": {
+        "large": "_lib_CHAPEL",
+        "medium": "_lib_GREYBOX_CORRIDOR",
+        "small": "_lib_PILLAR",
+        "wall": "_lib_CURTAIN_WALL",
+        "corner_tower": "_lib_BELL_TOWER",
+        "gate": "_lib_GB_GOTHIC_PORTAL",
+        "monument": "_lib_BELL_TOWER",
+        "sacred": "_lib_CHAPEL",
+    },
+    "GOTHIC_CHAPTER_HOUSE": {
+        "large": "_lib_CHAPEL",
+        "medium": "_lib_GREYBOX_CORRIDOR",
+        "small": "_lib_PILLAR",
+        "wall": "_lib_CURTAIN_WALL",
+        "corner_tower": "_lib_BELL_TOWER",
+        "gate": "_lib_GB_GOTHIC_PORTAL",
+        "monument": "_lib_BELL_TOWER",
+        "sacred": "_lib_CHAPEL",
+    },
+    "GOTHIC_NAVE_CROSSING": {
+        "large": "_lib_CHAPEL",
+        "medium": "_lib_GREYBOX_CORRIDOR",
+        "small": "_lib_PILLAR",
+        "wall": "_lib_CURTAIN_WALL",
+        "corner_tower": "_lib_BELL_TOWER",
+        "gate": "_lib_GB_GOTHIC_PORTAL",
+        "monument": "_lib_ROSE_WINDOW",
+        "sacred": "_lib_CHAPEL",
+    },
+    "ROMANESQUE_CLOISTER": {
+        "large": "_lib_CHAPEL",
+        "medium": "_lib_GB_ROMANESQUE_ARCADE",
+        "small": "_lib_PILLAR",
+        "wall": "_lib_CURTAIN_WALL",
+        "corner_tower": "_lib_BELL_TOWER",
+        "gate": "_lib_GATEHOUSE",
+        "monument": "_lib_BELL_TOWER",
+        "sacred": "_lib_CHAPEL",
+    },
+    "ROMANESQUE_APSE": {
+        "large": "_lib_BELL_TOWER",
+        "medium": "_lib_GB_ROMANESQUE_ARCADE",
+        "small": "_lib_PILLAR",
+        "wall": "_lib_CURTAIN_WALL",
+        "corner_tower": "_lib_BELL_TOWER",
+        "gate": "_lib_GATEHOUSE",
+        "monument": "_lib_BELL_TOWER",
+        "sacred": "_lib_GB_ROMANESQUE_APSE",
+    },
+    "SCIFI_DECK": {
+        "large": "_lib_GREYBOX_PILLAR_HALL",
+        "medium": "_lib_GREYBOX_CORRIDOR",
+        "small": "_lib_GREYBOX_CATWALK",
+        "wall": "_lib_CURTAIN_WALL",
+        "corner_tower": "_lib_WATCHTOWER",
+        "gate": "_lib_GB_SCIFI_PRESSURE_DOOR",
+        "monument": "_lib_GREYBOX_ROOM",
+        "sacred": "_lib_GREYBOX_ROOM",
+    },
+    "BYZANTINE_BASILICA": {
+        "large": "_lib_BAROQUE_VAULT",
+        "medium": "_lib_GB_ROMANESQUE_ARCADE",
+        "small": "_lib_PILLAR",
+        "wall": "_lib_CURTAIN_WALL",
+        "corner_tower": "_lib_BELL_TOWER",
+        "gate": "_lib_CUSPED_ARCH",
+        "monument": "_lib_ROSE_WINDOW",
+        "sacred": "_lib_DOME",
+    },
+    "BAROQUE_CHURCH": {
+        "large": "_lib_BAROQUE_FACADE",
+        "medium": "_lib_BAROQUE_VAULT",
+        "small": "_lib_BAROQUE_BALUSTRADE",
+        "wall": "_lib_CURTAIN_WALL",
+        "corner_tower": "_lib_BELL_TOWER",
+        "gate": "_lib_OGEE_ARCH",
+        "monument": "_lib_BAROQUE_NICHE",
+        "sacred": "_lib_DOME",
+    },
+    "BRUTALIST_PLAZA": {
+        "large": "_lib_GREYBOX_PILLAR_HALL",
+        "medium": "_lib_GB_BRUTALIST_PANEL_WALL",
+        "small": "_lib_PILLAR",
+        "wall": "_lib_CURTAIN_WALL",
+        "corner_tower": "_lib_WATCHTOWER",
+        "gate": "_lib_GATEHOUSE",
         "monument": "_lib_PUBLIC_FOUNTAIN",
         "sacred": "_lib_CHAPEL",
     },
@@ -171,12 +301,38 @@ def compose_world(
             world_root["surreal_style_genome_id"] = "zen_shrine_v1"
         elif style_key == "ASIAN_CITY":
             world_root["surreal_style_genome_id"] = "asian_city_v1"
+        elif style_key == "ASIAN_CITY_RECURSIVE":
+            world_root["surreal_style_genome_id"] = "asian_city_recursive_v1"
         elif style_key == "WESTERN_CASTLE":
             world_root["surreal_style_genome_id"] = "western_castle_v1"
+        elif style_key == "ART_DECO":
+            world_root["surreal_style_genome_id"] = "art_deco_lobby_v1"
         elif style_key == "ART_NOUVEAU":
             world_root["surreal_style_genome_id"] = "art_nouveau_v1"
         elif style_key == "MOORISH_COURTYARD":
             world_root["surreal_style_genome_id"] = "moorish_courtyard_v1"
+        elif style_key == "RENAISSANCE_PIAZZA":
+            world_root["surreal_style_genome_id"] = "renaissance_piazza_v1"
+        elif style_key == "VENETIAN_CANAL":
+            world_root["surreal_style_genome_id"] = "venetian_canal_v1"
+        elif style_key == "GOTHIC_CLOISTER":
+            world_root["surreal_style_genome_id"] = "gothic_cloister_v1"
+        elif style_key == "GOTHIC_CHAPTER_HOUSE":
+            world_root["surreal_style_genome_id"] = "gothic_chapter_house_v1"
+        elif style_key == "GOTHIC_NAVE_CROSSING":
+            world_root["surreal_style_genome_id"] = "gothic_nave_crossing_v1"
+        elif style_key == "ROMANESQUE_CLOISTER":
+            world_root["surreal_style_genome_id"] = "romanesque_cloister_v1"
+        elif style_key == "ROMANESQUE_APSE":
+            world_root["surreal_style_genome_id"] = "romanesque_apse_v1"
+        elif style_key == "SCIFI_DECK":
+            world_root["surreal_style_genome_id"] = "scifi_deck_v1"
+        elif style_key == "BYZANTINE_BASILICA":
+            world_root["surreal_style_genome_id"] = "byzantine_basilica_v1"
+        elif style_key == "BAROQUE_CHURCH":
+            world_root["surreal_style_genome_id"] = "baroque_church_v1"
+        elif style_key == "BRUTALIST_PLAZA":
+            world_root["surreal_style_genome_id"] = "brutalist_plaza_v1"
         try:
             if world_root not in list(out_coll.objects):
                 out_coll.objects.link(world_root)

@@ -127,13 +127,17 @@ def build_world_manifest(world_root, monolith=None):
                     from .compose import resolve_compose_style
                     compose_style = style_genome.get("compose_style") or style
                     gid = style_genome.get("id")
-                    if gid and not getattr(monolith, "_active_style_genome", None):
-                        from surreal_os.genome import load_genome
-                        monolith._active_style_genome = load_genome(gid)
-                    roles = resolve_compose_style(monolith, compose_style)
-                    if roles:
-                        style_genome = dict(style_genome)
-                        style_genome["resolved_compose_roles"] = dict(roles)
+                    saved_genome = getattr(monolith, "_active_style_genome", None)
+                    try:
+                        if gid:
+                            from surreal_os.genome import load_genome
+                            monolith._active_style_genome = load_genome(gid)
+                        roles = resolve_compose_style(monolith, compose_style)
+                        if roles:
+                            style_genome = dict(style_genome)
+                            style_genome["resolved_compose_roles"] = dict(roles)
+                    finally:
+                        monolith._active_style_genome = saved_genome
                 except Exception as exc:
                     print(f"[SurrealWorld] resolved_compose_roles skipped: {exc}")
         except Exception as exc:

@@ -1,8 +1,8 @@
 # Surreal Architecture — Loop State
 
-**Version:** 2.116.0  
+**Version:** 2.131.0  
 **Loop sentinel:** `AGENT_LOOP_TICK_surreal_tierb`  
-**Interval:** 300s (slowed tick 28 — backlog clear)
+**Interval:** 300s — **endless loop armed** (monitored shell, AAA genome expansion prompt)
 
 ## Micro-cycle 53 — genome `family` schema (v2.98.0) ✓
 
@@ -240,6 +240,93 @@ Removed stale `.yaml` genome duplicates — `.json` is sole source of truth for 
 - **`MOORISH_COURTYARD`** compose style + library bake; manifest embed verify
 - Genome catalog: **19**; graph research presets: **19+**
 
+## Micro-cycle 71 — v2.117.0 (Renaissance piazza set)
+
+- **`renaissance_piazza_v1`** genome + **`RENAISSANCE_PIAZZA`** grammar (facade, arcade, balustrade, fountain, pillar, dome)
+- **`RENAISSANCE_PIAZZA`** compose style + curated graph preset
+- Genome catalog: **20**; graph research presets: **20+**
+
+## Micro-cycle 72 — v2.118.0 (Venetian canal compose) ✓
+
+- **`venetian_canal_v1`** retargeted to **`VENETIAN_CANAL`** compose style (was WESTERN_CASTLE bleed)
+- Compose roles: loggia medium, palazzo large, bridge gate + `recursive_interior` manifest verify
+- **Repair:** truncated `surreal_architecture_gen.py` tail restored from git; full verify green
+
+## Micro-cycle 73 — v2.119.0 (Gothic cloister compose) ✓
+
+- **`gothic_cloister_v1`** retargeted to **`GOTHIC_CLOISTER`** compose style (was WESTERN_CASTLE bleed)
+- Compose roles: corridor medium, gothic portal gate, chapel sacred + library bake
+- Manifest embed verify for `recursive_interior` + resolved gate role
+
+## Micro-cycle 75 — v2.121.0 (Sci-Fi industrial yard + endless loop) ✓
+
+- **Endless tier-B loop** armed via monitored `cursor_surreal_tierb_loop.ps1` (300s, AAA expansion prompt)
+- **`scifi_industrial_yard_v1`** genome + **`SCI_FI_INDUSTRIAL_YARD`** grammar (pillar hall, catwalk, bulkhead, corridor)
+- Curated graph preset + research quick-launch; Sci-Fi family **4** genomes; catalog **25**
+
+## Micro-cycle 76 — v2.122.0 (Sci-Fi deck compose style) ✓
+
+- **`SCIFI_DECK`** compose style + library bake (corridor, room, catwalk, pillar hall, pressure door)
+- **`scifi_deck_v1`** + **`scifi_deck_spine_v1`** retargeted off WESTERN_CASTLE bleed
+- Manifest embed verify for `recursive_interior` + resolved pressure-door gate role
+
+## Micro-cycle 77 — v2.123.0 (Sci-Fi compose family complete) ✓
+
+- **`scifi_airlock_v1`** + **`scifi_industrial_yard_v1`** retargeted to **`SCIFI_DECK`** compose
+- Per-genome compose role overrides (airlock sealed chamber, industrial pillar-hall large)
+- World manifest embed verify for both Sci-Fi genomes
+
+## Micro-cycle 78 — v2.124.0 (Byzantine basilica monolithic set) ✓
+
+- **`byzantine_basilica_v1`** genome + **`BYZANTINE_BASILICA`** grammar (7 modules: narthex, arcade, cusped arch, vault, pillar, rose, dome)
+- **`BYZANTINE_BASILICA`** compose style + library bake; `vertical_stretch` transform
+- Curated graph preset + research quick-launch; genome catalog **26**
+
+## Micro-cycle 79 — v2.125.0 (Baroque church monolithic set) ✓
+
+- **`baroque_church_v1`** genome + **`BAROQUE_CHURCH`** grammar (facade, ogee portal, ribbed vault, niche, balustrade, dome)
+- **`BAROQUE_CHURCH`** compose style + library bake for baroque niche; `recursive_interior` transform
+- Curated graph preset + research quick-launch; genome catalog **27**
+
+## Micro-cycle 80 — v2.126.0 (Gothic chapter house variant) ✓
+
+- **`gothic_chapter_house_v1`** genome + **`GOTHIC_CHAPTER_HOUSE`** grammar (portal, nave, bay, buttress, transept bend, tracery)
+- **`GOTHIC_CHAPTER_HOUSE`** compose style + curated graph preset; Gothic family **2** genomes
+- World manifest embed verify; catalog **28**
+
+## Micro-cycle 81 — v2.127.0 (Gothic nave crossing variant) ✓
+
+- **`gothic_nave_crossing_v1`** genome + **`GOTHIC_NAVE_CROSSING`** grammar (portal, long nave, T-crossing, transept, rose clerestory)
+- **`GOTHIC_NAVE_CROSSING`** compose style + `vertical_stretch`; Gothic family **3** genomes; catalog **29**
+
+## Micro-cycle 82 — v2.128.0 (Romanesque compose polish) ✓
+
+- **`ROMANESQUE_CLOISTER`** + **`ROMANESQUE_APSE`** dedicated compose styles + library bake for apse module
+- **`romanesque_cloister_v1`** + **`romanesque_apse_v1`** retargeted off WESTERN_CASTLE bleed
+- World manifest embed verify for both Romanesque genomes
+
+## Micro-cycle 83 — v2.129.0 (Brutalist + Western compose retarget) ✓
+
+- **`BRUTALIST_PLAZA`** dedicated compose style + library bake for `GB_BRUTALIST_PANEL_WALL`
+- **`brutalist_plaza_v1`** retargeted off WESTERN_CASTLE bleed → `BRUTALIST_PLAZA` compose
+- **`western_castle_v1`** — `recursive_interior` + CLOISTER-aligned gate/corridor compose roles
+- World manifest embed verify for both genomes
+
+## Micro-cycle 84 — v2.130.0 (Asian city recursive compose polish) ✓
+
+- **`ASIAN_CITY_RECURSIVE`** grammar + dedicated compose style (kura-forward alley roles)
+- **`asian_city_recursive_v1`** retargeted off shared `ASIAN_CITY` bleed → recursive grammar + compose
+- World manifest embed verify for `recursive_interior` + resolved kura medium role
+
 ## Next loop targets
 
-_Maintenance mode — pick polish slices from research presets or new family genomes as needed._
+- Mesoamerican pyramid courtyard (new family)
+- Art Nouveau / Moorish manifest parity audit (compose tests green)
+- Industrial Art Deco hybrid or Streamline Moderne variant
+
+## Micro-cycle 85 — v2.131.0 (Art Deco lobby set) ✓
+
+- **`art_deco_lobby_v1`** genome + **`ART_DECO`** grammar (tessellation tower, geometric panel wall, chevron filigree, cusped portal, obelisk)
+- **`ART_DECO`** compose style + library bake for **`TESSELLATION_TOWER`**
+- Research preset `art_deco_lobby_graph` + curated playable preset; `vertical_stretch` transform
+- World manifest embed verify; genome catalog **30**
