@@ -292,6 +292,10 @@
 		{
 			"Name": "Monolith",
 			"Enabled": true
+		},
+		{
+			"Name": "SpeedTreeImporter",
+			"Enabled": true
 		}
 	]
 }
