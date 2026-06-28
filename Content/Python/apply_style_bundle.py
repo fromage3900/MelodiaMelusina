@@ -40,7 +40,7 @@ STYLE_BUNDLES = {
     },
     "Escher": {
         "pcg_graph": "/Game/EnvSandbox/PCG/Styles/Escher/PCG_DreamWalls",
-        "material": "/Game/EnvSandbox/Materials/Instances/Environment/Baroque/MI_Baroque_EscherOrnament",
+        "material": "/Game/EnvSandbox/Materials/Instances/Environment/Escher/MI_Escher_ImpossibleTile",
         "niagara_systems": [],
     },
     "Zen": {
