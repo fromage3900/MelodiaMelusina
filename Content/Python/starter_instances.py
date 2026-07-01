@@ -1,4 +1,4 @@
-"""Curated starter MI_* set for M_Master_Toon_Universal (10 showcase instances).
+﻿"""Curated starter MI_* set for M_Master_Toon_Universal (10 showcase instances).
 
 Each instance isolates ONE master capability (Nikki, flower shadow, nebula, magic, etc.).
 Legacy MI_Universal_* under Instances/Environment are deprecated — not deleted; use
@@ -46,6 +46,7 @@ STARTER_INSTANCES: list[dict] = [
             "ParallaxSteps": 10.0,
             "ParallaxMode": 2.0,
             "ParallaxHeight": 0.88,
+            "TriplanarBlend": 1.0,
             "NormalStrength": 1.35,
             "NormalPower": 0.85,
             "MacroVariationStrength": 0.6,
@@ -342,3 +343,4 @@ LEGACY_ALIASES: dict[str, str] = {
     "MI_Universal_TemporalInk": "MI_Show_InkWash",
     "MI_Universal_NikkiHero": "MI_Show_NikkiHero",
 }
+

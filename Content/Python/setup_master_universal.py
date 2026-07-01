@@ -1,13 +1,12 @@
-"""Build M_Master_Toon_Universal â€” the 'reach for every scene' master.
+﻿"""Build M_Master_Toon_Universal â€” the 'reach for every scene' master.
 
 Hybrid texture/procedural, dual texture layers (A/B) with per-layer maps and parallax,
 temporal boil/smear UV stylization, triplanar, Nikki dreamy glow, celestial ramps,
 curvature gold leaf, fairy-dust highlight motifs, dreamy shadow tinting,
 shadow-garden flowers, and metallic ORM blend â€” all defaulting to neutral (0).
 
-Run (Unreal Editor Output Log — use full path, NOT Windows terminal):
-  py "G:/EnvironmentPortfolio/BS_GodFile/Content/Python/setup_master_universal.py"
-  py "G:/EnvironmentPortfolio/BS_GodFile/Content/Python/setup_master_universal.py" --force
+Run (Unreal Editor Output Log — use this wrapper, not setup_master_universal.py directly):
+  py "G:/EnvironmentPortfolio/BS_GodFile/Content/Python/run_force_universal.py"
 
 Then instances:
   py "G:/EnvironmentPortfolio/BS_GodFile/Content/Python/apply_starter_instances.py"
@@ -375,9 +374,9 @@ def adjust_normal_map(m, nrm_sample, n_str, n_pow, layer_str, tag: str, y: int):
 
 def sample_maps_uv(
     m, uv, albedo, normal, orm, height, roughness_map, metallic_map,
-    tri_tiling, tag: str, y0: int, tri_sw_param=None,
+    tri_tiling, tri_alpha, tag: str, y0: int,
 ):
-    """UV-path texture samples + shared triplanar/world-aligned switch."""
+    """UV-path texture samples plus per-channel triplanar blends."""
     alb_s = lib.create_expression(m, unreal.MaterialExpressionTextureSample, -1420, y0)
     wire(f"{tag}_alb_obj", albedo, alb_s, "Tex", "TextureObject")
     wire(f"{tag}_alb_uv", uv, alb_s, "UVs", "Coordinates")
@@ -415,20 +414,17 @@ def sample_maps_uv(
             wire(f"{ttag}_obj", tobj, fn, "TextureObject (T2d)", "TextureObject", "Tex")
             wire(f"{ttag}_size", tri_tiling, fn, "Texture Size", "WorldSize", "Size")
 
-    def project_switch(tt, uv_e, tri_e, yy):
-        if tri_sw_param is not None:
-            WIRES[f"{tt}_sw"] = lib.connect_static_switch(tri_sw_param, tri_e or uv_e, uv_e)
-            return tri_sw_param
-        sw = static_switch(m, "bTriplanar", "Triplanar", -1060, yy)
-        WIRES[f"{tt}_sw"] = lib.connect_static_switch(sw, tri_e or uv_e, uv_e)
-        return sw
+    def project_blend(tt, uv_e, tri_e, yy):
+        if not tri_e:
+            return uv_e
+        return lerp3(m, uv_e, tri_e, tri_alpha, f"{tt}_tri_blend", -1060, yy)
 
-    alb = project_switch(f"{tag}_swA", alb_s, waT, y0)
-    nrm = project_switch(f"{tag}_swN", nrm_s, waN, y0 + 160)
-    orm_out = project_switch(f"{tag}_swR", orm_s, waR, y0 + 320)
-    hgt = project_switch(f"{tag}_swH", hgt_s, waH, y0 + 480)
-    rough = project_switch(f"{tag}_swRo", rough_s, waRo, y0 + 640)
-    metal = project_switch(f"{tag}_swM", metal_s, waM, y0 + 800)
+    alb = project_blend(f"{tag}_alb", alb_s, waT, y0)
+    nrm = project_blend(f"{tag}_nrm", nrm_s, waN, y0 + 160)
+    orm_out = project_blend(f"{tag}_orm", orm_s, waR, y0 + 320)
+    hgt = project_blend(f"{tag}_hgt", hgt_s, waH, y0 + 480)
+    rough = project_blend(f"{tag}_rough", rough_s, waRo, y0 + 640)
+    metal = project_blend(f"{tag}_metal", metal_s, waM, y0 + 800)
     return alb, nrm, orm_out, hgt, rough, metal
 
 
@@ -605,10 +601,12 @@ def build():
         "BS_MASTER_FORCE", ""
     ).strip().lower() in ("1", "true", "yes")
     if exists and not force:
-        unreal.log_warning(
-            f"[Universal] {path} exists â€” skipping rebuild. "
-            "Delete in Content Browser or run with --force."
+        msg = (
+            f"[Universal] {path} exists — SKIPPED rebuild (no --force). "
+            "Run run_force_universal.py instead."
         )
+        unreal.log_warning(msg)
+        print(f"UNIVERSAL_SKIP {path}")
         try:
             import setup_universal_instances as inst
             inst.build_instances()
@@ -696,8 +694,14 @@ def build():
         m, "TriplanarTiling", "Triplanar", 256.0, -2100, 420,
         desc="World-aligned projection texture size; preserved for existing instances",
     )
-    triplanar_sw = static_switch(m, "bTriplanar", "Triplanar", -2100, 480)
-
+    triplanar_blend = lib.scalar_param(
+        m, "TriplanarBlend", "Triplanar", 0.0, -2100, 460,
+        desc="0=UV projection, 1=world-aligned triplanar projection; bTriplanar forces 1 for legacy instances",
+    )
+    triplanar_force = static_switch(m, "bTriplanar", "Triplanar", -2100, 500, default=False)
+    WIRES["triplanar_force_alpha"] = lib.connect_static_switch(
+        triplanar_force, const1(m, -1940, 500, 1.0), triplanar_blend
+    )
     # ---- Layer A (primary) texture set ----
     albedo = tex_object(m, "Albedo", -2100, 480, "LayerA")
     normal = tex_object(m, "NormalMap", -2100, 640, "LayerA")
@@ -839,21 +843,23 @@ def build():
         m, uv_time, height_c, parallax_scale, layer_c_parallax, parallax_str,
         parallax_steps, parallax_mode, parallax_height, "pomC", 7400,
     )
-    uv_a = lerp3(m, uv_time, pom_a, parallax_str, "uv_pomA", -1480, 480)
-    uv_b = lerp3(m, uv_time, pom_b, parallax_str, "uv_pomB", -1480, 1280)
-    uv_c = lerp3(m, uv_time, pom_c, parallax_str, "uv_pomC", -1480, 2080)
+    # parallax_uv_offset already multiplies by ParallaxStrength, so these are
+    # identity UVs when strength is 0 and avoid squaring the artist control.
+    uv_a = pom_a
+    uv_b = pom_b
+    uv_c = pom_c
 
     alb_a, nrm_a, orm_a, hgt_a, rough_a, metal_a = sample_maps_uv(
         m, uv_a, albedo, normal, orm, height_a, roughness_a, metallic_a,
-        tri_tiling, "layA", 480, triplanar_sw,
+        tri_tiling, triplanar_force, "layA", 480,
     )
     alb_b_s, nrm_b_s, orm_b_s, hgt_b, rough_b, metal_b = sample_maps_uv(
         m, uv_b, alb_b, nrm_b, orm_b, height_b, roughness_b, metallic_b,
-        tri_tiling, "layB", 1280, triplanar_sw,
+        tri_tiling, triplanar_force, "layB", 1280,
     )
     alb_c_s, nrm_c_s, orm_c_s, hgt_c, rough_c, metal_c = sample_maps_uv(
         m, uv_c, alb_c, nrm_c, orm_c, height_c, roughness_c, metallic_c,
-        tri_tiling, "layC", 2080, triplanar_sw,
+        tri_tiling, triplanar_force, "layC", 2080,
     )
     nrm_a = adjust_normal_map(m, nrm_a, normal_strength, normal_power, layer_a_nrm_str, "nrmAdjA", 480)
     nrm_b_s = adjust_normal_map(m, nrm_b_s, normal_strength, normal_power, layer_b_nrm_str, "nrmAdjB", 1280)
@@ -890,30 +896,14 @@ def build():
     layer_a_active = switch_mask(m, layer_a_active_sw, "layA_on", -600, 1200)
     layer_b_active = switch_mask(m, layer_b_active_sw, "layB_on", -600, 1280)
     layer_c_active = switch_mask(m, layer_c_active_sw, "layC_on", -600, 1360)
-    active_count = add2(m, layer_a_active, layer_b_active, "lay_ac_ab", -440, 1240)
-    active_count = add2(m, active_count, layer_c_active, "lay_ac_abc", -280, 1240)
-    active_safe = add2(m, active_count, const1(m, -120, 1240, 0.001), "lay_ac_safe", -40, 1240)
-    one = const1(m, -1000, 1200, 1.0)
-
     def layer_channel_blend(val_a, val_b, val_c, alpha_b, alpha_c, lw_a, lw_b, lw_c, tag, y):
-        gated_a = mul2(m, one, layer_a_active, f"{tag}_ga", -800, y)
-        gated_b = mul2(m, alpha_b, layer_b_active, f"{tag}_gb", -800, y + 120)
-        gated_c = mul2(m, alpha_c, layer_c_active, f"{tag}_gc", -800, y + 240)
-        w_a = div2(m, gated_a, active_safe, f"{tag}_wa", -600, y)
-        w_b = div2(m, gated_b, active_safe, f"{tag}_wb", -600, y + 120)
-        w_c = div2(m, gated_c, active_safe, f"{tag}_wc", -600, y + 240)
+        alpha_b_on = mul2(m, alpha_b, layer_b_active, f"{tag}_ab_on", -800, y + 120)
+        alpha_c_on = mul2(m, alpha_c, layer_c_active, f"{tag}_ac_on", -800, y + 240)
         v_a = mul2(m, val_a, lw_a, f"{tag}_va", -400, y)
         v_b = mul2(m, val_b, lw_b, f"{tag}_vb", -400, y + 120)
         v_c = mul2(m, val_c, lw_c, f"{tag}_vc", -400, y + 240)
-        return add3(
-            m,
-            mul2(m, v_a, w_a, f"{tag}_wa_v", -200, y),
-            mul2(m, v_b, w_b, f"{tag}_wb_v", -200, y + 120),
-            mul2(m, v_c, w_c, f"{tag}_wc_v", -200, y + 240),
-            tag,
-            0,
-            y + 60,
-        )
+        ab = lerp3(m, v_a, v_b, alpha_b_on, f"{tag}_ab", -200, y + 60)
+        return lerp3(m, ab, v_c, alpha_c_on, f"{tag}_abc", 0, y + 60)
 
     alb_blend = layer_channel_blend(
         alb_a, alb_b_s, alb_c_s, color_alpha_ab, color_alpha_c,
@@ -2379,9 +2369,34 @@ def build():
         unreal.log_error(f"[Universal] texture violations (must fix): {violations}")
 
     failed = sorted(k for k, v in WIRES.items() if not v)
+    wire_ok = sum(WIRES.values())
+    wire_total = len(WIRES)
     unreal.log(f"[Universal] built {path}")
-    unreal.log(f"[Universal] wires ok={sum(WIRES.values())}/{len(WIRES)} | failed={failed}")
-    print(f"UNIVERSAL_RESULT path={path} ok={sum(WIRES.values())}/{len(WIRES)} failed={failed}")
+    unreal.log(f"[Universal] wires ok={wire_ok}/{wire_total} | failed={failed}")
+    print(f"UNIVERSAL_RESULT path={path} ok={wire_ok}/{wire_total} failed={failed}")
+    try:
+        import json
+        from datetime import datetime, timezone
+        from pathlib import Path
+
+        audit = Path(__file__).resolve().parents[2] / "Saved" / "Audit" / "universal_build_last.json"
+        audit.parent.mkdir(parents=True, exist_ok=True)
+        audit.write_text(
+            json.dumps(
+                {
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
+                    "path": path,
+                    "wires_ok": wire_ok,
+                    "wires_total": wire_total,
+                    "failed": failed,
+                    "force": force,
+                },
+                indent=2,
+            ),
+            encoding="utf-8",
+        )
+    except Exception as exc:
+        unreal.log_warning(f"[Universal] audit write: {exc}")
 
     if not force:
         try:
@@ -2396,3 +2411,5 @@ def build():
 
 if __name__ == "__main__":
     build()
+
+

@@ -1,4 +1,4 @@
-﻿# Material integration (2026-06-19)
+# Material integration (2026-06-19)
 
 Session summary for portfolio masters, SDF expansion, compositing textures, and editor tooling.
 
@@ -7,7 +7,7 @@ Session summary for portfolio masters, SDF expansion, compositing textures, and 
 | Area | Result |
 |------|--------|
 | **Universal masters** | `M_Master_Toon_Universal`, `M_Master_SDF_Toon`, `M_Master_Toon_Unified` — 18/18 texture params wired, Substrate Toon, compile OK |
-| **Starter instances** | 13 curated `MI_Show_*` under `Instances/Showcase/` — one master capability each (see below) |
+| **Starter instances** | 11 curated MI_Show_* under Instances/Showcase — one master capability each (see below); trimsheet layer/parallax demos live under Instances/Environment/Stylized/ |
 | **Legacy MI_Universal_*** | 141+ presets deprecated; move to `Instances/_Archive/` via `archive_unused_instances.py` (no delete) |
 | **SDF masters** | All 50 `_PROJECT` `M_SDF_*` ported to `EnvSandbox/Materials/Masters/` (incl. 9 aquatic) |
 | **Aquatic instances** | `MI_SDF_AbyssalVent_Deep` … `MI_SDF_ThermalGlow_Vent` under `SDF/Instances/` |
@@ -39,7 +39,7 @@ Groups in the Material Editor (rebuild master with `--force` after group renames
 
 Key expansion params have inline `desc` tooltips when the master is rebuilt via `setup_master_universal.py`.
 
-## Starter instances (13)
+## Starter instances (11)
 
 Canonical set on `M_Master_Toon_Universal` — one isolated capability each. Folder: `/Game/EnvSandbox/Materials/Instances/Showcase`. Source of truth: `Content/Python/starter_instances.py` (`STARTER_INSTANCES`, `STARTER_NAMES`).
 
@@ -56,13 +56,28 @@ Canonical set on `M_Master_Toon_Universal` — one isolated capability each. Fol
 | `MI_Show_ContactRimHero` | Cinematic | Contact rim + Nikki rim shaping + distance fade | `ContactRimStrength`, `RimWidth`, `DistanceFadeStrength` (Cinematic + Nikki) |
 | `MI_Show_ElementHydro` | Elemental | Wet iridescent hydro glass (`ElementType=2`) | `ElementStrength`, `IridescencePower`, `WetnessStrength` (Elemental + Nikki) |
 | `MI_Show_InkWash` | Stylized ink | Temporal boil + Nikki dream grade + smear | `TemporalStrength`, `DreamContrast`, `SmearStrength` (Temporal + Nikki) |
-| `MI_Show_TrimsheetHero` | Trimsheet | Layer A/B height blend + POM wear demo | `LayerBlend`, `LayerHeightBias`, `ParallaxMode` (Layers + Parallax) |
-| `MI_Show_ZenTorii` | Zen trim | Dual-layer torii wood + moss height compete | `LayerBlend`, `LayerHeightSharpness`, `MossConcavityStrength` |
-| `MI_Show_AudioPulse` | Audio | MPC-driven emissive + layer pulse (defaults off) | `AudioReactivity`, `AudioEmissiveStrength` (Audio) |
 
 Legacy `MI_Universal_*` names map via `LEGACY_ALIASES` in `starter_instances.py` (e.g. `MI_Universal_DreamyPastel` → `MI_Show_SkinSoft`, `MI_Universal_NikkiHero` → `MI_Show_NikkiHero`).
 
 **Landscape instances:** 11 presets (`MI_Landscape_Meadow` … `MI_Landscape_WetlandMud`). **Water instances:** 8 (`MI_GrandWater_*` incl. SakuraPond, SwampMurk, WaterfallSheet, FrozenPond).
+
+
+## Universal repair lock (2026-07-01)
+
+M_Master_Toon_Universal remains the single canonical universal master for portfolio mesh/surface materials. The 2026-07-01 repair rebuilt it in place through Content/Python/run_force_universal.py and confirmed 1041/1041 builder wires with no failures.
+
+Focused fixes:
+- Layer channels now blend sequentially A to B to C, gated by layer activation, so enabling an overlay no longer divides/dims Layer A when the overlay alpha is 0.
+- Parallax UVs now apply ParallaxStrength once inside parallax_uv_offset; ParallaxStrength=0 is an identity UV path.
+- Normal flow still uses MF_NormalAdjust for global/per-layer strength and feeds the final Substrate Toon normal pin from the blended normal accumulator.
+- Nikki behavior is preserved through the inline Nikki stack when the optional MF_Nikki* chain is unavailable.
+
+Verification artifacts:
+- Saved/Audit/universal_snapshot_before.json
+- Saved/Audit/universal_build_last.json
+- Saved/Audit/starter_instances.json
+- Saved/Audit/universal_post_rebuild_validation.json
+- Saved/Screenshots/universal_material_grid.png
 
 ## Infinity Nikki controls (environment)
 
