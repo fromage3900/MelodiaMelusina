@@ -18,7 +18,7 @@ REPORT = PROJECT_ROOT / "Saved" / "Audit" / "pcg_universal_audit.json"
 UE_CMD = Path(r"C:\Program Files\Epic Games\UE_5.8\Engine\Binaries\Win64\UnrealEditor-Cmd.exe")
 UPROJECT = PROJECT_ROOT / "BS_GodFile.uproject"
 
-EXPECTED_GRAPHS = (
+BASE_EXPECTED_GRAPHS = (
     std.GRAPH_FOLIAGE,
     std.GRAPH_ROCK,
     std.GRAPH_EXCLUSION,
@@ -65,9 +65,10 @@ def _audit_in_ue() -> dict:
         std.GRAPH_GREYBOX_MINIMAL,
         std.GRAPH_GREYBOX_STANDARD,
         std.GRAPH_SAKURA_SHOWCASE,
+        *(cfg["graph"] for cfg in std.STYLE_PRESETS.values()),
     }
     graphs = {}
-    for path in expected_graphs():
+    for path in (BASE_EXPECTED_GRAPHS + tuple(cfg["graph"] for cfg in std.STYLE_PRESETS.values())):
         exists = unreal.EditorAssetLibrary.does_asset_exist(path)
         node_count = 0
         if exists:
@@ -132,5 +133,6 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
 
 

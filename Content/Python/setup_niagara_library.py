@@ -1,4 +1,4 @@
-"""BS_GodFile EnvSandbox Niagara starter library.
+﻿"""BS_GodFile EnvSandbox Niagara starter library.
 
 USAGE
 -----
@@ -10,12 +10,13 @@ Headless (UnrealEditor-Cmd):
     -ExecutePythonScript="G:/EnvironmentPortfolio/BS_GodFile/Content/Python/setup_niagara_library.py"
 
 With live editor + UnrealMCP (port 55557), the script prefers MCP create_niagara_system /
-create_atmospheric_fx — same path the agent uses. Re-run safely; existing assets are skipped.
+create_atmospheric_fx â€” same path the agent uses. Re-run safely; existing assets are skipped.
 
 LIBRARY LAYOUT
 --------------
 /Game/EnvSandbox/VFX/
   MPC/                 MPC_Magical (henshin driver for materials + BP/Sequencer sync)
+  Systems/Universal/   reusable portfolio environment systems
   Systems/Ambient/     NS_FairyDust, NS_ConstellationTwinkle, NS_EmberMotes
   Systems/Sakura/      NS_Sakura* (6-system kit; full build via setup_sakura_niagara.py)
   Systems/Magical/     NS_MagicalHenshinBurst, NS_MagicTrail
@@ -27,8 +28,16 @@ THEME ALIGNMENT (material work plan)
 | NS_FairyDust            | MI_Universal_Fairy*           | soft hanging sparkles |
 | NS_ConstellationTwinkle | MI_Universal_Constellation    | slow twinkle field |
 | NS_EmberMotes           | MI_Universal_Warm* / campfire | warm floating dust |
+| NS_Uni_MistSheet        | landscape / water pillars     | depth fog sheet for cliffs, ponds, ruins |
+| NS_Uni_Fireflies        | Nikki / magical families      | readable stylized night-life layer |
+| NS_Uni_LeafDrift        | forest / zen / autumn biomes  | non-Sakura leaf drift |
+| NS_Uni_WaterMist        | MI_GrandWater_*               | pond, river, waterfall atomization |
+| NS_Uni_DustShafts       | stone / trimsheet interiors   | temple, ruin, cathedral dust beams |
+| NS_Uni_PollenSparkle    | meadow / flower fields        | soft botanical sparkle |
+| NS_Uni_RainRipples      | water / wetness materials     | stylized rain surface accents |
+| NS_Uni_GroundWisps      | forest floor / graveyard      | low fog and magical ground wisps |
 | NS_SakuraPetals         | MI_Sakura_Blossom             | canopy drift for L_SakuraPath |
-| NS_SakuraGroundPetals   | MI_Sakura_Petals              | fallen petals — see setup_sakura_niagara.py |
+| NS_SakuraGroundPetals   | MI_Sakura_Petals              | fallen petals â€” see setup_sakura_niagara.py |
 | NS_SakuraDreamSparkle   | MI_Sakura_Blossom             | Nikki air shimmer under canopy |
 | NS_SakuraLanternMotes   | MI_Sakura_Lantern             | warm motes at stone lantern |
 | NS_SakuraPondShimmer    | MI_Sakura_Water               | pond surface sparkle |
@@ -70,7 +79,10 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 
-import material_lib as lib
+try:
+    import material_lib as lib
+except ModuleNotFoundError:
+    lib = None
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 UE_CMD = Path(r"C:\Program Files\Epic Games\UE_5.8\Engine\Binaries\Win64\UnrealEditor-Cmd.exe")
@@ -81,13 +93,14 @@ LOG_PATH = PROJECT_ROOT / "Saved" / "Logs" / "niagara_library.log"
 VFX_ROOT = "/Game/EnvSandbox/VFX"
 MPC_DIR = f"{VFX_ROOT}/MPC"
 SYSTEMS_AMBIENT = f"{VFX_ROOT}/Systems/Ambient"
+SYSTEMS_UNIVERSAL = f"{VFX_ROOT}/Systems/Universal"
 SYSTEMS_SAKURA = f"{VFX_ROOT}/Systems/Sakura"
 SYSTEMS_MAGICAL = f"{VFX_ROOT}/Systems/Magical"
 SHOWCASE_DIR = f"{VFX_ROOT}/_Showcase"
 PROBE_DIR = f"{VFX_ROOT}/_Probe"
 
 MPC_MAGICAL = "MPC_Magical"
-MPC_AUDIO_PATH = f"{lib.MPC_DIR}/MPC_Portfolio_Audio"
+MPC_AUDIO_PATH = "/Game/EnvSandbox/Materials/Functions/MPC_Portfolio_Audio"
 
 NIAGARA_EMITTER_ROOT = "/Niagara/DefaultAssets/Templates/Emitters"
 MCP_HOST = "127.0.0.1"
@@ -165,6 +178,69 @@ SYSTEMS: tuple[NiagaraSystemSpec, ...] = (
         user_params=("User.SpawnRate",),
     ),
     NiagaraSystemSpec(
+        "NS_Uni_MistSheet",
+        SYSTEMS_UNIVERSAL,
+        atmospheric_preset="floating_dust",
+        theme="universal depth mist for cliffs, ponds, ruins, and forest thresholds",
+        paired_materials=("MI_Landscape_CoastalCliff", "MI_GrandWater_ShorelinePond"),
+        user_params=("User.SpawnRate", "User.Color", "User.WindStrength", "User.LayerHeight"),
+    ),
+    NiagaraSystemSpec(
+        "NS_Uni_Fireflies",
+        SYSTEMS_UNIVERSAL,
+        f"{NIAGARA_EMITTER_ROOT}/HangingParticulates",
+        theme="stylized firefly points for night forest and magical look-dev",
+        paired_materials=("MI_Show_FairyHearts", "MI_Show_NikkiHero"),
+        user_params=("User.SpawnRate", "User.Color", "User.PulseSpeed"),
+    ),
+    NiagaraSystemSpec(
+        "NS_Uni_LeafDrift",
+        SYSTEMS_UNIVERSAL,
+        f"{NIAGARA_EMITTER_ROOT}/Fountain",
+        theme="generic leaf drift for forest, autumn, zen, and ruin biomes",
+        paired_materials=("MI_Show_ForestFoliage", "MI_Zen_MossGarden"),
+        user_params=("User.SpawnRate", "User.WindStrength", "User.Color"),
+    ),
+    NiagaraSystemSpec(
+        "NS_Uni_WaterMist",
+        SYSTEMS_UNIVERSAL,
+        atmospheric_preset="floating_dust",
+        theme="water atomization for ponds, rivers, waterfalls, and shoreline contact",
+        paired_materials=("MI_GrandWater_RiverClear", "MI_GrandWater_WaterfallSheet"),
+        user_params=("User.SpawnRate", "User.Color", "User.SourceWidth"),
+    ),
+    NiagaraSystemSpec(
+        "NS_Uni_DustShafts",
+        SYSTEMS_UNIVERSAL,
+        f"{NIAGARA_EMITTER_ROOT}/HangingParticulates",
+        theme="interior dust shafts for temple, ruin, cathedral, and trimsheet showcases",
+        paired_materials=("MI_Show_StoneCliff", "MI_Baroque_CathedralSurreal"),
+        user_params=("User.SpawnRate", "User.Color", "User.BeamLength"),
+    ),
+    NiagaraSystemSpec(
+        "NS_Uni_PollenSparkle",
+        SYSTEMS_UNIVERSAL,
+        f"{NIAGARA_EMITTER_ROOT}/HangingParticulates",
+        theme="botanical pollen sparkle for meadows, flower fields, and hero asset reveals",
+        paired_materials=("MI_Show_CherryBlossom", "MI_Zen_BambooMist"),
+        user_params=("User.SpawnRate", "User.Color", "User.PulseSpeed"),
+    ),
+    NiagaraSystemSpec(
+        "NS_Uni_RainRipples",
+        SYSTEMS_UNIVERSAL,
+        f"{NIAGARA_EMITTER_ROOT}/OmnidirectionalBurst",
+        theme="stylized water and wet-ground ripple accents for rainy portfolio shots",
+        paired_materials=("MI_Show_ElementHydro", "MI_GrandWater_PondStylized"),
+        user_params=("User.SpawnRate", "User.RippleScale", "User.Color"),
+    ),
+    NiagaraSystemSpec(
+        "NS_Uni_GroundWisps",
+        SYSTEMS_UNIVERSAL,
+        atmospheric_preset="floating_dust",
+        theme="low magical ground wisps for forest floor, shrine, graveyard, and ruin scenes",
+        paired_materials=("MI_Show_InkWash", "MI_Zen_MoonlitGarden"),
+        user_params=("User.SpawnRate", "User.Color", "User.LayerHeight"),
+    ),    NiagaraSystemSpec(
         "NS_SakuraPetals",
         SYSTEMS_SAKURA,
         f"{NIAGARA_EMITTER_ROOT}/Fountain",
@@ -256,6 +332,7 @@ def _ensure_vfx_folders() -> None:
         VFX_ROOT,
         MPC_DIR,
         SYSTEMS_AMBIENT,
+        SYSTEMS_UNIVERSAL,
         SYSTEMS_SAKURA,
         SYSTEMS_MAGICAL,
         SHOWCASE_DIR,
@@ -665,3 +742,7 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
+
+
+

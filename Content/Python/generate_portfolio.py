@@ -64,6 +64,8 @@ def run_portfolio_pipeline() -> dict:
     import capture_portfolio_renders as capture
     import capture_material_previews as previews
     import scene_metadata_exporter as metadata
+    import export_genome_axis as genome_axis
+    import audit_pcg_heatmap as pcg_heatmap
 
     time.sleep(15)
     steps: list[dict] = []
@@ -93,6 +95,8 @@ def run_portfolio_pipeline() -> dict:
     _load_portfolio_level()
 
     step("scene_metadata_exporter", lambda: {"path": str(metadata.write_scene_metadata())})
+    step("export_genome_axis", lambda: {"path": str(genome_axis.write_genome_axis())})
+    step("audit_pcg_heatmap", lambda: {"path": str(pcg_heatmap.generate_heatmap()["heatmap"]["path"])})
     step("capture_material_previews", lambda: {"path": str(previews.write_previews_manifest())})
     step("capture_portfolio_renders", capture.run_all_captures)
     step("compile_render_plates", lambda: {"path": str(plates.write_renders_manifest(plates.compile_renders_manifest()))})

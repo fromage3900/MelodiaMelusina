@@ -5,7 +5,7 @@ temporal boil/smear UV stylization, triplanar, Nikki dreamy glow, celestial ramp
 curvature gold leaf, fairy-dust highlight motifs, dreamy shadow tinting,
 shadow-garden flowers, and metallic ORM blend â€” all defaulting to neutral (0).
 
-Run (editor open):
+Run (Unreal Editor Output Log — use full path, NOT Windows terminal):
   py "G:/EnvironmentPortfolio/BS_GodFile/Content/Python/setup_master_universal.py"
   py "G:/EnvironmentPortfolio/BS_GodFile/Content/Python/setup_master_universal.py" --force
 
@@ -514,6 +514,26 @@ def add2(m, a, b, tag: str, x: int, y: int):
     return e
 
 
+def add3(m, a, b, c, tag: str, x: int, y: int):
+    ab = add2(m, a, b, f"{tag}_ab", x, y)
+    return add2(m, ab, c, tag, x + 160, y)
+
+
+def div2(m, a, b, tag: str, x: int, y: int):
+    e = lib.create_expression(m, unreal.MaterialExpressionDivide, x, y)
+    wire(f"{tag}_A", a, e, "A")
+    wire(f"{tag}_B", b, e, "B")
+    return e
+
+
+def switch_mask(m, sw, tag: str, x: int, y: int):
+    """Static switch as 0/1 scalar for weighted layer math."""
+    one = const1(m, x, y, 1.0)
+    zero = const1(m, x, y + 80, 0.0)
+    WIRES[f"{tag}_sw"] = lib.connect_static_switch(sw, one, zero)
+    return sw
+
+
 def sub2(m, a, b, tag: str, x: int, y: int):
     e = lib.create_expression(m, unreal.MaterialExpressionSubtract, x, y)
     wire(f"{tag}_A", a, e, "A")
@@ -757,6 +777,11 @@ def build():
     layer_c_height_blend = lib.scalar_param(m, "LayerCHeightBlend", "Layers", 1.0, -2100, 3740)
     layer_c_metallic_blend = lib.scalar_param(m, "LayerCMetallicBlend", "Layers", 1.0, -2100, 3760)
 
+    # ---- Layer activation switches (Kiro T1 — independent per layer) ----
+    layer_a_active_sw = static_switch(m, "bLayerA_Active", "Layers", -2100, 3800, default=True)
+    layer_b_active_sw = static_switch(m, "bLayerB_Active", "Layers", -2100, 3900, default=False)
+    layer_c_active_sw = static_switch(m, "bLayerC_Active", "Layers", -2100, 4000, default=False)
+
     # ---- Parallax (shared + per-layer) ----
     parallax_scale = lib.scalar_param(m, "ParallaxScale", "Parallax", 0.04, -2100, 2320)
     parallax_str = lib.scalar_param(m, "ParallaxStrength", "Parallax", 0.0, -2100, 2420)
@@ -848,15 +873,8 @@ def build():
     rough_alpha_ab = mul2(m, blend_alpha_ab, layer_rough_blend, "layAB_r_alpha", 720, 1160)
     metal_alpha_ab = mul2(m, blend_alpha_ab, layer_metallic_blend, "layAB_m_alpha", 720, 1320)
 
-    alb_ab = lerp3(m, alb_a, alb_b_s, color_alpha_ab, "alb_lerp_ab", -680, 520)
-    nrm_ab = lerp3(m, nrm_a, nrm_b_s, nrm_alpha_ab, "nrm_lerp_ab", -680, 680)
-    orm_ab = lerp3(m, orm_a, orm_b_s, ao_alpha_ab, "orm_lerp_ab", -680, 840)
-    hgt_ab = lerp3(m, hgt_a, hgt_b, height_alpha_ab, "hgt_lerp_ab", -680, 1000)
-    rough_ab = lerp3(m, rough_a, rough_b, rough_alpha_ab, "rough_map_lerp_ab", -680, 1160)
-    metal_ab = lerp3(m, metal_a, metal_b, metal_alpha_ab, "metal_map_lerp_ab", -680, 1320)
-
     blend_alpha_c = advanced_layer_alpha(
-        m, hgt_ab, hgt_c, layer_c_blend, layer_c_blend_mode,
+        m, hgt_a, hgt_c, layer_c_blend, layer_c_blend_mode,
         layer_c_height_bias, layer_c_height_sharp, layer_c_blend_soft, layer_c_manual_mix,
         layer_c_base_height_scale, layer_c_overlay_height_scale, layer_c_height_invert,
         layer_c_alpha_bias, layer_c_alpha_contrast,
@@ -869,12 +887,58 @@ def build():
     rough_alpha_c = mul2(m, blend_alpha_c, layer_c_rough_blend, "layC_r_alpha", 720, 2360)
     metal_alpha_c = mul2(m, blend_alpha_c, layer_c_metallic_blend, "layC_m_alpha", 720, 2520)
 
-    alb_blend = lerp3(m, alb_ab, alb_c_s, color_alpha_c, "alb_lerp_c", -680, 1720)
-    nrm_blend = lerp3(m, nrm_ab, nrm_c_s, nrm_alpha_c, "nrm_lerp_c", -680, 1880)
-    orm_blend = lerp3(m, orm_ab, orm_c_s, ao_alpha_c, "orm_lerp_c", -680, 2040)
-    hgt_blend = lerp3(m, hgt_ab, hgt_c, height_alpha_c, "hgt_lerp_c", -680, 2200)
-    rough_blend = lerp3(m, rough_ab, rough_c, rough_alpha_c, "rough_map_lerp_c", -680, 2360)
-    metal_blend = lerp3(m, metal_ab, metal_c, metal_alpha_c, "metal_map_lerp_c", -680, 2520)
+    layer_a_active = switch_mask(m, layer_a_active_sw, "layA_on", -600, 1200)
+    layer_b_active = switch_mask(m, layer_b_active_sw, "layB_on", -600, 1280)
+    layer_c_active = switch_mask(m, layer_c_active_sw, "layC_on", -600, 1360)
+    active_count = add2(m, layer_a_active, layer_b_active, "lay_ac_ab", -440, 1240)
+    active_count = add2(m, active_count, layer_c_active, "lay_ac_abc", -280, 1240)
+    active_safe = add2(m, active_count, const1(m, -120, 1240, 0.001), "lay_ac_safe", -40, 1240)
+    one = const1(m, -1000, 1200, 1.0)
+
+    def layer_channel_blend(val_a, val_b, val_c, alpha_b, alpha_c, lw_a, lw_b, lw_c, tag, y):
+        gated_a = mul2(m, one, layer_a_active, f"{tag}_ga", -800, y)
+        gated_b = mul2(m, alpha_b, layer_b_active, f"{tag}_gb", -800, y + 120)
+        gated_c = mul2(m, alpha_c, layer_c_active, f"{tag}_gc", -800, y + 240)
+        w_a = div2(m, gated_a, active_safe, f"{tag}_wa", -600, y)
+        w_b = div2(m, gated_b, active_safe, f"{tag}_wb", -600, y + 120)
+        w_c = div2(m, gated_c, active_safe, f"{tag}_wc", -600, y + 240)
+        v_a = mul2(m, val_a, lw_a, f"{tag}_va", -400, y)
+        v_b = mul2(m, val_b, lw_b, f"{tag}_vb", -400, y + 120)
+        v_c = mul2(m, val_c, lw_c, f"{tag}_vc", -400, y + 240)
+        return add3(
+            m,
+            mul2(m, v_a, w_a, f"{tag}_wa_v", -200, y),
+            mul2(m, v_b, w_b, f"{tag}_wb_v", -200, y + 120),
+            mul2(m, v_c, w_c, f"{tag}_wc_v", -200, y + 240),
+            tag,
+            0,
+            y + 60,
+        )
+
+    alb_blend = layer_channel_blend(
+        alb_a, alb_b_s, alb_c_s, color_alpha_ab, color_alpha_c,
+        layer_a_weight, layer_b_weight, layer_c_weight, "alb", 520,
+    )
+    nrm_blend = layer_channel_blend(
+        nrm_a, nrm_b_s, nrm_c_s, nrm_alpha_ab, nrm_alpha_c,
+        layer_a_weight, layer_b_weight, layer_c_weight, "nrm", 680,
+    )
+    orm_blend = layer_channel_blend(
+        orm_a, orm_b_s, orm_c_s, ao_alpha_ab, ao_alpha_c,
+        layer_a_weight, layer_b_weight, layer_c_weight, "orm", 840,
+    )
+    hgt_blend = layer_channel_blend(
+        hgt_a, hgt_b, hgt_c, height_alpha_ab, height_alpha_c,
+        layer_a_weight, layer_b_weight, layer_c_weight, "hgt", 1000,
+    )
+    rough_blend = layer_channel_blend(
+        rough_a, rough_b, rough_c, rough_alpha_ab, rough_alpha_c,
+        layer_a_weight, layer_b_weight, layer_c_weight, "rough", 1160,
+    )
+    metal_blend = layer_channel_blend(
+        metal_a, metal_b, metal_c, metal_alpha_ab, metal_alpha_c,
+        layer_a_weight, layer_b_weight, layer_c_weight, "metal", 1320,
+    )
 
     alb = alb_blend
     nrm_s = nrm_blend
@@ -890,8 +954,10 @@ def build():
     tex_c_w = lib.create_expression(m, unreal.MaterialExpressionMultiply, -360, 360)
     wire("tcwA", tex_weight, tex_c_w, "A")
     wire("tcwB", layer_c_weight, tex_c_w, "B")
-    tex_ab_w = lerp3(m, tex_a_w, tex_b_w, blend_alpha_ab, "tex_eff_ab", -200, 180)
-    tex_eff = lerp3(m, tex_ab_w, tex_c_w, blend_alpha_c, "tex_eff_c", -40, 180)
+    tex_a_eff = mul2(m, tex_a_w, layer_a_active, "tex_a_eff", -200, 120)
+    tex_b_eff = mul2(m, tex_b_w, layer_b_active, "tex_b_eff", -200, 240)
+    tex_c_eff = mul2(m, tex_c_w, layer_c_active, "tex_c_eff", -200, 360)
+    tex_eff = add3(m, tex_a_eff, tex_b_eff, tex_c_eff, "tex_eff", -40, 180)
 
     # hybrid base color / roughness / normal / metallic
     color = lib.create_expression(m, unreal.MaterialExpressionLinearInterpolate, -40, 120)

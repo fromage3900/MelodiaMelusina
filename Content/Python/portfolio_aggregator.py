@@ -33,6 +33,8 @@ SOURCE_ORDER = (
     "renders_manifest",
     "pcg_build",
     "stats_manifest",
+    "genome_axis",
+    "pcg_heatmap",
 )
 
 _FALLBACK_SCHEMA: dict[str, Any] = {
@@ -96,6 +98,8 @@ def _resolve_source_paths(*, project_root: Path | None = None) -> dict[str, Path
         "renders_manifest": portfolio_root / "Renders" / "renders_manifest.json",
         "pcg_build": root / "Saved" / "Audit" / "pcg_universal_build.json",
         "stats_manifest": portfolio_root / "Stats" / "portfolio_stats_manifest.json",
+        "genome_axis": portfolio_root / "Metadata" / "genome_axis.json",
+        "pcg_heatmap": portfolio_root / "Metadata" / "pcg_heatmap.json",
     }
 
 
@@ -367,6 +371,33 @@ def _map_stats(data: dict | None, schema: dict, warnings: list[str]) -> dict:
     return section
 
 
+def _map_genome(data: dict | None, warnings: list[str]) -> dict:
+    """Extract genome axis steps from export_genome_axis output."""
+    if not data:
+        warnings.append("genome: no genome_axis source")
+        return {"axis_steps": [], "genome": None}
+    inner = data.get("genome") or {}
+    return {
+        "genome": inner.get("genome"),
+        "axis_steps": inner.get("axis_steps") or [],
+        "step_count": inner.get("step_count", 0),
+    }
+
+
+def _map_heatmap(data: dict | None, warnings: list[str]) -> dict:
+    """Extract PCG heatmap path from audit_pcg_heatmap output."""
+    if not data:
+        warnings.append("pcg_heatmap: no heatmap source")
+        return {"path": None, "format": None}
+    inner = data.get("heatmap") or {}
+    return {
+        "path": inner.get("path"),
+        "format": inner.get("format"),
+        "size_px": inner.get("size_px"),
+        "exclusion_zones": inner.get("exclusion_zones", []),
+    }
+
+
 def _build_provenance(
     source_key: str,
     path: Path,
@@ -522,6 +553,8 @@ def aggregate(*, project_root: Path | None = None) -> dict:
     renders_section = _map_renders(loaded["renders_manifest"], schema, warnings)
     pcg_section = _map_pcg(loaded["pcg_build"], schema, warnings)
     stats_section = _map_stats(loaded["stats_manifest"], schema, warnings)
+    genome_section = _map_genome(loaded.get("genome_axis"), warnings)
+    heatmap_section = _map_heatmap(loaded.get("pcg_heatmap"), warnings)
 
     metadata_section = {
         "schema_version": schema.get("version", "1.0"),
@@ -538,6 +571,8 @@ def aggregate(*, project_root: Path | None = None) -> dict:
         "renders": renders_section,
         "pcg": pcg_section,
         "stats": stats_section,
+        "genome": genome_section,
+        "pcg_heatmap": heatmap_section,
         "metadata": metadata_section,
     }
 

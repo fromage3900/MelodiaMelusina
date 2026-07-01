@@ -1,7 +1,7 @@
 """Build the MI_Sakura_* material set for the SakuraPath scene, on M_Master_Toon_Universal.
 
 Run AFTER rebuilding the master:
-  py Content/Python/setup_master_universal.py
+  py "G:/EnvironmentPortfolio/BS_GodFile/Content/Python/setup_master_universal.py"
   py Content/Python/setup_sakura_instances.py
 """
 from __future__ import annotations

@@ -1,4 +1,4 @@
-"""Sakura PCG — thin style wrapper on universal portfolio graphs.
+﻿"""Sakura PCG â€” thin style wrapper on universal portfolio graphs.
 
   py Content/Python/setup_pcg_sakura.py
   py Content/Python/setup_pcg_sakura.py --rebuild
@@ -82,9 +82,17 @@ def main() -> int:
         ue = Path(r"C:\Program Files\Epic Games\UE_5.8\Engine\Binaries\Win64\UnrealEditor-Cmd.exe")
         if not ue.exists():
             return 1
+        script = (PROJECT_ROOT / "Content/Python/setup_pcg_sakura.py").as_posix()
+        forwarded = []
+        if rebuild:
+            forwarded.append("--rebuild")
+        if not spawn:
+            forwarded.append("--no-spawn")
+        if forwarded:
+            script = script + " " + " ".join(forwarded)
         cmd = [
             str(ue), str(PROJECT_ROOT / "BS_GodFile.uproject"),
-            f"-ExecutePythonScript={(PROJECT_ROOT / 'Content/Python/setup_pcg_sakura.py').as_posix()}",
+            f"-ExecutePythonScript={script}",
             "-stdout", "-unattended", "-nullrhi", "-DisablePlugins=Monolith",
         ]
         return subprocess.run(cmd, cwd=str(PROJECT_ROOT)).returncode
@@ -95,3 +103,4 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+

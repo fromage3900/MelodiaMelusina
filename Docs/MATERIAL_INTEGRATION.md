@@ -113,7 +113,7 @@ python Content/Python/run_phase_a_safe.py
 **Starter pipeline (editor or headless):**
 
 ```text
-py Content/Python/setup_master_universal.py                 # or --force to refresh groups
+py "G:/EnvironmentPortfolio/BS_GodFile/Content/Python/setup_master_universal.py"                 # or --force to refresh groups
 py Content/Python/apply_starter_instances.py              # create/update 13 MI_Show_*
 py Content/Python/setup_trimsheet_instances.py          # create/update 4 trimsheet MIs
 py Content/Python/archive_unused_instances.py             # optional: move legacy Environment MIs
