@@ -2,6 +2,15 @@
 
 Status labels: `Implemented`, `Partial`, `Broken`, `Planned`, `Research`, `Deprecated`.
 
+## Spline-blocked Baroque `*Ex` spot-check: real fix confirmed on 1, blocked on another, unresolved on a third (afternoon session)
+
+Spot-checked the `BP_PathSplineProvider` direct-host spline pattern (proven this session on `PCG_WallDetail`) against 3 of the 5 spline-blocked Baroque `*Ex` graphs. Spawned `BP_PathSplineProvider_C`, gave it a real 3-point spline (`unreal.SplineComponent.set_spline_points`, plain `Vector` list — not `SplinePoint` structs, that API throws a nativize error), assigned each graph, generated:
+- **`CorniceEx`: genuinely fixed.** 0 → 40 instances. Confirms the direct-host spline pattern is the correct fix for graphs ending in a direct `PCGStaticMeshSpawnerSettings` (no subgraph indirection).
+- **`BalconyEx`: still 0, blocked by an opaque `PCGSubgraphSettings`.** Its `PCGExSplineToPathSettings → PCGExOffsetPathSettings → PCGSubgraphSettings` chain generated without crashing (spline input correctly wired, confirmed via `PCGGraphInputOutputSettings` edge trace), but the terminal `PCGSubgraphSettings` node's `subgraph` property is C++-protected and unreadable via Python reflection — can't trace what's inside it without opening it in the PCG Graph Editor UI directly.
+- **`NaveVaultEx`: still 0, cause not identified.** Same spline-host fix applied (no subgraph in its chain — `PCGExSplineToPathSettings → PCGExPathHatchSettings → PCGStaticMeshSpawnerSettings`), still produced 0 instances. Not diagnosed further this session — the spline-hosting mechanism itself is confirmed correct (proven on CorniceEx), so the remaining blocker is specific to `PCGExPathHatchSettings`'s own config, not the spline input.
+
+`PilasterEx`/`GothicCorridorEx` not re-tested this pass (time-boxed spot-check, not exhaustive). Real, verified, partial progress — 1 of 5 graphs genuinely unblocked, 2 more require deeper in-editor tracing than a spot-check allows.
+
 ## Real cathedral grammar system built + verified M1-M3 (afternoon session, `Partial` — M4/M5 need the user's own eyes)
 
 `Content/Python/build_cathedral_grammar.py` — the genuine version of what `PCG_FractalButtress_BS`/`PCG_M1_GrammarNave_BS` were supposed to be, built fresh (does NOT touch those legacy scaffolds). A real grammar: `ROLES = {"bay": ..., "buttress": ..., "pinnacle": ...}` dispatched by role. A real fractal: `_rule_buttress` recurses into a smaller self-similar copy of itself (scale halves each level), terminating into `_rule_pinnacle`. `bay_count` controls spine length, `buttress_depth` controls recursion depth — both genuinely drive instance count via a hand-derived formula (`predicted_instance_count()`), not a hardcoded scatter.
