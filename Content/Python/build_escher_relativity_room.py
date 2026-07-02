@@ -298,11 +298,79 @@ def build_recursive_room(name="PCG_EscherRecursiveRoom", W0=12.0, depth=3, force
     return f"{DEST_FOLDER}/{name}", len(boxes)
 
 
+def _gravity_shift_corridor_points(unreal, L=12.0, W=3.0, H=3.0, t=0.25, n_segs=5):
+    """Direct translation of build_gb_escher_gravity_shift's box list -- a
+    corridor that progressively rotates 90 deg around its own travel axis
+    over n_segs sections; floor becomes wall by the exit."""
+    seg_l = L / n_segs
+    boxes = []
+
+    for si in range(n_segs):
+        ang = si * (math.pi / 2) / (n_segs - 1)
+        cos_a = math.cos(ang)
+        sin_a = math.sin(ang)
+        y_ctr = -L * 0.5 + seg_l * (si + 0.5)
+
+        for (role, lx, lz, bw, bh) in [
+            ("floor", 0, -H * 0.5, W, t),
+            ("ceiling", 0, H * 0.5, W, t),
+            ("left", -W * 0.5, 0, t, H),
+            ("right", W * 0.5, 0, t, H),
+        ]:
+            rx = lx * cos_a - lz * sin_a
+            rz = lx * sin_a + lz * cos_a + H * 0.5
+
+            if abs(ang - math.pi / 4) < 0.1 or abs(ang - math.pi * 3 / 4) < 0.1:
+                box_sz = (max(bw, bh), seg_l, max(bw, bh))
+            else:
+                box_sz = (bw, seg_l, bh)
+
+            boxes.append(((rx, y_ctr, rz), (0, ang, 0), box_sz))
+
+    boxes.append(((0, -L * 0.5 + seg_l * 0.25, t * 1.05), (0, 0, 0), (W * 0.3, seg_l * 0.4, t * 0.5)))
+    return boxes
+
+
+def build_gravity_shift_corridor(name="PCG_EscherGravityShiftCorridor", L=12.0, force=True):
+    """A corridor that progressively rotates 90 deg around its travel axis --
+    you enter with the floor underfoot, exit with the original floor as the
+    left wall. Same CreatePoints+StaticMeshSpawner pattern."""
+    import unreal
+    import pcg_graph_builder as gb
+
+    graph, created = gb.load_or_create_graph(f"{DEST_FOLDER}/{name}", DEST_FOLDER, force=force)
+
+    create_node, create_settings = graph.add_node_of_type(unreal.PCGCreatePointsSettings)
+    create_node.set_node_position(-400, 0)
+
+    boxes = _gravity_shift_corridor_points(unreal, L=L)
+    pts = [_make_point(unreal, loc, rot, scale) for (loc, rot, scale) in boxes]
+    create_settings.set_editor_property("points_to_create", pts)
+
+    spawn_node, spawn_settings = graph.add_node_of_type(unreal.PCGStaticMeshSpawnerSettings)
+    spawn_node.set_node_position(0, 0)
+
+    entry = unreal.PCGMeshSelectorWeightedEntry()
+    desc = entry.get_editor_property("descriptor")
+    desc.set_editor_property("static_mesh", unreal.EditorAssetLibrary.load_asset(CUBE_MESH))
+    entry.set_editor_property("descriptor", desc)
+    entry.set_editor_property("weight", 1)
+    sel = spawn_settings.get_editor_property("mesh_selector_parameters")
+    sel.set_editor_property("mesh_entries", [entry])
+
+    graph.add_edge(create_node, "Out", spawn_node, "In")
+
+    unreal.EditorAssetLibrary.save_asset(f"{DEST_FOLDER}/{name}")
+    print(f"{name}: built {len(boxes)} boxes, saved")
+    return f"{DEST_FOLDER}/{name}", len(boxes)
+
+
 def build_all():
     r1 = build_relativity_room()
     r2 = build_penrose_loop()
     r3 = build_recursive_room()
-    return {"relativity_room": r1, "penrose_loop": r2, "recursive_room": r3}
+    r4 = build_gravity_shift_corridor()
+    return {"relativity_room": r1, "penrose_loop": r2, "recursive_room": r3, "gravity_shift_corridor": r4}
 
 
 if __name__ == "__main__":
