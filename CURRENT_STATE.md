@@ -23,7 +23,14 @@ Root-caused via log inspection (`Saved/Logs/BS_GodFile.log`) after two consecuti
 
 **Do not batch-generate these 9 graphs again.** Test them ONE AT A TIME with an editor-status check between each (`monolith_status`), so a crash can be attributed to the specific graph instead of taking down the whole batch. Once identified, either delete/disable the `PCGExCreateShapes` node in that graph or replace it with a vanilla `PCGCreatePointsSettings` node (the pattern already proven working in the Escher `*Ex` fixes and the 4 new Escher room generators).
 
-`GothicCorridorEx` was also never found at its expected path (`PCG_BaroqueGothicCorridorEx`) — needs a `list_assets` search under `/Game/EnvSandbox/PCG/Styles/Baroque/` to locate its real name, still outstanding.
+`GothicCorridorEx`'s real path resolved: `/Game/EnvSandbox/PCG/Styles/Baroque/PCG_GothicCorridorEx` (no `Baroque` prefix, unlike its 9 siblings).
+
+**Step 1 (Baroque `*Ex` sweep) complete, live-verified, all 10 graphs:**
+- **Risky (contains `PCGExCreateShapesSettings`, NOT generated this session, avoid batch-testing)**: `AtriumEx`, `ColonnadeEx`, `FacadeEx`, `RotundaEx` — all 4 share the same `PCGVolumeSamplerSettings → PCGExCreateShapesSettings → PCGExCreateShapeGridSettings → ... → PCGSubgraphSettings` shape. One (unidentified which) of these 4 is confirmed to hard-crash the engine on generate.
+- **Safe, tested, 0 instances (need a spline/path input — same root cause as the ~13 Bezier-blocked graphs elsewhere, not yet fixed)**: `BalconyEx`, `CorniceEx`, `NaveVaultEx`, `PilasterEx`, `GothicCorridorEx` — all use `PCGExSplineToPathSettings` or similar as their first node, which needs a real spline actor input (the `BP_PathSplineProvider` pattern), not a bare `PCGVolume`.
+- **Safe, tested, WORKING**: `EntryEx` — 845 instances, uses the plain `PCGVolumeSamplerSettings → PCGStaticMeshSpawnerSettings` pattern (the already-proven "Volume" pin fix).
+
+Next step for the 4 risky graphs: isolate which one(s) crash by inspecting `PCGExCreateShapesSettings` parameters directly (seed count, shape count fields) for an obviously bad value (negative/zero/NaN) rather than generating them — the crash is in `SetNumPointsAllocated`, consistent with a bad count param. If no obvious bad value is found statically, test them ONE AT A TIME with a `monolith_status` check after each, expecting to lose the editor on the culprit.
 
 ## RESEARCH 2026-07-02 (overnight): UE5.8 PCG capabilities + Escher precedent, both `Research` status
 
