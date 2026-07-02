@@ -2,6 +2,12 @@
 
 Status labels: `Implemented`, `Partial`, `Broken`, `Planned`, `Research`, `Deprecated`.
 
+## Real gotcha found: `EditorAssetLibrary.save_asset(path)` can silently no-op on in-place parameter edits
+
+While expanding iridescence/sheen/sparkle on 3 Sakura instances, `set_material_instance_scalar_parameter_value`/`set_material_instance_vector_parameter_value` calls correctly updated the in-memory value (confirmed via immediate readback), but the follow-up `EditorAssetLibrary.save_asset(path)` (default `only_if_is_dirty=True`) silently did nothing — the on-disk `.uasset` file timestamp didn't change at all. The parameter setters don't reliably mark the package dirty in this UE Python binding, at least for existing instances edited with *only* scalar/vector parameter changes (no texture change, no `recompile_material`, no parent reassignment). Confirmed narrow scope via spot-check: every other material save earlier this same session (new instance creation via `create_asset` + `set_material_instance_parent`, or texture parameter changes) genuinely persisted — this only bit in-place scalar/vector-only edits on already-existing instances.
+
+**Always call `save_asset(path, only_if_is_dirty=False)` for in-place material instance parameter edits** — don't trust the default. Verify with a real file-timestamp/size check (`ls -la` before/after, or `git status`) after any such save, not just an in-memory readback — an in-memory readback will report the new value correctly even when the disk write silently failed, giving false confidence.
+
 ## IMPORTANT: the capture-pipeline fix needs `trigger_build` re-run after every editor restart until a real rebuild happens
 
 The `r.PSOPrecaching` capture fix (committed in `Plugins/Monolith/Source/MonolithEditor/Private/MonolithEditorActions.cpp`) was applied via **Live Coding**, which patches the *running process* only — it does not get baked into the on-disk `UnrealEditor-MonolithEditor.dll`. Confirmed directly: after a routine editor crash + `-unattended` relaunch (a fresh process, loading the original unpatched DLL from disk), `capture_material_grid` immediately showed the checkerboard fallback again — the source fix is safely committed to git and structurally correct, but the *currently running* editor process wasn't using it until Live Coding was re-triggered in this new session too.
