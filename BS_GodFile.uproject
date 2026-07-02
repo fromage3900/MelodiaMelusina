@@ -279,7 +279,7 @@
 		},
 		{
 			"Name": "GaeaUnrealTools",
-			"Enabled": true
+			"Enabled": false
 		},
 		{
 			"Name": "PythonScriptPlugin",
