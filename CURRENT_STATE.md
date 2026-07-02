@@ -2,6 +2,15 @@
 
 Status labels: `Implemented`, `Partial`, `Broken`, `Planned`, `Research`, `Deprecated`.
 
+## MAJOR FINDING 2026-07-02 (overnight autonomous session): a far more sophisticated Escher/surreal architecture generator already exists outside the PCG system
+
+`deploy/surreal_architecture_gen.py` (~15,700 lines, Blender addon, currently v2.131.0 in this repo -- confirmed newer than a June 4 backup zip found on the user's OneDrive Desktop, which was v2.55.0 and explicitly a "base" recovery snapshot for baroque interior presets lost on 2026-06-03 and never recovered) contains real, fully-wired Escher room generators built as Blender GeometryNodes, e.g.:
+- `build_gb_escher_relativity()` (line ~6332) — "Relativity Room: a chamber where 3 gravity directions coexist. Based on Escher's 'Relativity' (1953)" — floor/wall/ceiling staircases in one room, real UI preset (`SURREAL_ARCH_OT_preset_gb_escher_relativity`), fully operator-wired.
+- A "Print Gallery"/"Smaller and Smaller" recursive room generator (line ~6705) — "hub room for recursive puzzle levels."
+- Also: real spiral staircase mesh generator (`_make_spiral_staircase_mesh`), Rotunda with gallery+oculus dome, Vault Cluster (barrel-vaulted chamber grid), Lighthouse, Greybox Pillar Hall.
+
+This is **architecturally more sophisticated than the current UE-native PCG Baroque/Escher work** (which uses hand-placed `PCGCreatePointsSettings` points, not real room-grammar generation). It outputs Blender meshes + a `.world.json` manifest (see `deploy/SURREAL_WORLD_RESEARCH.md`, `surreal_world/compose.py`/`export.py`) meant for HISM import into UE — that bridge exists in concept but its actual current working state (does it run, does the export produce valid UE-importable data) has NOT been verified this session. This is a serious candidate for the "massive scale cathedral + Escher environment" goal — likely more powerful than continuing to iterate on the UE-side PCG graphs alone. Needs a dedicated investigation pass: (1) confirm the Blender addon still runs cleanly in the user's current Blender version, (2) generate a test Relativity Room + export via the world.json pipeline, (3) confirm the UE import side (`surreal_world` Python package or manual HISM import) actually works end-to-end, (4) only then decide whether to lean on this system vs. continuing pure-PCG expansion.
+
 **READ THIS FILE FIRST, before trusting any other plan doc's asset-state claims.** Multiple
 tools/sessions edit the same materials and PCG graphs without reading each other's history —
 confirmed concretely on 2026-07-01/02: `PCG_Sub_BaroqueSpawn` got fixed by another session with
