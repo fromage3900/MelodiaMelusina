@@ -39,6 +39,7 @@
 #include "Engine/Texture2D.h"
 #include "RenderingThread.h"
 #include "ShaderCompiler.h"
+#include "HAL/IConsoleManager.h"
 #include "TextureResource.h"
 #include "Engine/StaticMesh.h"
 #include "Engine/SkeletalMesh.h"
@@ -1931,8 +1932,44 @@ bool FMonolithEditorActions::RenderAndSaveCapture(
 		return false;
 	}
 
+	// Fix (2026-07-02): captures were consistently showing the WorldGridMaterial
+	// checkerboard fallback instead of the real material/mesh appearance.
+	// First hypothesis (async shader compile not finished) was tested and
+	// disproven -- GShaderCompilingManager->FinishAllCompilation() + world
+	// ticks did not fix it. Root cause confirmed by direct A/B test:
+	// r.PSOPrecaching. A primitive component freshly spawned into a
+	// transient FAdvancedPreviewScene and captured in the same game-thread
+	// call has no PSO precached for its material/vertex-factory/render-pass
+	// combination yet -- with async PSO precaching on (the 5.8 default),
+	// the renderer substitutes a placeholder for that first frame instead of
+	// stalling to compile it, which for these preview captures is *every*
+	// frame, since the scene never lives long enough for the precache to
+	// resolve normally. Temporarily force synchronous PSO creation for the
+	// duration of this capture only, then restore the prior setting --
+	// scoped, not a global editor-wide behavior change.
+	static IConsoleVariable* CVarPSOPrecaching = IConsoleManager::Get().FindConsoleVariable(TEXT("r.PSOPrecaching"));
+	const int32 PrevPSOPrecaching = CVarPSOPrecaching ? CVarPSOPrecaching->GetInt() : 1;
+	if (CVarPSOPrecaching && PrevPSOPrecaching != 0)
+	{
+		CVarPSOPrecaching->Set(0, ECVF_SetByCode);
+	}
+	if (GShaderCompilingManager && GShaderCompilingManager->IsCompiling())
+	{
+		GShaderCompilingManager->FinishAllCompilation();
+	}
+	if (UWorld* CaptureWorld = CaptureComp->GetWorld())
+	{
+		CaptureWorld->SendAllEndOfFrameUpdates();
+		FlushRenderingCommands();
+	}
+
 	// Trigger the capture — submits render commands to the render thread
 	CaptureComp->CaptureScene();
+
+	if (CVarPSOPrecaching && PrevPSOPrecaching != 0)
+	{
+		CVarPSOPrecaching->Set(PrevPSOPrecaching, ECVF_SetByCode);
+	}
 
 	// Use GameThread_GetRenderTargetResource — the non-GameThread variant
 	// asserts IsInRenderingThread() which crashes when called from game thread.
