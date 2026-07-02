@@ -2,6 +2,12 @@
 
 Status labels: `Implemented`, `Partial`, `Broken`, `Planned`, `Research`, `Deprecated`.
 
+## IMPORTANT: the capture-pipeline fix needs `trigger_build` re-run after every editor restart until a real rebuild happens
+
+The `r.PSOPrecaching` capture fix (committed in `Plugins/Monolith/Source/MonolithEditor/Private/MonolithEditorActions.cpp`) was applied via **Live Coding**, which patches the *running process* only — it does not get baked into the on-disk `UnrealEditor-MonolithEditor.dll`. Confirmed directly: after a routine editor crash + `-unattended` relaunch (a fresh process, loading the original unpatched DLL from disk), `capture_material_grid` immediately showed the checkerboard fallback again — the source fix is safely committed to git and structurally correct, but the *currently running* editor process wasn't using it until Live Coding was re-triggered in this new session too.
+
+**Until a proper full (non-Live-Coding) rebuild happens, call `editor:trigger_build` once after every fresh editor launch, before trusting any capture output.** Verify with a quick `capture_material_grid` test on a known material after the build reports `patch_applied=true` — a checkerboard result means the patch didn't take (or this is a stale process), not that the fix itself is wrong.
+
 ## Sakura Level Push Stage 3: real mesh-alignment bug found + fixed in `PCG_Sakura_Showcase` (`Implemented`)
 
 Checked the 2 loadable Sakura PCG graphs (`PCG_Sakura_PetalDrift` remains an orphaned/unresolvable asset in this registry view — same drift pattern as `PCG_RockScatter` documented earlier, not touchable). `PCG_SakuraGrove`'s `PCGTransformPointsSettings` nodes were already correct (`rotation_min=(0,0,0) → rotation_max=(0,360,0)`, i.e. yaw-only randomization, upright vegetation). `PCG_Sakura_Showcase`'s 3 spawner chains had a genuine bug: `rotation_max=(359,0,0)` — **pitch** randomized instead of **yaw**, meaning every scattered mesh (`SM_Block_Cube_1`/`Cone`/`Cylinder`) got randomly tipped/tumbled onto its side instead of standing upright and just spinning around its vertical axis. Fixed to `rotation_min=(0,0,0) → rotation_max=(0,359,0)`, matching the correct `SakuraGrove` pattern. Verified via a fresh asset reload (not just same-session memory) after the fix.
