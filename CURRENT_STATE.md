@@ -2,6 +2,12 @@
 
 Status labels: `Implemented`, `Partial`, `Broken`, `Planned`, `Research`, `Deprecated`.
 
+## Sakura Level Push Stage 6 complete: real NASA starmap wired in, constellation VFX confirmed already-correct (`Implemented`)
+
+- **Found real, already-imported 4K NASA textures never used**: `/Game/EnvSandbox/Materials/Space/Textures/T_NASA_StarMap_4K` (4096×2048, real equirectangular starmap projection, confirmed via `inspect_texture_channels`) and `T_NASA_MilkyWay_4K`. The `StarMap` param on `MF_SpaceParallax`/`MI_Show_CelestialNebula` had been reusing a sparkle alpha texture (`T_Spark_Twinkle8`) as a placeholder stand-in the whole time.
+- **Wired `T_NASA_StarMap_4K` into `MI_Show_CelestialNebula`'s `StarMap` param**, verified via readback.
+- **`NS_ConstellationDraw`** (`/Game/EnvSandbox/VFX/Systems/Sakura/`, real Sakura-specific system, 10 modules, real `DreamIntensity`/`DreamTwinkleSpeed`/`DreamVisibility` user params, compile-clean) checked and confirmed **already correctly built** — uses its own dedicated glow sprite material (`M_StardustParticle_Glow`), not the `StarMap` texture. This is architecturally correct: a twinkling star sprite needs a small glow/point-light texture, not a full equirectangular NASA image — that belongs on surface/nebula materials (where it's now wired). No change needed here; the "tie NASA starmap to Sakura effects" ask is satisfied by the `MI_Show_CelestialNebula` wiring, which is the actual material-level integration point, not the sprite VFX.
+
 ## Vertex blending for trimsheet use (Stage 5): `MF_VertexPaintBlend` exists, real inputs understood, wiring scoped not attempted (`Partial`)
 
 Confirmed no vertex-color-driven blend exists on `M_Master_Toon_Universal` right now (only `MaterialExpressionVertexNormalWS` present, no `MaterialExpressionVertexColor`, no function calls referencing paint/vertex). But `/Game/EnvSandbox/Materials/Functions/MF_VertexPaintBlend` **does exist as a real, complete, already-authored function** — git history shows it was wired into the Universal master once (`a2f9eec Wire MF_VertexPaintBlend into Universal master`) and apparently dropped during a later `regenerate`/`finalize`/`lock` pass (several such commits followed).
