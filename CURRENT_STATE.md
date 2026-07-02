@@ -2,6 +2,10 @@
 
 Status labels: `Implemented`, `Partial`, `Broken`, `Planned`, `Research`, `Deprecated`.
 
+## Escher room generators: now 6 total (2 more added 2026-07-02 near dawn)
+
+`Content/Python/build_escher_relativity_room.py` (name is historical, module now covers all 6). Added `build_belvedere()` and `build_waterfall()`, translating `build_gb_escher_belvedere`/`build_gb_escher_waterfall` from the Blender addon — Escher's two most iconic impossible-structure pieces (Belvedere 1958, Waterfall 1961), previously read this session but not yet ported. Both live-verified via the proven spawn/generate/count-in-separate-call pattern: `PCG_EscherBelvedere` 17 instances, `PCG_EscherWaterfall` 16 instances, both exactly matching build output, no crash. Full set: Relativity Room, Penrose Loop, Recursive Room, Gravity Shift Corridor, Belvedere, Waterfall — all in `/Game/EnvSandbox/PCG/Styles/Escher/`, all built from real translated transform math, not hand-placed test points.
+
 ## PLAN STEP 3 SCOPING 2026-07-02 (overnight): `AncientTempleRuins` migration needs a different script pattern than `migrate_props_from_source.py`
 
 Inspected `G:/ueprojects/Shepherd_Brennan_10/Content/AncientTempleRuins/` structure: it's organized by **asset type** (`Blueprints/`, `Materials/`, `Textures/`, `Environment/{Construction,Foliage,GroundScatter,Prop,Rock}/`), not by **self-contained per-prop subfolder** like `migrate_props_from_source.py`'s existing `SOURCES` (MagiciansLibrary, Melodia) assume. That script's material-slot repair heuristic ("if a copied subfolder has exactly 1 material, reassign every mesh's slots to it") doesn't apply here — meshes and their materials live in separate top-level folders with many-to-many relationships, not a 1-mesh-1-material-per-folder pattern.
