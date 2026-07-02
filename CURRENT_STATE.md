@@ -2,6 +2,14 @@
 
 Status labels: `Implemented`, `Partial`, `Broken`, `Planned`, `Research`, `Deprecated`.
 
+## `capture_material_grid`/`capture_scene_preview` currently broken this session (`Broken`, real regression, not a content bug)
+
+Tried to capture a render of `MI_Show_ForestFoliage` for user feedback (afternoon session) — got the `WorldGridMaterial` checkerboard fallback pattern instead of the real material. Diagnosed methodically before reporting:
+- **Confirmed the material itself is healthy**: `inspect_material_pbr` on the same instance returned full, correct data — real textures, real tuned params (`BaseTint`/`MossColor`/`DreamTint` all real green tones, `DreamSaturation`/`PastelLift`/`MossConcavityStrength` all genuinely set, not defaults). Not a content problem.
+- **Confirmed it's not instance-specific**: `capture_scene_preview` on a stock, unmodified `/Engine/BasicShapes/Sphere` (no custom material at all) shows the identical checkerboard fallback.
+- **Ruled out level-dependence**: identical result (down to the same backdrop pixels) whether the blank scratch `Untitled` level or the real `/Game/EnvSandbox/_Template/L_Template` level is loaded — the capture harness's preview scene is independent of the loaded level, as expected. The outdoor-office-building HDRI backdrop visible in every capture is the tool's normal default backdrop, not a bug — the checkerboard material is the only real problem.
+- **Conclusion**: this is a genuine regression in Monolith's capture pipeline itself (material-to-preview-mesh assignment step), not fixable from Python — it lives in the C++ implementation. Possibly related to tonight's repeated editor crashes/relaunches leaving some render resource in a bad state, or a fresh `-unattended` launch not fully initializing something the capture path needs. **Do not trust any `capture_material_grid`/`capture_scene_preview` output until this is confirmed fixed** — a checkerboard result means the tool is broken, not that the material is. Needs either a full editor restart (not just relaunch) or Monolith-side investigation; not something to keep re-attempting headlessly.
+
 ## Spline-blocked Baroque `*Ex` spot-check: real fix confirmed on 1, blocked on another, unresolved on a third (afternoon session)
 
 Spot-checked the `BP_PathSplineProvider` direct-host spline pattern (proven this session on `PCG_WallDetail`) against 3 of the 5 spline-blocked Baroque `*Ex` graphs. Spawned `BP_PathSplineProvider_C`, gave it a real 3-point spline (`unreal.SplineComponent.set_spline_points`, plain `Vector` list — not `SplinePoint` structs, that API throws a nativize error), assigned each graph, generated:
