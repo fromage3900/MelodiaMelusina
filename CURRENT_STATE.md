@@ -2,6 +2,10 @@
 
 Status labels: `Implemented`, `Partial`, `Broken`, `Planned`, `Research`, `Deprecated`.
 
+## Escher generator pipeline: next candidate scoped, not attempted (`build_gb_umemoto_vault_cluster`)
+
+Checked the Blender addon for more translatable algorithms after the 6th Escher generator. `build_gb_umemoto_vault_cluster` (line 7300, barrel-vaulted chamber grid) is a real, well-formed generator, but unlike the 6 already-ported Escher rooms (pure box-placement math), its vault ceiling uses a genuine curved sweep (`GeometryNodeCurveArc → GeometryNodeCurveToMesh` with a rect profile) — not directly representable as a `PCGCreatePointsSettings` box list without first discretizing the arc into N rotated box segments (the same technique already used for Penrose Loop's curved arms, just needs deliberate design of the segment count/angle math here). Worth doing well rather than rushing an approximation blind at the end of an unattended session — scoped as a precise next step, not attempted. Other remaining `build_gb_*` functions (`umemoto_terrace/lattice_block/fortress_room`, `woods_*`, `room_circular/apsidal/rotunda`, `corridor_arc*`) not yet individually assessed for the same curved-vs-box distinction.
+
 ## Escher room generators: now 6 total (2 more added 2026-07-02 near dawn)
 
 `Content/Python/build_escher_relativity_room.py` (name is historical, module now covers all 6). Added `build_belvedere()` and `build_waterfall()`, translating `build_gb_escher_belvedere`/`build_gb_escher_waterfall` from the Blender addon — Escher's two most iconic impossible-structure pieces (Belvedere 1958, Waterfall 1961), previously read this session but not yet ported. Both live-verified via the proven spawn/generate/count-in-separate-call pattern: `PCG_EscherBelvedere` 17 instances, `PCG_EscherWaterfall` 16 instances, both exactly matching build output, no crash. Full set: Relativity Room, Penrose Loop, Recursive Room, Gravity Shift Corridor, Belvedere, Waterfall — all in `/Game/EnvSandbox/PCG/Styles/Escher/`, all built from real translated transform math, not hand-placed test points.
