@@ -365,12 +365,165 @@ def build_gravity_shift_corridor(name="PCG_EscherGravityShiftCorridor", L=12.0, 
     return f"{DEST_FOLDER}/{name}", len(boxes)
 
 
+def _belvedere_points(W=6.0, D=6.0, H1=3.5, t=0.35):
+    """Direct translation of build_gb_escher_belvedere -- a 2-story loggia
+    where the upper floor's columns connect to the WRONG (opposite) corners
+    of the lower floor, with impossible X-crossing beams at mid-level.
+    Escher's 'Belvedere' (1958)."""
+    H2 = H1
+    col_s = t * 1.5
+    boxes = []
+
+    boxes.append(((0, 0, t * 0.5), (0, 0, 0), (W, D, t)))
+    boxes.append(((0, 0, H1 + t * 0.5), (0, 0, 0), (W, D, t)))
+    boxes.append(((0, 0, H1 + H2 + t * 0.5), (0, 0, 0), (W, D, t)))
+
+    corners = [(-W * 0.5 + col_s * 0.5, -D * 0.5 + col_s * 0.5),
+               (W * 0.5 - col_s * 0.5, -D * 0.5 + col_s * 0.5),
+               (W * 0.5 - col_s * 0.5, D * 0.5 - col_s * 0.5),
+               (-W * 0.5 + col_s * 0.5, D * 0.5 - col_s * 0.5)]
+    for (cx, cy) in corners:
+        boxes.append(((cx, cy, H1 * 0.5 + t), (0, 0, 0), (col_s, col_s, H1)))
+
+    opp_corners = [corners[2], corners[3], corners[0], corners[1]]
+    for (bx_lo, by_lo), (bx_hi, by_hi) in zip(corners, opp_corners):
+        mx, my = (bx_lo + bx_hi) * 0.5, (by_lo + by_hi) * 0.5
+        mz = H1 + H2 * 0.5 + t
+        dx, dy = bx_hi - bx_lo, by_hi - by_lo
+        horiz_len = math.sqrt(dx * dx + dy * dy)
+        col_len = math.sqrt(horiz_len ** 2 + H2 ** 2)
+        tilt_x = math.atan2(H2, horiz_len)
+        yaw = math.atan2(dy, dx) if horiz_len > 0.001 else 0
+        boxes.append(((mx, my, mz), (tilt_x, 0, yaw), (col_s, col_s, col_len)))
+
+    beam_h = t * 1.8
+    for ang in [0, math.pi * 0.5]:
+        beam_len = math.sqrt(W ** 2 + D ** 2) * 0.9
+        boxes.append(((0, 0, H1 + H2 * 0.5), (0, 0, ang), (beam_len, col_s, beam_h)))
+
+    for (bw, bd, bx2, by2) in [
+        (W, t, 0, D * 0.5 - t * 0.5),
+        (W, t, 0, -D * 0.5 + t * 0.5),
+        (t, D, W * 0.5 - t * 0.5, 0),
+        (t, D, -W * 0.5 + t * 0.5, 0),
+    ]:
+        boxes.append(((bx2, by2, H1 + H2 + t + H2 * 0.15), (0, 0, 0), (bw, bd, H2 * 0.3)))
+
+    return boxes
+
+
+def build_belvedere(name="PCG_EscherBelvedere", force=True):
+    """Escher's 'Belvedere' (1958): a 2-story loggia where the upper columns
+    connect to the wrong corners below, with impossible X-crossing beams."""
+    import unreal
+    import pcg_graph_builder as gb
+
+    graph, created = gb.load_or_create_graph(f"{DEST_FOLDER}/{name}", DEST_FOLDER, force=force)
+
+    create_node, create_settings = graph.add_node_of_type(unreal.PCGCreatePointsSettings)
+    create_node.set_node_position(-400, 0)
+
+    boxes = _belvedere_points()
+    pts = [_make_point(unreal, loc, rot, scale) for (loc, rot, scale) in boxes]
+    create_settings.set_editor_property("points_to_create", pts)
+
+    spawn_node, spawn_settings = graph.add_node_of_type(unreal.PCGStaticMeshSpawnerSettings)
+    spawn_node.set_node_position(0, 0)
+
+    entry = unreal.PCGMeshSelectorWeightedEntry()
+    desc = entry.get_editor_property("descriptor")
+    desc.set_editor_property("static_mesh", unreal.EditorAssetLibrary.load_asset(CUBE_MESH))
+    entry.set_editor_property("descriptor", desc)
+    entry.set_editor_property("weight", 1)
+    sel = spawn_settings.get_editor_property("mesh_selector_parameters")
+    sel.set_editor_property("mesh_entries", [entry])
+
+    graph.add_edge(create_node, "Out", spawn_node, "In")
+
+    unreal.EditorAssetLibrary.save_asset(f"{DEST_FOLDER}/{name}")
+    print(f"{name}: built {len(boxes)} boxes, saved")
+    return f"{DEST_FOLDER}/{name}", len(boxes)
+
+
+def _waterfall_points(span=8.0, W_ch=0.9, rise=0.5, H_col=4.0):
+    """Direct translation of build_gb_escher_waterfall -- three elevated
+    channel arms 120deg apart, each tilting gently downward, but the loop
+    closes back at the top so water appears to flow down and return to its
+    source. Escher's 'Waterfall' (1961)."""
+    t_ch = 0.25
+    boxes = []
+    tilt = math.atan2(rise, span)
+    ch_len = math.sqrt(span ** 2 + rise ** 2)
+
+    for ai in range(3):
+        yaw = ai * math.tau / 3
+        cx = math.cos(yaw) * span * 0.5
+        cy = math.sin(yaw) * span * 0.5
+        cz = H_col + rise * (1 - ai / 3)
+
+        boxes.append(((cx, cy, cz), (tilt, 0, yaw + math.pi * 0.5), (W_ch, ch_len, t_ch)))
+        boxes.append(((cx + math.cos(yaw + math.pi * 0.5) * W_ch * 0.5,
+                        cy + math.sin(yaw + math.pi * 0.5) * W_ch * 0.5,
+                        cz + W_ch * 0.3), (tilt, 0, yaw + math.pi * 0.5), (t_ch, ch_len, W_ch * 0.6)))
+        boxes.append(((cx - math.cos(yaw + math.pi * 0.5) * W_ch * 0.5,
+                        cy - math.sin(yaw + math.pi * 0.5) * W_ch * 0.5,
+                        cz + W_ch * 0.3), (tilt, 0, yaw + math.pi * 0.5), (t_ch, ch_len, W_ch * 0.6)))
+        boxes.append(((cx, cy, cz * 0.5), (0, 0, 0), (t_ch * 2.5, t_ch * 2.5, cz)))
+
+    for ai in range(3):
+        yaw_a = ai * math.tau / 3
+        yaw_b = ((ai + 1) % 3) * math.tau / 3
+        jx = math.cos((yaw_a + yaw_b) * 0.5) * span * 0.85
+        jy = math.sin((yaw_a + yaw_b) * 0.5) * span * 0.85
+        jz = H_col + rise * 0.5 + W_ch * 0.4
+        boxes.append(((jx, jy, jz), (0, 0, 0), (W_ch * 1.4, W_ch * 1.4, W_ch * 0.8)))
+
+    boxes.append(((0, 0, t_ch * 0.5), (0, 0, 0), (span * 2.2, span * 2.2, t_ch)))
+    return boxes
+
+
+def build_waterfall(name="PCG_EscherWaterfall", force=True):
+    """Escher's 'Waterfall' (1961): three elevated channel arms 120deg apart,
+    each tilting down, but the loop closes back at the top."""
+    import unreal
+    import pcg_graph_builder as gb
+
+    graph, created = gb.load_or_create_graph(f"{DEST_FOLDER}/{name}", DEST_FOLDER, force=force)
+
+    create_node, create_settings = graph.add_node_of_type(unreal.PCGCreatePointsSettings)
+    create_node.set_node_position(-400, 0)
+
+    boxes = _waterfall_points()
+    pts = [_make_point(unreal, loc, rot, scale) for (loc, rot, scale) in boxes]
+    create_settings.set_editor_property("points_to_create", pts)
+
+    spawn_node, spawn_settings = graph.add_node_of_type(unreal.PCGStaticMeshSpawnerSettings)
+    spawn_node.set_node_position(0, 0)
+
+    entry = unreal.PCGMeshSelectorWeightedEntry()
+    desc = entry.get_editor_property("descriptor")
+    desc.set_editor_property("static_mesh", unreal.EditorAssetLibrary.load_asset(CUBE_MESH))
+    entry.set_editor_property("descriptor", desc)
+    entry.set_editor_property("weight", 1)
+    sel = spawn_settings.get_editor_property("mesh_selector_parameters")
+    sel.set_editor_property("mesh_entries", [entry])
+
+    graph.add_edge(create_node, "Out", spawn_node, "In")
+
+    unreal.EditorAssetLibrary.save_asset(f"{DEST_FOLDER}/{name}")
+    print(f"{name}: built {len(boxes)} boxes, saved")
+    return f"{DEST_FOLDER}/{name}", len(boxes)
+
+
 def build_all():
     r1 = build_relativity_room()
     r2 = build_penrose_loop()
     r3 = build_recursive_room()
     r4 = build_gravity_shift_corridor()
-    return {"relativity_room": r1, "penrose_loop": r2, "recursive_room": r3, "gravity_shift_corridor": r4}
+    r5 = build_belvedere()
+    r6 = build_waterfall()
+    return {"relativity_room": r1, "penrose_loop": r2, "recursive_room": r3, "gravity_shift_corridor": r4,
+            "belvedere": r5, "waterfall": r6}
 
 
 if __name__ == "__main__":
