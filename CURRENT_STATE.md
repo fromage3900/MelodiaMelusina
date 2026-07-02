@@ -2,6 +2,15 @@
 
 Status labels: `Implemented`, `Partial`, `Broken`, `Planned`, `Research`, `Deprecated`.
 
+## PLAN STEP 2 FINDING 2026-07-02 (overnight, `Broken`, honest report before any fix attempt): `PCG_FractalButtress_BS` and `PCG_M1_GrammarNave_BS` are NOT working recursive/grammar systems — they're scaffolded placeholders
+
+Live-inspected both (safe, static node/property reads, no generate calls needed):
+
+- **`PCG_M1_GrammarNave_BS`** (12 nodes: `PCGCreatePointsSettings → PCGSubdivideSegmentSettings → 5x PCGAttributeFilteringSettings → 5x PCGStaticMeshSpawnerSettings`): the shape looks like real architectural grammar (a spine, subdivided into segments, routed by attribute filters to 5 different element-type spawners) — but the `PCGCreatePointsSettings` source has **only 1 point** (not a spine), and **4 of the 5 `PCGStaticMeshSpawnerSettings` nodes have no mesh assigned (`None`)**. Only 1 of 5 has a mesh, and it's `/Engine/BasicShapes/Sphere` — an engine primitive placeholder, not real content.
+- **`PCG_FractalButtress_BS`** (4 nodes: `PCGCreatePointsSettings → PCGSubdivideSegmentSettings → PCGAttributeFilteringSettings → PCGStaticMeshSpawnerSettings`): same pattern — single seed point (no actual recursive/self-similar subdivision visible), 1 spawner using `/Engine/BasicShapes/Cylinder`, another placeholder primitive.
+
+**Conclusion: the "grammar"/"fractal" naming reflects design intent, not implemented behavior.** This is NOT the genuine massive-scale recursion lever the plan hoped for — it's an early scaffold (single-point source, mostly-unwired spawners, placeholder primitive meshes) that was never finished. Building a real self-similar/recursive architectural generator here would be new work, not a fix — a good candidate for a dedicated focused session (ideally leaning on the math-translation technique already proven with the 4 Escher room generators) rather than a late-night patch. Not attempted tonight; flagging honestly per the plan's Step 2 instruction to report the traced structure before proposing changes.
+
 ## RESOLVED 2026-07-02 (overnight): unattended-boot hang was TWO stacked issues, both fixed
 
 The editor appeared to "crash on relaunch" repeatedly overnight, but the real problem for most of the night was a **hang**, not a crash: process alive, memory flat, log frozen — not the PCGExCreateShapes bug (that only fires when a Baroque graph is generated, and boot never got that far).
