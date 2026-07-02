@@ -92,14 +92,19 @@ MI_SAKURA_GRASS = "/Game/EnvSandbox/Materials/Instances/Sakura/MI_Sakura_Grass"
 MI_SAKURA_PETALS = "/Game/EnvSandbox/Materials/Instances/Sakura/MI_Sakura_Petals"
 
 SCATTER_MESHES: dict[str, list[str]] = {
+    # NOTE (2026-07-02): "grass"/"petal"/"flower"/"moss" still have no real
+    # foliage-appropriate mesh in the project -- forcing e.g. a migrated prop
+    # in as a stand-in would look wrong, not just unpolished. Left as
+    # placeholders deliberately; needs a real foliage asset sourcing pass.
     "grass": [
         "/Game/Greybox_Kit/SM_Block_Cube_1.SM_Block_Cube_1",
         "/Engine/BasicShapes/Cone.Cone",
         "/Engine/BasicShapes/Cylinder.Cylinder",
     ],
     "rock": [
-        "/Game/Greybox_Kit/SM_Block_Cube_1.SM_Block_Cube_1",
-        "/Engine/BasicShapes/Cube.Cube",
+        "/Game/Greybox_Kit/SM_SM_Rock_1.SM_SM_Rock_1",
+        "/Game/Greybox_Kit/SM_SM_Rock_2.SM_SM_Rock_2",
+        "/Game/Greybox_Kit/SM_SM_Rock_3.SM_SM_Rock_3",
     ],
     "petal": ["/Engine/BasicShapes/Plane.Plane"],
     "flower": ["/Engine/BasicShapes/Cone.Cone"],
@@ -108,12 +113,27 @@ SCATTER_MESHES: dict[str, list[str]] = {
         "/Game/Greybox_Kit/SM_Block_Cube_1.SM_Block_Cube_1",
     ],
     "lantern": [
-        "/Engine/BasicShapes/Cylinder.Cylinder",
-        "/Engine/BasicShapes/Cube.Cube",
+        "/Game/Library/Migrated/MagiciansLibrary/Lantern/SM_Lantern.SM_Lantern",
+        "/Game/Library/Migrated/MagiciansLibrary/LanternGlass/SM_LanternGlass.SM_LanternGlass",
     ],
     "ruin": [
+        "/Game/Greybox_Kit/SM_Block_Wall_4x3.SM_Block_Wall_4x3",
+        "/Game/Greybox_Kit/SM_Block_Column_05.SM_Block_Column_05",
+        "/Game/Greybox_Kit/SM_SM_Rock_1.SM_SM_Rock_1",
+    ],
+    "decor": [
+        "/Game/Library/Migrated/MagiciansLibrary/Deco1/SM_Deco1.SM_Deco1",
+        "/Game/Library/Migrated/MagiciansLibrary/Deco2/SM_Deco2.SM_Deco2",
+        "/Game/Library/Migrated/MagiciansLibrary/Deco3/SM_Deco3.SM_Deco3",
+        "/Game/Library/Migrated/MagiciansLibrary/Deco4/SM_Deco4.SM_Deco4",
+        "/Game/Library/Migrated/MagiciansLibrary/Box/SM_Box.SM_Box",
+        "/Game/Library/Migrated/MagiciansLibrary/GlassBottle/SM_GlassBottle_Object1715.SM_GlassBottle_Object1715",
+    ],
+    "structural": [
         "/Game/Greybox_Kit/SM_Block_Cube_1.SM_Block_Cube_1",
-        "/Engine/BasicShapes/Cube.Cube",
+        "/Game/Greybox_Kit/SM_Block_Wall_4x3.SM_Block_Wall_4x3",
+        "/Game/Greybox_Kit/SM_Block_Column_05.SM_Block_Column_05",
+        "/Game/Greybox_Kit/SM_Block_Pillar_03.SM_Block_Pillar_03",
     ],
 }
 
