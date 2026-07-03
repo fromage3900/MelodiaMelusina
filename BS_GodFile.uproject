@@ -296,6 +296,17 @@
 		{
 			"Name": "SpeedTreeImporter",
 			"Enabled": true
+		},
+		{
+			"Name": "KawaiiPhysics",
+			"Enabled": true
+		},
+		{
+			"Name": "ProceduralModelingToolkit",
+			"Enabled": true,
+			"TargetAllowList": [
+				"Editor"
+			]
 		}
 	]
 }
