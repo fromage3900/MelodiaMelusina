@@ -34,6 +34,109 @@ DEST = "/Game/EnvSandbox/Materials/_Scratch"
 MF_PARALLAX = "/Game/EnvSandbox/Materials/Functions/MF_ParallaxCore"
 MF_RAMP = "/Game/EnvSandbox/Materials/Functions/MF_ColorRamp3"
 MF_IRID = "/Game/EnvSandbox/Materials/_Scratch/MF_IridescenceSheen"
+MF_TRIPLANAR = "/Game/EnvSandbox/Materials/Functions/MF_Triplanar"
+
+
+def ensure_triplanar_mf() -> str:
+    """Build MF_Triplanar if missing: world-space 3-axis projection.
+
+    Inputs: Tex (Texture2D), TriplanarScale (S), BlendSharpness (S).
+    Output: Color = normal-weighted blend of XY/XZ/YZ world projections.
+    Color-only v1 (albedo/ORM): normal-map triplanar needs per-axis tangent
+    reorientation -- deferred until a real need shows up.
+    """
+    import unreal
+    if unreal.EditorAssetLibrary.does_asset_exist(MF_TRIPLANAR):
+        return MF_TRIPLANAR
+    MEL = unreal.MaterialEditingLibrary
+    AT = unreal.AssetToolsHelpers.get_asset_tools()
+    fn = AT.create_asset("MF_Triplanar", MF_TRIPLANAR.rsplit("/", 1)[0],
+                         unreal.MaterialFunction, unreal.MaterialFunctionFactoryNew())
+
+    def fexpr(cls, x, y):
+        return MEL.create_material_expression_in_function(fn, cls, x, y)
+
+    con = MEL.connect_material_expressions
+
+    tex_in = fexpr(unreal.MaterialExpressionFunctionInput, -1400, -200)
+    tex_in.set_editor_property("input_name", "Tex")
+    tex_in.set_editor_property("input_type", unreal.FunctionInputType.FUNCTION_INPUT_TEXTURE2D)
+    tex_in.set_editor_property("sort_priority", 0)
+    scale_in = fexpr(unreal.MaterialExpressionFunctionInput, -1400, 0)
+    scale_in.set_editor_property("input_name", "TriplanarScale")
+    scale_in.set_editor_property("input_type", unreal.FunctionInputType.FUNCTION_INPUT_SCALAR)
+    scale_in.set_editor_property("sort_priority", 1)
+    sharp_in = fexpr(unreal.MaterialExpressionFunctionInput, -1400, 120)
+    sharp_in.set_editor_property("input_name", "BlendSharpness")
+    sharp_in.set_editor_property("input_type", unreal.FunctionInputType.FUNCTION_INPUT_SCALAR)
+    sharp_in.set_editor_property("sort_priority", 2)
+
+    wp = fexpr(unreal.MaterialExpressionWorldPosition, -1400, 260)
+    wmul = fexpr(unreal.MaterialExpressionMultiply, -1200, 260)
+    con(wp, "", wmul, "A")
+    con(scale_in, "", wmul, "B")
+
+    def mask(r, g, b, x, y):
+        m = fexpr(unreal.MaterialExpressionComponentMask, x, y)
+        m.set_editor_property("r", r)
+        m.set_editor_property("g", g)
+        m.set_editor_property("b", b)
+        m.set_editor_property("a", False)
+        return m
+
+    uv_xy = mask(True, True, False, -1000, 160)   # Z-facing
+    uv_xz = mask(True, False, True, -1000, 300)   # Y-facing
+    uv_yz = mask(False, True, True, -1000, 440)   # X-facing
+    for m in (uv_xy, uv_xz, uv_yz):
+        con(wmul, "", m, "")
+
+    samples = []
+    for i, uvm in enumerate((uv_yz, uv_xz, uv_xy)):  # order: X,Y,Z weights
+        s = fexpr(unreal.MaterialExpressionTextureSample, -800, 120 + i * 160)
+        con(tex_in, "", s, "TextureObject")
+        con(uvm, "", s, "UVs")
+        samples.append(s)
+
+    n = fexpr(unreal.MaterialExpressionVertexNormalWS, -1000, -300)
+    nabs = fexpr(unreal.MaterialExpressionAbs, -860, -300)
+    con(n, "", nabs, "")
+    npow = fexpr(unreal.MaterialExpressionPower, -720, -300)
+    con(nabs, "", npow, "Base")
+    con(sharp_in, "", npow, "Exp")
+    wx = mask(True, False, False, -580, -380)
+    wy = mask(False, True, False, -580, -300)
+    wz = mask(False, False, True, -580, -220)
+    for m in (wx, wy, wz):
+        con(npow, "", m, "")
+    sum1 = fexpr(unreal.MaterialExpressionAdd, -440, -340)
+    con(wx, "", sum1, "A")
+    con(wy, "", sum1, "B")
+    wsum = fexpr(unreal.MaterialExpressionAdd, -320, -300)
+    con(sum1, "", wsum, "A")
+    con(wz, "", wsum, "B")
+
+    acc = None
+    for i, (s, w) in enumerate(zip(samples, (wx, wy, wz))):
+        wn = fexpr(unreal.MaterialExpressionDivide, -440, 40 + i * 160)
+        con(w, "", wn, "A")
+        con(wsum, "", wn, "B")
+        m = fexpr(unreal.MaterialExpressionMultiply, -300, 80 + i * 160)
+        con(s, "RGB", m, "A")
+        con(wn, "", m, "B")
+        if acc is None:
+            acc = m
+        else:
+            a = fexpr(unreal.MaterialExpressionAdd, -160 + i * 40, 120 + i * 80)
+            con(acc, "", a, "A")
+            con(m, "", a, "B")
+            acc = a
+
+    out = fexpr(unreal.MaterialExpressionFunctionOutput, 100, 200)
+    out.set_editor_property("output_name", "Color")
+    con(acc, "", out, "")
+    MEL.update_material_function(fn)
+    unreal.EditorAssetLibrary.save_asset(MF_TRIPLANAR, only_if_is_dirty=False)
+    return MF_TRIPLANAR
 
 
 def build(name: str, landscape: bool = False) -> dict:
@@ -116,7 +219,26 @@ def build(name: str, landscape: bool = False) -> dict:
         albedo = tsamp("Albedo", "Base", -1550, -200, par, "")
         normal = tsamp("NormalMap", "Base", -1550, 420, par, "", is_normal=True)
         orm = tsamp("ORM", "Base", -1550, 140, par, "")
-        base_src, base_pin = albedo, "RGB"
+
+        # Triplanar option (default OFF): world-projected albedo for
+        # UV-independent terrain/kitbash surfaces. Color-only v1.
+        alb_obj = expr(unreal.MaterialExpressionTextureObjectParameter, -1750, -520)
+        alb_obj.set_editor_property("parameter_name", "Albedo")  # shares param
+        alb_obj.set_editor_property("group", "Triplanar")
+        t_scale = sparam("TriplanarScale", 0.005, 0.0001, 0.05, "Triplanar", -1750, -380)
+        t_sharp = sparam("TriplanarBlendSharpness", 4.0, 1.0, 16.0, "Triplanar", -1750, -320)
+        tri = mfcall(ensure_triplanar_mf(), -1520, -430)
+        con(alb_obj, "", tri, "Tex")
+        con(t_scale, "", tri, "TriplanarScale")
+        con(t_sharp, "", tri, "BlendSharpness")
+        tsw = expr(unreal.MaterialExpressionStaticSwitchParameter, -1320, -300)
+        tsw.set_editor_property("parameter_name", "bTriplanar_Active")
+        tsw.set_editor_property("default_value", False)
+        tsw.set_editor_property("group", "Triplanar")
+        con(tri, "Color", tsw, "True")
+        con(albedo, "RGB", tsw, "False")
+
+        base_src, base_pin = tsw, ""
         normal_src, normal_pin = normal, "RGB"
         rough_src, rough_pin = orm, "G"
         metal_src, metal_pin = orm, "B"
