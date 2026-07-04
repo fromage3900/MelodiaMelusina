@@ -57,11 +57,18 @@ lighting, matcap/fake-SSS, SDF face shadow, anisotropic hair glints, parallax
 interiors, emission-mask motifs) adapted to environment art. Ranked by
 wow ÷ risk, with the actual math so any can be built headlessly:
 
-1. **Dream Constellation Interior (parallax galaxy)** — fake volumetric depth: a
-   star/nebula field that appears to live *inside* the surface (gem/crystal/night
-   pond). Offset UV by `viewTS.xy/viewTS.z * ParallaxDepth` across 2–3 hash-noise
-   star layers → looks into infinite depth. Highest wow; needs tangent-space view
-   (verify in-editor). Ties to the existing Celestial `StarMap`/`Galaxy` params.
+0. **ALREADY EXISTS — do NOT rebuild: `MF_SpaceParallax`** (grp 14 Celestial,
+   `bCelestial_Active`). "Novel toon multi-depth space parallax: stars/galaxy/nebula
+   at different depths parallax against each other by view direction; nebula depth
+   toon-banded into shells; stars composite last." Uses `CameraVectorWS` +
+   `PixelNormalWS` + `Time` + Custom, exposes per-layer Depth/Strength/Tint +
+   `ToonSteps`. This IS the "galaxy inside the surface" effect — more advanced than
+   a hand-rolled one. **The only work here is integration/use, not building:**
+   (a) drive its `SpaceLow/NebulaTint/GalaxyTint/StarTint` from the shared dream
+   palette so it shimmers cohesively; (b) tie `bCelestial_Active` ON for the
+   crystal/night/pond instances that want it; (c) it already rides emissive → Dream
+   Pulse breathes it for free. Verified 2026-07-04; prior "Dream Constellation
+   Interior" backlog idea was a DUPLICATE and is deleted.
 2. **Kaleidoscope Sigil (procedural mandala glyphs)** — polar fold UVs into radial
    symmetry: `ang = |frac(atan2(p.y,p.x)/seg)*seg - seg/2|`, `seg=2π/Sides`; rotate
    by `Time·Speed`; stamp rings/petals via `sin(rad·Rings)`. Animated glowing
