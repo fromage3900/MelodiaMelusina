@@ -13,7 +13,12 @@ identically until an author opts in. All ride the emissive path and are scaled b
 | 10c | Dream Bloom | luminance(base) smoothstep → pastel | soft highlight self-glow | `DreamBloomStrength` |
 | 10d | Dream Flow | `dot(WorldPos,dir)·Scale + Time·Speed` → IQ cosine | living aurora drift | `DreamFlowStrength` |
 | 10e | Dream Pulse | `×(1 + Amp·sin(Time·Speed))` on final emissive | whole surface breathing | `DreamPulseAmp` |
+| 10f | Kaleidoscope Sigil | polar fold `abs(frac(ang/seg)-0.5)` + ring `sin(rad·Rings)` × IQ palette | rotating rainbow mandala rune | `SigilStrength` |
 | — | GlobalEmissiveBoost | MPC scalar multiply (terminal) | level-wide glow dimmer | MPC default 1.0 |
+
+Kaleidoscope Sigil is the **procedural Fairy-Glyph** — a texture-free animated
+rune folded from `SigilSides`/`SigilRings`/`SigilSpeed`/`SigilSharp`/`SigilCycles`.
+UV-stamped (TextureCoordinate input pin only — Nanite-safe, no view globals).
 
 IQ cosine palette (shared DNA): `0.5 + 0.5*cos(2π*(t*Cycles + float3(0,0.33,0.67)))`.
 
