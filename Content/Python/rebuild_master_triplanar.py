@@ -23,6 +23,10 @@ def build() -> str:
     MEL = unreal.MaterialEditingLibrary
     m = unreal.EditorAssetLibrary.load_asset(MASTER)
     E = MEL.get_material_expressions(m)
+    # idempotency: skip if already built
+    if any(isinstance(e, unreal.MaterialExpressionStaticSwitchParameter)
+           and str(e.get_editor_property("parameter_name")) == "bTriplanar_Active" for e in E):
+        return "bTriplanar_Active already present - skipping (already built)"
     byname = {e.get_name(): e for e in E}
     bsdf = next(e for e in E if e.get_name() == "MaterialExpressionSubstrateToonBSDF_4")
     base_src = MEL.get_inputs_for_material_expression(m, bsdf)[0]  # current BaseColor
