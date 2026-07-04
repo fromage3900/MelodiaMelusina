@@ -65,6 +65,21 @@ Net so far: **918 → 868 expressions**, PS **1128 → ~1015** (default path), t
 - **Docs**: a one-page "Universal Master — Instance Author's Guide" (which switch
   turns on what, sane ranges) in `Docs/Production/`.
 
+### Stage E — Melodia art-style integration (user request 2026-07-03)
+- **Volumetric ink blend**: wire `MF_InkAccumulation` (BaseColor/InkColor/InkAmount/
+  CavityPower/AccumBias → InkedColor) into the BaseColor tail behind `bInk_Active`
+  (default OFF) — cavity-driven ink pooling for the sumi-e/Melodia look.
+- **Impasto paint**: wire `MF_Impressionist_Impasto` (StrokeMask → ImpastoHeight)
+  into the normal/detail path behind `bImpasto_Active` (default OFF) — brush-stroke
+  relief.
+- **Melodia SDF + Baroque as layer options**: expose the beloved SDF/baroque
+  procedurals (M_SDF_RoseWindow, GildedFiligree, BaroqueScrollwork, VinylGroove) as
+  MF-wrapped emissive/overlay options selectable per instance (needs each converted
+  to an MF first, or sampled as baked textures). Bigger — sequence after A–D.
+- **Splice safety**: all at the known BaseColor tail (ColorRamp `graded` →
+  `MaterialFunctionCall_2`/iridescence consumers); switch-gated so the ~105
+  instances are unaffected until opted in.
+
 ### Stage D — Instance fix-up pass (data-driven)
 - Re-run `audit_universal_instance_overrides.py`; **report + fix** any remaining
   out-of-range overrides against the new clamps (the IridescentRock-class garbage).
