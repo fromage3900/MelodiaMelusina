@@ -17,8 +17,13 @@ identically until an author opts in. All ride the emissive path and are scaled b
 | 10g | Dawn Wash | `lerp(low,high, saturate(WorldZ·Scale+Bias))` | height-graded pastel dawn glow | `DawnStrength` |
 | 10h | Dream Mist | flowing pseudo-curl sin-noise, animated | drifting swirling mist | `MistStrength` |
 | 10i | Twinkle Glints | hash-placed star cells × per-cell time twinkle | sparkling star glints | `GlintStrength` |
-| 14 | Celestial cohesion | `bCelestialUsesDreamPalette`: MF_SpaceParallax tints ← Melusina MPC palette | constellation in-family with dream palette | switch (default OFF) |
+| 10j | Dream Halo | `pow(saturate(dot(N,V)),Power)` × color | soft view-facing inner glow (fake-SSS) | `HaloStrength` |
 | — | GlobalEmissiveBoost | MPC scalar multiply (terminal) | level-wide glow dimmer | MPC default 1.0 |
+
+> **Celestial palette cohesion** (`bCelestialUsesDreamPalette`) was attempted but its wiring
+> silently failed and the orphans were pruned — NOT currently present. Rebuild carefully
+> (verify each connection) and **never run `delete_unused_expressions` after adding gated
+> nodes** — it simplifies/strips default-OFF branches. Tints currently on `ConstellationRamp` (fine).
 
 Kaleidoscope Sigil is the **procedural Fairy-Glyph** — a texture-free animated
 rune folded from `SigilSides`/`SigilRings`/`SigilSpeed`/`SigilSharp`/`SigilCycles`.
