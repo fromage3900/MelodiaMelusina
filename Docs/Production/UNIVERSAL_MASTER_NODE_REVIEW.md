@@ -23,7 +23,7 @@ Status legend: KEEP (core, untouched) · GATE (keep, add static switch)
 | 02 | Triplanar | 15 | KEEP | Feature; verify consumers during consolidation pass. |
 | 03–05 | Layers A/B/C + samplers | 140 | KEEP | Core system, the material's whole point. |
 | 06–07 | Layer blends A↔B, B↔C | 90 | KEEP | Core. |
-| 05x | Core Parallax block | 35 | CONSOLIDATE | Duplicates per-layer parallax; keep per-layer, remove core block if trace confirms unconsumed. |
+| 05x | Core Parallax block | 35 | **KEEP (trace-corrected 2026-07-04)** | NOT a duplicate. Live trace: `ParallaxScale`(739)/`ParallaxStrength`(740)/`ParallaxHeight`(743) each feed 3 Multiplies (one per layer) and are multiplied *together* with `LayerA/B/C_ParallaxScale`(697/700/720): `Multiply_791 = (Subtract_140 × ParallaxScale_739) × LayerA_ParallaxScale_697`. The `05\|Parallax` group = **global master parallax controls**; per-layer params = per-layer trim. One integrated system. Removing the core block would break parallax on all layers. Prior CONSOLIDATE verdict was a node-dump guess, disproven. Good base to *expand* (stylized editable depth) per user's render-day steer. |
 | — | Channels control | 20 | KEEP | Separate rough/metal switches — now confirmed functional. |
 | — | PaletteRamp | 15 | CONSOLIDATE | One of FIVE ramp implementations; unify onto `MF_ColorRamp3` and add the advanced ColorRamp params (RampLow/Mid/High/PosMid/Contrast/Strength) matching M_Master_Nikki. |
 | 08 | Rim & Glow | 50 | KEEP | Signature toon feature. |

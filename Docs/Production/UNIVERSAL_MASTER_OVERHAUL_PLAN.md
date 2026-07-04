@@ -46,8 +46,13 @@ with defined params — no silent-zero failures.
   color-ramped Shadow Dream (dappled shape vs graded tint). Optional: gate it behind
   `bShadowGarden_Active` (default OFF, flip ON for those 3) to save PS on the other
   ~100 instances — same pattern as the other feature gates.
-- **Core-parallax vs per-layer parallax** duplication: keep per-layer, remove the
-  legacy core block if confirmed unconsumed (trace once).
+- ~~**Core-parallax vs per-layer parallax** duplication~~ **RESOLVED 2026-07-04 —
+  NOT a duplicate, nothing to remove.** Live trace: the `05 | Parallax` group is a
+  set of *global* parallax controls that multiply *together* with the per-layer
+  `LayerA/B/C_ParallaxScale` (`(height×ParallaxScale)×LayerA_ParallaxScale` per
+  layer). One integrated global×per-layer system; removing the core block would
+  break parallax on every layer. See NODE_REVIEW family 05x. Reframed as an
+  *expand* target (stylized editable depth) per the render-day steer.
 - Final `MEL.delete_unused_expressions` sweep for any new orphans.
 - Est. → ~800 expressions.
 
