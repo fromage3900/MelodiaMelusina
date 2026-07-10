@@ -24,7 +24,7 @@ bl_info = {
     "blender": (5, 1, 0),
     "author": "Claude Code",
     "description": "Procedural geometry node system for surreal architecture",
-    "version": (2, 131, 0),
+    "version": (2, 132, 0),
     "location": "Properties > Modifiers",
     "category": "Geometry Nodes",
 }
@@ -28266,7 +28266,7 @@ SURREAL_ARCH_OT_preset_art_deco_lobby = _make_graph_preset_op(
     "SURREAL_ARCH_OT_preset_art_deco_lobby",
     "surreal_arch.preset_art_deco_lobby", "Art Deco Lobby",
     "art_deco_lobby_graph",
-    description="Tessellation tower, geometric panels, chevron filigree, cusped portal, obelisk",
+    description="Setback facade, lobby stair, geometric panels, chevron filigree, cusped portal, processional ramp",
 )
 
 SURREAL_ARCH_OT_preset_renaissance_piazza = _make_graph_preset_op(
@@ -28549,7 +28549,7 @@ _ARCH_PRESETS = {
     },
     'ART_DECO_LOBBY': {
         'group': 'CIVIC', 'label': '🏙 Art Deco Lobby',
-        'desc': 'ART_DECO graph — tessellation tower, geometric panels, chevron filigree, obelisk',
+        'desc': 'ART_DECO graph — setback facade, lobby stair, panel wall, chevron filigree, ramp (no towers)',
         'op_id': 'surreal_arch.preset_art_deco_lobby',
     },
     'RENAISSANCE_PIAZZA': {

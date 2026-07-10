@@ -1,14 +1,14 @@
 {
   "id": "ART_DECO",
-  "label": "Art Deco Lobby Walk",
-  "description": "Stepped tessellation tower, geometric panel wall, chevron filigree, cusped portal, balconette, obelisk spire",
+  "label": "Art Deco Lobby Promenade",
+  "description": "Setback facade, lobby stair, geometric panel wall, chevron filigree, cusped portal, processional ramp — horizontal civic chain (no towers)",
   "style": "artdeco",
   "modules": [
-    {"arch_type": "TESSELLATION_TOWER", "overrides": {"tess_grid_x": 6, "tess_grid_y": 6, "tess_size": 0.45, "tess_height_var": 0.65, "tess_rotate_var": 0.15, "material_choice": "AUTO"}},
+    {"arch_type": "BAROQUE_FACADE", "overrides": {"baroque_facade_bays": 5, "baroque_facade_height": 12.0, "baroque_order": "CORINTHIAN", "baroque_ornament_density": 0.55, "material_choice": "AUTO"}},
+    {"arch_type": "GREYBOX_STAIR_BLOCK", "overrides": {"gb_steps": 12, "gb_rise": 0.22, "gb_run": 0.32, "gb_width": 2.6, "material_choice": "STONE", "unit_size": 2.0}},
     {"arch_type": "GB_BRUTALIST_PANEL_WALL", "overrides": {"gb_length": 10.0, "gb_height": 3.8, "gb_trim_mode": "RECESS", "gb_trim_recess": 0.06, "material_choice": "AUTO"}},
     {"arch_type": "FILIGREE_PANEL", "overrides": {"filigree_style": "GEOMETRIC_ARABESQUE", "filigree_width": 1.6, "filigree_height": 2.2, "filigree_density": 0.75, "material_choice": "AUTO"}},
     {"arch_type": "CUSPED_ARCH", "overrides": {"gothic_width": 2.2, "gb_height": 4.2, "gb_trim_mode": "RECESS", "material_choice": "AUTO"}},
-    {"arch_type": "BALCONY", "overrides": {"balcony_width": 2.4, "balcony_depth": 0.75, "balcony_baluster_count": 8, "material_choice": "AUTO"}},
-    {"arch_type": "OBELISK", "overrides": {"base_radius": 0.45, "height": 8.0, "material_choice": "AUTO"}}
+    {"arch_type": "GREYBOX_RAMP", "overrides": {"gb_length": 8.0, "gb_width": 2.4, "gb_rise": 1.8, "material_choice": "STONE", "unit_size": 2.0}}
   ]
 }

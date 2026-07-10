@@ -1,5 +1,12 @@
 # Surreal Architecture — Changelog
 
+## v2.132.0 — Art Deco tower-ban lobby promenade
+
+- **`ART_DECO`** grammar rewritten as horizontal civic chain (facade, stair, panel, filigree, portal, ramp) — no TESSELLATION_TOWER / OBELISK
+- Compose roles + genome overrides: `BAROQUE_FACADE` large, `PILLAR` corner, `PUBLIC_FOUNTAIN` monument; `axis_compression` transform
+- Research study `research/art_deco/01_lobby_promenade.md`; curated + research presets retargeted
+- OS/world verify tower-ban + resolved compose role asserts; `PILLAR` in verify library set
+
 ## v2.131.0 — Art Deco lobby architecture set
 
 - **`art_deco_lobby_v1`** genome + **`ART_DECO`** grammar chain (6 modules)

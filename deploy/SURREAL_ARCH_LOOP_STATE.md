@@ -318,15 +318,22 @@ Removed stale `.yaml` genome duplicates — `.json` is sole source of truth for 
 - **`asian_city_recursive_v1`** retargeted off shared `ASIAN_CITY` bleed → recursive grammar + compose
 - World manifest embed verify for `recursive_interior` + resolved kura medium role
 
-## Next loop targets
-
-- Mesoamerican pyramid courtyard (new family)
-- Art Nouveau / Moorish manifest parity audit (compose tests green)
-- Industrial Art Deco hybrid or Streamline Moderne variant
-
 ## Micro-cycle 85 — v2.131.0 (Art Deco lobby set) ✓
 
 - **`art_deco_lobby_v1`** genome + **`ART_DECO`** grammar (tessellation tower, geometric panel wall, chevron filigree, cusped portal, obelisk)
 - **`ART_DECO`** compose style + library bake for **`TESSELLATION_TOWER`**
 - Research preset `art_deco_lobby_graph` + curated playable preset; `vertical_stretch` transform
 - World manifest embed verify; genome catalog **30**
+
+## Micro-cycle 86 — v2.132.0 (Art Deco tower-ban promenade) ✓
+
+- **`ART_DECO`** grammar retargeted to horizontal civic chain: setback facade → lobby stair → panel wall → chevron filigree → cusped portal → processional ramp
+- Compose roles: `large`→`BAROQUE_FACADE`, `corner_tower`→`PILLAR`, `monument`→`PUBLIC_FOUNTAIN` (banned TESSELLATION_TOWER / OBELISK)
+- Genome `axis_compression` + research study `research/art_deco/01_lobby_promenade.md`
+- OS/world verify assert tower-ban + resolved pillar corner role
+
+## Next loop targets
+
+- Broader tower-ban sweep (Gothic / Romanesque / Renaissance / Moorish / Art Nouveau corner_tower → PILLAR)
+- Wire Mesoamerican pyramid courtyard if not merged from sibling
+- Industrial Art Deco hybrid or Streamline Moderne variant (horizontal civic)

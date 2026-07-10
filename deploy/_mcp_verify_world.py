@@ -215,11 +215,13 @@ try:
     library.init_library(
         s,
         types_only={
-            "TESSELLATION_TOWER",
+            "BAROQUE_FACADE",
             "GB_BRUTALIST_PANEL_WALL",
             "FILIGREE_PANEL",
             "CUSPED_ARCH",
-            "OBELISK",
+            "PILLAR",
+            "PUBLIC_FOUNTAIN",
+            "CURTAIN_WALL",
         },
     )
     deco_plan = plans.spawn_village_plan(location=(110, 0, 0))
@@ -228,7 +230,10 @@ try:
     art_deco_export_root = droot
     s._active_style_genome = None
     print(f"  art_deco_compose: {dmsg} metrics={verify_hooks.compose_metrics(droot)}")
-    if droot.get("surreal_style_genome_id") != "art_deco_lobby_v1":
+    if droot is None:
+        print("  !! FAIL: art_deco compose returned None root")
+        all_ok = False
+    elif droot.get("surreal_style_genome_id") != "art_deco_lobby_v1":
         print(f"  !! FAIL: art_deco genome stamp got {droot.get('surreal_style_genome_id')}")
         all_ok = False
     else:
@@ -673,10 +678,17 @@ try:
             raise RuntimeError(f"ART_DECO style_genome expected art_deco_lobby_v1: {dsg}")
         if dsg.get("family") != "ArtDeco":
             raise RuntimeError(f"art_deco family mismatch: {dsg.get('family')}")
-        if dsg.get("surreal_transform") != "vertical_stretch":
+        if dsg.get("surreal_transform") != "axis_compression":
             raise RuntimeError("ART_DECO surreal_transform mismatch")
-        if dsg.get("resolved_compose_roles", {}).get("gate") != "_lib_CUSPED_ARCH":
+        roles = dsg.get("resolved_compose_roles") or {}
+        if roles.get("gate") != "_lib_CUSPED_ARCH":
             raise RuntimeError("ART_DECO resolved gate mismatch")
+        if roles.get("corner_tower") != "_lib_PILLAR":
+            raise RuntimeError(f"ART_DECO resolved corner_tower mismatch: {roles.get('corner_tower')}")
+        if roles.get("large") != "_lib_BAROQUE_FACADE":
+            raise RuntimeError(f"ART_DECO resolved large mismatch: {roles.get('large')}")
+        if roles.get("monument") != "_lib_PUBLIC_FOUNTAIN":
+            raise RuntimeError(f"ART_DECO resolved monument mismatch: {roles.get('monument')}")
         print("  art_deco manifest embed: OK")
     if moorish_export_root is not None:
         mm = export.build_world_manifest(moorish_export_root, monolith=s)
