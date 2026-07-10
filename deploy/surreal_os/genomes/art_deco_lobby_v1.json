@@ -1,17 +1,22 @@
 {
   "id": "art_deco_lobby_v1",
   "family": "ArtDeco",
-  "verticality": 0.88,
-  "symmetry": 0.82,
-  "ornament_density": 0.55,
+  "verticality": 0.52,
+  "symmetry": 0.84,
+  "ornament_density": 0.58,
   "structural_logic": 0.86,
-  "organic_growth": 0.22,
-  "cosmic_influence": 0.08,
+  "organic_growth": 0.2,
+  "cosmic_influence": 0.06,
   "sacred_sequence": [],
   "compose_style": "ART_DECO",
   "default_graph": "ART_DECO",
   "grammar_id": "ART_DECO",
-  "surreal_transform": "vertical_stretch",
+  "surreal_transform": "axis_compression",
+  "compose_roles": {
+    "corner_tower": "_lib_PILLAR",
+    "large": "_lib_BAROQUE_FACADE",
+    "monument": "_lib_PUBLIC_FOUNTAIN"
+  },
   "prop_defaults": {
     "gb_trim_mode": "RECESS",
     "gb_bake_trim_colors": true,

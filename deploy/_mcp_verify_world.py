@@ -215,11 +215,15 @@ try:
     library.init_library(
         s,
         types_only={
-            "TESSELLATION_TOWER",
+            "BAROQUE_FACADE",
             "GB_BRUTALIST_PANEL_WALL",
             "FILIGREE_PANEL",
             "CUSPED_ARCH",
-            "OBELISK",
+            "PILLAR",
+            "PUBLIC_FOUNTAIN",
+            "GREYBOX_RAMP",
+            "BALCONY",
+            "CURTAIN_WALL",
         },
     )
     deco_plan = plans.spawn_village_plan(location=(110, 0, 0))
@@ -227,12 +231,16 @@ try:
     droot, dmsg = compose.compose_world(s, bpy.context, deco_plan, "ART_DECO", 0.85, "COLLECTION")
     art_deco_export_root = droot
     s._active_style_genome = None
-    print(f"  art_deco_compose: {dmsg} metrics={verify_hooks.compose_metrics(droot)}")
-    if droot.get("surreal_style_genome_id") != "art_deco_lobby_v1":
-        print(f"  !! FAIL: art_deco genome stamp got {droot.get('surreal_style_genome_id')}")
+    if droot is None:
+        print(f"  !! FAIL: art_deco compose returned None: {dmsg}")
         all_ok = False
     else:
-        print("  art_deco_compose: OK")
+        print(f"  art_deco_compose: {dmsg} metrics={verify_hooks.compose_metrics(droot)}")
+        if droot.get("surreal_style_genome_id") != "art_deco_lobby_v1":
+            print(f"  !! FAIL: art_deco genome stamp got {droot.get('surreal_style_genome_id')}")
+            all_ok = False
+        else:
+            print("  art_deco_compose: OK")
 except Exception as e:
     print(f"  art_deco compose error: {e}")
     all_ok = False
@@ -673,10 +681,14 @@ try:
             raise RuntimeError(f"ART_DECO style_genome expected art_deco_lobby_v1: {dsg}")
         if dsg.get("family") != "ArtDeco":
             raise RuntimeError(f"art_deco family mismatch: {dsg.get('family')}")
-        if dsg.get("surreal_transform") != "vertical_stretch":
+        if dsg.get("surreal_transform") != "axis_compression":
             raise RuntimeError("ART_DECO surreal_transform mismatch")
         if dsg.get("resolved_compose_roles", {}).get("gate") != "_lib_CUSPED_ARCH":
             raise RuntimeError("ART_DECO resolved gate mismatch")
+        if dsg.get("resolved_compose_roles", {}).get("corner_tower") != "_lib_PILLAR":
+            raise RuntimeError(
+                f"ART_DECO corner_tower expected _lib_PILLAR: {dsg.get('resolved_compose_roles', {}).get('corner_tower')}"
+            )
         print("  art_deco manifest embed: OK")
     if moorish_export_root is not None:
         mm = export.build_world_manifest(moorish_export_root, monolith=s)

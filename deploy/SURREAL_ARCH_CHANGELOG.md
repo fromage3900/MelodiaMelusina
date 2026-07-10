@@ -1,5 +1,13 @@
 # Surreal Architecture — Changelog
 
+## v2.132.0 — Art Deco lobby tower-ban rematerialize
+
+- **`ART_DECO`** grammar rematerialized: facade → panel wall → chevron filigree → cusped portal → balcony → promenade ramp
+- Removed banned spines (`TESSELLATION_TOWER`, `OBELISK`); compose `corner_tower` → `_lib_PILLAR`, monument → fountain
+- Genome `art_deco_lobby_v1` → `axis_compression`; research study `research/artdeco/01_lobby_promenade.md`
+- Library bake for `GREYBOX_RAMP`; OS/world verify assert banned arch types empty + corner pillar
+- Verify bootstrap: OS + overhaul use sys.path import (factory-startup safe)
+
 ## v2.131.0 — Art Deco lobby architecture set
 
 - **`art_deco_lobby_v1`** genome + **`ART_DECO`** grammar chain (6 modules)

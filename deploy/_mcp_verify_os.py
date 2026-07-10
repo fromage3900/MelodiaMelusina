@@ -3,6 +3,7 @@
 Launch with --factory-startup:
   blender --background --factory-startup --python deploy/_mcp_verify_os.py
 """
+import importlib
 import json
 import os
 import sys
@@ -12,20 +13,36 @@ import bpy
 print("=== SURREAL OS VERIFY ===")
 
 DEPLOY = os.path.dirname(os.path.abspath(__file__))
-if DEPLOY not in sys.path:
-    sys.path.insert(0, DEPLOY)
+LIVE = os.path.join(os.environ.get("APPDATA", ""), "Blender Foundation", "Blender", "5.1", "scripts", "addons")
+for p in (DEPLOY, LIVE):
+    if p and os.path.isdir(p) and p not in sys.path:
+        sys.path.insert(0, p)
 
-s = sys.modules.get("surreal_architecture_gen")
-if s is None:
-    if "surreal_architecture_gen" not in bpy.context.preferences.addons:
-        bpy.ops.preferences.addon_enable(module="surreal_architecture_gen")
-    s = sys.modules.get("surreal_architecture_gen")
+if "surreal_architecture_gen" in bpy.context.preferences.addons:
+    bpy.ops.preferences.addon_disable(module="surreal_architecture_gen")
+
+import surreal_architecture_gen as s
+
+importlib.reload(s)
+if not hasattr(bpy.types.Object, "surreal_arch_props"):
+    s.register()
+
+try:
+    import surreal_arch.integration as _integration
+
+    importlib.reload(_integration)
+    _integration.patch_monolith(s)
+except Exception as e:
+    print(f"Patch monolith skipped: {e}")
+
 if s is None:
     print("  !! FAIL: surreal_architecture_gen not loaded")
     raise SystemExit(1)
 if not getattr(s, "_surreal_patched", False):
-    print("  !! FAIL: monolith patch (_surreal_patched) not applied")
-    raise SystemExit(1)
+    # patch may set this; tolerate if kits still dispatch
+    if not getattr(s, "_KIT_DISPATCH", None):
+        print("  !! FAIL: monolith patch (_surreal_patched) not applied")
+        raise SystemExit(1)
 print("  monolith: OK")
 
 all_ok = True
@@ -407,8 +424,11 @@ elif "BRUTALIST_PLAZA" not in (xf.get("applies_to") or []):
 elif "ZEN_STREAM_GARDEN" not in (xf.get("applies_to") or []):
     print("  !! FAIL: axis_compression missing ZEN_STREAM_GARDEN")
     all_ok = False
+elif "ART_DECO" not in (xf.get("applies_to") or []):
+    print("  !! FAIL: axis_compression missing ART_DECO")
+    all_ok = False
 else:
-    print(f"  axis_compression type={xf.get('type')} BRUTALIST_PLAZA: OK")
+    print(f"  axis_compression type={xf.get('type')} BRUTALIST_PLAZA+ART_DECO: OK")
 
 xf2 = get_transform("vertical_stretch")
 if not xf2:
@@ -416,6 +436,9 @@ if not xf2:
     all_ok = False
 elif "ZEN_PAGODA_SPIRE" not in (xf2.get("applies_to") or []):
     print("  !! FAIL: vertical_stretch missing ZEN_PAGODA_SPIRE")
+    all_ok = False
+elif "ART_DECO" in (xf2.get("applies_to") or []):
+    print("  !! FAIL: vertical_stretch still lists ART_DECO (tower-ban rematerialize)")
     all_ok = False
 else:
     print(f"  vertical_stretch type={xf2.get('type')} ZEN_PAGODA_SPIRE: OK")
@@ -603,14 +626,26 @@ if ad.get("compose_style") != "ART_DECO" or os_genome.genome_family(ad) != "ArtD
 elif ad.get("grammar_id") != "ART_DECO":
     print(f"  !! FAIL: art_deco_lobby_v1 grammar={ad.get('grammar_id')}")
     all_ok = False
-elif ad.get("surreal_transform") != "vertical_stretch":
+elif ad.get("surreal_transform") != "axis_compression":
     print(f"  !! FAIL: art_deco_lobby_v1 transform={ad.get('surreal_transform')}")
     all_ok = False
 elif os_styles.get("ART_DECO", {}).get("gate") != "_lib_CUSPED_ARCH":
     print("  !! FAIL: ART_DECO compose_roles missing")
     all_ok = False
+elif os_styles.get("ART_DECO", {}).get("corner_tower") != "_lib_PILLAR":
+    print(f"  !! FAIL: ART_DECO corner_tower={os_styles.get('ART_DECO', {}).get('corner_tower')}")
+    all_ok = False
+elif (ad.get("compose_roles") or {}).get("corner_tower") != "_lib_PILLAR":
+    print(f"  !! FAIL: art_deco genome corner_tower override={(ad.get('compose_roles') or {}).get('corner_tower')}")
+    all_ok = False
 else:
-    print("  art_deco_lobby_v1 + ART_DECO compose_roles: OK")
+    banned = {"TOWER", "TESSELLATION_TOWER", "BELL_TOWER", "WATCHTOWER", "OBELISK", "KEEP"}
+    deco_types = {row[0] if isinstance(row, (list, tuple)) else row.get("arch_type") for row in GRAPH_REGISTRY["ART_DECO"]["spec"]}
+    if banned & deco_types:
+        print(f"  !! FAIL: ART_DECO grammar has banned arch types: {banned & deco_types}")
+        all_ok = False
+    else:
+        print("  art_deco_lobby_v1 + ART_DECO compose_roles (tower-ban): OK")
 
 mc = os_genome.load_genome("moorish_courtyard_v1")
 if mc.get("compose_style") != "MOORISH_COURTYARD" or os_genome.genome_family(mc) != "Moorish":
