@@ -328,6 +328,7 @@ Removed stale `.yaml` genome duplicates — `.json` is sole source of truth for 
 
 - **`ART_NOUVEAU`** + **`MOORISH_COURTYARD`** compose `corner_tower` → `_lib_PILLAR` (was `_lib_BELL_TOWER`)
 - Genome `compose_roles` overrides + OS/world verify asserts for tower-ban pillar markers
+- World verify library bake for Art Nouveau / Moorish kits; `PILLAR` added to `VERIFY_LIBRARY_TYPES`
 - Research studies `research/art_nouveau/01_corner_markers.md` + `research/moorish/01_corner_markers.md`
 - Hygiene: mesoamerican stub `archway_style` ROUND → ROMAN
 

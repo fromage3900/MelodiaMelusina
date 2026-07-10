@@ -4,6 +4,7 @@
 
 - **`ART_NOUVEAU`** + **`MOORISH_COURTYARD`** `corner_tower` remapped `_lib_BELL_TOWER` → `_lib_PILLAR`
 - Genome `compose_roles` overrides + OS/world verify asserts for pillar corner markers
+- World verify: library bake for Art Nouveau / Moorish role kits; `PILLAR` in `VERIFY_LIBRARY_TYPES`
 - Research studies for Art Nouveau + Moorish corner markers (no tower spines)
 - Hygiene: mesoamerican pyramid stub `archway_style` ROUND → ROMAN
 

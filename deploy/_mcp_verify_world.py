@@ -194,13 +194,29 @@ except Exception as e:
 print("\n--- Art Nouveau plan compose ---")
 try:
     from surreal_os import genome as os_genome
+    library.init_library(
+        s,
+        types_only={
+            "BAROQUE_FACADE",
+            "BALCONY",
+            "FILIGREE_PANEL",
+            "CURTAIN_WALL",
+            "PILLAR",
+            "OGEE_ARCH",
+            "PUBLIC_FOUNTAIN",
+            "CHAPEL",
+        },
+    )
     art_plan = plans.spawn_village_plan(location=(100, 0, 0))
     s._active_style_genome = os_genome.load_genome("art_nouveau_v1")
     aroot, amsg = compose.compose_world(s, bpy.context, art_plan, "ART_NOUVEAU", 0.85, "COLLECTION")
     art_nouveau_export_root = aroot
     s._active_style_genome = None
     print(f"  art_nouveau_compose: {amsg} metrics={verify_hooks.compose_metrics(aroot)}")
-    if aroot.get("surreal_style_genome_id") != "art_nouveau_v1":
+    if aroot is None:
+        print(f"  !! FAIL: art_nouveau compose returned None: {amsg}")
+        all_ok = False
+    elif aroot.get("surreal_style_genome_id") != "art_nouveau_v1":
         print(f"  !! FAIL: art_nouveau genome stamp got {aroot.get('surreal_style_genome_id')}")
         all_ok = False
     else:
@@ -240,13 +256,29 @@ except Exception as e:
 print("\n--- Moorish courtyard plan compose ---")
 try:
     from surreal_os import genome as os_genome
+    library.init_library(
+        s,
+        types_only={
+            "PALAZZO",
+            "GB_ROMANESQUE_ARCADE",
+            "FILIGREE_PANEL",
+            "CURVED_WALL",
+            "PILLAR",
+            "ARCHWAY_ADV",
+            "PUBLIC_FOUNTAIN",
+            "CHAPEL",
+        },
+    )
     moor_plan = plans.spawn_village_plan(location=(120, 0, 0))
     s._active_style_genome = os_genome.load_genome("moorish_courtyard_v1")
     mroot, mmsg = compose.compose_world(s, bpy.context, moor_plan, "MOORISH_COURTYARD", 0.85, "COLLECTION")
     moorish_export_root = mroot
     s._active_style_genome = None
     print(f"  moorish_compose: {mmsg} metrics={verify_hooks.compose_metrics(mroot)}")
-    if mroot.get("surreal_style_genome_id") != "moorish_courtyard_v1":
+    if mroot is None:
+        print(f"  !! FAIL: moorish compose returned None: {mmsg}")
+        all_ok = False
+    elif mroot.get("surreal_style_genome_id") != "moorish_courtyard_v1":
         print(f"  !! FAIL: moorish genome stamp got {mroot.get('surreal_style_genome_id')}")
         all_ok = False
     else:
