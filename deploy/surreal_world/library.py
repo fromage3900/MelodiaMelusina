@@ -87,7 +87,7 @@ SURREAL_LIBRARY_SPEC = {
     "TESSELLATION_TOWER": {"tess_grid_x": 6, "tess_grid_y": 6, "tess_size": 0.45, "tess_height_var": 0.65, "tess_rotate_var": 0.15},
     "RETAINING_WALL": {"wall_segments": 4, "retaining_steps": 5, "retaining_batter": 0.1, "wall_thickness": 0.65, "unit_size": 1.2, "material_choice": "STONE"},
     "GREYBOX_STAIR_BLOCK": {"gb_steps": 12, "gb_rise": 0.22, "gb_run": 0.32, "gb_width": 2.4, "material_choice": "STONE", "unit_size": 2.0},
-    "GREYBOX_RAMP": {"gb_length": 6.0, "gb_width": 2.8, "gb_rise": 2.4, "gb_curbs": true, "material_choice": "STONE"},
+    "GREYBOX_RAMP": {"gb_length": 6.0, "gb_width": 2.8, "gb_rise": 2.4, "gb_curbs": True, "material_choice": "STONE"},
 }
 
 
