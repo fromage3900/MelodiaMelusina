@@ -1,0 +1,27 @@
+{
+  "id": "ottoman_caravanserai_v1",
+  "family": "Ottoman",
+  "verticality": 0.38,
+  "symmetry": 0.86,
+  "ornament_density": 0.7,
+  "structural_logic": 0.8,
+  "organic_growth": 0.2,
+  "cosmic_influence": 0.12,
+  "sacred_sequence": [],
+  "compose_style": "OTTOMAN_CARAVANSERAI",
+  "default_graph": "OTTOMAN_CARAVANSERAI",
+  "grammar_id": "OTTOMAN_CARAVANSERAI",
+  "surreal_transform": "axis_compression",
+  "compose_roles": {
+    "corner_tower": "_lib_PILLAR"
+  },
+  "prop_defaults": {
+    "gb_trim_mode": "RECESS",
+    "gb_bake_trim_colors": true,
+    "filigree_style": "GEOMETRIC_ARABESQUE",
+    "filigree_density": 0.72,
+    "archway_style": "HORSESHOE",
+    "material_choice": "STONE",
+    "unit_size": 2.0
+  }
+}

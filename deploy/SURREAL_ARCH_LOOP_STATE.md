@@ -1,8 +1,15 @@
 # Surreal Architecture — Loop State
 
-**Version:** 2.131.0  
+**Version:** 2.132.0  
 **Loop sentinel:** `AGENT_LOOP_TICK_surreal_tierb`  
 **Interval:** 300s — **endless loop armed** (monitored shell, AAA genome expansion prompt)
+
+## Micro-cycle 86 — v2.132.0 (Ottoman caravanserai set) ✓
+
+- **`ottoman_caravanserai_v1`** genome + **`OTTOMAN_CARAVANSERAI`** grammar (han facade, horseshoe iwan, arabesque, riwaq, corridor, ramp, sahn fountain)
+- **`OTTOMAN_CARAVANSERAI`** compose style — `corner_tower` → `_lib_PILLAR` (tower-ban); `axis_compression`
+- Research preset + curated playable preset; world/OS verify tiers; Linux factory-startup sys.path bootstrap
+- Hygiene: meso stub `ROUND` → `ROMAN`; genome catalog **32**
 
 ## Micro-cycle 53 — genome `family` schema (v2.98.0) ✓
 
@@ -320,9 +327,16 @@ Removed stale `.yaml` genome duplicates — `.json` is sole source of truth for 
 
 ## Next loop targets
 
-- Mesoamerican pyramid courtyard (new family)
-- Art Nouveau / Moorish manifest parity audit (compose tests green)
-- Industrial Art Deco hybrid or Streamline Moderne variant
+- Khmer gallery / Inca terrace (new horizontal civic families)
+- Art Deco lobby tower-ban rematerialize (still has TESSELLATION_TOWER/OBELISK on mainline 2.131)
+- Art Nouveau / Moorish / Renaissance / Gothic `corner_tower` → PILLAR sweep
+
+## Micro-cycle 86 — v2.132.0 (Ottoman caravanserai set) ✓
+
+- **`ottoman_caravanserai_v1`** genome + **`OTTOMAN_CARAVANSERAI`** grammar (7 modules: facade, iwan, arabesque, arcade, corridor, ramp, fountain)
+- **`OTTOMAN_CARAVANSERAI`** compose style + library bake for **`GREYBOX_RAMP`**; `corner_tower` → `_lib_PILLAR`
+- Research preset `ottoman_caravanserai_graph` + curated playable preset; `axis_compression` transform
+- World manifest embed verify; genome catalog **32**
 
 ## Micro-cycle 85 — v2.131.0 (Art Deco lobby set) ✓
 

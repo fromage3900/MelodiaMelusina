@@ -15,7 +15,14 @@ print("=== SURREAL WORLD VERIFY v2.69 ===")
 print("Blender", bpy.app.version_string)
 
 DEPLOY = os.path.dirname(os.path.abspath(__file__))
-LIVE = os.path.join(os.environ.get("APPDATA", ""), "Blender Foundation", "Blender", "5.1", "scripts", "addons")
+LIVE = os.path.join(
+    os.environ.get("APPDATA", os.path.expanduser("~/.config")),
+    "Blender Foundation",
+    "Blender",
+    "5.1",
+    "scripts",
+    "addons",
+)
 for p in (DEPLOY, LIVE):
     if p and os.path.isdir(p) and p not in sys.path:
         sys.path.insert(0, p)
@@ -51,6 +58,7 @@ moorish_export_root = None
 renaissance_export_root = None
 byzantine_export_root = None
 baroque_export_root = None
+ottoman_export_root = None
 venetian_export_root = None
 romanesque_cloister_export_root = None
 romanesque_apse_export_root = None
@@ -307,6 +315,40 @@ try:
         print("  baroque_compose: OK")
 except Exception as e:
     print(f"  baroque compose error: {e}")
+    all_ok = False
+
+print("\n--- Ottoman caravanserai plan compose ---")
+try:
+    from surreal_os import genome as os_genome
+    library.init_library(
+        s,
+        types_only={
+            "BAROQUE_FACADE",
+            "GB_ROMANESQUE_ARCADE",
+            "FILIGREE_PANEL",
+            "PILLAR",
+            "ARCHWAY_ADV",
+            "PUBLIC_FOUNTAIN",
+            "GREYBOX_PILLAR_HALL",
+            "GREYBOX_RAMP",
+        },
+    )
+    otto_plan = plans.spawn_village_plan(location=(168, 0, 0))
+    s._active_style_genome = os_genome.load_genome("ottoman_caravanserai_v1")
+    oroot, omsg = compose.compose_world(s, bpy.context, otto_plan, "OTTOMAN_CARAVANSERAI", 0.85, "COLLECTION")
+    ottoman_export_root = oroot
+    s._active_style_genome = None
+    print(f"  ottoman_compose: {omsg} metrics={verify_hooks.compose_metrics(oroot)}")
+    if oroot is None:
+        print("  !! FAIL: ottoman compose returned None root")
+        all_ok = False
+    elif oroot.get("surreal_style_genome_id") != "ottoman_caravanserai_v1":
+        print(f"  !! FAIL: ottoman genome stamp got {oroot.get('surreal_style_genome_id')}")
+        all_ok = False
+    else:
+        print("  ottoman_compose: OK")
+except Exception as e:
+    print(f"  ottoman compose error: {e}")
     all_ok = False
 
 print("\n--- Romanesque cloister plan compose ---")
@@ -722,6 +764,20 @@ try:
         if bcsg.get("resolved_compose_roles", {}).get("gate") != "_lib_OGEE_ARCH":
             raise RuntimeError("BAROQUE_CHURCH resolved gate mismatch")
         print("  baroque_church manifest embed: OK")
+    if ottoman_export_root is not None:
+        om = export.build_world_manifest(ottoman_export_root, monolith=s)
+        osg = om.get("style_genome") or {}
+        if osg.get("id") != "ottoman_caravanserai_v1":
+            raise RuntimeError(f"OTTOMAN_CARAVANSERAI style_genome expected ottoman_caravanserai_v1: {osg}")
+        if osg.get("family") != "Ottoman":
+            raise RuntimeError(f"ottoman family mismatch: {osg.get('family')}")
+        if osg.get("surreal_transform") != "axis_compression":
+            raise RuntimeError("ottoman surreal_transform mismatch")
+        if osg.get("resolved_compose_roles", {}).get("corner_tower") != "_lib_PILLAR":
+            raise RuntimeError("OTTOMAN_CARAVANSERAI resolved corner_tower mismatch")
+        if osg.get("resolved_compose_roles", {}).get("gate") != "_lib_ARCHWAY_ADV":
+            raise RuntimeError("OTTOMAN_CARAVANSERAI resolved gate mismatch")
+        print("  ottoman_caravanserai manifest embed: OK")
     if romanesque_cloister_export_root is not None:
         rcm = export.build_world_manifest(romanesque_cloister_export_root, monolith=s)
         rcsg = rcm.get("style_genome") or {}

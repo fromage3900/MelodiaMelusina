@@ -16,3 +16,8 @@ Before implementing a new generator kit, fill `_template_node_design.md` and lin
 ## Pilot style
 
 **Zen / Japanese** — first full Style Genome (`zen_shrine_v1`).
+
+## Recent studies
+
+- `ottoman/01_caravanserai_courtyard.md` — han facade → iwan → riwaq → sahn (tower-ban civic chain)
+

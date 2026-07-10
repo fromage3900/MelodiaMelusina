@@ -1,0 +1,15 @@
+{
+  "id": "OTTOMAN_CARAVANSERAI",
+  "label": "Ottoman Caravanserai Courtyard",
+  "description": "Han facade, horseshoe iwan, arabesque screen, riwaq arcade, stable corridor, gallery ramp, sahn fountain",
+  "style": "ottoman",
+  "modules": [
+    {"arch_type": "BAROQUE_FACADE", "overrides": {"baroque_facade_bays": 5, "baroque_facade_height": 12.0, "baroque_order": "CORINTHIAN", "baroque_ornament_density": 0.55, "material_choice": "STONE"}},
+    {"arch_type": "ARCHWAY_ADV", "overrides": {"archway_style": "HORSESHOE", "archway_width": 2.8, "archway_height": 2.4, "archway_depth": 0.65, "material_choice": "STONE"}},
+    {"arch_type": "FILIGREE_PANEL", "overrides": {"filigree_style": "GEOMETRIC_ARABESQUE", "filigree_width": 1.6, "filigree_height": 2.2, "filigree_density": 0.72, "material_choice": "AUTO"}},
+    {"arch_type": "GB_ROMANESQUE_ARCADE", "overrides": {"gb_width": 3.4, "gb_height": 4.2, "gb_trim_mode": "RECESS", "unit_size": 3.4, "material_choice": "STONE"}},
+    {"arch_type": "GREYBOX_CORRIDOR", "overrides": {"gb_length": 10.0, "gb_corridor_profile": "DOUBLE", "gb_trim_mode": "RECESS", "material_choice": "STONE"}},
+    {"arch_type": "GREYBOX_RAMP", "overrides": {"gb_length": 8.0, "gb_width": 2.4, "gb_rise": 2.2, "material_choice": "STONE"}},
+    {"arch_type": "PUBLIC_FOUNTAIN", "overrides": {"fountain_radius": 1.5, "fountain_tiers": 2, "material_choice": "MARBLE"}}
+  ]
+}

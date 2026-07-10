@@ -1,5 +1,13 @@
 # Surreal Architecture — Changelog
 
+## v2.132.0 — Ottoman caravanserai architecture set
+
+- **`ottoman_caravanserai_v1`** genome + **`OTTOMAN_CARAVANSERAI`** grammar chain (7 modules)
+- **`OTTOMAN_CARAVANSERAI`** compose style — tower-ban (`corner_tower` → `_lib_PILLAR`); `axis_compression`
+- Research preset `ottoman_caravanserai_graph` + curated playable preset; library bake for `GREYBOX_RAMP`
+- Linux `--factory-startup` sys.path bootstrap for OS/overhaul/world verify; meso `ROUND`→`ROMAN` hygiene
+- World manifest embed verify; genome catalog **32**
+
 ## v2.131.0 — Art Deco lobby architecture set
 
 - **`art_deco_lobby_v1`** genome + **`ART_DECO`** grammar chain (6 modules)
