@@ -301,6 +301,23 @@ RESEARCH_PRESETS = {
             style_genome_id="art_deco_lobby_v1",
         ),
     },
+    "meso_pyramid_courtyard_graph": {
+        "label": "Mesoamerican Pyramid Courtyard",
+        "description": "Retaining tiers, ceremonial stair, processional ramp, colonnade, portal, sacred pool",
+        "research_ref": "research/mesoamerican/01_pyramid_courtyard.md — meso_pyramid_courtyard_v1 + MESOAMERICAN_PYRAMID",
+        "group": "CIVIC",
+        "graph_id": "MESOAMERICAN_PYRAMID",
+        "genome_id": "meso_pyramid_courtyard_v1",
+        "props": dict(
+            arch_type="RETAINING_WALL",
+            wall_segments=4,
+            retaining_steps=5,
+            retaining_batter=0.1,
+            material_choice="STONE",
+            unit_size=1.2,
+            style_genome_id="meso_pyramid_courtyard_v1",
+        ),
+    },
     "moorish_courtyard_graph": {
         "label": "Moorish Courtyard Colonnade",
         "description": "Horseshoe portal, arabesque screen, arcade bays, fountain court",
