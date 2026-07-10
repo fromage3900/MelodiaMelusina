@@ -47,7 +47,7 @@ from surreal_arch.greybox_graph import GRAPH_REGISTRY
 
 merged = merge_grammar_into_registry(GRAPH_REGISTRY)
 print(f"  merged_into_registry: {merged}")
-for gid in ("ZEN_SHRINE_AXIS", "ZEN_SAKURA_WALK", "ZEN_SHRINE_COURTYARD", "ZEN_ROJI_PATH", "ZEN_KARESANSHUI_WALK", "ZEN_TEA_GARDEN", "ZEN_STREAM_GARDEN", "ZEN_PAGODA_SPIRE", "ZEN_KAIRO_ENCLOSURE", "CLOISTER", "GOTHIC_CHAPTER_HOUSE", "GOTHIC_NAVE_CROSSING", "SCIFI_AIRLOCK", "SCI_FI_DECK", "ROMANESQUE_CLOISTER", "VENETIAN_CANAL", "ROMANESQUE_APSE", "SCI_FI_DECK_EXPANSION", "SCI_FI_INDUSTRIAL_YARD", "ASIAN_CITY", "ASIAN_CITY_RECURSIVE", "BRUTALIST_PLAZA", "ART_NOUVEAU", "ART_DECO", "MOORISH_COURTYARD", "RENAISSANCE_PIAZZA", "BYZANTINE_BASILICA", "BAROQUE_CHURCH"):
+for gid in ("ZEN_SHRINE_AXIS", "ZEN_SAKURA_WALK", "ZEN_SHRINE_COURTYARD", "ZEN_ROJI_PATH", "ZEN_KARESANSHUI_WALK", "ZEN_TEA_GARDEN", "ZEN_STREAM_GARDEN", "ZEN_PAGODA_SPIRE", "ZEN_KAIRO_ENCLOSURE", "CLOISTER", "GOTHIC_CHAPTER_HOUSE", "GOTHIC_NAVE_CROSSING", "SCIFI_AIRLOCK", "SCI_FI_DECK", "ROMANESQUE_CLOISTER", "VENETIAN_CANAL", "ROMANESQUE_APSE", "SCI_FI_DECK_EXPANSION", "SCI_FI_INDUSTRIAL_YARD", "ASIAN_CITY", "ASIAN_CITY_RECURSIVE", "BRUTALIST_PLAZA", "ART_NOUVEAU", "ART_DECO", "MOORISH_COURTYARD", "RENAISSANCE_PIAZZA", "BYZANTINE_BASILICA", "BAROQUE_CHURCH", "MESOAMERICAN_PYRAMID"):
     if gid not in GRAPH_REGISTRY:
         print(f"  !! FAIL: {gid} not in GRAPH_REGISTRY")
         all_ok = False
@@ -205,8 +205,8 @@ else:
     print("  scifi_industrial_yard_v1: OK")
 
 genome_ids = os_genome.list_genomes()
-if len(genome_ids) < 29:
-    print(f"  !! FAIL: expected >=29 genomes got {len(genome_ids)}")
+if len(genome_ids) < 30:
+    print(f"  !! FAIL: expected >=30 genomes got {len(genome_ids)}")
     all_ok = False
 else:
     print(f"  genome catalog: {len(genome_ids)} entries")
@@ -312,6 +312,12 @@ try:
     if len(gnc_objs) < 3:
         print(f"  !! FAIL: GOTHIC_NAVE_CROSSING spawn got {len(gnc_objs)}")
         all_ok = False
+    meso_spec = GRAPH_REGISTRY["MESOAMERICAN_PYRAMID"]["spec"]
+    meso_objs = spawn_graph(bpy.context, s, meso_spec[:4], spacing=10.0, graph_id="MESOAMERICAN_PYRAMID")
+    print(f"  spawn_graph MESOAMERICAN_PYRAMID partial: {len(meso_objs)} objects")
+    if len(meso_objs) < 3:
+        print(f"  !! FAIL: MESOAMERICAN_PYRAMID spawn got {len(meso_objs)}")
+        all_ok = False
     from surreal_arch.research_presets import run_research_preset
     rp = run_research_preset(bpy.context, "gothic_cloister_graph", monolith=s)
     if rp.get("mode") != "graph" or rp.get("count", 0) < 3:
@@ -407,8 +413,11 @@ elif "BRUTALIST_PLAZA" not in (xf.get("applies_to") or []):
 elif "ZEN_STREAM_GARDEN" not in (xf.get("applies_to") or []):
     print("  !! FAIL: axis_compression missing ZEN_STREAM_GARDEN")
     all_ok = False
+elif "MESOAMERICAN_PYRAMID" not in (xf.get("applies_to") or []):
+    print("  !! FAIL: axis_compression missing MESOAMERICAN_PYRAMID")
+    all_ok = False
 else:
-    print(f"  axis_compression type={xf.get('type')} BRUTALIST_PLAZA: OK")
+    print(f"  axis_compression type={xf.get('type')} BRUTALIST+MESO: OK")
 
 xf2 = get_transform("vertical_stretch")
 if not xf2:
@@ -663,6 +672,28 @@ elif os_styles.get("BAROQUE_CHURCH", {}).get("gate") != "_lib_OGEE_ARCH":
     all_ok = False
 else:
     print("  baroque_church_v1 + BAROQUE_CHURCH compose_roles: OK")
+
+mp = os_genome.load_genome("meso_pyramid_courtyard_v1")
+if mp.get("compose_style") != "MESOAMERICAN_PYRAMID" or os_genome.genome_family(mp) != "Mesoamerican":
+    print(f"  !! FAIL: meso_pyramid_courtyard_v1 compose/family")
+    all_ok = False
+elif mp.get("grammar_id") != "MESOAMERICAN_PYRAMID":
+    print(f"  !! FAIL: meso_pyramid_courtyard_v1 grammar={mp.get('grammar_id')}")
+    all_ok = False
+elif mp.get("surreal_transform") != "axis_compression":
+    print(f"  !! FAIL: meso transform={mp.get('surreal_transform')}")
+    all_ok = False
+elif mp.get("compose_roles", {}).get("monument") != "_lib_GREYBOX_STAIR_BLOCK":
+    print(f"  !! FAIL: meso monument role={mp.get('compose_roles')}")
+    all_ok = False
+elif os_styles.get("MESOAMERICAN_PYRAMID", {}).get("gate") != "_lib_ARCHWAY_ADV":
+    print("  !! FAIL: MESOAMERICAN_PYRAMID compose_roles missing")
+    all_ok = False
+elif os_styles.get("MESOAMERICAN_PYRAMID", {}).get("corner_tower") != "_lib_PILLAR":
+    print("  !! FAIL: MESOAMERICAN_PYRAMID corner_tower must be pillar (no tower spine)")
+    all_ok = False
+else:
+    print("  meso_pyramid_courtyard_v1 + MESOAMERICAN_PYRAMID compose_roles: OK")
 
 ven = os_genome.load_genome("venetian_canal_v1")
 if ven.get("compose_style") != "VENETIAN_CANAL" or os_genome.genome_family(ven) != "Venetian":

@@ -51,6 +51,7 @@ moorish_export_root = None
 renaissance_export_root = None
 byzantine_export_root = None
 baroque_export_root = None
+meso_export_root = None
 venetian_export_root = None
 romanesque_cloister_export_root = None
 romanesque_apse_export_root = None
@@ -235,6 +236,36 @@ try:
         print("  art_deco_compose: OK")
 except Exception as e:
     print(f"  art_deco compose error: {e}")
+    all_ok = False
+
+print("\n--- Mesoamerican pyramid courtyard plan compose ---")
+try:
+    from surreal_os import genome as os_genome
+    library.init_library(
+        s,
+        types_only={
+            "RETAINING_WALL",
+            "GREYBOX_STAIR_BLOCK",
+            "GREYBOX_RAMP",
+            "GB_ROMANESQUE_ARCADE",
+            "ARCHWAY_ADV",
+            "PUBLIC_FOUNTAIN",
+            "PILLAR",
+        },
+    )
+    meso_plan = plans.spawn_village_plan(location=(115, 0, 0))
+    s._active_style_genome = os_genome.load_genome("meso_pyramid_courtyard_v1")
+    mproot, mpmsg = compose.compose_world(s, bpy.context, meso_plan, "MESOAMERICAN_PYRAMID", 0.85, "COLLECTION")
+    meso_export_root = mproot
+    s._active_style_genome = None
+    print(f"  meso_compose: {mpmsg} metrics={verify_hooks.compose_metrics(mproot)}")
+    if mproot.get("surreal_style_genome_id") != "meso_pyramid_courtyard_v1":
+        print(f"  !! FAIL: meso genome stamp got {mproot.get('surreal_style_genome_id')}")
+        all_ok = False
+    else:
+        print("  meso_compose: OK")
+except Exception as e:
+    print(f"  meso compose error: {e}")
     all_ok = False
 
 print("\n--- Moorish courtyard plan compose ---")
@@ -678,6 +709,20 @@ try:
         if dsg.get("resolved_compose_roles", {}).get("gate") != "_lib_CUSPED_ARCH":
             raise RuntimeError("ART_DECO resolved gate mismatch")
         print("  art_deco manifest embed: OK")
+    if meso_export_root is not None:
+        mpm = export.build_world_manifest(meso_export_root, monolith=s)
+        mpsg = mpm.get("style_genome") or {}
+        if mpsg.get("id") != "meso_pyramid_courtyard_v1":
+            raise RuntimeError(f"MESOAMERICAN_PYRAMID style_genome expected meso_pyramid_courtyard_v1: {mpsg}")
+        if mpsg.get("family") != "Mesoamerican":
+            raise RuntimeError(f"meso family mismatch: {mpsg.get('family')}")
+        if mpsg.get("surreal_transform") != "axis_compression":
+            raise RuntimeError("meso surreal_transform mismatch")
+        if mpsg.get("resolved_compose_roles", {}).get("monument") != "_lib_GREYBOX_STAIR_BLOCK":
+            raise RuntimeError("MESOAMERICAN_PYRAMID resolved monument mismatch")
+        if mpsg.get("resolved_compose_roles", {}).get("corner_tower") != "_lib_PILLAR":
+            raise RuntimeError("MESOAMERICAN_PYRAMID corner_tower must be pillar")
+        print("  meso_pyramid_courtyard manifest embed: OK")
     if moorish_export_root is not None:
         mm = export.build_world_manifest(moorish_export_root, monolith=s)
         msg = mm.get("style_genome") or {}
