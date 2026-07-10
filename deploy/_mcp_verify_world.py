@@ -47,6 +47,7 @@ brutalist_export_root = None
 castle_root = None
 art_nouveau_export_root = None
 art_deco_export_root = None
+art_deco_industrial_export_root = None
 moorish_export_root = None
 renaissance_export_root = None
 byzantine_export_root = None
@@ -235,6 +236,37 @@ try:
         print("  art_deco_compose: OK")
 except Exception as e:
     print(f"  art_deco compose error: {e}")
+    all_ok = False
+
+print("\n--- Industrial Art Deco lobby plan compose ---")
+try:
+    from surreal_os import genome as os_genome
+    library.init_library(
+        s,
+        types_only={
+            "GB_BRUTALIST_PANEL_WALL",
+            "GREYBOX_CATWALK",
+            "FILIGREE_PANEL",
+            "GREYBOX_PILLAR_HALL",
+            "GREYBOX_RAMP",
+            "CUSPED_ARCH",
+            "PILLAR",
+            "PUBLIC_FOUNTAIN",
+        },
+    )
+    deco_ind_plan = plans.spawn_village_plan(location=(115, 0, 0))
+    s._active_style_genome = os_genome.load_genome("art_deco_industrial_v1")
+    diroot, dimsg = compose.compose_world(s, bpy.context, deco_ind_plan, "ART_DECO_INDUSTRIAL", 0.85, "COLLECTION")
+    art_deco_industrial_export_root = diroot
+    s._active_style_genome = None
+    print(f"  art_deco_industrial_compose: {dimsg} metrics={verify_hooks.compose_metrics(diroot)}")
+    if diroot.get("surreal_style_genome_id") != "art_deco_industrial_v1":
+        print(f"  !! FAIL: art_deco_industrial genome stamp got {diroot.get('surreal_style_genome_id')}")
+        all_ok = False
+    else:
+        print("  art_deco_industrial_compose: OK")
+except Exception as e:
+    print(f"  art_deco_industrial compose error: {e}")
     all_ok = False
 
 print("\n--- Moorish courtyard plan compose ---")
@@ -678,6 +710,20 @@ try:
         if dsg.get("resolved_compose_roles", {}).get("gate") != "_lib_CUSPED_ARCH":
             raise RuntimeError("ART_DECO resolved gate mismatch")
         print("  art_deco manifest embed: OK")
+    if art_deco_industrial_export_root is not None:
+        dim = export.build_world_manifest(art_deco_industrial_export_root, monolith=s)
+        disg = dim.get("style_genome") or {}
+        if disg.get("id") != "art_deco_industrial_v1":
+            raise RuntimeError(f"ART_DECO_INDUSTRIAL style_genome expected art_deco_industrial_v1: {disg}")
+        if disg.get("family") != "ArtDeco":
+            raise RuntimeError(f"art_deco_industrial family mismatch: {disg.get('family')}")
+        if disg.get("surreal_transform") != "axis_compression":
+            raise RuntimeError("ART_DECO_INDUSTRIAL surreal_transform mismatch")
+        if disg.get("resolved_compose_roles", {}).get("corner_tower") != "_lib_PILLAR":
+            raise RuntimeError("ART_DECO_INDUSTRIAL corner_tower must be pillar (no towers)")
+        if disg.get("resolved_compose_roles", {}).get("gate") != "_lib_CUSPED_ARCH":
+            raise RuntimeError("ART_DECO_INDUSTRIAL resolved gate mismatch")
+        print("  art_deco_industrial manifest embed: OK")
     if moorish_export_root is not None:
         mm = export.build_world_manifest(moorish_export_root, monolith=s)
         msg = mm.get("style_genome") or {}

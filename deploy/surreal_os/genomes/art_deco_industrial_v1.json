@@ -1,0 +1,23 @@
+{
+  "id": "art_deco_industrial_v1",
+  "family": "ArtDeco",
+  "verticality": 0.42,
+  "symmetry": 0.8,
+  "ornament_density": 0.48,
+  "structural_logic": 0.9,
+  "organic_growth": 0.12,
+  "cosmic_influence": 0.06,
+  "sacred_sequence": [],
+  "compose_style": "ART_DECO_INDUSTRIAL",
+  "default_graph": "ART_DECO_INDUSTRIAL",
+  "grammar_id": "ART_DECO_INDUSTRIAL",
+  "surreal_transform": "axis_compression",
+  "prop_defaults": {
+    "gb_trim_mode": "RECESS",
+    "gb_bake_trim_colors": true,
+    "filigree_style": "GEOMETRIC_ARABESQUE",
+    "filigree_density": 0.72,
+    "material_choice": "AUTO",
+    "unit_size": 2.0
+  }
+}

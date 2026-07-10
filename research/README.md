@@ -16,3 +16,9 @@ Before implementing a new generator kit, fill `_template_node_design.md` and lin
 ## Pilot style
 
 **Zen / Japanese** — first full Style Genome (`zen_shrine_v1`).
+
+## Additional studies
+
+| Study | Path |
+|-------|------|
+| Industrial Art Deco hybrid lobby | `research/industrial_art_deco/01_hybrid_lobby.md` |

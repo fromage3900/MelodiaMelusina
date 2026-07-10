@@ -1,5 +1,12 @@
 # Surreal Architecture — Changelog
 
+## v2.132.0 — Industrial Art Deco hybrid lobby set
+
+- **`art_deco_industrial_v1`** genome + **`ART_DECO_INDUSTRIAL`** grammar (6 modules: panel wall, catwalk, filigree, hypostyle, ramp, portal)
+- **`ART_DECO_INDUSTRIAL`** compose style — pillar corner markers; no tower / obelisk / keep spines
+- Research study `research/industrial_art_deco/01_hybrid_lobby.md` + research/curated graph presets; `axis_compression`
+- Library bake for **`GREYBOX_RAMP`**; world manifest embed verify; genome catalog **32**
+
 ## v2.131.0 — Art Deco lobby architecture set
 
 - **`art_deco_lobby_v1`** genome + **`ART_DECO`** grammar chain (6 modules)

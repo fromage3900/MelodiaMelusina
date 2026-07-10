@@ -1,6 +1,6 @@
 # Surreal Architecture — Loop State
 
-**Version:** 2.131.0  
+**Version:** 2.132.0  
 **Loop sentinel:** `AGENT_LOOP_TICK_surreal_tierb`  
 **Interval:** 300s — **endless loop armed** (monitored shell, AAA genome expansion prompt)
 

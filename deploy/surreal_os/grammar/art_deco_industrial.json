@@ -1,0 +1,14 @@
+{
+  "id": "ART_DECO_INDUSTRIAL",
+  "label": "Industrial Art Deco Lobby Walk",
+  "description": "Geometric panel wall, catwalk mezzanine, chevron filigree, hypostyle hall, approach ramp, cusped portal — no tower spines",
+  "style": "artdeco",
+  "modules": [
+    {"arch_type": "GB_BRUTALIST_PANEL_WALL", "overrides": {"gb_length": 12.0, "gb_height": 4.0, "gb_trim_mode": "RECESS", "gb_trim_recess": 0.06, "material_choice": "AUTO"}},
+    {"arch_type": "GREYBOX_CATWALK", "overrides": {"gb_length": 10.0, "gb_width": 1.6, "gb_rail_height": 1.0, "material_choice": "AUTO"}},
+    {"arch_type": "FILIGREE_PANEL", "overrides": {"filigree_style": "GEOMETRIC_ARABESQUE", "filigree_width": 1.6, "filigree_height": 2.2, "filigree_density": 0.75, "material_choice": "AUTO"}},
+    {"arch_type": "GREYBOX_PILLAR_HALL", "overrides": {"gb_cols_x": 4, "gb_cols_y": 3, "gb_spacing": 3.8, "gb_height": 4.0, "gb_trim_mode": "RECESS", "material_choice": "AUTO", "unit_size": 3.8}},
+    {"arch_type": "GREYBOX_RAMP", "overrides": {"gb_length": 8.0, "gb_width": 3.0, "gb_rise": 2.4, "gb_wall_thick": 0.3, "gb_curbs": true, "material_choice": "STONE", "unit_size": 2.0}},
+    {"arch_type": "CUSPED_ARCH", "overrides": {"gothic_width": 2.4, "gb_height": 4.2, "gb_trim_mode": "RECESS", "material_choice": "AUTO"}}
+  ]
+}

@@ -25,6 +25,7 @@ Structured studies live under [`research/`](../research/README.md) — deploy do
 | Shrine axis | `research/zen/02_shrine_axis.md` |
 | Karesansui grammar | `research/zen/03_karesansui_grammar.md` |
 | Surreal transforms | `research/surreal/01_non_euclidean_transforms.md` |
+| Industrial Art Deco hybrid | `research/industrial_art_deco/01_hybrid_lobby.md` |
 
 ### New kits (v2.74)
 

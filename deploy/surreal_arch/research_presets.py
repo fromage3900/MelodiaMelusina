@@ -301,6 +301,23 @@ RESEARCH_PRESETS = {
             style_genome_id="art_deco_lobby_v1",
         ),
     },
+    "art_deco_industrial_graph": {
+        "label": "Industrial Art Deco Lobby Walk",
+        "description": "Panel wall, catwalk, chevron filigree, hypostyle hall, ramp, cusped portal",
+        "research_ref": "research/industrial_art_deco/01_hybrid_lobby.md — art_deco_industrial_v1 + ART_DECO_INDUSTRIAL",
+        "group": "CIVIC",
+        "graph_id": "ART_DECO_INDUSTRIAL",
+        "genome_id": "art_deco_industrial_v1",
+        "props": dict(
+            arch_type="GB_BRUTALIST_PANEL_WALL",
+            gb_length=12.0,
+            gb_height=4.0,
+            gb_trim_mode="RECESS",
+            material_choice="AUTO",
+            unit_size=2.0,
+            style_genome_id="art_deco_industrial_v1",
+        ),
+    },
     "moorish_courtyard_graph": {
         "label": "Moorish Courtyard Colonnade",
         "description": "Horseshoe portal, arabesque screen, arcade bays, fountain court",

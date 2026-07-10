@@ -163,6 +163,8 @@ def resolve_genome_manifest(monolith, style_key: str, genome_id: str | None = No
         gid = "western_castle_v1"
     if not gid and style_key == "ART_DECO":
         gid = "art_deco_lobby_v1"
+    if not gid and style_key == "ART_DECO_INDUSTRIAL":
+        gid = "art_deco_industrial_v1"
     if not gid and style_key == "ART_NOUVEAU":
         gid = "art_nouveau_v1"
     if not gid and style_key == "MOORISH_COURTYARD":
