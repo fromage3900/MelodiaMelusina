@@ -47,6 +47,7 @@ brutalist_export_root = None
 castle_root = None
 art_nouveau_export_root = None
 art_deco_export_root = None
+greek_stoa_export_root = None
 moorish_export_root = None
 renaissance_export_root = None
 byzantine_export_root = None
@@ -235,6 +236,35 @@ try:
         print("  art_deco_compose: OK")
 except Exception as e:
     print(f"  art_deco compose error: {e}")
+    all_ok = False
+
+print("\n--- Greek Stoa colonnade plan compose ---")
+try:
+    from surreal_os import genome as os_genome
+    library.init_library(
+        s,
+        types_only={
+            "GREYBOX_PILLAR_HALL",
+            "GB_ROMANESQUE_ARCADE",
+            "PILLAR",
+            "ARCHWAY_ADV",
+            "PUBLIC_FOUNTAIN",
+            "CURTAIN_WALL",
+        },
+    )
+    greek_plan = plans.spawn_village_plan(location=(125, 0, 0))
+    s._active_style_genome = os_genome.load_genome("greek_stoa_v1")
+    groot, gmsg = compose.compose_world(s, bpy.context, greek_plan, "GREEK_STOA", 0.85, "COLLECTION")
+    greek_stoa_export_root = groot
+    s._active_style_genome = None
+    print(f"  greek_stoa_compose: {gmsg} metrics={verify_hooks.compose_metrics(groot)}")
+    if groot is None or groot.get("surreal_style_genome_id") != "greek_stoa_v1":
+        print(f"  !! FAIL: greek_stoa genome stamp got {None if groot is None else groot.get('surreal_style_genome_id')}")
+        all_ok = False
+    else:
+        print("  greek_stoa_compose: OK")
+except Exception as e:
+    print(f"  greek_stoa compose error: {e}")
     all_ok = False
 
 print("\n--- Moorish courtyard plan compose ---")
@@ -678,6 +708,20 @@ try:
         if dsg.get("resolved_compose_roles", {}).get("gate") != "_lib_CUSPED_ARCH":
             raise RuntimeError("ART_DECO resolved gate mismatch")
         print("  art_deco manifest embed: OK")
+    if greek_stoa_export_root is not None:
+        gm = export.build_world_manifest(greek_stoa_export_root, monolith=s)
+        gsg = gm.get("style_genome") or {}
+        if gsg.get("id") != "greek_stoa_v1":
+            raise RuntimeError(f"GREEK_STOA style_genome expected greek_stoa_v1: {gsg}")
+        if gsg.get("family") != "Greek":
+            raise RuntimeError(f"greek_stoa family mismatch: {gsg.get('family')}")
+        if gsg.get("surreal_transform") != "axis_compression":
+            raise RuntimeError("GREEK_STOA surreal_transform mismatch")
+        if gsg.get("resolved_compose_roles", {}).get("gate") != "_lib_ARCHWAY_ADV":
+            raise RuntimeError("GREEK_STOA resolved gate mismatch")
+        if gsg.get("resolved_compose_roles", {}).get("corner_tower") != "_lib_PILLAR":
+            raise RuntimeError("GREEK_STOA corner_tower must be pillar")
+        print("  greek_stoa manifest embed: OK")
     if moorish_export_root is not None:
         mm = export.build_world_manifest(moorish_export_root, monolith=s)
         msg = mm.get("style_genome") or {}

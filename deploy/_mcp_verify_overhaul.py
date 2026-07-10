@@ -3,17 +3,27 @@
 Launch with --factory-startup for reliable headless runs:
   blender --background --factory-startup --python deploy/_mcp_verify_overhaul.py
 """
+import importlib
 import json
+import os
+import sys
+
 import bpy
 
 print("=== SURREAL OVERHAUL VERIFY v2.75 ===")
 print("Blender", bpy.app.version_string)
 
-if "surreal_architecture_gen" not in bpy.context.preferences.addons:
-    bpy.ops.preferences.addon_enable(module="surreal_architecture_gen")
+DEPLOY = os.path.dirname(os.path.abspath(__file__))
+LIVE = os.path.join(os.environ.get("APPDATA", ""), "Blender Foundation", "Blender", "5.1", "scripts", "addons")
+for p in (DEPLOY, LIVE):
+    if p and os.path.isdir(p) and p not in sys.path:
+        sys.path.insert(0, p)
+
+if "surreal_architecture_gen" in bpy.context.preferences.addons:
+    bpy.ops.preferences.addon_disable(module="surreal_architecture_gen")
 
 import surreal_architecture_gen as s
-import importlib
+
 importlib.reload(s)
 
 print("Version:", s.bl_info.get("version"))
@@ -31,6 +41,11 @@ try:
 except Exception:
     pass
 s.register()
+
+try:
+    _integration.patch_monolith(s)
+except Exception as e:
+    print(f"Patch monolith skipped: {e}")
 
 obj = bpy.data.objects.new("_VerifyProps", bpy.data.meshes.new("_VerifyMesh"))
 print("Search on object props:", hasattr(obj, "surreal_arch_props"))

@@ -1,5 +1,12 @@
 # Surreal Architecture — Changelog
 
+## v2.132.0 — Greek Stoa colonnade architecture set
+
+- **`greek_stoa_v1`** genome + **`GREEK_STOA`** grammar (hypostyle hall, arcade, columns, processional stair, Roman propylon, agora fountain)
+- **`GREEK_STOA`** compose style — pillar corner markers; no tower / obelisk / keep spines
+- Research study `research/greek/01_stoa_colonnade.md` + research/curated graph presets; `axis_compression`
+- OS/overhaul factory-startup sys.path bootstrap; mesoamerican `ROUND`→`ROMAN` hygiene; catalog **32**
+
 ## v2.131.0 — Art Deco lobby architecture set
 
 - **`art_deco_lobby_v1`** genome + **`ART_DECO`** grammar chain (6 modules)

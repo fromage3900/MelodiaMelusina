@@ -1,0 +1,25 @@
+{
+  "id": "greek_stoa_v1",
+  "family": "Greek",
+  "verticality": 0.34,
+  "symmetry": 0.88,
+  "ornament_density": 0.48,
+  "structural_logic": 0.9,
+  "organic_growth": 0.12,
+  "cosmic_influence": 0.08,
+  "sacred_sequence": [],
+  "compose_style": "GREEK_STOA",
+  "default_graph": "GREEK_STOA",
+  "grammar_id": "GREEK_STOA",
+  "surreal_transform": "axis_compression",
+  "compose_roles": {
+    "corner_tower": "_lib_PILLAR"
+  },
+  "prop_defaults": {
+    "gb_trim_mode": "RECESS",
+    "gb_bake_trim_colors": true,
+    "archway_style": "ROMAN",
+    "material_choice": "STONE",
+    "unit_size": 2.0
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "id": "GREEK_STOA",
+  "label": "Greek Stoa Colonnade",
+  "description": "Hypostyle stoa hall, arcade colonnade, freestanding columns, processional stair, Roman propylon, agora fountain — no tower spines",
+  "style": "greek",
+  "modules": [
+    {"arch_type": "GREYBOX_PILLAR_HALL", "overrides": {"gb_cols_x": 4, "gb_cols_y": 2, "gb_spacing": 3.6, "gb_height": 4.2, "gb_trim_mode": "RECESS", "unit_size": 3.6, "material_choice": "STONE"}},
+    {"arch_type": "GB_ROMANESQUE_ARCADE", "overrides": {"gb_width": 3.4, "gb_height": 4.0, "gb_trim_mode": "RECESS", "unit_size": 3.4, "material_choice": "STONE"}},
+    {"arch_type": "PILLAR", "overrides": {"pillar_radius": 0.38, "pillar_height": 4.5, "pillar_flutes": 20, "material_choice": "MARBLE"}},
+    {"arch_type": "GREYBOX_STAIR_BLOCK", "overrides": {"gb_steps": 10, "gb_rise": 0.2, "gb_run": 0.34, "gb_width": 3.2, "material_choice": "STONE", "unit_size": 2.0}},
+    {"arch_type": "ARCHWAY_ADV", "overrides": {"archway_style": "ROMAN", "archway_width": 2.8, "archway_height": 3.2, "archway_depth": 0.6, "material_choice": "STONE"}},
+    {"arch_type": "PUBLIC_FOUNTAIN", "overrides": {"fountain_radius": 1.5, "fountain_tiers": 2, "material_choice": "MARBLE"}}
+  ]
+}

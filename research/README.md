@@ -16,3 +16,7 @@ Before implementing a new generator kit, fill `_template_node_design.md` and lin
 ## Pilot style
 
 **Zen / Japanese** — first full Style Genome (`zen_shrine_v1`).
+
+## Civic expansions
+
+**Greek / Classical** — `research/greek/01_stoa_colonnade.md` feeds `greek_stoa_v1` + `GREEK_STOA`.
