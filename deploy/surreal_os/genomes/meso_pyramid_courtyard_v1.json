@@ -12,6 +12,9 @@
   "default_graph": "MESOAMERICAN_PYRAMID",
   "grammar_id": "MESOAMERICAN_PYRAMID",
   "surreal_transform": "axis_compression",
+  "compose_roles": {
+    "corner_tower": "_lib_PILLAR"
+  },
   "prop_defaults": {
     "gb_trim_mode": "RECESS",
     "retaining_steps": 5,
