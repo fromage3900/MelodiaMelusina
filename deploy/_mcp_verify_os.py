@@ -12,17 +12,33 @@ import bpy
 print("=== SURREAL OS VERIFY ===")
 
 DEPLOY = os.path.dirname(os.path.abspath(__file__))
-if DEPLOY not in sys.path:
-    sys.path.insert(0, DEPLOY)
+LIVE = os.path.join(os.environ.get("APPDATA", ""), "Blender Foundation", "Blender", "5.1", "scripts", "addons")
+for p in (DEPLOY, LIVE):
+    if p and os.path.isdir(p) and p not in sys.path:
+        sys.path.insert(0, p)
 
 s = sys.modules.get("surreal_architecture_gen")
 if s is None:
-    if "surreal_architecture_gen" not in bpy.context.preferences.addons:
+    try:
+        import surreal_architecture_gen as s
+    except Exception:
+        s = None
+if s is None and "surreal_architecture_gen" not in bpy.context.preferences.addons:
+    try:
         bpy.ops.preferences.addon_enable(module="surreal_architecture_gen")
+    except Exception:
+        pass
     s = sys.modules.get("surreal_architecture_gen")
 if s is None:
     print("  !! FAIL: surreal_architecture_gen not loaded")
     raise SystemExit(1)
+if not getattr(s, "_surreal_patched", False):
+    # World/overhaul may leave an unpatched import; register to apply SurrealOS hooks.
+    try:
+        if not hasattr(bpy.types.Object, "surreal_arch_props"):
+            s.register()
+    except Exception:
+        pass
 if not getattr(s, "_surreal_patched", False):
     print("  !! FAIL: monolith patch (_surreal_patched) not applied")
     raise SystemExit(1)
