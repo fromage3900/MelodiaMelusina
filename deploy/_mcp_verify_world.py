@@ -51,6 +51,7 @@ moorish_export_root = None
 renaissance_export_root = None
 byzantine_export_root = None
 baroque_export_root = None
+beaux_arts_export_root = None
 venetian_export_root = None
 romanesque_cloister_export_root = None
 romanesque_apse_export_root = None
@@ -307,6 +308,39 @@ try:
         print("  baroque_compose: OK")
 except Exception as e:
     print(f"  baroque compose error: {e}")
+    all_ok = False
+
+print("\n--- Beaux-Arts civic plaza plan compose ---")
+try:
+    from surreal_os import genome as os_genome
+    library.init_library(
+        s,
+        types_only={
+            "BAROQUE_FACADE",
+            "GB_ROMANESQUE_ARCADE",
+            "BAROQUE_BALUSTRADE",
+            "PILLAR",
+            "ARCHWAY_ADV",
+            "PUBLIC_FOUNTAIN",
+            "TOWN_HALL",
+        },
+    )
+    beaux_plan = plans.spawn_village_plan(location=(162, 0, 0))
+    s._active_style_genome = os_genome.load_genome("beaux_arts_plaza_v1")
+    bxroot, bxmsg = compose.compose_world(s, bpy.context, beaux_plan, "BEAUX_ARTS_PLAZA", 0.85, "COLLECTION")
+    beaux_arts_export_root = bxroot
+    s._active_style_genome = None
+    print(f"  beaux_arts_compose: {bxmsg} metrics={verify_hooks.compose_metrics(bxroot)}")
+    if bxroot is None:
+        print("  !! FAIL: beaux_arts compose returned None root")
+        all_ok = False
+    elif bxroot.get("surreal_style_genome_id") != "beaux_arts_plaza_v1":
+        print(f"  !! FAIL: beaux_arts genome stamp got {bxroot.get('surreal_style_genome_id')}")
+        all_ok = False
+    else:
+        print("  beaux_arts_compose: OK")
+except Exception as e:
+    print(f"  beaux_arts compose error: {e}")
     all_ok = False
 
 print("\n--- Romanesque cloister plan compose ---")
@@ -722,6 +756,20 @@ try:
         if bcsg.get("resolved_compose_roles", {}).get("gate") != "_lib_OGEE_ARCH":
             raise RuntimeError("BAROQUE_CHURCH resolved gate mismatch")
         print("  baroque_church manifest embed: OK")
+    if beaux_arts_export_root is not None:
+        bxm = export.build_world_manifest(beaux_arts_export_root, monolith=s)
+        bxsg = bxm.get("style_genome") or {}
+        if bxsg.get("id") != "beaux_arts_plaza_v1":
+            raise RuntimeError(f"BEAUX_ARTS_PLAZA style_genome expected beaux_arts_plaza_v1: {bxsg}")
+        if bxsg.get("family") != "BeauxArts":
+            raise RuntimeError(f"beaux_arts family mismatch: {bxsg.get('family')}")
+        if bxsg.get("surreal_transform") != "axis_compression":
+            raise RuntimeError("beaux_arts surreal_transform mismatch")
+        if bxsg.get("resolved_compose_roles", {}).get("corner_tower") != "_lib_PILLAR":
+            raise RuntimeError("BEAUX_ARTS_PLAZA resolved corner_tower mismatch")
+        if bxsg.get("resolved_compose_roles", {}).get("gate") != "_lib_ARCHWAY_ADV":
+            raise RuntimeError("BEAUX_ARTS_PLAZA resolved gate mismatch")
+        print("  beaux_arts_plaza manifest embed: OK")
     if romanesque_cloister_export_root is not None:
         rcm = export.build_world_manifest(romanesque_cloister_export_root, monolith=s)
         rcsg = rcm.get("style_genome") or {}

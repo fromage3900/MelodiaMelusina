@@ -12,17 +12,34 @@ import bpy
 print("=== SURREAL OS VERIFY ===")
 
 DEPLOY = os.path.dirname(os.path.abspath(__file__))
-if DEPLOY not in sys.path:
-    sys.path.insert(0, DEPLOY)
+LIVE = os.path.join(
+    os.environ.get("APPDATA", os.path.expanduser("~/.config")),
+    "Blender Foundation",
+    "Blender",
+    "5.1",
+    "scripts",
+    "addons",
+)
+for p in (DEPLOY, LIVE):
+    if p and os.path.isdir(p) and p not in sys.path:
+        sys.path.insert(0, p)
 
-s = sys.modules.get("surreal_architecture_gen")
-if s is None:
-    if "surreal_architecture_gen" not in bpy.context.preferences.addons:
-        bpy.ops.preferences.addon_enable(module="surreal_architecture_gen")
-    s = sys.modules.get("surreal_architecture_gen")
-if s is None:
-    print("  !! FAIL: surreal_architecture_gen not loaded")
-    raise SystemExit(1)
+# --factory-startup only exposes addons_core; import via sys.path then register.
+import importlib
+import surreal_architecture_gen as s
+
+importlib.reload(s)
+if not hasattr(bpy.types.Object, "surreal_arch_props"):
+    s.register()
+
+try:
+    import surreal_arch.integration as _integration
+
+    importlib.reload(_integration)
+    _integration.patch_monolith(s)
+except Exception as e:
+    print(f"Patch monolith skipped: {e}")
+
 if not getattr(s, "_surreal_patched", False):
     print("  !! FAIL: monolith patch (_surreal_patched) not applied")
     raise SystemExit(1)
@@ -47,7 +64,7 @@ from surreal_arch.greybox_graph import GRAPH_REGISTRY
 
 merged = merge_grammar_into_registry(GRAPH_REGISTRY)
 print(f"  merged_into_registry: {merged}")
-for gid in ("ZEN_SHRINE_AXIS", "ZEN_SAKURA_WALK", "ZEN_SHRINE_COURTYARD", "ZEN_ROJI_PATH", "ZEN_KARESANSHUI_WALK", "ZEN_TEA_GARDEN", "ZEN_STREAM_GARDEN", "ZEN_PAGODA_SPIRE", "ZEN_KAIRO_ENCLOSURE", "CLOISTER", "GOTHIC_CHAPTER_HOUSE", "GOTHIC_NAVE_CROSSING", "SCIFI_AIRLOCK", "SCI_FI_DECK", "ROMANESQUE_CLOISTER", "VENETIAN_CANAL", "ROMANESQUE_APSE", "SCI_FI_DECK_EXPANSION", "SCI_FI_INDUSTRIAL_YARD", "ASIAN_CITY", "ASIAN_CITY_RECURSIVE", "BRUTALIST_PLAZA", "ART_NOUVEAU", "ART_DECO", "MOORISH_COURTYARD", "RENAISSANCE_PIAZZA", "BYZANTINE_BASILICA", "BAROQUE_CHURCH"):
+for gid in ("ZEN_SHRINE_AXIS", "ZEN_SAKURA_WALK", "ZEN_SHRINE_COURTYARD", "ZEN_ROJI_PATH", "ZEN_KARESANSHUI_WALK", "ZEN_TEA_GARDEN", "ZEN_STREAM_GARDEN", "ZEN_PAGODA_SPIRE", "ZEN_KAIRO_ENCLOSURE", "CLOISTER", "GOTHIC_CHAPTER_HOUSE", "GOTHIC_NAVE_CROSSING", "SCIFI_AIRLOCK", "SCI_FI_DECK", "ROMANESQUE_CLOISTER", "VENETIAN_CANAL", "ROMANESQUE_APSE", "SCI_FI_DECK_EXPANSION", "SCI_FI_INDUSTRIAL_YARD", "ASIAN_CITY", "ASIAN_CITY_RECURSIVE", "BRUTALIST_PLAZA", "ART_NOUVEAU", "ART_DECO", "MOORISH_COURTYARD", "RENAISSANCE_PIAZZA", "BYZANTINE_BASILICA", "BAROQUE_CHURCH", "BEAUX_ARTS_PLAZA"):
     if gid not in GRAPH_REGISTRY:
         print(f"  !! FAIL: {gid} not in GRAPH_REGISTRY")
         all_ok = False
@@ -300,6 +317,19 @@ try:
     if len(bar_objs) < 3:
         print(f"  !! FAIL: BAROQUE_CHURCH spawn got {len(bar_objs)}")
         all_ok = False
+    beaux_spec = GRAPH_REGISTRY["BEAUX_ARTS_PLAZA"]["spec"]
+    beaux_objs = spawn_graph(bpy.context, s, beaux_spec[:3], spacing=11.0, graph_id="BEAUX_ARTS_PLAZA")
+    print(f"  spawn_graph BEAUX_ARTS_PLAZA partial: {len(beaux_objs)} objects")
+    if len(beaux_objs) < 2:
+        print(f"  !! FAIL: BEAUX_ARTS_PLAZA spawn got {len(beaux_objs)}")
+        all_ok = False
+    banned = {"TOWER", "TESSELLATION_TOWER", "BELL_TOWER", "WATCHTOWER", "OBELISK", "KEEP"}
+    beaux_types = {at for at, _ in beaux_spec}
+    if banned & beaux_types:
+        print(f"  !! FAIL: BEAUX_ARTS_PLAZA banned arch types: {banned & beaux_types}")
+        all_ok = False
+    else:
+        print("  BEAUX_ARTS_PLAZA tower-ban: OK")
     gch_spec = GRAPH_REGISTRY["GOTHIC_CHAPTER_HOUSE"]["spec"]
     gch_objs = spawn_graph(bpy.context, s, gch_spec[:4], spacing=10.0, graph_id="GOTHIC_CHAPTER_HOUSE")
     print(f"  spawn_graph GOTHIC_CHAPTER_HOUSE partial: {len(gch_objs)} objects")
@@ -349,6 +379,12 @@ try:
         all_ok = False
     else:
         print(f"  research_preset baroque_church_graph: {rp5['count']} modules")
+    rp_beaux = run_research_preset(bpy.context, "beaux_arts_plaza_graph", monolith=s)
+    if rp_beaux.get("mode") != "graph" or rp_beaux.get("count", 0) < 4:
+        print(f"  !! FAIL: beaux_arts_plaza_graph spawn: {rp_beaux}")
+        all_ok = False
+    else:
+        print(f"  research_preset beaux_arts_plaza_graph: {rp_beaux['count']} modules")
     rp6 = run_research_preset(bpy.context, "gothic_chapter_house_graph", monolith=s)
     if rp6.get("mode") != "graph" or rp6.get("count", 0) < 4:
         print(f"  !! FAIL: gothic_chapter_house_graph spawn: {rp6}")
@@ -404,11 +440,14 @@ if not xf:
 elif "BRUTALIST_PLAZA" not in (xf.get("applies_to") or []):
     print("  !! FAIL: axis_compression missing BRUTALIST_PLAZA")
     all_ok = False
+elif "BEAUX_ARTS_PLAZA" not in (xf.get("applies_to") or []):
+    print("  !! FAIL: axis_compression missing BEAUX_ARTS_PLAZA")
+    all_ok = False
 elif "ZEN_STREAM_GARDEN" not in (xf.get("applies_to") or []):
     print("  !! FAIL: axis_compression missing ZEN_STREAM_GARDEN")
     all_ok = False
 else:
-    print(f"  axis_compression type={xf.get('type')} BRUTALIST_PLAZA: OK")
+    print(f"  axis_compression type={xf.get('type')} BRUTALIST_PLAZA+BEAUX_ARTS_PLAZA: OK")
 
 xf2 = get_transform("vertical_stretch")
 if not xf2:
@@ -663,6 +702,28 @@ elif os_styles.get("BAROQUE_CHURCH", {}).get("gate") != "_lib_OGEE_ARCH":
     all_ok = False
 else:
     print("  baroque_church_v1 + BAROQUE_CHURCH compose_roles: OK")
+
+ba = os_genome.load_genome("beaux_arts_plaza_v1")
+if ba.get("grammar_id") != "BEAUX_ARTS_PLAZA" or ba.get("compose_style") != "BEAUX_ARTS_PLAZA":
+    print(f"  !! FAIL: beaux_arts_plaza_v1")
+    all_ok = False
+elif os_genome.genome_family(ba) != "BeauxArts":
+    print(f"  !! FAIL: beaux_arts family={os_genome.genome_family(ba)}")
+    all_ok = False
+elif ba.get("surreal_transform") != "axis_compression":
+    print(f"  !! FAIL: beaux_arts transform={ba.get('surreal_transform')}")
+    all_ok = False
+elif os_styles.get("BEAUX_ARTS_PLAZA", {}).get("corner_tower") != "_lib_PILLAR":
+    print("  !! FAIL: BEAUX_ARTS_PLAZA corner_tower not PILLAR")
+    all_ok = False
+elif ba.get("compose_roles", {}).get("corner_tower") != "_lib_PILLAR":
+    print(f"  !! FAIL: beaux_arts genome corner_tower={ba.get('compose_roles')}")
+    all_ok = False
+elif os_styles.get("BEAUX_ARTS_PLAZA", {}).get("gate") != "_lib_ARCHWAY_ADV":
+    print("  !! FAIL: BEAUX_ARTS_PLAZA compose_roles missing")
+    all_ok = False
+else:
+    print("  beaux_arts_plaza_v1 + BEAUX_ARTS_PLAZA compose_roles: OK")
 
 ven = os_genome.load_genome("venetian_canal_v1")
 if ven.get("compose_style") != "VENETIAN_CANAL" or os_genome.genome_family(ven) != "Venetian":

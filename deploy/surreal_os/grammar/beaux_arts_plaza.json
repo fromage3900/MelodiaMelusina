@@ -1,0 +1,15 @@
+{
+  "id": "BEAUX_ARTS_PLAZA",
+  "label": "Beaux-Arts Civic Plaza",
+  "description": "Temple-front facade, ceremonial stair, approach ramp, colonnade, Roman portal, balustrade terrace, fountain court — horizontal civic chain, no tower spine",
+  "style": "beaux_arts",
+  "modules": [
+    {"arch_type": "BAROQUE_FACADE", "overrides": {"baroque_facade_bays": 7, "baroque_facade_height": 14.0, "baroque_order": "CORINTHIAN", "baroque_ornament_density": 0.7, "material_choice": "MARBLE"}},
+    {"arch_type": "GREYBOX_STAIR_BLOCK", "overrides": {"gb_steps": 14, "gb_rise": 0.2, "gb_run": 0.32, "gb_width": 3.2, "material_choice": "STONE", "unit_size": 2.0}},
+    {"arch_type": "GREYBOX_RAMP", "overrides": {"gb_length": 8.0, "gb_width": 2.8, "gb_rise": 1.6, "material_choice": "STONE", "unit_size": 2.0}},
+    {"arch_type": "GB_ROMANESQUE_ARCADE", "overrides": {"gb_width": 3.4, "gb_height": 4.5, "gb_trim_mode": "RECESS", "unit_size": 3.4, "material_choice": "MARBLE"}},
+    {"arch_type": "ARCHWAY_ADV", "overrides": {"archway_style": "ROMAN", "archway_width": 2.8, "archway_height": 3.2, "archway_depth": 0.6, "material_choice": "MARBLE"}},
+    {"arch_type": "BAROQUE_BALUSTRADE", "overrides": {"baroque_balustrade_length": 7.0, "baroque_balustrade_posts": 13, "material_choice": "MARBLE"}},
+    {"arch_type": "PUBLIC_FOUNTAIN", "overrides": {"fountain_radius": 1.7, "fountain_tiers": 3, "material_choice": "MARBLE"}}
+  ]
+}

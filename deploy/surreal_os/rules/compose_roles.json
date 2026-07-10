@@ -179,6 +179,16 @@
       "gate": "_lib_GATEHOUSE",
       "monument": "_lib_PUBLIC_FOUNTAIN",
       "sacred": "_lib_CHAPEL"
+    },
+    "BEAUX_ARTS_PLAZA": {
+      "large": "_lib_BAROQUE_FACADE",
+      "medium": "_lib_GB_ROMANESQUE_ARCADE",
+      "small": "_lib_BAROQUE_BALUSTRADE",
+      "wall": "_lib_CURTAIN_WALL",
+      "corner_tower": "_lib_PILLAR",
+      "gate": "_lib_ARCHWAY_ADV",
+      "monument": "_lib_PUBLIC_FOUNTAIN",
+      "sacred": "_lib_TOWN_HALL"
     }
   },
   "fallbacks": {

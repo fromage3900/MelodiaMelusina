@@ -1,6 +1,6 @@
 # Surreal Architecture — Loop State
 
-**Version:** 2.131.0  
+**Version:** 2.132.0  
 **Loop sentinel:** `AGENT_LOOP_TICK_surreal_tierb`  
 **Interval:** 300s — **endless loop armed** (monitored shell, AAA genome expansion prompt)
 
@@ -320,9 +320,18 @@ Removed stale `.yaml` genome duplicates — `.json` is sole source of truth for 
 
 ## Next loop targets
 
-- Mesoamerican pyramid courtyard (new family)
-- Art Nouveau / Moorish manifest parity audit (compose tests green)
-- Industrial Art Deco hybrid or Streamline Moderne variant
+- Mesoamerican pyramid courtyard full wire (stub present; ROUND→ROMAN hygiene)
+- Art Deco lobby tower-ban rematerialize (still has TESSELLATION_TOWER / OBELISK)
+- Art Nouveau / Moorish / Renaissance `corner_tower` → PILLAR sweep
+- Streamline Moderne or Persian iwan horizontal civic
+
+## Micro-cycle 86 — v2.132.0 (Beaux-Arts civic plaza) ✓
+
+- **`beaux_arts_plaza_v1`** genome + **`BEAUX_ARTS_PLAZA`** grammar (facade, stair, ramp, arcade, Roman portal, balustrade, fountain)
+- **`BEAUX_ARTS_PLAZA`** compose style — `corner_tower` → `_lib_PILLAR` (tower ban); `axis_compression`
+- Research preset `beaux_arts_plaza_graph` + curated playable preset; world manifest embed verify
+- OS/overhaul verify sys.path bootstrap for Linux `--factory-startup`
+- Genome catalog **32** (includes meso stub)
 
 ## Micro-cycle 85 — v2.131.0 (Art Deco lobby set) ✓
 

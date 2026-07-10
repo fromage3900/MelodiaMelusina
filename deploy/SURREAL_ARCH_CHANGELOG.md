@@ -1,5 +1,13 @@
 # Surreal Architecture — Changelog
 
+## v2.132.0 — Beaux-Arts civic plaza architecture set
+
+- **`beaux_arts_plaza_v1`** genome + **`BEAUX_ARTS_PLAZA`** grammar chain (7 modules: facade, stair, ramp, arcade, Roman portal, balustrade, fountain)
+- **`BEAUX_ARTS_PLAZA`** compose style — `corner_tower` → `_lib_PILLAR` (no tower spine); `axis_compression` transform
+- Research preset `beaux_arts_plaza_graph` + curated playable preset; world manifest embed verify
+- OS/overhaul verify bootstraps use sys.path import (Linux `--factory-startup` safe)
+- Genome catalog **32**
+
 ## v2.131.0 — Art Deco lobby architecture set
 
 - **`art_deco_lobby_v1`** genome + **`ART_DECO`** grammar chain (6 modules)

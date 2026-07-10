@@ -1,0 +1,26 @@
+{
+  "id": "beaux_arts_plaza_v1",
+  "family": "BeauxArts",
+  "verticality": 0.42,
+  "symmetry": 0.92,
+  "ornament_density": 0.78,
+  "structural_logic": 0.88,
+  "organic_growth": 0.12,
+  "cosmic_influence": 0.08,
+  "sacred_sequence": ["facade", "stair", "arcade", "fountain"],
+  "compose_style": "BEAUX_ARTS_PLAZA",
+  "default_graph": "BEAUX_ARTS_PLAZA",
+  "grammar_id": "BEAUX_ARTS_PLAZA",
+  "surreal_transform": "axis_compression",
+  "compose_roles": {
+    "corner_tower": "_lib_PILLAR"
+  },
+  "prop_defaults": {
+    "gb_trim_mode": "RECESS",
+    "gb_bake_trim_colors": true,
+    "baroque_order": "CORINTHIAN",
+    "baroque_ornament_density": 0.7,
+    "material_choice": "MARBLE",
+    "unit_size": 2.0
+  }
+}
