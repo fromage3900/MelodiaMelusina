@@ -179,6 +179,16 @@
       "gate": "_lib_GATEHOUSE",
       "monument": "_lib_PUBLIC_FOUNTAIN",
       "sacred": "_lib_CHAPEL"
+    },
+    "MESOAMERICAN_PYRAMID": {
+      "large": "_lib_RETAINING_WALL",
+      "medium": "_lib_GB_ROMANESQUE_ARCADE",
+      "small": "_lib_GREYBOX_STAIR_BLOCK",
+      "wall": "_lib_RETAINING_WALL",
+      "corner_tower": "_lib_PILLAR",
+      "gate": "_lib_ARCHWAY_ADV",
+      "monument": "_lib_PUBLIC_FOUNTAIN",
+      "sacred": "_lib_PUBLIC_FOUNTAIN"
     }
   },
   "fallbacks": {
