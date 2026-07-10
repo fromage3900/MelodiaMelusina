@@ -1,5 +1,12 @@
 # Surreal Architecture — Changelog
 
+## v2.132.0 — Mesoamerican pyramid courtyard architecture set
+
+- **`meso_pyramid_courtyard_v1`** genome + **`MESOAMERICAN_PYRAMID`** grammar (terrace, stair, ramp, colonnade, ROMAN portal, sacred pool)
+- **`MESOAMERICAN_PYRAMID`** compose style — corner markers as PILLAR; no tower spines; `axis_compression`
+- Research study + graph/curated presets; library bake for RETAINING_WALL / GREYBOX_STAIR_BLOCK / GREYBOX_RAMP
+- World manifest embed verify; genome catalog **31**; OS/overhaul factory-startup sys.path bootstrap
+
 ## v2.131.0 — Art Deco lobby architecture set
 
 - **`art_deco_lobby_v1`** genome + **`ART_DECO`** grammar chain (6 modules)
