@@ -1,7 +1,7 @@
 {
   "id": "MESOAMERICAN_PYRAMID",
   "label": "Mesoamerican Pyramid Courtyard",
-  "description": "Stepped retaining tiers, ceremonial stair block, upper platform, colonnade, stone portal, sacred pool",
+  "description": "Horizontal civic chain: battered terraces, ceremonial stair, arcade colonnade, stone portal, sacred pool (no tower spines)",
   "style": "mesoamerican",
   "modules": [
     {"arch_type": "RETAINING_WALL", "overrides": {"wall_segments": 4, "retaining_steps": 5, "retaining_batter": 0.1, "wall_thickness": 0.65, "unit_size": 1.2, "material_choice": "STONE"}},
