@@ -320,9 +320,17 @@ Removed stale `.yaml` genome duplicates — `.json` is sole source of truth for 
 
 ## Next loop targets
 
-- Mesoamerican pyramid courtyard (new family)
-- Art Nouveau / Moorish manifest parity audit (compose tests green)
-- Industrial Art Deco hybrid or Streamline Moderne variant
+- Mesoamerican pyramid courtyard full wire (stub grammar+genome present; ROUND→ROMAN)
+- Mesoamerican ballcourt / processional avenue variant
+- Broader tower-ban sweep (Gothic / Romanesque / Renaissance / Moorish / Art Nouveau corner_tower → PILLAR)
+- Industrial Art Deco hybrid or Streamline Moderne horizontal civic
+
+## Micro-cycle 86 — v2.132.0 (Art Deco lobby tower-ban rematerialize) ✓
+
+- **`ART_DECO`** grammar rematerialized — facade / panel / filigree / portal / balcony / ramp (no TESSELLATION_TOWER / OBELISK)
+- Compose roles: `large`→BAROQUE_FACADE, `corner_tower`→PILLAR, `monument`→PUBLIC_FOUNTAIN
+- Genome `axis_compression` + compose_roles overrides; research study `research/artdeco/01_lobby_promenade.md`
+- OS/world verify tower-ban asserts; library bake for GREYBOX_RAMP
 
 ## Micro-cycle 85 — v2.131.0 (Art Deco lobby set) ✓
 
