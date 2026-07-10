@@ -47,6 +47,7 @@ brutalist_export_root = None
 castle_root = None
 art_nouveau_export_root = None
 art_deco_export_root = None
+meso_ballcourt_export_root = None
 moorish_export_root = None
 renaissance_export_root = None
 byzantine_export_root = None
@@ -235,6 +236,36 @@ try:
         print("  art_deco_compose: OK")
 except Exception as e:
     print(f"  art_deco compose error: {e}")
+    all_ok = False
+
+print("\n--- Mesoamerican ballcourt plan compose ---")
+try:
+    from surreal_os import genome as os_genome
+    library.init_library(
+        s,
+        types_only={
+            "GREYBOX_CORRIDOR",
+            "GB_ROMANESQUE_ARCADE",
+            "PILLAR",
+            "RETAINING_WALL",
+            "ARCHWAY_ADV",
+            "GREYBOX_STAIR_BLOCK",
+            "GREYBOX_RAMP",
+        },
+    )
+    ball_plan = plans.spawn_village_plan(location=(130, 0, 0))
+    s._active_style_genome = os_genome.load_genome("meso_ballcourt_v1")
+    broot, bmsg = compose.compose_world(s, bpy.context, ball_plan, "MESOAMERICAN_BALLCOURT", 0.85, "COLLECTION")
+    meso_ballcourt_export_root = broot
+    s._active_style_genome = None
+    print(f"  meso_ballcourt_compose: {bmsg} metrics={verify_hooks.compose_metrics(broot)}")
+    if broot.get("surreal_style_genome_id") != "meso_ballcourt_v1":
+        print(f"  !! FAIL: meso_ballcourt genome stamp got {broot.get('surreal_style_genome_id')}")
+        all_ok = False
+    else:
+        print("  meso_ballcourt_compose: OK")
+except Exception as e:
+    print(f"  meso_ballcourt compose error: {e}")
     all_ok = False
 
 print("\n--- Moorish courtyard plan compose ---")
@@ -678,6 +709,20 @@ try:
         if dsg.get("resolved_compose_roles", {}).get("gate") != "_lib_CUSPED_ARCH":
             raise RuntimeError("ART_DECO resolved gate mismatch")
         print("  art_deco manifest embed: OK")
+    if meso_ballcourt_export_root is not None:
+        bm = export.build_world_manifest(meso_ballcourt_export_root, monolith=s)
+        bsg = bm.get("style_genome") or {}
+        if bsg.get("id") != "meso_ballcourt_v1":
+            raise RuntimeError(f"MESOAMERICAN_BALLCOURT style_genome expected meso_ballcourt_v1: {bsg}")
+        if bsg.get("family") != "Mesoamerican":
+            raise RuntimeError(f"meso_ballcourt family mismatch: {bsg.get('family')}")
+        if bsg.get("surreal_transform") != "axis_compression":
+            raise RuntimeError("MESOAMERICAN_BALLCOURT surreal_transform mismatch")
+        if bsg.get("resolved_compose_roles", {}).get("corner_tower") != "_lib_PILLAR":
+            raise RuntimeError("MESOAMERICAN_BALLCOURT corner_tower must be pillar (no towers)")
+        if bsg.get("resolved_compose_roles", {}).get("gate") != "_lib_ARCHWAY_ADV":
+            raise RuntimeError("MESOAMERICAN_BALLCOURT resolved gate mismatch")
+        print("  meso_ballcourt manifest embed: OK")
     if moorish_export_root is not None:
         mm = export.build_world_manifest(moorish_export_root, monolith=s)
         msg = mm.get("style_genome") or {}

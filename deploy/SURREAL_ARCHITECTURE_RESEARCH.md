@@ -25,6 +25,7 @@ Structured studies live under [`research/`](../research/README.md) — deploy do
 | Shrine axis | `research/zen/02_shrine_axis.md` |
 | Karesansui grammar | `research/zen/03_karesansui_grammar.md` |
 | Surreal transforms | `research/surreal/01_non_euclidean_transforms.md` |
+| Mesoamerican ballcourt | `research/mesoamerican/01_ballcourt.md` |
 
 ### New kits (v2.74)
 

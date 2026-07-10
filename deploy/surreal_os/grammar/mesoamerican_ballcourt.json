@@ -1,0 +1,14 @@
+{
+  "id": "MESOAMERICAN_BALLCOURT",
+  "label": "Mesoamerican Ballcourt",
+  "description": "I-shaped tlachtli alley — lintel portal, talud berm, playing ramp, corridor spine, end terrace, spectator arcade",
+  "style": "mesoamerican",
+  "modules": [
+    {"arch_type": "ARCHWAY_ADV", "overrides": {"archway_style": "LINTEL", "archway_width": 2.4, "archway_height": 2.6, "archway_depth": 0.55, "material_choice": "STONE"}},
+    {"arch_type": "RETAINING_WALL", "overrides": {"wall_segments": 5, "retaining_steps": 4, "retaining_batter": 0.12, "wall_thickness": 0.7, "unit_size": 1.4, "material_choice": "STONE"}},
+    {"arch_type": "GREYBOX_RAMP", "overrides": {"gb_length": 10.0, "gb_width": 2.4, "gb_rise": 2.2, "material_choice": "STONE"}},
+    {"arch_type": "GREYBOX_CORRIDOR", "overrides": {"gb_length": 14.0, "gb_corridor_profile": "DOUBLE", "gb_trim_mode": "RECESS", "material_choice": "STONE"}},
+    {"arch_type": "GREYBOX_STAIR_BLOCK", "overrides": {"gb_steps": 10, "gb_rise": 0.2, "gb_run": 0.34, "gb_width": 3.2, "material_choice": "STONE", "unit_size": 2.2}},
+    {"arch_type": "GB_ROMANESQUE_ARCADE", "overrides": {"gb_width": 3.4, "gb_height": 3.8, "gb_trim_mode": "RECESS", "unit_size": 3.4, "material_choice": "STONE"}}
+  ]
+}

@@ -301,6 +301,23 @@ RESEARCH_PRESETS = {
             style_genome_id="art_deco_lobby_v1",
         ),
     },
+    "meso_ballcourt_graph": {
+        "label": "Mesoamerican Ballcourt",
+        "description": "I-shaped tlachtli alley — lintel portal, talud berm, ramp, corridor, end terrace, arcade",
+        "research_ref": "research/mesoamerican/01_ballcourt.md — meso_ballcourt_v1 + MESOAMERICAN_BALLCOURT",
+        "group": "CIVIC",
+        "graph_id": "MESOAMERICAN_BALLCOURT",
+        "genome_id": "meso_ballcourt_v1",
+        "props": dict(
+            arch_type="GREYBOX_CORRIDOR",
+            gb_length=14.0,
+            gb_corridor_profile="DOUBLE",
+            gb_trim_mode="RECESS",
+            material_choice="STONE",
+            unit_size=2.0,
+            style_genome_id="meso_ballcourt_v1",
+        ),
+    },
     "moorish_courtyard_graph": {
         "label": "Moorish Courtyard Colonnade",
         "description": "Horseshoe portal, arabesque screen, arcade bays, fountain court",

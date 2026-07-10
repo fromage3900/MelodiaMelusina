@@ -16,3 +16,9 @@ Before implementing a new generator kit, fill `_template_node_design.md` and lin
 ## Pilot style
 
 **Zen / Japanese** — first full Style Genome (`zen_shrine_v1`).
+
+## Mesoamerican
+
+| Study | Path |
+|-------|------|
+| Ballcourt (I-shaped) | `research/mesoamerican/01_ballcourt.md` |
