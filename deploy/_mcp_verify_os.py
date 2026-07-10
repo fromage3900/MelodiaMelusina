@@ -47,7 +47,7 @@ from surreal_arch.greybox_graph import GRAPH_REGISTRY
 
 merged = merge_grammar_into_registry(GRAPH_REGISTRY)
 print(f"  merged_into_registry: {merged}")
-for gid in ("ZEN_SHRINE_AXIS", "ZEN_SAKURA_WALK", "ZEN_SHRINE_COURTYARD", "ZEN_ROJI_PATH", "ZEN_KARESANSHUI_WALK", "ZEN_TEA_GARDEN", "ZEN_STREAM_GARDEN", "ZEN_PAGODA_SPIRE", "ZEN_KAIRO_ENCLOSURE", "CLOISTER", "GOTHIC_CHAPTER_HOUSE", "GOTHIC_NAVE_CROSSING", "SCIFI_AIRLOCK", "SCI_FI_DECK", "ROMANESQUE_CLOISTER", "VENETIAN_CANAL", "ROMANESQUE_APSE", "SCI_FI_DECK_EXPANSION", "SCI_FI_INDUSTRIAL_YARD", "ASIAN_CITY", "ASIAN_CITY_RECURSIVE", "BRUTALIST_PLAZA", "ART_NOUVEAU", "ART_DECO", "MOORISH_COURTYARD", "RENAISSANCE_PIAZZA", "BYZANTINE_BASILICA", "BAROQUE_CHURCH"):
+for gid in ("ZEN_SHRINE_AXIS", "ZEN_SAKURA_WALK", "ZEN_SHRINE_COURTYARD", "ZEN_ROJI_PATH", "ZEN_KARESANSHUI_WALK", "ZEN_TEA_GARDEN", "ZEN_STREAM_GARDEN", "ZEN_PAGODA_SPIRE", "ZEN_KAIRO_ENCLOSURE", "CLOISTER", "GOTHIC_CHAPTER_HOUSE", "GOTHIC_NAVE_CROSSING", "SCIFI_AIRLOCK", "SCI_FI_DECK", "ROMANESQUE_CLOISTER", "VENETIAN_CANAL", "ROMANESQUE_APSE", "SCI_FI_DECK_EXPANSION", "SCI_FI_INDUSTRIAL_YARD", "ASIAN_CITY", "ASIAN_CITY_RECURSIVE", "BRUTALIST_PLAZA", "ART_NOUVEAU", "ART_DECO", "STREAMLINE_MODERNE", "MOORISH_COURTYARD", "RENAISSANCE_PIAZZA", "BYZANTINE_BASILICA", "BAROQUE_CHURCH"):
     if gid not in GRAPH_REGISTRY:
         print(f"  !! FAIL: {gid} not in GRAPH_REGISTRY")
         all_ok = False
@@ -205,8 +205,8 @@ else:
     print("  scifi_industrial_yard_v1: OK")
 
 genome_ids = os_genome.list_genomes()
-if len(genome_ids) < 29:
-    print(f"  !! FAIL: expected >=29 genomes got {len(genome_ids)}")
+if len(genome_ids) < 30:
+    print(f"  !! FAIL: expected >=30 genomes got {len(genome_ids)}")
     all_ok = False
 else:
     print(f"  genome catalog: {len(genome_ids)} entries")
@@ -275,6 +275,12 @@ try:
     print(f"  spawn_graph ART_DECO partial: {len(deco_objs)} objects")
     if len(deco_objs) < 2:
         print(f"  !! FAIL: ART_DECO spawn got {len(deco_objs)}")
+        all_ok = False
+    stream_spec = GRAPH_REGISTRY["STREAMLINE_MODERNE"]["spec"]
+    stream_objs = spawn_graph(bpy.context, s, stream_spec[:3], spacing=11.0, graph_id="STREAMLINE_MODERNE")
+    print(f"  spawn_graph STREAMLINE_MODERNE partial: {len(stream_objs)} objects")
+    if len(stream_objs) < 2:
+        print(f"  !! FAIL: STREAMLINE_MODERNE spawn got {len(stream_objs)}")
         all_ok = False
     moor_spec = GRAPH_REGISTRY["MOORISH_COURTYARD"]["spec"]
     moor_objs = spawn_graph(bpy.context, s, moor_spec[:3], spacing=10.0, graph_id="MOORISH_COURTYARD")
@@ -611,6 +617,25 @@ elif os_styles.get("ART_DECO", {}).get("gate") != "_lib_CUSPED_ARCH":
     all_ok = False
 else:
     print("  art_deco_lobby_v1 + ART_DECO compose_roles: OK")
+
+sm = os_genome.load_genome("streamline_moderne_v1")
+if sm.get("compose_style") != "STREAMLINE_MODERNE" or os_genome.genome_family(sm) != "StreamlineModerne":
+    print(f"  !! FAIL: streamline_moderne_v1 compose/family")
+    all_ok = False
+elif sm.get("grammar_id") != "STREAMLINE_MODERNE":
+    print(f"  !! FAIL: streamline_moderne_v1 grammar={sm.get('grammar_id')}")
+    all_ok = False
+elif sm.get("surreal_transform") != "axis_compression":
+    print(f"  !! FAIL: streamline_moderne_v1 transform={sm.get('surreal_transform')}")
+    all_ok = False
+elif os_styles.get("STREAMLINE_MODERNE", {}).get("gate") != "_lib_ARCHWAY_ADV":
+    print("  !! FAIL: STREAMLINE_MODERNE compose_roles missing")
+    all_ok = False
+elif os_styles.get("STREAMLINE_MODERNE", {}).get("corner_tower") != "_lib_PILLAR":
+    print("  !! FAIL: STREAMLINE_MODERNE corner_tower must be pillar (tower ban)")
+    all_ok = False
+else:
+    print("  streamline_moderne_v1 + STREAMLINE_MODERNE compose_roles: OK")
 
 mc = os_genome.load_genome("moorish_courtyard_v1")
 if mc.get("compose_style") != "MOORISH_COURTYARD" or os_genome.genome_family(mc) != "Moorish":

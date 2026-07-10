@@ -1,0 +1,22 @@
+{
+  "id": "streamline_moderne_v1",
+  "family": "StreamlineModerne",
+  "verticality": 0.32,
+  "symmetry": 0.78,
+  "ornament_density": 0.42,
+  "structural_logic": 0.86,
+  "organic_growth": 0.28,
+  "cosmic_influence": 0.06,
+  "sacred_sequence": [],
+  "compose_style": "STREAMLINE_MODERNE",
+  "default_graph": "STREAMLINE_MODERNE",
+  "grammar_id": "STREAMLINE_MODERNE",
+  "surreal_transform": "axis_compression",
+  "prop_defaults": {
+    "gb_trim_mode": "RECESS",
+    "gb_bake_trim_colors": true,
+    "archway_style": "LINTEL",
+    "material_choice": "STONE",
+    "unit_size": 2.0
+  }
+}

@@ -50,6 +50,8 @@ def genome_family(genome: dict) -> str:
         return "Western"
     if gid.startswith("art_deco_"):
         return "ArtDeco"
+    if gid.startswith("streamline_"):
+        return "StreamlineModerne"
     if gid.startswith("art_nouveau_"):
         return "ArtNouveau"
     if gid.startswith("moorish_"):
@@ -163,6 +165,8 @@ def resolve_genome_manifest(monolith, style_key: str, genome_id: str | None = No
         gid = "western_castle_v1"
     if not gid and style_key == "ART_DECO":
         gid = "art_deco_lobby_v1"
+    if not gid and style_key == "STREAMLINE_MODERNE":
+        gid = "streamline_moderne_v1"
     if not gid and style_key == "ART_NOUVEAU":
         gid = "art_nouveau_v1"
     if not gid and style_key == "MOORISH_COURTYARD":

@@ -113,6 +113,16 @@ COMPOSE_STYLES = {
         "monument": "_lib_OBELISK",
         "sacred": "_lib_PUBLIC_FOUNTAIN",
     },
+    "STREAMLINE_MODERNE": {
+        "large": "_lib_GB_BRUTALIST_PANEL_WALL",
+        "medium": "_lib_GB_ROMANESQUE_ARCADE",
+        "small": "_lib_BALCONY",
+        "wall": "_lib_CURVED_WALL",
+        "corner_tower": "_lib_PILLAR",
+        "gate": "_lib_ARCHWAY_ADV",
+        "monument": "_lib_PUBLIC_FOUNTAIN",
+        "sacred": "_lib_GREYBOX_PILLAR_HALL",
+    },
     "MOORISH_COURTYARD": {
         "large": "_lib_PALAZZO",
         "medium": "_lib_GB_ROMANESQUE_ARCADE",
@@ -307,6 +317,8 @@ def compose_world(
             world_root["surreal_style_genome_id"] = "western_castle_v1"
         elif style_key == "ART_DECO":
             world_root["surreal_style_genome_id"] = "art_deco_lobby_v1"
+        elif style_key == "STREAMLINE_MODERNE":
+            world_root["surreal_style_genome_id"] = "streamline_moderne_v1"
         elif style_key == "ART_NOUVEAU":
             world_root["surreal_style_genome_id"] = "art_nouveau_v1"
         elif style_key == "MOORISH_COURTYARD":

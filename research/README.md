@@ -16,3 +16,7 @@ Before implementing a new generator kit, fill `_template_node_design.md` and lin
 ## Pilot style
 
 **Zen / Japanese** — first full Style Genome (`zen_shrine_v1`).
+
+## Recent studies
+
+- [Streamline Moderne civic facade](streamline/01_civic_facade.md) — horizontal civic chain, no tower spines

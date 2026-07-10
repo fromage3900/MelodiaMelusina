@@ -301,6 +301,23 @@ RESEARCH_PRESETS = {
             style_genome_id="art_deco_lobby_v1",
         ),
     },
+    "streamline_moderne_graph": {
+        "label": "Streamline Moderne Civic Facade",
+        "description": "Curved wall, panel band, ramp, arcade, lintel portal, fountain court",
+        "research_ref": "1930s civic terminal — streamline_moderne_v1 + STREAMLINE_MODERNE graph",
+        "group": "CIVIC",
+        "graph_id": "STREAMLINE_MODERNE",
+        "genome_id": "streamline_moderne_v1",
+        "props": dict(
+            arch_type="GB_BRUTALIST_PANEL_WALL",
+            gb_length=14.0,
+            gb_height=3.6,
+            gb_trim_mode="RECESS",
+            material_choice="STONE",
+            unit_size=2.0,
+            style_genome_id="streamline_moderne_v1",
+        ),
+    },
     "moorish_courtyard_graph": {
         "label": "Moorish Courtyard Colonnade",
         "description": "Horseshoe portal, arabesque screen, arcade bays, fountain court",

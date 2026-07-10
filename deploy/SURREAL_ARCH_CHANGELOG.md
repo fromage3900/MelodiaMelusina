@@ -1,5 +1,12 @@
 # Surreal Architecture — Changelog
 
+## v2.132.0 — Streamline Moderne civic facade
+
+- **`streamline_moderne_v1`** genome + **`STREAMLINE_MODERNE`** grammar chain (6 modules)
+- **`STREAMLINE_MODERNE`** compose style — horizontal civic roles; `corner_tower` → pillar (tower ban)
+- Research preset `streamline_moderne_graph` + curated playable preset; `axis_compression` transform
+- World manifest embed verify; genome catalog **32**; mesoamerican `ROUND`→`ROMAN` hygiene
+
 ## v2.131.0 — Art Deco lobby architecture set
 
 - **`art_deco_lobby_v1`** genome + **`ART_DECO`** grammar chain (6 modules)

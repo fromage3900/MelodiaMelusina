@@ -1,0 +1,14 @@
+{
+  "id": "STREAMLINE_MODERNE",
+  "label": "Streamline Moderne Civic Facade",
+  "description": "Curved street wall, horizontal panel band, approach ramp, arcade colonnade, lintel portal, fountain court — no tower spines",
+  "style": "streamline",
+  "modules": [
+    {"arch_type": "CURVED_WALL", "overrides": {"wall_arc_angle": 75.0, "wall_arc_radius": 6.5, "wall_height": 3.4, "wall_thickness": 0.42, "crenel_merlon_count": 6, "material_choice": "STONE"}},
+    {"arch_type": "GB_BRUTALIST_PANEL_WALL", "overrides": {"gb_length": 14.0, "gb_height": 3.6, "gb_trim_mode": "RECESS", "gb_trim_recess": 0.07, "material_choice": "STONE"}},
+    {"arch_type": "GREYBOX_RAMP", "overrides": {"gb_length": 10.0, "gb_width": 2.8, "gb_rise": 1.8, "material_choice": "STONE"}},
+    {"arch_type": "GB_ROMANESQUE_ARCADE", "overrides": {"gb_width": 3.4, "gb_height": 3.8, "gb_trim_mode": "RECESS", "unit_size": 3.4, "material_choice": "STONE"}},
+    {"arch_type": "ARCHWAY_ADV", "overrides": {"archway_style": "LINTEL", "archway_width": 2.8, "archway_height": 2.8, "archway_depth": 0.55, "material_choice": "STONE"}},
+    {"arch_type": "PUBLIC_FOUNTAIN", "overrides": {"fountain_radius": 1.4, "fountain_tiers": 2, "material_choice": "STONE"}}
+  ]
+}

@@ -47,6 +47,7 @@ brutalist_export_root = None
 castle_root = None
 art_nouveau_export_root = None
 art_deco_export_root = None
+streamline_export_root = None
 moorish_export_root = None
 renaissance_export_root = None
 byzantine_export_root = None
@@ -235,6 +236,37 @@ try:
         print("  art_deco_compose: OK")
 except Exception as e:
     print(f"  art_deco compose error: {e}")
+    all_ok = False
+
+print("\n--- Streamline Moderne civic plan compose ---")
+try:
+    from surreal_os import genome as os_genome
+    library.init_library(
+        s,
+        types_only={
+            "GB_BRUTALIST_PANEL_WALL",
+            "GB_ROMANESQUE_ARCADE",
+            "BALCONY",
+            "CURVED_WALL",
+            "PILLAR",
+            "ARCHWAY_ADV",
+            "PUBLIC_FOUNTAIN",
+            "GREYBOX_PILLAR_HALL",
+        },
+    )
+    stream_plan = plans.spawn_village_plan(location=(115, 0, 0))
+    s._active_style_genome = os_genome.load_genome("streamline_moderne_v1")
+    sroot, smsg = compose.compose_world(s, bpy.context, stream_plan, "STREAMLINE_MODERNE", 0.85, "COLLECTION")
+    streamline_export_root = sroot
+    s._active_style_genome = None
+    print(f"  streamline_compose: {smsg} metrics={verify_hooks.compose_metrics(sroot)}")
+    if sroot.get("surreal_style_genome_id") != "streamline_moderne_v1":
+        print(f"  !! FAIL: streamline genome stamp got {sroot.get('surreal_style_genome_id')}")
+        all_ok = False
+    else:
+        print("  streamline_compose: OK")
+except Exception as e:
+    print(f"  streamline compose error: {e}")
     all_ok = False
 
 print("\n--- Moorish courtyard plan compose ---")
@@ -678,6 +710,20 @@ try:
         if dsg.get("resolved_compose_roles", {}).get("gate") != "_lib_CUSPED_ARCH":
             raise RuntimeError("ART_DECO resolved gate mismatch")
         print("  art_deco manifest embed: OK")
+    if streamline_export_root is not None:
+        sm = export.build_world_manifest(streamline_export_root, monolith=s)
+        ssg = sm.get("style_genome") or {}
+        if ssg.get("id") != "streamline_moderne_v1":
+            raise RuntimeError(f"STREAMLINE_MODERNE style_genome expected streamline_moderne_v1: {ssg}")
+        if ssg.get("family") != "StreamlineModerne":
+            raise RuntimeError(f"streamline family mismatch: {ssg.get('family')}")
+        if ssg.get("surreal_transform") != "axis_compression":
+            raise RuntimeError("STREAMLINE_MODERNE surreal_transform mismatch")
+        if ssg.get("resolved_compose_roles", {}).get("gate") != "_lib_ARCHWAY_ADV":
+            raise RuntimeError("STREAMLINE_MODERNE resolved gate mismatch")
+        if ssg.get("resolved_compose_roles", {}).get("corner_tower") != "_lib_PILLAR":
+            raise RuntimeError("STREAMLINE_MODERNE corner_tower must be pillar")
+        print("  streamline_moderne manifest embed: OK")
     if moorish_export_root is not None:
         mm = export.build_world_manifest(moorish_export_root, monolith=s)
         msg = mm.get("style_genome") or {}
