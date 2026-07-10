@@ -404,11 +404,14 @@ if not xf:
 elif "BRUTALIST_PLAZA" not in (xf.get("applies_to") or []):
     print("  !! FAIL: axis_compression missing BRUTALIST_PLAZA")
     all_ok = False
+elif "ART_DECO" not in (xf.get("applies_to") or []):
+    print("  !! FAIL: axis_compression missing ART_DECO")
+    all_ok = False
 elif "ZEN_STREAM_GARDEN" not in (xf.get("applies_to") or []):
     print("  !! FAIL: axis_compression missing ZEN_STREAM_GARDEN")
     all_ok = False
 else:
-    print(f"  axis_compression type={xf.get('type')} BRUTALIST_PLAZA: OK")
+    print(f"  axis_compression type={xf.get('type')} BRUTALIST_PLAZA+ART_DECO: OK")
 
 xf2 = get_transform("vertical_stretch")
 if not xf2:
@@ -603,14 +606,29 @@ if ad.get("compose_style") != "ART_DECO" or os_genome.genome_family(ad) != "ArtD
 elif ad.get("grammar_id") != "ART_DECO":
     print(f"  !! FAIL: art_deco_lobby_v1 grammar={ad.get('grammar_id')}")
     all_ok = False
-elif ad.get("surreal_transform") != "vertical_stretch":
+elif ad.get("surreal_transform") != "axis_compression":
     print(f"  !! FAIL: art_deco_lobby_v1 transform={ad.get('surreal_transform')}")
     all_ok = False
 elif os_styles.get("ART_DECO", {}).get("gate") != "_lib_CUSPED_ARCH":
     print("  !! FAIL: ART_DECO compose_roles missing")
     all_ok = False
+elif os_styles.get("ART_DECO", {}).get("corner_tower") != "_lib_PILLAR":
+    print("  !! FAIL: ART_DECO corner_tower must be pillar (tower ban)")
+    all_ok = False
+elif os_styles.get("ART_DECO", {}).get("monument") != "_lib_GREYBOX_RAMP":
+    print("  !! FAIL: ART_DECO monument must be ramp (no obelisk)")
+    all_ok = False
+elif (ad.get("compose_roles") or {}).get("corner_tower") != "_lib_PILLAR":
+    print("  !! FAIL: art_deco_lobby_v1 compose_roles corner_tower override missing")
+    all_ok = False
 else:
-    print("  art_deco_lobby_v1 + ART_DECO compose_roles: OK")
+    banned = {"TOWER", "TESSELLATION_TOWER", "BELL_TOWER", "WATCHTOWER", "OBELISK", "KEEP"}
+    deco_types = {row[0] if isinstance(row, (list, tuple)) else row.get("arch_type") for row in GRAPH_REGISTRY["ART_DECO"]["spec"]}
+    if banned & deco_types:
+        print(f"  !! FAIL: ART_DECO grammar still has banned tower types: {banned & deco_types}")
+        all_ok = False
+    else:
+        print("  art_deco_lobby_v1 + ART_DECO compose_roles (tower-ban): OK")
 
 mc = os_genome.load_genome("moorish_courtyard_v1")
 if mc.get("compose_style") != "MOORISH_COURTYARD" or os_genome.genome_family(mc) != "Moorish":

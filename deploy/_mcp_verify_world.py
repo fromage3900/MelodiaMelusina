@@ -215,11 +215,14 @@ try:
     library.init_library(
         s,
         types_only={
-            "TESSELLATION_TOWER",
+            "BAROQUE_FACADE",
             "GB_BRUTALIST_PANEL_WALL",
             "FILIGREE_PANEL",
             "CUSPED_ARCH",
-            "OBELISK",
+            "GREYBOX_RAMP",
+            "PILLAR",
+            "PUBLIC_FOUNTAIN",
+            "CURTAIN_WALL",
         },
     )
     deco_plan = plans.spawn_village_plan(location=(110, 0, 0))
@@ -673,10 +676,14 @@ try:
             raise RuntimeError(f"ART_DECO style_genome expected art_deco_lobby_v1: {dsg}")
         if dsg.get("family") != "ArtDeco":
             raise RuntimeError(f"art_deco family mismatch: {dsg.get('family')}")
-        if dsg.get("surreal_transform") != "vertical_stretch":
+        if dsg.get("surreal_transform") != "axis_compression":
             raise RuntimeError("ART_DECO surreal_transform mismatch")
         if dsg.get("resolved_compose_roles", {}).get("gate") != "_lib_CUSPED_ARCH":
             raise RuntimeError("ART_DECO resolved gate mismatch")
+        if dsg.get("resolved_compose_roles", {}).get("corner_tower") != "_lib_PILLAR":
+            raise RuntimeError("ART_DECO corner_tower must be pillar (no towers)")
+        if dsg.get("resolved_compose_roles", {}).get("monument") != "_lib_GREYBOX_RAMP":
+            raise RuntimeError("ART_DECO monument must be ramp (no obelisk)")
         print("  art_deco manifest embed: OK")
     if moorish_export_root is not None:
         mm = export.build_world_manifest(moorish_export_root, monolith=s)
