@@ -101,3 +101,28 @@ atoms:
     kit: GB_ZEN_LANTERN
     trim_labels: [trim:kiso, trim:sao, trim:chudai, trim:hibukuro, trim:kasa, trim:hoju]
     snap_contract: [floor, toro_mid, accent]
+  talud_retaining_tier:
+    category: terrace
+    kit: RETAINING_WALL
+    trim_labels: [trim:batter_face, trim:terrace_tread, trim:coping]
+    snap_contract: [floor, terrace_ny, terrace_py, stair_mid]
+  ceremonial_stair_block:
+    category: circulation
+    kit: GREYBOX_STAIR_BLOCK
+    trim_labels: [trim:riser, trim:tread, trim:stringer, trim:landing]
+    snap_contract: [floor, path_ny, path_py, landing]
+  court_colonnade_bay:
+    category: colonnade
+    kit: GB_ROMANESQUE_ARCADE
+    trim_labels: [trim:pier, trim:arch_reveal, trim:entablature]
+    snap_contract: [floor, path_ny, path_py, court_px]
+  precinct_stone_portal:
+    category: gateway
+    kit: ARCHWAY_ADV
+    trim_labels: [trim:jamb, trim:arch_reveal, trim:threshold]
+    snap_contract: [floor, path_ny, path_py, gate]
+  sacred_court_pool:
+    category: ritual
+    kit: PUBLIC_FOUNTAIN
+    trim_labels: [trim:basin, trim:rim, trim:water_plane]
+    snap_contract: [floor, basin, approach_ny, approach_py]
