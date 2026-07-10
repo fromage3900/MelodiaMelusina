@@ -1,7 +1,7 @@
 {
   "id": "meso_pyramid_courtyard_v1",
   "family": "Mesoamerican",
-  "verticality": 0.76,
+  "verticality": 0.42,
   "symmetry": 0.9,
   "ornament_density": 0.45,
   "structural_logic": 0.88,
@@ -12,10 +12,14 @@
   "default_graph": "MESOAMERICAN_PYRAMID",
   "grammar_id": "MESOAMERICAN_PYRAMID",
   "surreal_transform": "axis_compression",
+  "compose_roles": {
+    "corner_tower": "_lib_PILLAR"
+  },
   "prop_defaults": {
     "gb_trim_mode": "RECESS",
     "retaining_steps": 5,
     "retaining_batter": 0.1,
+    "archway_style": "ROMAN",
     "material_choice": "STONE",
     "unit_size": 2.0
   }

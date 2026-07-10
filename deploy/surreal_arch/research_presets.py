@@ -335,6 +335,22 @@ RESEARCH_PRESETS = {
             style_genome_id="renaissance_piazza_v1",
         ),
     },
+    "meso_pyramid_courtyard_graph": {
+        "label": "Mesoamerican Pyramid Courtyard",
+        "description": "Talud terraces, ceremonial stair, processional ramp, colonnade, stone portal, sacred pool",
+        "research_ref": "research/mesoamerican/01_pyramid_courtyard.md — meso_pyramid_courtyard_v1 + MESOAMERICAN_PYRAMID",
+        "group": "CIVIC",
+        "graph_id": "MESOAMERICAN_PYRAMID",
+        "genome_id": "meso_pyramid_courtyard_v1",
+        "props": dict(
+            arch_type="RETAINING_WALL",
+            retaining_steps=5,
+            retaining_batter=0.1,
+            material_choice="STONE",
+            unit_size=2.0,
+            style_genome_id="meso_pyramid_courtyard_v1",
+        ),
+    },
     "byzantine_basilica_graph": {
         "label": "Byzantine Basilica",
         "description": "Horseshoe narthex, cusped arch, vault nave, rose window, crossing dome",
