@@ -1,0 +1,25 @@
+{
+  "id": "egyptian_temple_court_v1",
+  "family": "Egyptian",
+  "verticality": 0.38,
+  "symmetry": 0.94,
+  "ornament_density": 0.32,
+  "structural_logic": 0.9,
+  "organic_growth": 0.08,
+  "cosmic_influence": 0.42,
+  "sacred_sequence": ["gate", "stair", "hypostyle", "arcade", "lake"],
+  "compose_style": "EGYPTIAN_TEMPLE_COURT",
+  "default_graph": "EGYPTIAN_TEMPLE_COURT",
+  "grammar_id": "EGYPTIAN_TEMPLE_COURT",
+  "surreal_transform": "axis_compression",
+  "compose_roles": {
+    "corner_tower": "_lib_PILLAR"
+  },
+  "prop_defaults": {
+    "gb_trim_mode": "RECESS",
+    "gb_bake_trim_colors": true,
+    "archway_style": "LINTEL",
+    "material_choice": "STONE",
+    "unit_size": 2.0
+  }
+}

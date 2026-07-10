@@ -1,5 +1,12 @@
 # Surreal Architecture — Changelog
 
+## v2.132.0 — Egyptian temple court architecture set
+
+- **`egyptian_temple_court_v1`** genome + **`EGYPTIAN_TEMPLE_COURT`** grammar (7 modules: pylon panel, lintel gate, stair, hypostyle, arcade, ramp, sacred lake)
+- **`EGYPTIAN_TEMPLE_COURT`** compose style — hypostyle large, lintel gate, `corner_tower` → PILLAR (tower-ban)
+- Research preset `egyptian_temple_court_graph` + curated playable preset; `axis_compression` transform
+- World manifest embed verify; genome catalog **32**; meso stub ROUND→ROMAN hygiene; Linux verify bootstrap
+
 ## v2.131.0 — Art Deco lobby architecture set
 
 - **`art_deco_lobby_v1`** genome + **`ART_DECO`** grammar chain (6 modules)

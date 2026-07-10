@@ -1,8 +1,15 @@
 # Surreal Architecture — Loop State
 
-**Version:** 2.131.0  
+**Version:** 2.132.0  
 **Loop sentinel:** `AGENT_LOOP_TICK_surreal_tierb`  
 **Interval:** 300s — **endless loop armed** (monitored shell, AAA genome expansion prompt)
+
+## Micro-cycle 86 — v2.132.0 (Egyptian temple court) ✓
+
+- **`egyptian_temple_court_v1`** genome + **`EGYPTIAN_TEMPLE_COURT`** grammar (pylon panel, lintel gate, stair, hypostyle, arcade, ramp, sacred lake)
+- **`EGYPTIAN_TEMPLE_COURT`** compose style — `corner_tower` → `_lib_PILLAR` (tower-ban); `axis_compression`
+- Research preset `egyptian_temple_court_graph` + curated playable preset; genome catalog **32**
+- Hygiene: meso stub `archway_style` ROUND → ROMAN; Linux verify sys.path bootstrap
 
 ## Micro-cycle 53 — genome `family` schema (v2.98.0) ✓
 
@@ -320,9 +327,10 @@ Removed stale `.yaml` genome duplicates — `.json` is sole source of truth for 
 
 ## Next loop targets
 
-- Mesoamerican pyramid courtyard (new family)
-- Art Nouveau / Moorish manifest parity audit (compose tests green)
-- Industrial Art Deco hybrid or Streamline Moderne variant
+- Mesoamerican pyramid courtyard full wire (stub present; ROUND→ROMAN hygiene done)
+- Art Deco lobby tower-ban rematerialize (still has TESSELLATION_TOWER/OBELISK)
+- Art Nouveau / Moorish / Renaissance `corner_tower` → PILLAR sweep
+- Streamline Moderne / Ottoman caravanserai / Khmer gallery if not already landed
 
 ## Micro-cycle 85 — v2.131.0 (Art Deco lobby set) ✓
 

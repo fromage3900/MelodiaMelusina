@@ -13,6 +13,8 @@ Human-readable architectural studies that feed the OS layer (`deploy/surreal_os/
 
 Before implementing a new generator kit, fill `_template_node_design.md` and link it from `deploy/SURREAL_ARCH_LOOP_STATE.md`.
 
-## Pilot style
+## Pilot styles
 
 **Zen / Japanese** — first full Style Genome (`zen_shrine_v1`).
+
+**Egyptian** — processional temple court (`egyptian_temple_court_v1`); see `egyptian/01_temple_court.md`.
