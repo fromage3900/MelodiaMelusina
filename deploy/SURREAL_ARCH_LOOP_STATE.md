@@ -320,9 +320,9 @@ Removed stale `.yaml` genome duplicates — `.json` is sole source of truth for 
 
 ## Next loop targets
 
-- Mesoamerican pyramid courtyard (new family)
+- Mesoamerican pyramid courtyard finish (stubs present; compose/verify wiring)
 - Art Nouveau / Moorish manifest parity audit (compose tests green)
-- Industrial Art Deco hybrid or Streamline Moderne variant
+- Streamline Moderne civic facade (horizontal chain)
 
 ## Micro-cycle 85 — v2.131.0 (Art Deco lobby set) ✓
 
@@ -330,3 +330,10 @@ Removed stale `.yaml` genome duplicates — `.json` is sole source of truth for 
 - **`ART_DECO`** compose style + library bake for **`TESSELLATION_TOWER`**
 - Research preset `art_deco_lobby_graph` + curated playable preset; `vertical_stretch` transform
 - World manifest embed verify; genome catalog **30**
+
+## Micro-cycle 86 — v2.132.0 (Industrial Art Deco hybrid) ✓
+
+- **`art_deco_industrial_v1`** genome + **`ART_DECO_INDUSTRIAL`** grammar (panel wall, catwalk, filigree, hypostyle hall, ramp, cusped portal)
+- **`ART_DECO_INDUSTRIAL`** compose style — pillar corner markers (no tower / obelisk spines); `axis_compression`
+- Research study `research/industrial_art_deco/01_hybrid_lobby.md` + curated graph preset
+- Library bake for **`GREYBOX_RAMP`**; world manifest embed verify; genome catalog **32**
