@@ -16,3 +16,7 @@ Before implementing a new generator kit, fill `_template_node_design.md` and lin
 ## Pilot style
 
 **Zen / Japanese** — first full Style Genome (`zen_shrine_v1`).
+
+## Additional styles
+
+- **Khmer** — gallery enclosure (`khmer_gallery_v1`) — see `khmer/01_gallery_enclosure.md`

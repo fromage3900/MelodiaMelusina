@@ -1,5 +1,14 @@
 # Surreal Architecture — Changelog
 
+## v2.132.0 — Khmer gallery enclosure architecture set
+
+- **`khmer_gallery_v1`** genome + **`KHMER_GALLERY`** grammar chain (6 modules)
+- Horizontal civic: gopura lintel → gallery → stair → arcade → ramp → sacred pool
+- **`KHMER_GALLERY`** compose style — `corner_tower` → `_lib_PILLAR` (no tower spines)
+- Research preset `khmer_gallery_graph` + curated playable preset; `axis_compression`
+- Library bake for `GREYBOX_RAMP` / `GREYBOX_STAIR_BLOCK`; world/OS verify; catalog **32**
+- Research study: `research/khmer/01_gallery_enclosure.md`
+
 ## v2.131.0 — Art Deco lobby architecture set
 
 - **`art_deco_lobby_v1`** genome + **`ART_DECO`** grammar chain (6 modules)

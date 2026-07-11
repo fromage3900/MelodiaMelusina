@@ -1,6 +1,6 @@
 # Surreal Architecture — Loop State
 
-**Version:** 2.131.0  
+**Version:** 2.132.0  
 **Loop sentinel:** `AGENT_LOOP_TICK_surreal_tierb`  
 **Interval:** 300s — **endless loop armed** (monitored shell, AAA genome expansion prompt)
 
@@ -320,9 +320,10 @@ Removed stale `.yaml` genome duplicates — `.json` is sole source of truth for 
 
 ## Next loop targets
 
-- Mesoamerican pyramid courtyard (new family)
-- Art Nouveau / Moorish manifest parity audit (compose tests green)
-- Industrial Art Deco hybrid or Streamline Moderne variant
+- Inca terrace / Andean processional ramp (horizontal civic)
+- Art Deco lobby tower-ban rematerialize (still has TESSELLATION_TOWER/OBELISK)
+- Art Nouveau / Moorish / Renaissance `corner_tower` → PILLAR sweep
+- Mesoamerican pyramid courtyard full wire (stub grammar+genome present)
 
 ## Micro-cycle 85 — v2.131.0 (Art Deco lobby set) ✓
 
@@ -330,3 +331,10 @@ Removed stale `.yaml` genome duplicates — `.json` is sole source of truth for 
 - **`ART_DECO`** compose style + library bake for **`TESSELLATION_TOWER`**
 - Research preset `art_deco_lobby_graph` + curated playable preset; `vertical_stretch` transform
 - World manifest embed verify; genome catalog **30**
+
+## Micro-cycle 86 — v2.132.0 (Khmer gallery enclosure) ✓
+
+- **`khmer_gallery_v1`** genome + **`KHMER_GALLERY`** grammar (gopura lintel, gallery corridor, stair, arcade, ramp, sacred pool)
+- **`KHMER_GALLERY`** compose style — `corner_tower` → **PILLAR** (tower-ban compliant); `axis_compression`
+- Research + curated presets; library bake for ramp/stair; world/OS verify tiers; catalog **32**
+- Research study: `research/khmer/01_gallery_enclosure.md`

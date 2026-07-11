@@ -58,6 +58,7 @@ gothic_export_root = None
 gothic_chapter_export_root = None
 gothic_nave_crossing_export_root = None
 scifi_deck_export_root = None
+khmer_export_root = None
 scifi_airlock_export_root = None
 scifi_industrial_export_root = None
 zen_pagoda_export_root = None
@@ -271,6 +272,36 @@ try:
         print("  renaissance_compose: OK")
 except Exception as e:
     print(f"  renaissance compose error: {e}")
+    all_ok = False
+
+print("\n--- Khmer gallery plan compose ---")
+try:
+    from surreal_os import genome as os_genome
+    library.init_library(
+        s,
+        types_only={
+            "GREYBOX_PILLAR_HALL",
+            "GB_ROMANESQUE_ARCADE",
+            "PILLAR",
+            "ARCHWAY_ADV",
+            "PUBLIC_FOUNTAIN",
+            "GREYBOX_RAMP",
+            "GREYBOX_STAIR_BLOCK",
+        },
+    )
+    khmer_plan = plans.spawn_village_plan(location=(145, 0, 0))
+    s._active_style_genome = os_genome.load_genome("khmer_gallery_v1")
+    kroot, kmsg = compose.compose_world(s, bpy.context, khmer_plan, "KHMER_GALLERY", 0.85, "COLLECTION")
+    khmer_export_root = kroot
+    s._active_style_genome = None
+    print(f"  khmer_compose: {kmsg} metrics={verify_hooks.compose_metrics(kroot)}")
+    if kroot.get("surreal_style_genome_id") != "khmer_gallery_v1":
+        print(f"  !! FAIL: khmer genome stamp got {kroot.get('surreal_style_genome_id')}")
+        all_ok = False
+    else:
+        print("  khmer_compose: OK")
+except Exception as e:
+    print(f"  khmer compose error: {e}")
     all_ok = False
 
 print("\n--- Byzantine basilica plan compose ---")
@@ -698,6 +729,20 @@ try:
         if rsg.get("resolved_compose_roles", {}).get("sacred") != "_lib_DOME":
             raise RuntimeError("RENAISSANCE_PIAZZA resolved sacred mismatch")
         print("  renaissance_piazza manifest embed: OK")
+    if khmer_export_root is not None:
+        km = export.build_world_manifest(khmer_export_root, monolith=s)
+        ksg = km.get("style_genome") or {}
+        if ksg.get("id") != "khmer_gallery_v1":
+            raise RuntimeError(f"KHMER_GALLERY style_genome expected khmer_gallery_v1: {ksg}")
+        if ksg.get("family") != "Khmer":
+            raise RuntimeError(f"khmer family mismatch: {ksg.get('family')}")
+        if ksg.get("surreal_transform") != "axis_compression":
+            raise RuntimeError("KHMER_GALLERY surreal_transform mismatch")
+        if ksg.get("resolved_compose_roles", {}).get("corner_tower") != "_lib_PILLAR":
+            raise RuntimeError("KHMER_GALLERY corner_tower must be PILLAR")
+        if ksg.get("resolved_compose_roles", {}).get("gate") != "_lib_ARCHWAY_ADV":
+            raise RuntimeError("KHMER_GALLERY resolved gate mismatch")
+        print("  khmer_gallery manifest embed: OK")
     if byzantine_export_root is not None:
         bm = export.build_world_manifest(byzantine_export_root, monolith=s)
         bsg = bm.get("style_genome") or {}

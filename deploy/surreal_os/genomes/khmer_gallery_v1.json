@@ -1,0 +1,21 @@
+{
+  "id": "khmer_gallery_v1",
+  "family": "Khmer",
+  "verticality": 0.42,
+  "symmetry": 0.86,
+  "ornament_density": 0.52,
+  "structural_logic": 0.9,
+  "organic_growth": 0.18,
+  "cosmic_influence": 0.28,
+  "sacred_sequence": [],
+  "compose_style": "KHMER_GALLERY",
+  "default_graph": "KHMER_GALLERY",
+  "grammar_id": "KHMER_GALLERY",
+  "surreal_transform": "axis_compression",
+  "prop_defaults": {
+    "gb_trim_mode": "RECESS",
+    "archway_style": "LINTEL",
+    "material_choice": "STONE",
+    "unit_size": 2.4
+  }
+}

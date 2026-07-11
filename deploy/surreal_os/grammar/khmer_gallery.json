@@ -1,0 +1,14 @@
+{
+  "id": "KHMER_GALLERY",
+  "label": "Khmer Gallery Enclosure",
+  "description": "Gopura lintel gate, enclosed gallery, ceremonial stair, arcade colonnade, processional ramp, sacred pool",
+  "style": "khmer",
+  "modules": [
+    {"arch_type": "ARCHWAY_ADV", "overrides": {"archway_style": "LINTEL", "archway_width": 2.8, "archway_height": 2.4, "archway_depth": 0.6, "material_choice": "STONE"}},
+    {"arch_type": "GREYBOX_CORRIDOR", "overrides": {"gb_length": 10.0, "gb_corridor_profile": "DOUBLE", "gb_trim_mode": "RECESS", "material_choice": "STONE", "unit_size": 3.2}},
+    {"arch_type": "GREYBOX_STAIR_BLOCK", "overrides": {"gb_steps": 10, "gb_rise": 0.2, "gb_run": 0.34, "gb_width": 2.8, "material_choice": "STONE", "unit_size": 2.4}},
+    {"arch_type": "GB_ROMANESQUE_ARCADE", "overrides": {"gb_width": 3.4, "gb_height": 4.0, "gb_trim_mode": "RECESS", "unit_size": 3.4, "material_choice": "STONE"}},
+    {"arch_type": "GREYBOX_RAMP", "overrides": {"gb_length": 8.0, "gb_width": 2.4, "gb_rise": 1.6, "material_choice": "STONE"}},
+    {"arch_type": "PUBLIC_FOUNTAIN", "overrides": {"fountain_radius": 1.8, "fountain_tiers": 2, "material_choice": "STONE"}}
+  ]
+}

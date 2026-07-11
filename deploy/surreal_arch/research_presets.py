@@ -335,6 +335,23 @@ RESEARCH_PRESETS = {
             style_genome_id="renaissance_piazza_v1",
         ),
     },
+    "khmer_gallery_graph": {
+        "label": "Khmer Gallery Enclosure",
+        "description": "Gopura lintel, gallery corridor, stair, arcade, ramp, sacred pool",
+        "research_ref": "Angkor gallery typology — khmer_gallery_v1 + KHMER_GALLERY graph",
+        "group": "ASIAN",
+        "graph_id": "KHMER_GALLERY",
+        "genome_id": "khmer_gallery_v1",
+        "props": dict(
+            arch_type="ARCHWAY_ADV",
+            archway_style="LINTEL",
+            archway_width=2.8,
+            archway_height=2.4,
+            material_choice="STONE",
+            unit_size=2.4,
+            style_genome_id="khmer_gallery_v1",
+        ),
+    },
     "byzantine_basilica_graph": {
         "label": "Byzantine Basilica",
         "description": "Horseshoe narthex, cusped arch, vault nave, rose window, crossing dome",
