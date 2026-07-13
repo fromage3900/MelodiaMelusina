@@ -104,13 +104,13 @@ COMPOSE_STYLES = {
         "sacred": "_lib_CHAPEL",
     },
     "ART_DECO": {
-        "large": "_lib_TESSELLATION_TOWER",
+        "large": "_lib_BAROQUE_FACADE",
         "medium": "_lib_GB_BRUTALIST_PANEL_WALL",
         "small": "_lib_FILIGREE_PANEL",
         "wall": "_lib_CURTAIN_WALL",
-        "corner_tower": "_lib_TESSELLATION_TOWER",
+        "corner_tower": "_lib_PILLAR",
         "gate": "_lib_CUSPED_ARCH",
-        "monument": "_lib_OBELISK",
+        "monument": "_lib_PUBLIC_FOUNTAIN",
         "sacred": "_lib_PUBLIC_FOUNTAIN",
     },
     "MOORISH_COURTYARD": {
