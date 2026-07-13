@@ -1,5 +1,13 @@
 # Surreal Architecture — Changelog
 
+## v2.132.0 — Balinese pura courtyard architecture set
+
+- **`balinese_pura_courtyard_v1`** genome + **`BALINESE_PURA_COURTYARD`** grammar chain (7 modules)
+- **`BALINESE_PURA_COURTYARD`** compose style — wantilan pavilion sacred, moon-gate threshold, pillar corners (tower-ban)
+- Research preset `balinese_pura_courtyard_graph` + curated playable preset; `axis_compression` transform
+- World manifest embed verify; genome catalog **32**
+- Fixed orphaned `MESOAMERICAN_PYRAMID` archway enum (`ROUND` → `LINTEL`)
+
 ## v2.131.0 — Art Deco lobby architecture set
 
 - **`art_deco_lobby_v1`** genome + **`ART_DECO`** grammar chain (6 modules)

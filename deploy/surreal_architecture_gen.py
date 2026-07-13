@@ -24,7 +24,7 @@ bl_info = {
     "blender": (5, 1, 0),
     "author": "Claude Code",
     "description": "Procedural geometry node system for surreal architecture",
-    "version": (2, 131, 0),
+    "version": (2, 132, 0),
     "location": "Properties > Modifiers",
     "category": "Geometry Nodes",
 }
@@ -28269,6 +28269,13 @@ SURREAL_ARCH_OT_preset_art_deco_lobby = _make_graph_preset_op(
     description="Tessellation tower, geometric panels, chevron filigree, cusped portal, obelisk",
 )
 
+SURREAL_ARCH_OT_preset_balinese_pura_courtyard = _make_graph_preset_op(
+    "SURREAL_ARCH_OT_preset_balinese_pura_courtyard",
+    "surreal_arch.preset_balinese_pura_courtyard", "Balinese Pura Courtyard",
+    "balinese_pura_courtyard_graph",
+    description="Candi bentar gate, stair, arcade, wantilan pavilion, ramp, petirtaan basin",
+)
+
 SURREAL_ARCH_OT_preset_renaissance_piazza = _make_graph_preset_op(
     "SURREAL_ARCH_OT_preset_renaissance_piazza",
     "surreal_arch.preset_renaissance_piazza", "Renaissance Piazza",
@@ -28551,6 +28558,11 @@ _ARCH_PRESETS = {
         'group': 'CIVIC', 'label': '🏙 Art Deco Lobby',
         'desc': 'ART_DECO graph — tessellation tower, geometric panels, chevron filigree, obelisk',
         'op_id': 'surreal_arch.preset_art_deco_lobby',
+    },
+    'BALINESE_PURA_COURTYARD': {
+        'group': 'ASIAN', 'label': '🌺 Balinese Pura Courtyard',
+        'desc': 'BALINESE_PURA_COURTYARD graph — gate, stair, arcade, wantilan, ramp, basin',
+        'op_id': 'surreal_arch.preset_balinese_pura_courtyard',
     },
     'RENAISSANCE_PIAZZA': {
         'group': 'CIVIC', 'label': '🏛 Renaissance Piazza',
@@ -38069,6 +38081,7 @@ classes = (
     SURREAL_ARCH_OT_preset_filigree_rail_vine,
     SURREAL_ARCH_OT_preset_art_nouveau_facade,
     SURREAL_ARCH_OT_preset_art_deco_lobby,
+    SURREAL_ARCH_OT_preset_balinese_pura_courtyard,
     SURREAL_ARCH_OT_preset_renaissance_piazza,
     SURREAL_ARCH_OT_preset_byzantine_basilica,
     SURREAL_ARCH_OT_preset_baroque_church,

@@ -47,7 +47,7 @@ from surreal_arch.greybox_graph import GRAPH_REGISTRY
 
 merged = merge_grammar_into_registry(GRAPH_REGISTRY)
 print(f"  merged_into_registry: {merged}")
-for gid in ("ZEN_SHRINE_AXIS", "ZEN_SAKURA_WALK", "ZEN_SHRINE_COURTYARD", "ZEN_ROJI_PATH", "ZEN_KARESANSHUI_WALK", "ZEN_TEA_GARDEN", "ZEN_STREAM_GARDEN", "ZEN_PAGODA_SPIRE", "ZEN_KAIRO_ENCLOSURE", "CLOISTER", "GOTHIC_CHAPTER_HOUSE", "GOTHIC_NAVE_CROSSING", "SCIFI_AIRLOCK", "SCI_FI_DECK", "ROMANESQUE_CLOISTER", "VENETIAN_CANAL", "ROMANESQUE_APSE", "SCI_FI_DECK_EXPANSION", "SCI_FI_INDUSTRIAL_YARD", "ASIAN_CITY", "ASIAN_CITY_RECURSIVE", "BRUTALIST_PLAZA", "ART_NOUVEAU", "ART_DECO", "MOORISH_COURTYARD", "RENAISSANCE_PIAZZA", "BYZANTINE_BASILICA", "BAROQUE_CHURCH"):
+for gid in ("ZEN_SHRINE_AXIS", "ZEN_SAKURA_WALK", "ZEN_SHRINE_COURTYARD", "ZEN_ROJI_PATH", "ZEN_KARESANSHUI_WALK", "ZEN_TEA_GARDEN", "ZEN_STREAM_GARDEN", "ZEN_PAGODA_SPIRE", "ZEN_KAIRO_ENCLOSURE", "CLOISTER", "GOTHIC_CHAPTER_HOUSE", "GOTHIC_NAVE_CROSSING", "SCIFI_AIRLOCK", "SCI_FI_DECK", "ROMANESQUE_CLOISTER", "VENETIAN_CANAL", "ROMANESQUE_APSE", "SCI_FI_DECK_EXPANSION", "SCI_FI_INDUSTRIAL_YARD", "ASIAN_CITY", "ASIAN_CITY_RECURSIVE", "BRUTALIST_PLAZA", "ART_NOUVEAU", "ART_DECO", "MOORISH_COURTYARD", "RENAISSANCE_PIAZZA", "BYZANTINE_BASILICA", "BAROQUE_CHURCH", "BALINESE_PURA_COURTYARD"):
     if gid not in GRAPH_REGISTRY:
         print(f"  !! FAIL: {gid} not in GRAPH_REGISTRY")
         all_ok = False
@@ -205,8 +205,8 @@ else:
     print("  scifi_industrial_yard_v1: OK")
 
 genome_ids = os_genome.list_genomes()
-if len(genome_ids) < 29:
-    print(f"  !! FAIL: expected >=29 genomes got {len(genome_ids)}")
+if len(genome_ids) < 31:
+    print(f"  !! FAIL: expected >=31 genomes got {len(genome_ids)}")
     all_ok = False
 else:
     print(f"  genome catalog: {len(genome_ids)} entries")
@@ -300,6 +300,19 @@ try:
     if len(bar_objs) < 3:
         print(f"  !! FAIL: BAROQUE_CHURCH spawn got {len(bar_objs)}")
         all_ok = False
+    bal_spec = GRAPH_REGISTRY["BALINESE_PURA_COURTYARD"]["spec"]
+    bal_objs = spawn_graph(bpy.context, s, bal_spec[:4], spacing=10.0, graph_id="BALINESE_PURA_COURTYARD")
+    print(f"  spawn_graph BALINESE_PURA_COURTYARD partial: {len(bal_objs)} objects")
+    if len(bal_objs) < 3:
+        print(f"  !! FAIL: BALINESE_PURA_COURTYARD spawn got {len(bal_objs)}")
+        all_ok = False
+    banned = {"TOWER", "TESSELLATION_TOWER", "BELL_TOWER", "WATCHTOWER", "OBELISK", "KEEP"}
+    bal_types = {at for at, _ in bal_spec}
+    if banned & bal_types:
+        print(f"  !! FAIL: BALINESE_PURA_COURTYARD banned arch types: {banned & bal_types}")
+        all_ok = False
+    else:
+        print("  BALINESE_PURA_COURTYARD tower-ban: OK")
     gch_spec = GRAPH_REGISTRY["GOTHIC_CHAPTER_HOUSE"]["spec"]
     gch_objs = spawn_graph(bpy.context, s, gch_spec[:4], spacing=10.0, graph_id="GOTHIC_CHAPTER_HOUSE")
     print(f"  spawn_graph GOTHIC_CHAPTER_HOUSE partial: {len(gch_objs)} objects")
@@ -404,11 +417,14 @@ if not xf:
 elif "BRUTALIST_PLAZA" not in (xf.get("applies_to") or []):
     print("  !! FAIL: axis_compression missing BRUTALIST_PLAZA")
     all_ok = False
+elif "BALINESE_PURA_COURTYARD" not in (xf.get("applies_to") or []):
+    print("  !! FAIL: axis_compression missing BALINESE_PURA_COURTYARD")
+    all_ok = False
 elif "ZEN_STREAM_GARDEN" not in (xf.get("applies_to") or []):
     print("  !! FAIL: axis_compression missing ZEN_STREAM_GARDEN")
     all_ok = False
 else:
-    print(f"  axis_compression type={xf.get('type')} BRUTALIST_PLAZA: OK")
+    print(f"  axis_compression type={xf.get('type')} BRUTALIST+BALINESE: OK")
 
 xf2 = get_transform("vertical_stretch")
 if not xf2:
@@ -676,6 +692,25 @@ elif os_styles.get("VENETIAN_CANAL", {}).get("medium") != "_lib_GB_VENETIAN_LOGG
     all_ok = False
 else:
     print("  venetian_canal_v1 + VENETIAN_CANAL compose_roles: OK")
+
+bp = os_genome.load_genome("balinese_pura_courtyard_v1")
+if bp.get("compose_style") != "BALINESE_PURA_COURTYARD" or os_genome.genome_family(bp) != "Balinese":
+    print(f"  !! FAIL: balinese_pura_courtyard_v1 compose/family")
+    all_ok = False
+elif bp.get("grammar_id") != "BALINESE_PURA_COURTYARD":
+    print(f"  !! FAIL: balinese_pura_courtyard_v1 grammar={bp.get('grammar_id')}")
+    all_ok = False
+elif bp.get("surreal_transform") != "axis_compression":
+    print(f"  !! FAIL: balinese transform={bp.get('surreal_transform')}")
+    all_ok = False
+elif os_styles.get("BALINESE_PURA_COURTYARD", {}).get("gate") != "_lib_CN_MOON_GATE":
+    print("  !! FAIL: BALINESE_PURA_COURTYARD compose_roles missing")
+    all_ok = False
+elif os_styles.get("BALINESE_PURA_COURTYARD", {}).get("corner_tower") != "_lib_PILLAR":
+    print("  !! FAIL: BALINESE_PURA_COURTYARD corner_tower must be PILLAR")
+    all_ok = False
+else:
+    print("  balinese_pura_courtyard_v1 + BALINESE_PURA_COURTYARD compose_roles: OK")
 
 if all_ok:
     print("\n=== OS VERIFY OK ===")

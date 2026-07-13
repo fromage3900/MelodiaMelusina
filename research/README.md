@@ -16,3 +16,7 @@ Before implementing a new generator kit, fill `_template_node_design.md` and lin
 ## Pilot style
 
 **Zen / Japanese** — first full Style Genome (`zen_shrine_v1`).
+
+## Additional studies
+
+- **Balinese** — [`balinese/01_pura_courtyard.md`](balinese/01_pura_courtyard.md) → `balinese_pura_courtyard_v1`

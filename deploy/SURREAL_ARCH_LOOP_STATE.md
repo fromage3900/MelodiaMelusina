@@ -1,8 +1,16 @@
 # Surreal Architecture — Loop State
 
-**Version:** 2.131.0  
+**Version:** 2.132.0  
 **Loop sentinel:** `AGENT_LOOP_TICK_surreal_tierb`  
 **Interval:** 300s — **endless loop armed** (monitored shell, AAA genome expansion prompt)
+
+## Micro-cycle 86 — v2.132.0 (Balinese pura courtyard) ✓
+
+- **`balinese_pura_courtyard_v1`** genome + **`BALINESE_PURA_COURTYARD`** grammar (moon gate, stair, corridor, arcade, pavilion, ramp, basin)
+- **`BALINESE_PURA_COURTYARD`** compose style — `corner_tower` → `_lib_PILLAR` (tower-ban compliant)
+- Research preset + curated playable preset; `axis_compression` transform
+- World manifest embed verify; genome catalog **32** (incl. orphaned meso genome on disk)
+- Fixed orphaned **`MESOAMERICAN_PYRAMID`** `ROUND` → `LINTEL` archway enum
 
 ## Micro-cycle 53 — genome `family` schema (v2.98.0) ✓
 
@@ -320,13 +328,14 @@ Removed stale `.yaml` genome duplicates — `.json` is sole source of truth for 
 
 ## Next loop targets
 
-- Mesoamerican pyramid courtyard (new family)
-- Art Nouveau / Moorish manifest parity audit (compose tests green)
-- Industrial Art Deco hybrid or Streamline Moderne variant
+- Art Deco lobby tower-ban rematerialize (TESSELLATION_TOWER / OBELISK still present)
+- Art Nouveau / Moorish / Renaissance / Gothic `corner_tower` → PILLAR sweep
+- Wire orphaned Mesoamerican genome fully (compose + verify) or Persian iwan / Greek stoa if unclaimed
 
-## Micro-cycle 85 — v2.131.0 (Art Deco lobby set) ✓
+## Micro-cycle 86 — v2.132.0 (Balinese pura courtyard) ✓
 
-- **`art_deco_lobby_v1`** genome + **`ART_DECO`** grammar (tessellation tower, geometric panel wall, chevron filigree, cusped portal, obelisk)
-- **`ART_DECO`** compose style + library bake for **`TESSELLATION_TOWER`**
-- Research preset `art_deco_lobby_graph` + curated playable preset; `vertical_stretch` transform
-- World manifest embed verify; genome catalog **30**
+- **`balinese_pura_courtyard_v1`** genome + **`BALINESE_PURA_COURTYARD`** grammar (7 modules: gate, stair, walk, arcade, pavilion, ramp, basin)
+- **`BALINESE_PURA_COURTYARD`** compose style + `axis_compression`; corner markers are pillars
+- Research preset `balinese_pura_courtyard_graph` + curated playable preset
+- World manifest embed verify; catalog **32**
+- Orphaned meso grammar enum fix: `ROUND` → `LINTEL`

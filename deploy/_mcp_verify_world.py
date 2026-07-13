@@ -61,6 +61,7 @@ scifi_deck_export_root = None
 scifi_airlock_export_root = None
 scifi_industrial_export_root = None
 zen_pagoda_export_root = None
+balinese_export_root = None
 
 print("\n--- Library init ---")
 try:
@@ -235,6 +236,35 @@ try:
         print("  art_deco_compose: OK")
 except Exception as e:
     print(f"  art_deco compose error: {e}")
+    all_ok = False
+
+print("\n--- Balinese pura courtyard plan compose ---")
+try:
+    from surreal_os import genome as os_genome
+    library.init_library(
+        s,
+        types_only={
+            "CN_TING_PAVILION",
+            "GB_ROMANESQUE_ARCADE",
+            "PILLAR",
+            "CURTAIN_WALL",
+            "CN_MOON_GATE",
+            "PUBLIC_FOUNTAIN",
+        },
+    )
+    bal_plan = plans.spawn_village_plan(location=(130, 0, 0))
+    s._active_style_genome = os_genome.load_genome("balinese_pura_courtyard_v1")
+    balroot, balmsg = compose.compose_world(s, bpy.context, bal_plan, "BALINESE_PURA_COURTYARD", 0.85, "COLLECTION")
+    balinese_export_root = balroot
+    s._active_style_genome = None
+    print(f"  balinese_compose: {balmsg} metrics={verify_hooks.compose_metrics(balroot)}")
+    if balroot.get("surreal_style_genome_id") != "balinese_pura_courtyard_v1":
+        print(f"  !! FAIL: balinese genome stamp got {balroot.get('surreal_style_genome_id')}")
+        all_ok = False
+    else:
+        print("  balinese_compose: OK")
+except Exception as e:
+    print(f"  balinese compose error: {e}")
     all_ok = False
 
 print("\n--- Moorish courtyard plan compose ---")
@@ -678,6 +708,20 @@ try:
         if dsg.get("resolved_compose_roles", {}).get("gate") != "_lib_CUSPED_ARCH":
             raise RuntimeError("ART_DECO resolved gate mismatch")
         print("  art_deco manifest embed: OK")
+    if balinese_export_root is not None:
+        bm = export.build_world_manifest(balinese_export_root, monolith=s)
+        bsg = bm.get("style_genome") or {}
+        if bsg.get("id") != "balinese_pura_courtyard_v1":
+            raise RuntimeError(f"BALINESE_PURA_COURTYARD style_genome expected balinese_pura_courtyard_v1: {bsg}")
+        if bsg.get("family") != "Balinese":
+            raise RuntimeError(f"balinese family mismatch: {bsg.get('family')}")
+        if bsg.get("surreal_transform") != "axis_compression":
+            raise RuntimeError("BALINESE_PURA_COURTYARD surreal_transform mismatch")
+        if bsg.get("resolved_compose_roles", {}).get("gate") != "_lib_CN_MOON_GATE":
+            raise RuntimeError("BALINESE_PURA_COURTYARD resolved gate mismatch")
+        if bsg.get("resolved_compose_roles", {}).get("corner_tower") != "_lib_PILLAR":
+            raise RuntimeError("BALINESE_PURA_COURTYARD corner_tower mismatch")
+        print("  balinese_pura_courtyard manifest embed: OK")
     if moorish_export_root is not None:
         mm = export.build_world_manifest(moorish_export_root, monolith=s)
         msg = mm.get("style_genome") or {}

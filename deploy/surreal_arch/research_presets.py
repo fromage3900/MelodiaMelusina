@@ -301,6 +301,20 @@ RESEARCH_PRESETS = {
             style_genome_id="art_deco_lobby_v1",
         ),
     },
+    "balinese_pura_courtyard_graph": {
+        "label": "Balinese Pura Courtyard",
+        "description": "Candi bentar gate, processional stair, arcade gallery, wantilan pavilion, terrace ramp, petirtaan",
+        "research_ref": "research/balinese/01_pura_courtyard.md — balinese_pura_courtyard_v1 + BALINESE_PURA_COURTYARD graph",
+        "group": "ASIAN",
+        "graph_id": "BALINESE_PURA_COURTYARD",
+        "genome_id": "balinese_pura_courtyard_v1",
+        "props": dict(
+            arch_type="CN_MOON_GATE",
+            material_choice="STONE",
+            unit_size=2.0,
+            style_genome_id="balinese_pura_courtyard_v1",
+        ),
+    },
     "moorish_courtyard_graph": {
         "label": "Moorish Courtyard Colonnade",
         "description": "Horseshoe portal, arabesque screen, arcade bays, fountain court",

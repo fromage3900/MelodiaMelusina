@@ -1,0 +1,15 @@
+{
+  "id": "BALINESE_PURA_COURTYARD",
+  "label": "Balinese Pura Courtyard",
+  "description": "Candi bentar gate, processional stair, court walk, arcade gallery, wantilan pavilion, terrace ramp, petirtaan basin",
+  "style": "balinese",
+  "modules": [
+    {"arch_type": "CN_MOON_GATE", "overrides": {"gb_width": 3.2, "gb_height": 3.8, "material_choice": "STONE"}},
+    {"arch_type": "GREYBOX_STAIR_BLOCK", "overrides": {"gb_steps": 10, "gb_rise": 0.2, "gb_run": 0.34, "gb_width": 2.6, "material_choice": "STONE", "unit_size": 2.0}},
+    {"arch_type": "GB_CORRIDOR_OFFSET", "overrides": {"gb_length": 8.0, "gb_trim_mode": "RECESS", "gb_wainscot_height": 0.35, "material_choice": "STONE"}},
+    {"arch_type": "GB_ROMANESQUE_ARCADE", "overrides": {"gb_width": 3.2, "gb_height": 3.8, "gb_trim_mode": "RECESS", "unit_size": 3.2, "material_choice": "STONE"}},
+    {"arch_type": "CN_TING_PAVILION", "overrides": {"gb_width": 5.5, "gb_depth": 5.0, "gb_height": 3.4, "material_choice": "AUTO"}},
+    {"arch_type": "GREYBOX_RAMP", "overrides": {"gb_length": 6.0, "gb_width": 2.4, "gb_rise": 1.2, "material_choice": "STONE"}},
+    {"arch_type": "PUBLIC_FOUNTAIN", "overrides": {"fountain_radius": 1.4, "fountain_tiers": 2, "material_choice": "STONE"}}
+  ]
+}
