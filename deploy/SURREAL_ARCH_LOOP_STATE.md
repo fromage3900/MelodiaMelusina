@@ -1,6 +1,6 @@
 # Surreal Architecture — Loop State
 
-**Version:** 2.131.0  
+**Version:** 2.132.0  
 **Loop sentinel:** `AGENT_LOOP_TICK_surreal_tierb`  
 **Interval:** 300s — **endless loop armed** (monitored shell, AAA genome expansion prompt)
 
@@ -318,11 +318,19 @@ Removed stale `.yaml` genome duplicates — `.json` is sole source of truth for 
 - **`asian_city_recursive_v1`** retargeted off shared `ASIAN_CITY` bleed → recursive grammar + compose
 - World manifest embed verify for `recursive_interior` + resolved kura medium role
 
+## Micro-cycle 86 — v2.132.0 (Tibetan monastery courtyard) ✓
+
+- **`tibetan_monastery_v1`** genome + **`TIBETAN_MONASTERY`** grammar (lintel portal, kora corridor, processional stair, arcade, dukhang hall, terrace ramp, sacred basin)
+- **`TIBETAN_MONASTERY`** compose style — `corner_tower` → `_lib_PILLAR` (no tower spines); `axis_compression` transform
+- Research preset `tibetan_monastery_graph` + curated playable preset; world manifest embed verify
+- Fixed orphaned **`MESOAMERICAN_PYRAMID`** `ROUND` → `LINTEL` archway enum
+- Genome catalog **32**
+
 ## Next loop targets
 
-- Mesoamerican pyramid courtyard (new family)
-- Art Nouveau / Moorish manifest parity audit (compose tests green)
-- Industrial Art Deco hybrid or Streamline Moderne variant
+- Art Deco lobby tower-ban rematerialize (still has TESSELLATION_TOWER/OBELISK)
+- Art Nouveau / Moorish / Renaissance / Gothic `corner_tower` → PILLAR sweep
+- Hindu Mandapa / Persian iwan / Beaux-Arts civic if still unclaimed
 
 ## Micro-cycle 85 — v2.131.0 (Art Deco lobby set) ✓
 

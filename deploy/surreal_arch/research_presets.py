@@ -370,6 +370,23 @@ RESEARCH_PRESETS = {
             style_genome_id="baroque_church_v1",
         ),
     },
+    "tibetan_monastery_graph": {
+        "label": "Tibetan Monastery Courtyard",
+        "description": "Lintel portal, kora corridor, processional stair, arcade, dukhang hall, terrace ramp, sacred basin",
+        "research_ref": "Gompa courtyard / kora typology — tibetan_monastery_v1 + TIBETAN_MONASTERY graph",
+        "group": "ASIAN",
+        "graph_id": "TIBETAN_MONASTERY",
+        "genome_id": "tibetan_monastery_v1",
+        "props": dict(
+            arch_type="ARCHWAY_ADV",
+            archway_style="LINTEL",
+            archway_width=2.6,
+            archway_height=2.4,
+            material_choice="STONE",
+            unit_size=2.0,
+            style_genome_id="tibetan_monastery_v1",
+        ),
+    },
     "romanesque_apse_graph": {
         "label": "Romanesque Choir + Apse",
         "description": "Arcade walk terminating in semicircular apse",

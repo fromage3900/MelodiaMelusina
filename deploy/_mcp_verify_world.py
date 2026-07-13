@@ -61,6 +61,7 @@ scifi_deck_export_root = None
 scifi_airlock_export_root = None
 scifi_industrial_export_root = None
 zen_pagoda_export_root = None
+tibetan_export_root = None
 
 print("\n--- Library init ---")
 try:
@@ -271,6 +272,35 @@ try:
         print("  renaissance_compose: OK")
 except Exception as e:
     print(f"  renaissance compose error: {e}")
+    all_ok = False
+
+print("\n--- Tibetan monastery plan compose ---")
+try:
+    from surreal_os import genome as os_genome
+    library.init_library(
+        s,
+        types_only={
+            "GREYBOX_PILLAR_HALL",
+            "GB_ROMANESQUE_ARCADE",
+            "PILLAR",
+            "CURTAIN_WALL",
+            "ARCHWAY_ADV",
+            "PUBLIC_FOUNTAIN",
+        },
+    )
+    tib_plan = plans.spawn_village_plan(location=(165, 0, 0))
+    s._active_style_genome = os_genome.load_genome("tibetan_monastery_v1")
+    tibroot, tibmsg = compose.compose_world(s, bpy.context, tib_plan, "TIBETAN_MONASTERY", 0.85, "COLLECTION")
+    tibetan_export_root = tibroot
+    s._active_style_genome = None
+    print(f"  tibetan_compose: {tibmsg} metrics={verify_hooks.compose_metrics(tibroot)}")
+    if tibroot.get("surreal_style_genome_id") != "tibetan_monastery_v1":
+        print(f"  !! FAIL: tibetan genome stamp got {tibroot.get('surreal_style_genome_id')}")
+        all_ok = False
+    else:
+        print("  tibetan_compose: OK")
+except Exception as e:
+    print(f"  tibetan compose error: {e}")
     all_ok = False
 
 print("\n--- Byzantine basilica plan compose ---")
@@ -698,6 +728,20 @@ try:
         if rsg.get("resolved_compose_roles", {}).get("sacred") != "_lib_DOME":
             raise RuntimeError("RENAISSANCE_PIAZZA resolved sacred mismatch")
         print("  renaissance_piazza manifest embed: OK")
+    if tibetan_export_root is not None:
+        tm = export.build_world_manifest(tibetan_export_root, monolith=s)
+        tsg = tm.get("style_genome") or {}
+        if tsg.get("id") != "tibetan_monastery_v1":
+            raise RuntimeError(f"TIBETAN_MONASTERY style_genome expected tibetan_monastery_v1: {tsg}")
+        if tsg.get("family") != "Tibetan":
+            raise RuntimeError(f"tibetan family mismatch: {tsg.get('family')}")
+        if tsg.get("surreal_transform") != "axis_compression":
+            raise RuntimeError("TIBETAN_MONASTERY surreal_transform mismatch")
+        if tsg.get("resolved_compose_roles", {}).get("corner_tower") != "_lib_PILLAR":
+            raise RuntimeError("TIBETAN_MONASTERY resolved corner_tower mismatch")
+        if tsg.get("resolved_compose_roles", {}).get("gate") != "_lib_ARCHWAY_ADV":
+            raise RuntimeError("TIBETAN_MONASTERY resolved gate mismatch")
+        print("  tibetan_monastery manifest embed: OK")
     if byzantine_export_root is not None:
         bm = export.build_world_manifest(byzantine_export_root, monolith=s)
         bsg = bm.get("style_genome") or {}

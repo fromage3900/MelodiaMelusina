@@ -24,7 +24,7 @@ bl_info = {
     "blender": (5, 1, 0),
     "author": "Claude Code",
     "description": "Procedural geometry node system for surreal architecture",
-    "version": (2, 131, 0),
+    "version": (2, 132, 0),
     "location": "Properties > Modifiers",
     "category": "Geometry Nodes",
 }
@@ -28290,6 +28290,13 @@ SURREAL_ARCH_OT_preset_baroque_church = _make_graph_preset_op(
     description="Ornate facade, ogee portal, ribbed vault, niche chapel, balustrade, dome",
 )
 
+SURREAL_ARCH_OT_preset_tibetan_monastery = _make_graph_preset_op(
+    "SURREAL_ARCH_OT_preset_tibetan_monastery",
+    "surreal_arch.preset_tibetan_monastery", "Tibetan Monastery Courtyard",
+    "tibetan_monastery_graph",
+    description="Lintel portal, kora corridor, processional stair, arcade, dukhang, terrace ramp, sacred basin",
+)
+
 SURREAL_ARCH_OT_preset_zen_stream_garden = _make_graph_preset_op(
     "SURREAL_ARCH_OT_preset_zen_stream_garden",
     "surreal_arch.preset_zen_stream_garden", "Zen Stream Garden",
@@ -28566,6 +28573,11 @@ _ARCH_PRESETS = {
         'group': 'CIVIC', 'label': '🏛 Baroque Church',
         'desc': 'BAROQUE_CHURCH graph — facade, ogee portal, vault nave, niche, balustrade, dome',
         'op_id': 'surreal_arch.preset_baroque_church',
+    },
+    'TIBETAN_MONASTERY': {
+        'group': 'ASIAN', 'label': '🏔 Tibetan Monastery Courtyard',
+        'desc': 'TIBETAN_MONASTERY graph — lintel portal, kora, stair, arcade, dukhang, ramp, basin',
+        'op_id': 'surreal_arch.preset_tibetan_monastery',
     },
     'ZEN_STREAM_GARDEN': {
         'group': 'ASIAN', 'label': '💧 Zen Stream Garden',
@@ -38072,6 +38084,7 @@ classes = (
     SURREAL_ARCH_OT_preset_renaissance_piazza,
     SURREAL_ARCH_OT_preset_byzantine_basilica,
     SURREAL_ARCH_OT_preset_baroque_church,
+    SURREAL_ARCH_OT_preset_tibetan_monastery,
     SURREAL_ARCH_OT_preset_zen_stream_garden,
     SURREAL_ARCH_OT_preset_zen_pagoda_spire,
     SURREAL_ARCH_OT_preset_zen_karesansui_walk,

@@ -1,5 +1,13 @@
 # Surreal Architecture — Changelog
 
+## v2.132.0 — Tibetan monastery courtyard set
+
+- **`tibetan_monastery_v1`** genome + **`TIBETAN_MONASTERY`** grammar (7 modules: lintel portal, kora corridor, processional stair, arcade, dukhang, terrace ramp, sacred basin)
+- **`TIBETAN_MONASTERY`** compose style — `corner_tower` → `_lib_PILLAR`; no banned tower spines
+- Research preset `tibetan_monastery_graph` + curated playable preset; `axis_compression` transform
+- World manifest embed verify; genome catalog **32**
+- Fixed orphaned mesoamerican grammar `ROUND` → `LINTEL`
+
 ## v2.131.0 — Art Deco lobby architecture set
 
 - **`art_deco_lobby_v1`** genome + **`ART_DECO`** grammar chain (6 modules)

@@ -3,14 +3,27 @@
 Launch with --factory-startup for reliable headless runs:
   blender --background --factory-startup --python deploy/_mcp_verify_overhaul.py
 """
+import importlib
 import json
+import os
+import sys
+
 import bpy
 
 print("=== SURREAL OVERHAUL VERIFY v2.75 ===")
 print("Blender", bpy.app.version_string)
 
-if "surreal_architecture_gen" not in bpy.context.preferences.addons:
-    bpy.ops.preferences.addon_enable(module="surreal_architecture_gen")
+DEPLOY = os.path.dirname(os.path.abspath(__file__))
+LIVE = os.path.join(os.environ.get("APPDATA", ""), "Blender Foundation", "Blender", "5.1", "scripts", "addons")
+for pth in (DEPLOY, LIVE):
+    if pth and os.path.isdir(pth) and pth not in sys.path:
+        sys.path.insert(0, pth)
+
+if "surreal_architecture_gen" in bpy.context.preferences.addons:
+    try:
+        bpy.ops.preferences.addon_disable(module="surreal_architecture_gen")
+    except Exception:
+        pass
 
 import surreal_architecture_gen as s
 import importlib
