@@ -81,6 +81,8 @@ SURREAL_LIBRARY_SPEC = {
     "GB_BRUTALIST_PANEL_WALL": {"gb_length": 12.0, "gb_height": 3.6, "gb_trim_mode": "RECESS", "gb_trim_recess": 0.08, "material_choice": "STONE"},
     "GB_SCIFI_PRESSURE_DOOR": {"gb_length": 3.5, "gb_door_width": 1.4, "gb_trim_mode": "RECESS"},
     "CUSPED_ARCH": {"gothic_width": 2.4, "gb_height": 4.0, "gb_trim_mode": "RECESS", "material_choice": "MARBLE"},
+    "GREYBOX_STAIR_BLOCK": {"gb_steps": 10, "gb_rise": 0.2, "gb_run": 0.34, "gb_width": 3.0, "material_choice": "STONE", "unit_size": 2.0},
+    "GREYBOX_RAMP": {"gb_length": 8.0, "gb_width": 2.8, "gb_rise": 1.6, "material_choice": "STONE"},
     "ROSE_WINDOW": {"rose_outer_radius": 1.5, "rose_petal_count": 12, "rose_spoke_count": 12, "material_choice": "STAINED"},
     "BAROQUE_VAULT": {"baroque_vault_span": 8.0, "baroque_vault_rise": 3.0, "baroque_vault_style": "BARREL", "material_choice": "MARBLE"},
     "BAROQUE_NICHE": {"baroque_niche_width": 1.2, "baroque_niche_depth": 0.4, "baroque_niche_height": 2.4, "material_choice": "MARBLE"},

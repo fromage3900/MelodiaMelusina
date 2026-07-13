@@ -1,5 +1,12 @@
 # Surreal Architecture — Changelog
 
+## v2.132.0 — Hindu Mandapa courtyard architecture set
+
+- **`hindu_mandapa_v1`** genome + **`HINDU_MANDAPA`** grammar (torana, prakara corridor, mandapa pillar hall, sabha arcade, jagati stair, processional ramp)
+- **`HINDU_MANDAPA`** compose style — `corner_tower` → `_lib_PILLAR`; kund monument; chapel sacred; `axis_compression`
+- Research study + graph/curated presets; library bake for stair/ramp; mesoamerican `ROUND`→`LINTEL` hygiene
+- Factory-startup verify bootstrap; world manifest embed verify; genome catalog **32**
+
 ## v2.131.0 — Art Deco lobby architecture set
 
 - **`art_deco_lobby_v1`** genome + **`ART_DECO`** grammar chain (6 modules)

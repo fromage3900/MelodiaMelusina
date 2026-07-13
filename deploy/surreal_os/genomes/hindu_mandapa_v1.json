@@ -1,0 +1,24 @@
+{
+  "id": "hindu_mandapa_v1",
+  "family": "Hindu",
+  "verticality": 0.36,
+  "symmetry": 0.84,
+  "ornament_density": 0.62,
+  "structural_logic": 0.88,
+  "organic_growth": 0.18,
+  "cosmic_influence": 0.28,
+  "sacred_sequence": [],
+  "compose_style": "HINDU_MANDAPA",
+  "default_graph": "HINDU_MANDAPA",
+  "grammar_id": "HINDU_MANDAPA",
+  "surreal_transform": "axis_compression",
+  "compose_roles": {
+    "corner_tower": "_lib_PILLAR"
+  },
+  "prop_defaults": {
+    "gb_trim_mode": "RECESS",
+    "gb_bake_trim_colors": true,
+    "material_choice": "STONE",
+    "unit_size": 2.0
+  }
+}

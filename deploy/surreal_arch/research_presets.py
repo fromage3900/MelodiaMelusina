@@ -301,6 +301,23 @@ RESEARCH_PRESETS = {
             style_genome_id="art_deco_lobby_v1",
         ),
     },
+    "hindu_mandapa_graph": {
+        "label": "Hindu Mandapa Courtyard",
+        "description": "Torana portal, prakara corridor, open mandapa, sabha arcade, jagati stair, processional ramp",
+        "research_ref": "research/hindu/01_mandapa_courtyard.md — hindu_mandapa_v1 + HINDU_MANDAPA graph",
+        "group": "CIVIC",
+        "graph_id": "HINDU_MANDAPA",
+        "genome_id": "hindu_mandapa_v1",
+        "props": dict(
+            arch_type="CUSPED_ARCH",
+            gothic_width=2.6,
+            gb_height=4.4,
+            gb_trim_mode="RECESS",
+            material_choice="STONE",
+            unit_size=2.0,
+            style_genome_id="hindu_mandapa_v1",
+        ),
+    },
     "moorish_courtyard_graph": {
         "label": "Moorish Courtyard Colonnade",
         "description": "Horseshoe portal, arabesque screen, arcade bays, fountain court",

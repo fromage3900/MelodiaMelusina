@@ -9,11 +9,30 @@ import bpy
 print("=== SURREAL OVERHAUL VERIFY v2.75 ===")
 print("Blender", bpy.app.version_string)
 
-if "surreal_architecture_gen" not in bpy.context.preferences.addons:
-    bpy.ops.preferences.addon_enable(module="surreal_architecture_gen")
+import os
+import sys
+import importlib
+
+DEPLOY = os.path.dirname(os.path.abspath(__file__))
+LIVE = os.path.join(
+    os.environ.get("APPDATA", os.path.expanduser("~/.config")),
+    "Blender Foundation",
+    "Blender",
+    "5.1",
+    "scripts",
+    "addons",
+)
+for pth in (DEPLOY, LIVE):
+    if pth and os.path.isdir(pth) and pth not in sys.path:
+        sys.path.insert(0, pth)
+
+if "surreal_architecture_gen" in bpy.context.preferences.addons:
+    try:
+        bpy.ops.preferences.addon_disable(module="surreal_architecture_gen")
+    except Exception:
+        pass
 
 import surreal_architecture_gen as s
-import importlib
 importlib.reload(s)
 
 print("Version:", s.bl_info.get("version"))
@@ -31,6 +50,12 @@ try:
 except Exception:
     pass
 s.register()
+
+try:
+    import surreal_arch.integration as _integration
+    _integration.patch_monolith(s)
+except Exception as e:
+    print(f"Patch monolith skipped: {e}")
 
 obj = bpy.data.objects.new("_VerifyProps", bpy.data.meshes.new("_VerifyMesh"))
 print("Search on object props:", hasattr(obj, "surreal_arch_props"))

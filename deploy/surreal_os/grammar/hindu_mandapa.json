@@ -1,0 +1,14 @@
+{
+  "id": "HINDU_MANDAPA",
+  "label": "Hindu Mandapa Courtyard",
+  "description": "Torana portal, prakara corridor, open mandapa pillar hall, sabha arcade, jagati stair, processional ramp — no tower spines",
+  "style": "hindu",
+  "modules": [
+    {"arch_type": "CUSPED_ARCH", "overrides": {"gothic_width": 2.6, "gb_height": 4.4, "gb_trim_mode": "RECESS", "material_choice": "STONE"}},
+    {"arch_type": "GREYBOX_CORRIDOR", "overrides": {"gb_length": 12.0, "gb_corridor_profile": "DOUBLE", "gb_trim_mode": "RECESS", "material_choice": "STONE"}},
+    {"arch_type": "GREYBOX_PILLAR_HALL", "overrides": {"gb_cols_x": 4, "gb_cols_y": 3, "gb_spacing": 3.6, "gb_height": 4.2, "gb_trim_mode": "RECESS", "unit_size": 3.6, "material_choice": "STONE"}},
+    {"arch_type": "GB_ROMANESQUE_ARCADE", "overrides": {"gb_width": 3.4, "gb_height": 4.0, "gb_trim_mode": "RECESS", "unit_size": 3.4, "material_choice": "STONE"}},
+    {"arch_type": "GREYBOX_STAIR_BLOCK", "overrides": {"gb_steps": 10, "gb_rise": 0.2, "gb_run": 0.34, "gb_width": 3.2, "material_choice": "STONE", "unit_size": 2.0}},
+    {"arch_type": "GREYBOX_RAMP", "overrides": {"gb_length": 8.0, "gb_width": 2.8, "gb_rise": 1.6, "material_choice": "STONE"}}
+  ]
+}

@@ -15,7 +15,14 @@ print("=== SURREAL WORLD VERIFY v2.69 ===")
 print("Blender", bpy.app.version_string)
 
 DEPLOY = os.path.dirname(os.path.abspath(__file__))
-LIVE = os.path.join(os.environ.get("APPDATA", ""), "Blender Foundation", "Blender", "5.1", "scripts", "addons")
+LIVE = os.path.join(
+    os.environ.get("APPDATA", os.path.expanduser("~/.config")),
+    "Blender Foundation",
+    "Blender",
+    "5.1",
+    "scripts",
+    "addons",
+)
 for p in (DEPLOY, LIVE):
     if p and os.path.isdir(p) and p not in sys.path:
         sys.path.insert(0, p)
@@ -60,6 +67,7 @@ gothic_nave_crossing_export_root = None
 scifi_deck_export_root = None
 scifi_airlock_export_root = None
 scifi_industrial_export_root = None
+hindu_mandapa_export_root = None
 zen_pagoda_export_root = None
 
 print("\n--- Library init ---")
@@ -308,6 +316,40 @@ try:
 except Exception as e:
     print(f"  baroque compose error: {e}")
     all_ok = False
+
+print("\n--- Hindu mandapa plan compose ---")
+try:
+    from surreal_os import genome as os_genome
+    library.init_library(
+        s,
+        types_only={
+            "CUSPED_ARCH",
+            "GREYBOX_CORRIDOR",
+            "GREYBOX_PILLAR_HALL",
+            "GB_ROMANESQUE_ARCADE",
+            "GREYBOX_STAIR_BLOCK",
+            "GREYBOX_RAMP",
+            "PILLAR",
+            "PUBLIC_FOUNTAIN",
+            "CHAPEL",
+            "CURTAIN_WALL",
+        },
+    )
+    hindu_plan = plans.spawn_village_plan(location=(165, 0, 0))
+    s._active_style_genome = os_genome.load_genome("hindu_mandapa_v1")
+    hroot, hmsg = compose.compose_world(s, bpy.context, hindu_plan, "HINDU_MANDAPA", 0.85, "COLLECTION")
+    hindu_mandapa_export_root = hroot
+    s._active_style_genome = None
+    print(f"  hindu_mandapa_compose: {hmsg} metrics={verify_hooks.compose_metrics(hroot)}")
+    if hroot is None or hroot.get("surreal_style_genome_id") != "hindu_mandapa_v1":
+        print(f"  !! FAIL: hindu_mandapa genome stamp got {None if hroot is None else hroot.get('surreal_style_genome_id')}")
+        all_ok = False
+    else:
+        print("  hindu_mandapa_compose: OK")
+except Exception as e:
+    print(f"  hindu_mandapa compose error: {e}")
+    all_ok = False
+
 
 print("\n--- Romanesque cloister plan compose ---")
 try:
@@ -678,6 +720,22 @@ try:
         if dsg.get("resolved_compose_roles", {}).get("gate") != "_lib_CUSPED_ARCH":
             raise RuntimeError("ART_DECO resolved gate mismatch")
         print("  art_deco manifest embed: OK")
+
+    if hindu_mandapa_export_root is not None:
+        hm = export.build_world_manifest(hindu_mandapa_export_root, monolith=s)
+        hsg = hm.get("style_genome") or {}
+        if hsg.get("id") != "hindu_mandapa_v1":
+            raise RuntimeError(f"HINDU_MANDAPA style_genome expected hindu_mandapa_v1: {hsg}")
+        if hsg.get("family") != "Hindu":
+            raise RuntimeError(f"hindu_mandapa family mismatch: {hsg.get('family')}")
+        if hsg.get("surreal_transform") != "axis_compression":
+            raise RuntimeError("HINDU_MANDAPA surreal_transform mismatch")
+        if hsg.get("resolved_compose_roles", {}).get("gate") != "_lib_CUSPED_ARCH":
+            raise RuntimeError("HINDU_MANDAPA resolved gate mismatch")
+        if hsg.get("resolved_compose_roles", {}).get("corner_tower") != "_lib_PILLAR":
+            raise RuntimeError("HINDU_MANDAPA corner_tower must be pillar")
+        print("  hindu_mandapa manifest embed: OK")
+
     if moorish_export_root is not None:
         mm = export.build_world_manifest(moorish_export_root, monolith=s)
         msg = mm.get("style_genome") or {}
