@@ -3,34 +3,44 @@
 Launch with --factory-startup for reliable headless runs:
   blender --background --factory-startup --python deploy/_mcp_verify_overhaul.py
 """
+import importlib
 import json
+import os
+import sys
+
 import bpy
 
 print("=== SURREAL OVERHAUL VERIFY v2.75 ===")
 print("Blender", bpy.app.version_string)
 
-if "surreal_architecture_gen" not in bpy.context.preferences.addons:
-    bpy.ops.preferences.addon_enable(module="surreal_architecture_gen")
+DEPLOY = os.path.dirname(os.path.abspath(__file__))
+LIVE = os.path.join(os.environ.get("APPDATA", ""), "Blender Foundation", "Blender", "5.1", "scripts", "addons")
+for p in (DEPLOY, LIVE):
+    if p and os.path.isdir(p) and p not in sys.path:
+        sys.path.insert(0, p)
+
+if "surreal_architecture_gen" in bpy.context.preferences.addons:
+    try:
+        bpy.ops.preferences.addon_disable(module="surreal_architecture_gen")
+    except Exception:
+        pass
 
 import surreal_architecture_gen as s
-import importlib
-importlib.reload(s)
 
-print("Version:", s.bl_info.get("version"))
+importlib.reload(s)
+if not hasattr(bpy.types.Object, "surreal_arch_props"):
+    s.register()
 
 # The addon’s register() patches the monolith, but importlib.reload(s) replaces
 # those monkey-patches. Re-apply kit/snap/trim hooks for accurate verification.
 try:
     import surreal_arch.integration as _integration
     importlib.reload(_integration)
+    _integration.patch_monolith(s)
 except Exception as e:
     print(f"Integration reload skipped: {e}")
 
-try:
-    s.unregister()
-except Exception:
-    pass
-s.register()
+print("Version:", s.bl_info.get("version"))
 
 obj = bpy.data.objects.new("_VerifyProps", bpy.data.meshes.new("_VerifyMesh"))
 print("Search on object props:", hasattr(obj, "surreal_arch_props"))
