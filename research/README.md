@@ -16,3 +16,11 @@ Before implementing a new generator kit, fill `_template_node_design.md` and lin
 ## Pilot style
 
 **Zen / Japanese** — first full Style Genome (`zen_shrine_v1`).
+
+## Additional studies
+
+| Style | Study |
+|-------|-------|
+| Chinese | [`research/chinese/01_siheyuan_courtyard.md`](chinese/01_siheyuan_courtyard.md) |
+| Zen | [`research/zen/`](zen/) |
+| Surreal | [`research/surreal/`](surreal/) |

@@ -12,17 +12,49 @@ import bpy
 print("=== SURREAL OS VERIFY ===")
 
 DEPLOY = os.path.dirname(os.path.abspath(__file__))
-if DEPLOY not in sys.path:
-    sys.path.insert(0, DEPLOY)
+LIVE = os.path.join(
+    os.environ.get("APPDATA", os.path.expanduser("~/.config")),
+    "Blender Foundation",
+    "Blender",
+    "5.1",
+    "scripts",
+    "addons",
+)
+for p in (DEPLOY, LIVE):
+    if p and os.path.isdir(p) and p not in sys.path:
+        sys.path.insert(0, p)
 
 s = sys.modules.get("surreal_architecture_gen")
 if s is None:
+    try:
+        import surreal_architecture_gen as s
+        if not hasattr(bpy.types.Object, "surreal_arch_props"):
+            s.register()
+        try:
+            import surreal_arch.integration as _integration
+            _integration.patch_monolith(s)
+        except Exception as e:
+            print(f"  patch_monolith skipped: {e}")
+    except Exception as e:
+        print(f"  import surreal_architecture_gen failed: {e}")
+        s = None
+if s is None:
     if "surreal_architecture_gen" not in bpy.context.preferences.addons:
-        bpy.ops.preferences.addon_enable(module="surreal_architecture_gen")
+        try:
+            bpy.ops.preferences.addon_enable(module="surreal_architecture_gen")
+        except Exception:
+            pass
     s = sys.modules.get("surreal_architecture_gen")
 if s is None:
     print("  !! FAIL: surreal_architecture_gen not loaded")
     raise SystemExit(1)
+if not getattr(s, "_surreal_patched", False):
+    try:
+        import surreal_arch.integration as _integration
+        _integration.patch_monolith(s)
+    except Exception as e:
+        print(f"  !! FAIL: monolith patch (_surreal_patched) not applied: {e}")
+        raise SystemExit(1)
 if not getattr(s, "_surreal_patched", False):
     print("  !! FAIL: monolith patch (_surreal_patched) not applied")
     raise SystemExit(1)
@@ -47,7 +79,7 @@ from surreal_arch.greybox_graph import GRAPH_REGISTRY
 
 merged = merge_grammar_into_registry(GRAPH_REGISTRY)
 print(f"  merged_into_registry: {merged}")
-for gid in ("ZEN_SHRINE_AXIS", "ZEN_SAKURA_WALK", "ZEN_SHRINE_COURTYARD", "ZEN_ROJI_PATH", "ZEN_KARESANSHUI_WALK", "ZEN_TEA_GARDEN", "ZEN_STREAM_GARDEN", "ZEN_PAGODA_SPIRE", "ZEN_KAIRO_ENCLOSURE", "CLOISTER", "GOTHIC_CHAPTER_HOUSE", "GOTHIC_NAVE_CROSSING", "SCIFI_AIRLOCK", "SCI_FI_DECK", "ROMANESQUE_CLOISTER", "VENETIAN_CANAL", "ROMANESQUE_APSE", "SCI_FI_DECK_EXPANSION", "SCI_FI_INDUSTRIAL_YARD", "ASIAN_CITY", "ASIAN_CITY_RECURSIVE", "BRUTALIST_PLAZA", "ART_NOUVEAU", "ART_DECO", "MOORISH_COURTYARD", "RENAISSANCE_PIAZZA", "BYZANTINE_BASILICA", "BAROQUE_CHURCH"):
+for gid in ("ZEN_SHRINE_AXIS", "ZEN_SAKURA_WALK", "ZEN_SHRINE_COURTYARD", "ZEN_ROJI_PATH", "ZEN_KARESANSHUI_WALK", "ZEN_TEA_GARDEN", "ZEN_STREAM_GARDEN", "ZEN_PAGODA_SPIRE", "ZEN_KAIRO_ENCLOSURE", "CLOISTER", "GOTHIC_CHAPTER_HOUSE", "GOTHIC_NAVE_CROSSING", "SCIFI_AIRLOCK", "SCI_FI_DECK", "ROMANESQUE_CLOISTER", "VENETIAN_CANAL", "ROMANESQUE_APSE", "SCI_FI_DECK_EXPANSION", "SCI_FI_INDUSTRIAL_YARD", "ASIAN_CITY", "ASIAN_CITY_RECURSIVE", "BRUTALIST_PLAZA", "ART_NOUVEAU", "ART_DECO", "MOORISH_COURTYARD", "RENAISSANCE_PIAZZA", "BYZANTINE_BASILICA", "BAROQUE_CHURCH", "CHINESE_SIHEYUAN"):
     if gid not in GRAPH_REGISTRY:
         print(f"  !! FAIL: {gid} not in GRAPH_REGISTRY")
         all_ok = False
@@ -205,8 +237,8 @@ else:
     print("  scifi_industrial_yard_v1: OK")
 
 genome_ids = os_genome.list_genomes()
-if len(genome_ids) < 29:
-    print(f"  !! FAIL: expected >=29 genomes got {len(genome_ids)}")
+if len(genome_ids) < 31:
+    print(f"  !! FAIL: expected >=31 genomes got {len(genome_ids)}")
     all_ok = False
 else:
     print(f"  genome catalog: {len(genome_ids)} entries")
@@ -312,6 +344,19 @@ try:
     if len(gnc_objs) < 3:
         print(f"  !! FAIL: GOTHIC_NAVE_CROSSING spawn got {len(gnc_objs)}")
         all_ok = False
+    siheyuan_spec = GRAPH_REGISTRY["CHINESE_SIHEYUAN"]["spec"]
+    siheyuan_objs = spawn_graph(bpy.context, s, siheyuan_spec[:3], spacing=10.0, graph_id="CHINESE_SIHEYUAN")
+    print(f"  spawn_graph CHINESE_SIHEYUAN partial: {len(siheyuan_objs)} objects")
+    if len(siheyuan_objs) < 2:
+        print(f"  !! FAIL: CHINESE_SIHEYUAN spawn got {len(siheyuan_objs)}")
+        all_ok = False
+    banned = {"TOWER", "TESSELLATION_TOWER", "BELL_TOWER", "WATCHTOWER", "OBELISK", "KEEP"}
+    siheyuan_types = {row[0] if isinstance(row, (list, tuple)) else row.get("arch_type") for row in siheyuan_spec}
+    if banned & siheyuan_types:
+        print(f"  !! FAIL: CHINESE_SIHEYUAN banned arch types: {banned & siheyuan_types}")
+        all_ok = False
+    else:
+        print("  CHINESE_SIHEYUAN banned arch_type set empty: OK")
     from surreal_arch.research_presets import run_research_preset
     rp = run_research_preset(bpy.context, "gothic_cloister_graph", monolith=s)
     if rp.get("mode") != "graph" or rp.get("count", 0) < 3:
@@ -404,11 +449,14 @@ if not xf:
 elif "BRUTALIST_PLAZA" not in (xf.get("applies_to") or []):
     print("  !! FAIL: axis_compression missing BRUTALIST_PLAZA")
     all_ok = False
+elif "CHINESE_SIHEYUAN" not in (xf.get("applies_to") or []):
+    print("  !! FAIL: axis_compression missing CHINESE_SIHEYUAN")
+    all_ok = False
 elif "ZEN_STREAM_GARDEN" not in (xf.get("applies_to") or []):
     print("  !! FAIL: axis_compression missing ZEN_STREAM_GARDEN")
     all_ok = False
 else:
-    print(f"  axis_compression type={xf.get('type')} BRUTALIST_PLAZA: OK")
+    print(f"  axis_compression type={xf.get('type')} BRUTALIST_PLAZA+CHINESE_SIHEYUAN: OK")
 
 xf2 = get_transform("vertical_stretch")
 if not xf2:
@@ -611,6 +659,28 @@ elif os_styles.get("ART_DECO", {}).get("gate") != "_lib_CUSPED_ARCH":
     all_ok = False
 else:
     print("  art_deco_lobby_v1 + ART_DECO compose_roles: OK")
+
+cs = os_genome.load_genome("chinese_siheyuan_v1")
+if cs.get("compose_style") != "CHINESE_SIHEYUAN" or os_genome.genome_family(cs) != "Chinese":
+    print(f"  !! FAIL: chinese_siheyuan_v1 compose/family")
+    all_ok = False
+elif cs.get("grammar_id") != "CHINESE_SIHEYUAN":
+    print(f"  !! FAIL: chinese_siheyuan_v1 grammar={cs.get('grammar_id')}")
+    all_ok = False
+elif cs.get("surreal_transform") != "axis_compression":
+    print(f"  !! FAIL: chinese_siheyuan transform={cs.get('surreal_transform')}")
+    all_ok = False
+elif os_styles.get("CHINESE_SIHEYUAN", {}).get("gate") != "_lib_CN_PAILOU":
+    print("  !! FAIL: CHINESE_SIHEYUAN compose_roles missing")
+    all_ok = False
+elif os_styles.get("CHINESE_SIHEYUAN", {}).get("corner_tower") != "_lib_PILLAR":
+    print("  !! FAIL: CHINESE_SIHEYUAN corner_tower must be PILLAR")
+    all_ok = False
+elif cs.get("compose_roles", {}).get("corner_tower") != "_lib_PILLAR":
+    print(f"  !! FAIL: chinese genome corner_tower override={cs.get('compose_roles')}")
+    all_ok = False
+else:
+    print("  chinese_siheyuan_v1 + CHINESE_SIHEYUAN compose_roles: OK")
 
 mc = os_genome.load_genome("moorish_courtyard_v1")
 if mc.get("compose_style") != "MOORISH_COURTYARD" or os_genome.genome_family(mc) != "Moorish":

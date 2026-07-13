@@ -335,6 +335,23 @@ RESEARCH_PRESETS = {
             style_genome_id="renaissance_piazza_v1",
         ),
     },
+    "chinese_siheyuan_graph": {
+        "label": "Chinese Siheyuan Courtyard",
+        "description": "Pailou gate, lang corridor, platform stair, main hall, side arcade, moon gate",
+        "research_ref": "research/chinese/01_siheyuan_courtyard.md — chinese_siheyuan_v1 + CHINESE_SIHEYUAN",
+        "group": "ASIAN",
+        "graph_id": "CHINESE_SIHEYUAN",
+        "genome_id": "chinese_siheyuan_v1",
+        "props": dict(
+            arch_type="CN_PAILOU",
+            gb_width=4.2,
+            gb_height=7.0,
+            gb_trim_mode="RECESS",
+            material_choice="AUTO",
+            unit_size=2.0,
+            style_genome_id="chinese_siheyuan_v1",
+        ),
+    },
     "byzantine_basilica_graph": {
         "label": "Byzantine Basilica",
         "description": "Horseshoe narthex, cusped arch, vault nave, rose window, crossing dome",

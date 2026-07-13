@@ -1,5 +1,12 @@
 # Surreal Architecture — Changelog
 
+## v2.132.0 — Chinese Siheyuan courtyard architecture set
+
+- **`chinese_siheyuan_v1`** genome + **`CHINESE_SIHEYUAN`** grammar (pailou, lang corridor, platform stair, main hall, arcade, moon gate)
+- **`CHINESE_SIHEYUAN`** compose style — `corner_tower` → PILLAR (tower ban); `axis_compression` transform
+- Research preset + curated playable preset; world manifest embed verify; genome catalog **32**
+- Fixed orphaned `MESOAMERICAN_PYRAMID` grammar `archway_style` ROUND → LINTEL
+
 ## v2.131.0 — Art Deco lobby architecture set
 
 - **`art_deco_lobby_v1`** genome + **`ART_DECO`** grammar chain (6 modules)

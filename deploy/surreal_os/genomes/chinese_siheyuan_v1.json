@@ -1,0 +1,24 @@
+{
+  "id": "chinese_siheyuan_v1",
+  "family": "Chinese",
+  "verticality": 0.38,
+  "symmetry": 0.86,
+  "ornament_density": 0.52,
+  "structural_logic": 0.82,
+  "organic_growth": 0.28,
+  "cosmic_influence": 0.14,
+  "sacred_sequence": [],
+  "compose_style": "CHINESE_SIHEYUAN",
+  "default_graph": "CHINESE_SIHEYUAN",
+  "grammar_id": "CHINESE_SIHEYUAN",
+  "surreal_transform": "axis_compression",
+  "compose_roles": {
+    "corner_tower": "_lib_PILLAR"
+  },
+  "prop_defaults": {
+    "gb_trim_mode": "RECESS",
+    "gb_bake_trim_colors": true,
+    "material_choice": "AUTO",
+    "unit_size": 2.0
+  }
+}

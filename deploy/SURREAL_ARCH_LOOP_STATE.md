@@ -1,6 +1,6 @@
 # Surreal Architecture — Loop State
 
-**Version:** 2.131.0  
+**Version:** 2.132.0  
 **Loop sentinel:** `AGENT_LOOP_TICK_surreal_tierb`  
 **Interval:** 300s — **endless loop armed** (monitored shell, AAA genome expansion prompt)
 
@@ -320,9 +320,17 @@ Removed stale `.yaml` genome duplicates — `.json` is sole source of truth for 
 
 ## Next loop targets
 
-- Mesoamerican pyramid courtyard (new family)
-- Art Nouveau / Moorish manifest parity audit (compose tests green)
-- Industrial Art Deco hybrid or Streamline Moderne variant
+- Art Deco lobby tower-ban rematerialize (TESSELLATION_TOWER / OBELISK still in grammar)
+- Art Nouveau / Moorish / Renaissance / Gothic `corner_tower` → PILLAR sweep
+- Tibetan monastery courtyard or Hindu mandapa horizontal civic
+
+## Micro-cycle 86 — v2.132.0 (Chinese Siheyuan courtyard) ✓
+
+- **`chinese_siheyuan_v1`** genome + **`CHINESE_SIHEYUAN`** grammar (pailou → lang → stair → hall → arcade → moon gate)
+- **`CHINESE_SIHEYUAN`** compose style + library bake; `corner_tower` → `_lib_PILLAR`; `axis_compression`
+- Research preset `chinese_siheyuan_graph` + curated playable preset; Chinese family
+- World manifest embed verify; genome catalog **32**; factory-startup verify bootstrap hardened
+- Orphaned meso grammar enum fix (`ROUND` → `LINTEL`)
 
 ## Micro-cycle 85 — v2.131.0 (Art Deco lobby set) ✓
 

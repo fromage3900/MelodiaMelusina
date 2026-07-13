@@ -2,7 +2,7 @@
   "transforms": {
     "axis_compression": {
       "type": "graph_wrap",
-      "applies_to": ["ZEN_SHRINE_AXIS", "ZEN_ROJI_PATH", "ZEN_SAKURA_WALK", "ZEN_KARESANSHUI_WALK", "ZEN_STREAM_GARDEN", "ZEN_KAIRO_ENCLOSURE", "BRUTALIST_PLAZA"],
+      "applies_to": ["ZEN_SHRINE_AXIS", "ZEN_ROJI_PATH", "ZEN_SAKURA_WALK", "ZEN_KARESANSHUI_WALK", "ZEN_STREAM_GARDEN", "ZEN_KAIRO_ENCLOSURE", "BRUTALIST_PLAZA", "CHINESE_SIHEYUAN"],
       "params": {"axis": "Z", "scale_from_genome": "verticality", "scale_min": 0.92, "scale_max": 1.12}
     },
     "vertical_stretch": {

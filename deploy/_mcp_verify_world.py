@@ -15,7 +15,14 @@ print("=== SURREAL WORLD VERIFY v2.69 ===")
 print("Blender", bpy.app.version_string)
 
 DEPLOY = os.path.dirname(os.path.abspath(__file__))
-LIVE = os.path.join(os.environ.get("APPDATA", ""), "Blender Foundation", "Blender", "5.1", "scripts", "addons")
+LIVE = os.path.join(
+    os.environ.get("APPDATA", os.path.expanduser("~/.config")),
+    "Blender Foundation",
+    "Blender",
+    "5.1",
+    "scripts",
+    "addons",
+)
 for p in (DEPLOY, LIVE):
     if p and os.path.isdir(p) and p not in sys.path:
         sys.path.insert(0, p)
@@ -61,6 +68,7 @@ scifi_deck_export_root = None
 scifi_airlock_export_root = None
 scifi_industrial_export_root = None
 zen_pagoda_export_root = None
+chinese_siheyuan_export_root = None
 
 print("\n--- Library init ---")
 try:
@@ -235,6 +243,39 @@ try:
         print("  art_deco_compose: OK")
 except Exception as e:
     print(f"  art_deco compose error: {e}")
+    all_ok = False
+
+print("\n--- Chinese siheyuan courtyard plan compose ---")
+try:
+    from surreal_os import genome as os_genome
+    library.init_library(
+        s,
+        types_only={
+            "KR_HANOK",
+            "GB_ROMANESQUE_ARCADE",
+            "CN_TING_PAVILION",
+            "CURTAIN_WALL",
+            "PILLAR",
+            "CN_PAILOU",
+            "CN_MOON_GATE",
+        },
+    )
+    siheyuan_plan = plans.spawn_village_plan(location=(130, 0, 0))
+    s._active_style_genome = os_genome.load_genome("chinese_siheyuan_v1")
+    croot, cmsg = compose.compose_world(s, bpy.context, siheyuan_plan, "CHINESE_SIHEYUAN", 0.85, "COLLECTION")
+    chinese_siheyuan_export_root = croot
+    s._active_style_genome = None
+    print(f"  chinese_siheyuan_compose: {cmsg} metrics={verify_hooks.compose_metrics(croot)}")
+    if croot is None:
+        print("  !! FAIL: chinese_siheyuan compose returned None root")
+        all_ok = False
+    elif croot.get("surreal_style_genome_id") != "chinese_siheyuan_v1":
+        print(f"  !! FAIL: chinese_siheyuan genome stamp got {croot.get('surreal_style_genome_id')}")
+        all_ok = False
+    else:
+        print("  chinese_siheyuan_compose: OK")
+except Exception as e:
+    print(f"  chinese_siheyuan compose error: {e}")
     all_ok = False
 
 print("\n--- Moorish courtyard plan compose ---")
@@ -678,6 +719,20 @@ try:
         if dsg.get("resolved_compose_roles", {}).get("gate") != "_lib_CUSPED_ARCH":
             raise RuntimeError("ART_DECO resolved gate mismatch")
         print("  art_deco manifest embed: OK")
+    if chinese_siheyuan_export_root is not None:
+        cm = export.build_world_manifest(chinese_siheyuan_export_root, monolith=s)
+        csg = cm.get("style_genome") or {}
+        if csg.get("id") != "chinese_siheyuan_v1":
+            raise RuntimeError(f"CHINESE_SIHEYUAN style_genome expected chinese_siheyuan_v1: {csg}")
+        if csg.get("family") != "Chinese":
+            raise RuntimeError(f"chinese family mismatch: {csg.get('family')}")
+        if csg.get("surreal_transform") != "axis_compression":
+            raise RuntimeError("CHINESE_SIHEYUAN surreal_transform mismatch")
+        if csg.get("resolved_compose_roles", {}).get("gate") != "_lib_CN_PAILOU":
+            raise RuntimeError("CHINESE_SIHEYUAN resolved gate mismatch")
+        if csg.get("resolved_compose_roles", {}).get("corner_tower") != "_lib_PILLAR":
+            raise RuntimeError("CHINESE_SIHEYUAN resolved corner_tower mismatch")
+        print("  chinese_siheyuan manifest embed: OK")
     if moorish_export_root is not None:
         mm = export.build_world_manifest(moorish_export_root, monolith=s)
         msg = mm.get("style_genome") or {}

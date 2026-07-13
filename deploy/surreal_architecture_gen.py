@@ -24,7 +24,7 @@ bl_info = {
     "blender": (5, 1, 0),
     "author": "Claude Code",
     "description": "Procedural geometry node system for surreal architecture",
-    "version": (2, 131, 0),
+    "version": (2, 132, 0),
     "location": "Properties > Modifiers",
     "category": "Geometry Nodes",
 }
@@ -28276,6 +28276,13 @@ SURREAL_ARCH_OT_preset_renaissance_piazza = _make_graph_preset_op(
     description="Baroque facade, arcade colonnade, balustrade, fountain, dome",
 )
 
+SURREAL_ARCH_OT_preset_chinese_siheyuan = _make_graph_preset_op(
+    "SURREAL_ARCH_OT_preset_chinese_siheyuan",
+    "surreal_arch.preset_chinese_siheyuan", "Chinese Siheyuan Courtyard",
+    "chinese_siheyuan_graph",
+    description="Pailou gate, lang corridor, platform stair, main hall, side arcade, moon gate",
+)
+
 SURREAL_ARCH_OT_preset_byzantine_basilica = _make_graph_preset_op(
     "SURREAL_ARCH_OT_preset_byzantine_basilica",
     "surreal_arch.preset_byzantine_basilica", "Byzantine Basilica",
@@ -28556,6 +28563,11 @@ _ARCH_PRESETS = {
         'group': 'CIVIC', 'label': '🏛 Renaissance Piazza',
         'desc': 'RENAISSANCE_PIAZZA graph — facade, arcade, balustrade, fountain, dome',
         'op_id': 'surreal_arch.preset_renaissance_piazza',
+    },
+    'CHINESE_SIHEYUAN': {
+        'group': 'ASIAN', 'label': '🏯 Chinese Siheyuan',
+        'desc': 'CHINESE_SIHEYUAN graph — pailou, lang corridor, stair, hall, arcade, moon gate',
+        'op_id': 'surreal_arch.preset_chinese_siheyuan',
     },
     'BYZANTINE_BASILICA': {
         'group': 'CIVIC', 'label': '⛪ Byzantine Basilica',
@@ -38070,6 +38082,7 @@ classes = (
     SURREAL_ARCH_OT_preset_art_nouveau_facade,
     SURREAL_ARCH_OT_preset_art_deco_lobby,
     SURREAL_ARCH_OT_preset_renaissance_piazza,
+    SURREAL_ARCH_OT_preset_chinese_siheyuan,
     SURREAL_ARCH_OT_preset_byzantine_basilica,
     SURREAL_ARCH_OT_preset_baroque_church,
     SURREAL_ARCH_OT_preset_zen_stream_garden,
