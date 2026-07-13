@@ -1,5 +1,12 @@
 # Surreal Architecture — Changelog
 
+## v2.132.0 — Art Deco lobby tower-ban rematerialize
+
+- Rematerialized **`ART_DECO`** grammar to horizontal civic plaza (no `TESSELLATION_TOWER` / `OBELISK`)
+- Modules: setback facade, lobby stair, geometric panel wall, chevron filigree, pillar-hall colonnade, cusped portal, ramp, fountain
+- Compose roles: facade large / pillar hall medium / `corner_tower`→`PILLAR`; transform → `axis_compression`
+- Research study + preset + curated playable retarget; OS/world tower-ban verify asserts
+
 ## v2.131.0 — Art Deco lobby architecture set
 
 - **`art_deco_lobby_v1`** genome + **`ART_DECO`** grammar chain (6 modules)

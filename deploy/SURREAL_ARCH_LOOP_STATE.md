@@ -1,6 +1,6 @@
 # Surreal Architecture — Loop State
 
-**Version:** 2.131.0  
+**Version:** 2.132.0  
 **Loop sentinel:** `AGENT_LOOP_TICK_surreal_tierb`  
 **Interval:** 300s — **endless loop armed** (monitored shell, AAA genome expansion prompt)
 
@@ -318,15 +318,22 @@ Removed stale `.yaml` genome duplicates — `.json` is sole source of truth for 
 - **`asian_city_recursive_v1`** retargeted off shared `ASIAN_CITY` bleed → recursive grammar + compose
 - World manifest embed verify for `recursive_interior` + resolved kura medium role
 
-## Next loop targets
-
-- Mesoamerican pyramid courtyard (new family)
-- Art Nouveau / Moorish manifest parity audit (compose tests green)
-- Industrial Art Deco hybrid or Streamline Moderne variant
-
 ## Micro-cycle 85 — v2.131.0 (Art Deco lobby set) ✓
 
 - **`art_deco_lobby_v1`** genome + **`ART_DECO`** grammar (tessellation tower, geometric panel wall, chevron filigree, cusped portal, obelisk)
 - **`ART_DECO`** compose style + library bake for **`TESSELLATION_TOWER`**
 - Research preset `art_deco_lobby_graph` + curated playable preset; `vertical_stretch` transform
 - World manifest embed verify; genome catalog **30**
+
+## Micro-cycle 86 — v2.132.0 (Art Deco tower-ban rematerialize) ✓
+
+- Rematerialized **`ART_DECO`** grammar off banned spines → facade / stair / panel / filigree / colonnade / portal / ramp / fountain
+- Compose roles: `large`=`BAROQUE_FACADE`, `corner_tower`=`PILLAR`, `monument`=`PUBLIC_FOUNTAIN`
+- Genome transform **`axis_compression`**; research + curated presets retargeted; OS/world tower-ban asserts
+- Research study `research/artdeco/01_lobby_plaza.md`
+
+## Next loop targets
+
+- Fully wire orphaned Mesoamerican compose+verify (fix `ROUND`→`LINTEL`)
+- Art Nouveau / Moorish / Renaissance `corner_tower` → PILLAR sweep
+- Unique horizontal civic not yet raced (if open)

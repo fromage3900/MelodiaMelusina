@@ -24,7 +24,7 @@ bl_info = {
     "blender": (5, 1, 0),
     "author": "Claude Code",
     "description": "Procedural geometry node system for surreal architecture",
-    "version": (2, 131, 0),
+    "version": (2, 132, 0),
     "location": "Properties > Modifiers",
     "category": "Geometry Nodes",
 }
@@ -28548,8 +28548,8 @@ _ARCH_PRESETS = {
         'op_id': 'surreal_arch.preset_art_nouveau_facade',
     },
     'ART_DECO_LOBBY': {
-        'group': 'CIVIC', 'label': '🏙 Art Deco Lobby',
-        'desc': 'ART_DECO graph — tessellation tower, geometric panels, chevron filigree, obelisk',
+        'group': 'CIVIC', 'label': '🏙 Art Deco Lobby Plaza',
+        'desc': 'ART_DECO graph — setback facade, stair, geometric panels, chevron filigree, colonnade, ramp, fountain',
         'op_id': 'surreal_arch.preset_art_deco_lobby',
     },
     'RENAISSANCE_PIAZZA': {
