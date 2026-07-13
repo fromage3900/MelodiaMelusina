@@ -84,7 +84,8 @@ SURREAL_LIBRARY_SPEC = {
     "ROSE_WINDOW": {"rose_outer_radius": 1.5, "rose_petal_count": 12, "rose_spoke_count": 12, "material_choice": "STAINED"},
     "BAROQUE_VAULT": {"baroque_vault_span": 8.0, "baroque_vault_rise": 3.0, "baroque_vault_style": "BARREL", "material_choice": "MARBLE"},
     "BAROQUE_NICHE": {"baroque_niche_width": 1.2, "baroque_niche_depth": 0.4, "baroque_niche_height": 2.4, "material_choice": "MARBLE"},
-    "TESSELLATION_TOWER": {"tess_grid_x": 6, "tess_grid_y": 6, "tess_size": 0.45, "tess_height_var": 0.65, "tess_rotate_var": 0.15},
+    "GREYBOX_STAIR_BLOCK": {"gb_steps": 12, "gb_rise": 0.22, "gb_run": 0.32, "gb_width": 2.4, "material_choice": "STONE"},
+    "GREYBOX_RAMP": {"gb_length": 6.0, "gb_width": 2.4, "gb_rise": 1.8, "material_choice": "STONE"},
 }
 
 
