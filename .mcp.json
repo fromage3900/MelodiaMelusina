@@ -1,14 +1,21 @@
 {
   "mcpServers": {
     "envoy": {
-      "type": "http",
-      "url": "http://localhost:9870/mcp",
-      "description": "TouchDesigner — Embody/Envoy MCP server. 53 tools for live TD network creation, parameter control, Python execution, TDN export/import."
+      "type": "stdio",
+      "command": "G:/EnvironmentPortfolio/_TouchDesigner/grandmaster_melodia/.venv/Scripts/python.exe",
+      "args": [
+        "-u",
+        "G:/EnvironmentPortfolio/.embody/envoy-bridge.py",
+        "--port",
+        "9870",
+        "--config",
+        "G:/EnvironmentPortfolio/.embody/envoy.json"
+      ]
     },
     "monolith": {
       "type": "http",
       "url": "http://localhost:9316/mcp",
-      "description": "Unreal Engine 5.8 — Monolith MCP server. 28 tools for editor control, scene capture, material inspection, CSV profiling."
+      "description": "Unreal Engine 5.8 \u2014 Monolith MCP server. 28 tools for editor control, scene capture, material inspection, CSV profiling."
     },
     "blender": {
       "type": "http",
