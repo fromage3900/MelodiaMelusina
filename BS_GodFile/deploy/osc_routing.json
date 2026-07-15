@@ -38,7 +38,7 @@
         "path": "/material/toon",
         "type": "float_array",
         "size": 12,
-        "description": "TD → UE Substrate Toon parameter group: [bloom_intensity, bloom_threshold, bloom_r, bloom_g, bloom_b, shadow_r, shadow_g, shadow_b, saturation, contrast, diffuse_wrap, reserved]"
+        "description": "TD → UE Substrate Toon parameter group (12 floats, MPC-mapped): [0]bloom_intensity→Magical.BloomIntensity, [1]bloom_threshold→PP, [2]sparkle_pulse→SakuraDream.SparklePulse, [3]dream_intensity→SakuraDream.DreamIntensity, [4]wind_strength→SakuraDream.WindStrength, [5]global_opacity→SakuraDream.GlobalOpacity, [6]shadow_tint_r→PP, [7]shadow_tint_b→PP, [8]magical_transform→Magical.MagicalTransform, [9]saturation→PP, [10]diffuse_wrap→Material, [11]sparkle_visibility→SakuraDream.SparkleVisibility"
       },
       "style_preset": {
         "path": "/material/preset",
@@ -90,6 +90,108 @@
         "type": "float_array",
         "size": 16,
         "description": "Blender camera Z-up world matrix (4x4, column-major)"
+      }
+    },
+    "battle": {
+      "phase": {
+        "path": "/battle/phase",
+        "type": "string",
+        "description": "Current battle phase: Awaiting→RhythmExecution→EnemyTurn→Victory|Defeat|Fled"
+      },
+      "grade": {
+        "path": "/battle/grade",
+        "type": "string",
+        "description": "Rhythm hit result: perfect|great|good|miss — drives VFX intensity in TD"
+      },
+      "combo": {
+        "path": "/battle/combo",
+        "type": "int",
+        "range": [0, 999],
+        "description": "Current combo count — particle density multiplier in TD"
+      },
+      "damage": {
+        "path": "/battle/damage",
+        "type": "float_array",
+        "size": 2,
+        "description": "[player_damage_dealt, enemy_hp_remaining] — drives screen shake VFX"
+      },
+      "enemy_broken": {
+        "path": "/battle/enemy_broken",
+        "type": "int",
+        "range": [0, 1],
+        "description": "Enemy toughness broken (0/1) — triggers wish burst in TD"
+      },
+      "ult_gauge": {
+        "path": "/battle/ult_gauge",
+        "type": "float",
+        "range": [0, 100],
+        "description": "Ultimate gauge 0-100 — drives glow intensity in TD"
+      },
+      "encounter": {
+        "path": "/battle/encounter",
+        "type": "string",
+        "description": "Enemy ID + BPM + element when encounter starts"
+      },
+      "result": {
+        "path": "/battle/result",
+        "type": "string",
+        "description": "Battle result: victory|defeat|fled — triggers finale VFX in TD"
+      }
+    },
+    "rhythm": {
+      "beat": {
+        "path": "/rhythm/beat",
+        "type": "int",
+        "description": "Current beat number from MelodiaRhythmClock.tick()"
+      },
+      "beat_progress": {
+        "path": "/rhythm/beat_progress",
+        "type": "float",
+        "range": [0, 1],
+        "description": "Normalized progress within current beat (0.0-1.0)"
+      },
+      "measure": {
+        "path": "/rhythm/measure",
+        "type": "int",
+        "description": "Current measure number (increments every 4 beats)"
+      },
+      "bpm": {
+        "path": "/rhythm/bpm",
+        "type": "float",
+        "range": [60, 200],
+        "description": "Current BPM (per-enemy, ranges 80-200)"
+      }
+    },
+    "niagara": {
+      "sparkle_rate": {
+        "path": "/niagara/sparkle/rate",
+        "type": "float",
+        "range": [0, 2],
+        "description": "Sakura sparkle particle spawn rate multiplier"
+      },
+      "sparkle_color": {
+        "path": "/niagara/sparkle/color",
+        "type": "float_array",
+        "size": 3,
+        "description": "Sparkle particle RGB color override"
+      },
+      "mote_rate": {
+        "path": "/niagara/mote/rate",
+        "type": "float",
+        "range": [0, 1],
+        "description": "Lantern mote spawn rate"
+      },
+      "burst_trigger": {
+        "path": "/niagara/burst",
+        "type": "int",
+        "range": [0, 1],
+        "description": "Wish burst trigger (0→1 edge fires burst)"
+      },
+      "wind": {
+        "path": "/niagara/wind",
+        "type": "float_array",
+        "size": 3,
+        "description": "Wind direction vector affecting all Niagara systems"
       }
     },
     "geometry": {
