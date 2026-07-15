@@ -1,6 +1,6 @@
 """Surreal baroque + zen themed MI_* for M_Master_Toon_Universal.
 
-Uses Japanese ornament alphas from /Game/Textures/70_Japanese_Ornament_Alphas_vfxMed.
+Uses Japanese ornament alphas from /Game/EnvSandbox/Textures_Shared/70_Japanese_Ornament_Alphas_vfxMed.
 Zen library: see zen_instances.py (apply via apply_zen_instances.py).
 """
 from __future__ import annotations

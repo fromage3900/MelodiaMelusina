@@ -10,6 +10,7 @@ Run (editor):
 from __future__ import annotations
 
 import json
+import hashlib
 from datetime import datetime, timezone
 from pathlib import Path
 import material_lib as lib
@@ -26,7 +27,13 @@ def _material_label(asset) -> str:
         return asset.get_name()
 
 
-def _capture_thumbnail(asset) -> str | None:
+def _thumb_path(asset_path: str, asset_name: str) -> Path:
+    digest = hashlib.sha1(asset_path.encode("utf-8")).hexdigest()[:10]
+    safe_name = "".join(ch if ch.isalnum() or ch in ("_", "-") else "_" for ch in asset_name)
+    return OUT_DIR / f"thumb_{safe_name}_{digest}.png"
+
+
+def _capture_thumbnail(asset, *, asset_path: str) -> tuple[str | None, str | None]:
     import unreal
 
     try:
@@ -34,15 +41,13 @@ def _capture_thumbnail(asset) -> str | None:
         options.size = unreal.IntPoint(256, 256)
         options.render_background = True
         options.background_color = unreal.LinearColor(0.15, 0.15, 0.15, 1.0)
-        path = str(OUT_DIR / f"thumb_{asset.get_name()}.png")
-        if hasattr(unreal, "AutomationLibrary"):
-            unreal.AutomationLibrary.take_thumbnail(
-                asset, path, options
-            )
-            return path
-    except Exception:
-        pass
-    return None
+        if not hasattr(unreal, "AutomationLibrary"):
+            return None, "AutomationLibrary missing (cannot take thumbnails in this context)"
+        out_path = _thumb_path(asset_path, asset.get_name())
+        unreal.AutomationLibrary.take_thumbnail(asset, str(out_path), options)
+        return str(out_path), None
+    except Exception as exc:
+        return None, str(exc)
 
 
 def capture_material_previews() -> dict:
@@ -51,6 +56,14 @@ def capture_material_previews() -> dict:
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     dirs = [lib.MASTER_DIR, lib.ENV_INST_DIR]
     results = {}
+    duplicates: list[dict] = []
+    failures: list[dict] = []
+    captured = 0
+    scanned = 0
+
+    automation_available = hasattr(unreal, "AutomationLibrary") and hasattr(
+        unreal.AutomationLibrary, "take_thumbnail"
+    )
     for folder in dirs:
         try:
             asset_list = unreal.EditorAssetLibrary.list_assets(folder, recursive=True)
@@ -65,13 +78,44 @@ def capture_material_previews() -> dict:
                     continue
             except Exception:
                 continue
+            scanned += 1
             name = asset.get_name()
             entry = {"path": asset_path, "label": _material_label(asset)}
-            thumb = _capture_thumbnail(asset)
+            thumb, error = _capture_thumbnail(asset, asset_path=asset_path)
             if thumb:
+                captured += 1
                 entry["thumbnail"] = thumb
-            results[name] = entry
-    return {"ok": True, "count": len(results), "materials": results}
+                try:
+                    entry["thumbnail_rel"] = str(Path(thumb).resolve().relative_to(PROJECT_ROOT))
+                except Exception:
+                    entry["thumbnail_rel"] = None
+            elif error:
+                # Keep only a small sample of failure details to avoid huge manifests.
+                if len(failures) < 25:
+                    failures.append({"material": name, "path": asset_path, "error": error})
+
+            key = name
+            if key in results:
+                digest = hashlib.sha1(asset_path.encode("utf-8")).hexdigest()[:10]
+                key = f"{name}__{digest}"
+                duplicates.append({"name": name, "key": key, "path": asset_path})
+            results[key] = entry
+
+    return {
+        "ok": True,
+        "count": len(results),
+        "materials": results,
+        "stats": {
+            "folders_scanned": dirs,
+            "assets_scanned": scanned,
+            "thumbnails_captured": captured,
+            "automation_available": automation_available,
+            "duplicates": len(duplicates),
+            "failure_samples": len(failures),
+        },
+        "duplicates": duplicates,
+        "failure_samples": failures,
+    }
 
 
 def write_previews_manifest() -> Path:

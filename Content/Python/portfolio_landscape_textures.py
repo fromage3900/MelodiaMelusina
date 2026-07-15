@@ -53,6 +53,16 @@ LANDSCAPE_LAYER_FALLBACKS: dict[str, dict[str, list[str]]] = {
     "Path": cc0_chain("Tiles074"),
 }
 
+# The optional Surfaces_CC0 migration is not present in every checkout. Keep
+# the landscape family portable by retaining authored project-local albedo
+# fallbacks when that pack is unavailable.
+PROJECT_LOCAL_ALBEDO_FALLBACKS = {
+    "Rock": "/Game/EnvSandbox/Textures_Shared/sbs_-_seamless_abstract_pack_-_512x512/512x512/Texture_512x512_1.Texture_512x512_1",
+    "Grass": "/Game/EnvSandbox/Textures/Melusina/Grass/T_Grass_BaseColor.T_Grass_BaseColor",
+    "Mud": "/Game/EnvSandbox/Textures/Melusina/Soil/T_Soil_BaseColor.T_Soil_BaseColor",
+    "Path": "/Game/EnvSandbox/Materials/SDF/Textures/Marble/Marble_5_-_512x512.Marble_5_-_512x512",
+}
+
 
 def resolve_layer_textures(layer: str) -> dict[str, list[str]]:
     """Merge primary + fallback CC0 chains for a landscape layer."""
@@ -66,6 +76,9 @@ def resolve_layer_textures(layer: str) -> dict[str, list[str]]:
                 if p not in chain:
                     chain.append(p)
         merged[key] = chain
+    fallback = PROJECT_LOCAL_ALBEDO_FALLBACKS.get(layer)
+    if fallback and fallback not in merged["Albedo"]:
+        merged["Albedo"].append(fallback)
     return merged
 
 

@@ -236,6 +236,13 @@ def apply_greybox_pcg(
         foliage_meta = build_preset_graphs(force=True).get(preset, {})
         foliage_graph = _foliage_graph_for_preset(preset)
 
+    if foliage_graph in std.UNSAFE_GENERATE_GRAPHS:
+        return {
+            "passed": False,
+            "error": f"foliage graph is quarantined from generation: {foliage_graph}",
+            "level": level,
+            "preset": preset,
+        }
     foliage_vol, foliage_comp = _spawn_volume(
         eas, std.ACTOR_GROUND_COVER, foliage_graph, seed=std.SEED_FOLIAGE,
     )

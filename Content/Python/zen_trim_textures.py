@@ -1,6 +1,6 @@
 """ZenTrim 4K trimsheet texture sets — Layer A/B maps for M_Master_Toon_Universal instances.
 
-Textures live under /Game/Textures/ZenTrim_<Variant>_<Channel>.
+Textures live under /Game/EnvSandbox/Textures_Shared/ZenTrim_<Variant>_<Channel>.
 Layer A = clean base (default Base4K). Layer B = environment variation overlay.
 The master lerps all maps via LayerBlend — instances only assign textures + scalars.
 
@@ -15,7 +15,7 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 REPORT = PROJECT_ROOT / "Saved" / "Audit" / "zen_trim_textures.json"
-TEX = "/Game/Textures"
+TEX = "/Game/EnvSandbox/Textures_Shared"
 
 # Variant folder stems (match uasset names on disk)
 ZEN_TRIM_VARIANTS = (

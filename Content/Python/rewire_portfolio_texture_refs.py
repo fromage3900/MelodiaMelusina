@@ -14,15 +14,15 @@ REPORT_PATH = PROJECT_ROOT / "Saved" / "Audit" / "portfolio_texture_rewire.json"
 MATERIALS_ROOT = "/Game/EnvSandbox/Materials"
 
 TEXTURE_REPLACEMENTS: dict[str, str] = {
-    "/Game/_PROJECT/04_Materials/Textures/Marble/Marble_1_-_512x512": "/Game/EnvSandbox/Materials/SDF/Textures/Marble/Marble_1_-_512x512",
-    "/Game/_PROJECT/04_Materials/Textures/Marble/Marble_3_-_512x512": "/Game/EnvSandbox/Materials/SDF/Textures/Marble/Marble_3_-_512x512",
-    "/Game/_PROJECT/04_Materials/Textures/Marble/Marble_5_-_512x512": "/Game/EnvSandbox/Materials/SDF/Textures/Marble/Marble_5_-_512x512",
-    "/Game/_PROJECT/04_Materials/Textures/Marble/Marble_6_-_512x512": "/Game/EnvSandbox/Materials/SDF/Textures/Marble/Marble_6_-_512x512",
-    "/Game/_PROJECT/04_Materials/Textures/Marble/Marble_7_-_512x512": "/Game/EnvSandbox/Materials/SDF/Textures/Marble/Marble_7_-_512x512",
-    "/Game/_PROJECT/04_Materials/Textures/Marble/Marble_9_-_512x512": "/Game/EnvSandbox/Materials/SDF/Textures/Marble/Marble_9_-_512x512",
-    "/Game/_PROJECT/04_Materials/Textures/Perlin/Perlin_1_-_512x512": "/Game/EnvSandbox/Materials/SDF/Textures/Perlin/Perlin_1_-_512x512",
-    "/Game/_PROJECT/04_Materials/Textures/Voronoi/Voronoi_2_-_512x512": "/Game/EnvSandbox/Materials/SDF/Textures/Voronoi/Voronoi_2_-_512x512",
-    "/Game/_PROJECT/04_Materials/Textures/Voronoi/Voronoi_11_-_512x512": "/Game/EnvSandbox/Materials/SDF/Textures/Voronoi/Voronoi_11_-_512x512",
+    "/Game/Melodia/_PROJECT/04_Materials/Textures/Marble/Marble_1_-_512x512": "/Game/EnvSandbox/Materials/SDF/Textures/Marble/Marble_1_-_512x512",
+    "/Game/Melodia/_PROJECT/04_Materials/Textures/Marble/Marble_3_-_512x512": "/Game/EnvSandbox/Materials/SDF/Textures/Marble/Marble_3_-_512x512",
+    "/Game/Melodia/_PROJECT/04_Materials/Textures/Marble/Marble_5_-_512x512": "/Game/EnvSandbox/Materials/SDF/Textures/Marble/Marble_5_-_512x512",
+    "/Game/Melodia/_PROJECT/04_Materials/Textures/Marble/Marble_6_-_512x512": "/Game/EnvSandbox/Materials/SDF/Textures/Marble/Marble_6_-_512x512",
+    "/Game/Melodia/_PROJECT/04_Materials/Textures/Marble/Marble_7_-_512x512": "/Game/EnvSandbox/Materials/SDF/Textures/Marble/Marble_7_-_512x512",
+    "/Game/Melodia/_PROJECT/04_Materials/Textures/Marble/Marble_9_-_512x512": "/Game/EnvSandbox/Materials/SDF/Textures/Marble/Marble_9_-_512x512",
+    "/Game/Melodia/_PROJECT/04_Materials/Textures/Perlin/Perlin_1_-_512x512": "/Game/EnvSandbox/Materials/SDF/Textures/Perlin/Perlin_1_-_512x512",
+    "/Game/Melodia/_PROJECT/04_Materials/Textures/Voronoi/Voronoi_2_-_512x512": "/Game/EnvSandbox/Materials/SDF/Textures/Voronoi/Voronoi_2_-_512x512",
+    "/Game/Melodia/_PROJECT/04_Materials/Textures/Voronoi/Voronoi_11_-_512x512": "/Game/EnvSandbox/Materials/SDF/Textures/Voronoi/Voronoi_11_-_512x512",
 }
 
 

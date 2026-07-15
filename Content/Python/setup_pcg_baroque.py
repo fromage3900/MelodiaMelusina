@@ -19,9 +19,9 @@ UE_CMD = Path(r"C:\Program Files\Epic Games\UE_5.8\Engine\Binaries\Win64\UnrealE
 UPROJECT = PROJECT_ROOT / "BS_GodFile.uproject"
 
 MELODIA_BAROQUE_COLS = (
-    "/Game/_PROJECT/PCG/Collections/PCGCol_Baroque_Walls",
-    "/Game/_PROJECT/PCG/Collections/PCGCol_Baroque_Columns",
-    "/Game/_PROJECT/PCG/Collections/PCGCol_Baroque_Cornice",
+    "/Game/Melodia/_PROJECT/PCG/Collections/PCGCol_Baroque_Walls",
+    "/Game/Melodia/_PROJECT/PCG/Collections/PCGCol_Baroque_Columns",
+    "/Game/Melodia/_PROJECT/PCG/Collections/PCGCol_Baroque_Cornice",
 )
 
 
@@ -42,8 +42,8 @@ def build_kit() -> dict:
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "kit_path": std.SMC_BAROQUE,
         "salvaged_collections": salvaged,
-        "wall_graph": std.GRAPH_WALL,
-        "note": "Clone mesh entries from salvaged collections in editor; wall graph is Phase 3 stub",
+        "wall_graphs": [std.GRAPH_WALL_IVY, std.GRAPH_WALL_MOSS, std.GRAPH_WALL_LICHEN],
+        "note": "Wall detail graphs deployed via build_pcg_wall_detail.py (ivy, moss, lichen)",
     }
     REPORT.parent.mkdir(parents=True, exist_ok=True)
     REPORT.write_text(json.dumps(report, indent=2), encoding="utf-8")

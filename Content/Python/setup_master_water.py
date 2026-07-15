@@ -256,7 +256,7 @@ def build() -> str:
 
     caustic_chain = catalog._chain(
         catalog.COMPOSITING["noise_fine"],
-        "/Game/Alphas_Sparkles/T_Spark_Twinkle8.T_Spark_Twinkle8",
+        "/Game/EnvSandbox/Alphas_Sparkles/T_Spark_Twinkle8.T_Spark_Twinkle8",
         catalog.MASK["voronoi_swirl"],
     )
     wired_textures: list[str] = []

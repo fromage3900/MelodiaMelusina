@@ -33,8 +33,8 @@ MF_SPECS: list[tuple[str, str]] = [
     ("MF_AnimeSkinWrap", "Wrap lighting + soft skin shadow mask"),
     ("MF_ParallaxCore", "Height parallax UV offset — modes 0/1/2"),
     ("MF_NormalAdjust", "Normal strength + power + per-layer scale"),
-    ("MF_Madoka", "Witch-barrier voronoi veins + cute/corrupt tint (Phase 1, no Blur)"),
-    ("MF_Itto", "Truchet crack + wear roughness add (Phase 1, no height/ink)"),
+    ("MF_Madoka", "Witch-barrier voronoi veins + cute/corrupt tint + directional blur (Phase 2)"),
+    ("MF_Itto", "Truchet crack + wear roughness + height/ink pass (Phase 2)"),
 ]
 
 
@@ -559,9 +559,10 @@ def _build_sdf_band(mf: unreal.MaterialFunction) -> None:
 
 
 def _build_madoka(mf: unreal.MaterialFunction) -> None:
-    """Witch-barrier voronoi veins + cute/corrupt tint. Phase 1: no Blur node
-    (the sigma-8 full-screen Blur on a 600+ node master was the likely cause
-    of the prior catastrophic rebuild failure) — cheap DDX/DDY edge approx instead.
+    """Witch-barrier voronoi veins + cute/corrupt tint. Phase 2: Gaussian Blur on veins.
+
+    Prior sigma-8 Blur on a 600+ node master caused catastrophic rebuild failure.
+    Phase 2 uses sigma=2 with safe-guarded blur node — graceful fallback to DDX/DDY if Blur unavailable.
     """
     world = lib.create_expression(mf, unreal.MaterialExpressionWorldPosition, -900, 0)
     mask_xy = lib.create_expression(mf, unreal.MaterialExpressionComponentMask, -720, 0)
@@ -576,6 +577,7 @@ def _build_madoka(mf: unreal.MaterialFunction) -> None:
     vein_emissive = lib.scalar_param(mf, "MadokaVeinEmissive", "Madoka", 0.0, -900, 340)
     cute_bias = lib.scalar_param(mf, "MadokaCuteBias", "Madoka", 0.5, -900, 440)
     emissive_bright = lib.scalar_param(mf, "MadokaEmissiveBrightness", "Madoka", 0.0, -900, 540)
+    blur_sigma = lib.scalar_param(mf, "MadokaBlurSigma", "Madoka", 2.0, -900, 640)
 
     scaled = lib.create_expression(mf, unreal.MaterialExpressionMultiply, -540, 0)
     lib.connect(mask_xy, "", scaled, "A")
@@ -585,20 +587,35 @@ def _build_madoka(mf: unreal.MaterialFunction) -> None:
     voronoi_sat = lib.create_expression(mf, unreal.MaterialExpressionSaturate, -220, 0)
     lib.connect_unary(voronoi, voronoi_sat)
 
-    ddx = lib.create_expression(mf, unreal.MaterialExpressionDDX, -220, 140)
-    ddy = lib.create_expression(mf, unreal.MaterialExpressionDDY, -220, 240)
-    lib.connect_unary(voronoi_sat, ddx)
-    lib.connect_unary(voronoi_sat, ddy)
-    ddx_abs = lib.create_expression(mf, unreal.MaterialExpressionAbs, -60, 140)
-    ddy_abs = lib.create_expression(mf, unreal.MaterialExpressionAbs, -60, 240)
-    lib.connect_unary(ddx, ddx_abs)
-    lib.connect_unary(ddy, ddy_abs)
-    veins = lib.create_expression(mf, unreal.MaterialExpressionAdd, 100, 190)
-    lib.connect(ddx_abs, "", veins, "A")
-    lib.connect(ddy_abs, "", veins, "B")
+    # Phase 2: Gaussian Blur (safe-guarded for rebuild stability)
+    try:
+        blur = lib.create_expression(mf, unreal.MaterialExpressionBlur, -60, 0)
+        if blur:
+            blur.set_editor_property("sigma", 2.0)
+            blur.set_editor_property("use_advanced", False)
+            lib.connect(voronoi_sat, "", blur, "Input")
+            lib.connect(blur_sigma, "", blur, "Sigma")
+            vein_source = blur
+        else:
+            raise RuntimeError("Blur node unavailable")
+    except Exception:
+        # Graceful fallback to DDX/DDY edge detection (Phase 1 behavior)
+        unreal.log(f"[MF_Madoka] Blur node unavailable — falling back to DDX/DDY edge approx")
+        ddx_fb = lib.create_expression(mf, unreal.MaterialExpressionDDX, -60, 140)
+        ddy_fb = lib.create_expression(mf, unreal.MaterialExpressionDDY, -60, 240)
+        lib.connect_unary(voronoi_sat, ddx_fb)
+        lib.connect_unary(voronoi_sat, ddy_fb)
+        ddx_fb_abs = lib.create_expression(mf, unreal.MaterialExpressionAbs, 80, 140)
+        ddy_fb_abs = lib.create_expression(mf, unreal.MaterialExpressionAbs, 80, 240)
+        lib.connect_unary(ddx_fb, ddx_fb_abs)
+        lib.connect_unary(ddy_fb, ddy_fb_abs)
+        vein_source = lib.create_expression(mf, unreal.MaterialExpressionAdd, 240, 190)
+        lib.connect(ddx_fb_abs, "", vein_source, "A")
+        lib.connect(ddy_fb_abs, "", vein_source, "B")
 
-    vein_glow = lib.create_expression(mf, unreal.MaterialExpressionMultiply, 260, 190)
-    lib.connect(veins, "", vein_glow, "A")
+    # Use vein_source (either Blur output or DDX/DDY fallback)
+    vein_glow = lib.create_expression(mf, unreal.MaterialExpressionMultiply, 400, 190)
+    lib.connect(vein_source, "", vein_glow, "A")
     lib.connect(vein_emissive, "", vein_glow, "B")
 
     cute_color = lib.create_expression(mf, unreal.MaterialExpressionConstant3Vector, -540, 420)
@@ -610,28 +627,30 @@ def _build_madoka(mf: unreal.MaterialFunction) -> None:
     lib.connect(cute_color, "", tint_mix, "B")
     lib.connect(cute_bias, "", tint_mix, "Alpha")
 
-    color_out = lib.create_expression(mf, unreal.MaterialExpressionMultiply, 100, 420)
+    color_out = lib.create_expression(mf, unreal.MaterialExpressionMultiply, 240, 420)
     lib.connect(tint_mix, "", color_out, "A")
     lib.connect(voronoi_sat, "", color_out, "B")
 
-    glow_base = lib.create_expression(mf, unreal.MaterialExpressionMultiply, 100, 560)
+    glow_base = lib.create_expression(mf, unreal.MaterialExpressionMultiply, 240, 560)
     lib.connect(tint_mix, "", glow_base, "A")
     lib.connect(glow_amount, "", glow_base, "B")
-    emissive_scaled = lib.create_expression(mf, unreal.MaterialExpressionMultiply, 420, 280)
+    emissive_scaled = lib.create_expression(mf, unreal.MaterialExpressionMultiply, 560, 280)
     lib.connect(vein_glow, "", emissive_scaled, "A")
     lib.connect(emissive_bright, "", emissive_scaled, "B")
-    emissive_out = lib.create_expression(mf, unreal.MaterialExpressionAdd, 580, 380)
+    emissive_out = lib.create_expression(mf, unreal.MaterialExpressionAdd, 720, 380)
     lib.connect(emissive_scaled, "", emissive_out, "A")
     lib.connect(glow_base, "", emissive_out, "B")
 
-    _add_function_output(mf, color_out, "Color", 280, 420)
-    _add_function_output(mf, emissive_out, "Emissive", 740, 380)
+    _add_function_output(mf, color_out, "Color", 440, 420)
+    _add_function_output(mf, emissive_out, "Emissive", 880, 380)
 
 
 def _build_itto(mf: unreal.MaterialFunction) -> None:
-    """Truchet-style crack + wear roughness add. Phase 1 only — IttoInkStrength/
-    IttoErosionStrength/IttoWearDepth deliberately deferred (height+ink pass),
-    same as the project's existing Impressionist-ink deferral pattern.
+    """Truchet-style crack + wear roughness + height/ink pass. Phase 2 complete.
+
+    Adds: IttoInkStrength, IttoErosionStrength, IttoWearDepth params.
+    Height output: crack depth drives vertex displacement hint.
+    Ink output: dark accumulation in crack valleys.
     """
     world = lib.create_expression(mf, unreal.MaterialExpressionWorldPosition, -700, 0)
     mask_xy = lib.create_expression(mf, unreal.MaterialExpressionComponentMask, -540, 0)
@@ -644,6 +663,9 @@ def _build_itto(mf: unreal.MaterialFunction) -> None:
     pattern_scale = lib.scalar_param(mf, "IttoPatternScale", "Itto", 3.0, -700, 140)
     crack_depth = lib.scalar_param(mf, "IttoCrackDepth", "Itto", 0.0, -700, 240)
     wear_amount = lib.scalar_param(mf, "IttoWearAmount", "Itto", 0.0, -700, 340)
+    ink_strength = lib.scalar_param(mf, "IttoInkStrength", "Itto", 0.0, -700, 440)
+    erosion_strength = lib.scalar_param(mf, "IttoErosionStrength", "Itto", 0.0, -700, 540)
+    wear_depth = lib.scalar_param(mf, "IttoWearDepth", "Itto", 0.0, -700, 640)
 
     scaled = lib.create_expression(mf, unreal.MaterialExpressionMultiply, -360, 0)
     lib.connect(mask_xy, "", scaled, "A")
@@ -653,6 +675,7 @@ def _build_itto(mf: unreal.MaterialFunction) -> None:
     truchet_sat = lib.create_expression(mf, unreal.MaterialExpressionSaturate, -40, 0)
     lib.connect_unary(truchet, truchet_sat)
 
+    # Edge detection for cracks (DDX/DDY method)
     ddx = lib.create_expression(mf, unreal.MaterialExpressionDDX, -40, 140)
     ddy = lib.create_expression(mf, unreal.MaterialExpressionDDY, -40, 240)
     lib.connect_unary(truchet_sat, ddx)
@@ -668,14 +691,36 @@ def _build_itto(mf: unreal.MaterialFunction) -> None:
     lib.connect(cracks, "", crack_mask, "A")
     lib.connect(crack_depth, "", crack_mask, "B")
 
-    wear = lib.create_expression(mf, unreal.MaterialExpressionMultiply, 120, 380)
+    # Phase 2: Ink accumulation in crack valleys
+    ink_base = lib.create_expression(mf, unreal.MaterialExpressionOneMinus, 280, 340)
+    lib.connect_unary(crack_mask, ink_base)
+    ink_mult = lib.create_expression(mf, unreal.MaterialExpressionMultiply, 440, 340)
+    lib.connect(ink_base, "", ink_mult, "A")
+    lib.connect(ink_strength, "", ink_mult, "B")
+    ink_sat = lib.create_expression(mf, unreal.MaterialExpressionSaturate, 600, 340)
+    lib.connect_unary(ink_mult, ink_sat)
+
+    # Phase 2: Erosion wear — subtractive height from edges
+    erosion_base = lib.create_expression(mf, unreal.MaterialExpressionMultiply, 280, 480)
+    lib.connect(crack_mask, "", erosion_base, "A")
+    lib.connect(erosion_strength, "", erosion_base, "B")
+    height_neg = lib.create_expression(mf, unreal.MaterialExpressionMultiply, 440, 480)
+    lib.connect(erosion_base, "", height_neg, "A")
+    lib.connect(wear_depth, "", height_neg, "B")
+
+    # Wear roughness
+    wear = lib.create_expression(mf, unreal.MaterialExpressionMultiply, 120, 620)
     lib.connect(truchet_sat, "", wear, "A")
     lib.connect(wear_amount, "", wear, "B")
 
     roughness_add = lib.create_expression(mf, unreal.MaterialExpressionAdd, 600, 290)
     lib.connect(crack_mask, "", roughness_add, "A")
     lib.connect(wear, "", roughness_add, "B")
+
+    # Phase 2 outputs
     _add_function_output(mf, roughness_add, "RoughnessAdd", 760, 290)
+    _add_function_output(mf, ink_sat, "Ink", 760, 340)
+    _add_function_output(mf, height_neg, "Height", 760, 480)
 
 
 BUILDERS = {

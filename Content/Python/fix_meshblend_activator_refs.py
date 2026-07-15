@@ -192,10 +192,14 @@ def replace_plugin_copies_if_needed(report: dict) -> int:
 
 
 def _run_binary_patch_fallback() -> dict:
-    from patch_meshblend_uasset_paths import main as patch_main
-
-    patch_main()
-    return json.loads(REPORT_PATH.read_text(encoding="utf-8"))
+    """Binary patch disabled — corrupts MF_MeshBlend_Activator_Index_* uassets."""
+    report = {
+        "error": "fix_meshblend_activator_refs requires Unreal Editor Python",
+        "binary_patch": "disabled",
+    }
+    REPORT_PATH.parent.mkdir(parents=True, exist_ok=True)
+    REPORT_PATH.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    return report
 
 
 def main() -> int:
@@ -204,7 +208,7 @@ def main() -> int:
     except ImportError:
         report = _run_binary_patch_fallback()
         print(json.dumps(report, indent=2))
-        return 0 if not report.get("errors") else 1
+        return 1
 
     import unreal
 
@@ -221,10 +225,11 @@ def main() -> int:
     report["functions_fixed"] = fix_local_functions(report)
 
     if report["masters_fixed"] == 0 and report["functions_fixed"] == 0:
-        report["binary_patch"] = _run_binary_patch_fallback()
-
-    if report["functions_fixed"] == 0 and not report.get("binary_patch"):
         report["functions_replaced_from_plugin"] = replace_plugin_copies_if_needed(report)
+        if report["functions_replaced_from_plugin"] == 0:
+            report["binary_patch_skipped"] = (
+                "Binary uasset patch disabled — it corrupts MF_MeshBlend_Activator_Index_* packages."
+            )
 
     REPORT_PATH.parent.mkdir(parents=True, exist_ok=True)
     REPORT_PATH.write_text(json.dumps(report, indent=2), encoding="utf-8")

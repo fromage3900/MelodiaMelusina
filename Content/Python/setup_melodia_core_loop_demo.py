@@ -15,12 +15,17 @@ FOLDERS = (
     "/Game/Melodia/UI/Notation",
     "/Game/Melodia/UI/Notation/Textures",
     "/Game/Melodia/Levels",
+    "/Game/Melodia/Bridge/JRPG",
+    "/Game/Data/Melodia",
 )
 
+# TurnBasedJRPGTemplate moved to _ThirdParty (2026-07 org pass)
 PHOENIX = (
-    "/Game/TurnBasedJRPGTemplate/Blueprints/Battle/BP_BattleController",
-    "/Game/TurnBasedJRPGTemplate/Blueprints/UI/BP_BattleUI",
+    "/Game/_ThirdParty/TurnBasedJRPGTemplate/Blueprints/Battle/BP_BattleController",
+    "/Game/_ThirdParty/TurnBasedJRPGTemplate/Blueprints/UI/BP_BattleUI",
+    "/Game/_ThirdParty/TurnBasedJRPGTemplate/Blueprints/Structs/S_UnitStats",
     "/Game/Melodia/Core/BP_QuestManager",
+    "/Game/Melodia/Bridge/JRPG/BP_Melodia_JRPG_Bridge",
 )
 
 
@@ -42,8 +47,9 @@ def main() -> int:
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "folders_created": created,
         "checks": checks,
-        "all_ok": all(c["ok"] for c in checks),
-        "note": "Full loop requires MelodiaMelusina_PROD C++ in G:/Melodia",
+        "template_ok": checks[0]["ok"] and checks[1]["ok"],
+        "bridge_ok": checks[-1]["ok"] if len(checks) > 4 else False,
+        "note": "Run scaffold_melodia_jrpg_rhythm_bridge.py for full bridge",
     }
     AUDIT.mkdir(parents=True, exist_ok=True)
     out = AUDIT / "melodia_core_loop_demo_bs.json"

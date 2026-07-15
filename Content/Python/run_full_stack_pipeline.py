@@ -102,8 +102,7 @@ def main() -> int:
     textures = PYTHON_DIR / "restore_portfolio_textures.py"
     subprocess.run([sys.executable, str(restore)], cwd=str(PROJECT_ROOT), check=False)
     subprocess.run([sys.executable, str(textures)], cwd=str(PROJECT_ROOT), check=False)
-    subprocess.run([sys.executable, str(PYTHON_DIR / "patch_portfolio_texture_paths.py")], cwd=str(PROJECT_ROOT), check=False)
-    subprocess.run([sys.executable, str(PYTHON_DIR / "patch_meshblend_uasset_paths.py")], cwd=str(PROJECT_ROOT), check=False)
+    # Binary patches disabled — corrupt MF_MeshBlend_Activator_Index_* and material uassets.
 
     if not UE_CMD.exists():
         print(f"ERROR: UnrealEditor-Cmd not found: {UE_CMD}")

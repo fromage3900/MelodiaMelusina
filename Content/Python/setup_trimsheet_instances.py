@@ -198,7 +198,7 @@ TRIMSHEET_INSTANCES: list[dict] = [
 
 
 def cloth_trim_instance_specs() -> list[dict]:
-    """Auto-generate ClothTrim MIs from discovered /Game/Textures/ClothTrim_* assets."""
+    """Auto-generate ClothTrim MIs from discovered /Game/EnvSandbox/Textures_Shared/ClothTrim_* assets."""
     import cloth_trim_textures as ct
     import trim_layer_presets as lp
 
@@ -338,7 +338,7 @@ def main() -> int:
         "cloth_count": cloth_count,
         "folder": FOLDER,
         "cloth_folder": CLOTH_FOLDER,
-        "texture_roots": ["/Game/Textures/ZenTrim_*", "/Game/Textures/ClothTrim_*"],
+        "texture_roots": ["/Game/EnvSandbox/Textures_Shared/ZenTrim_*", "/Game/EnvSandbox/Textures_Shared/ClothTrim_*"],
         "artist_guide": {
             "LayerA": "Base4K trimsheet → Albedo, NormalMap, ORM, HeightMap",
             "LayerB": "Variation overlay → LayerB_* (same channel mapping)",

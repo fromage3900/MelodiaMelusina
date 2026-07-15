@@ -14,6 +14,7 @@ Steps (sequential, best-effort):
   5. compile_render_plates.write_renders_manifest() (idempotent disk compiler)
   6. portfolio_aggregator.ensure_package_written() -> Saved/Portfolio/portfolio_package.json
   7. package_to_website_handoff.write_handoff() -> _github_deploy/generated/*_config.json
+  8. package_to_figma_tokens.py (dry-run; POST when FIGMA_API_TOKEN + FIGMA_FILE_KEY set)
 
 UE steps (metadata + renders) require RHI; shell launch omits -nullrhi.
 """
@@ -21,6 +22,7 @@ from __future__ import annotations
 
 import json
 import subprocess
+import sys
 import time
 import os
 from datetime import datetime, timezone
@@ -28,8 +30,17 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 REPORT = PROJECT_ROOT / "Saved" / "Audit" / "generate_portfolio.json"
+FIGMA_BRIDGE = PROJECT_ROOT / "pipeline" / "figma" / "package_to_figma_tokens.py"
 PACKAGE_PATH = PROJECT_ROOT / "Saved" / "Portfolio" / "portfolio_package.json"
-LEVEL = "/Game/EnvSandbox/Environments/Sakura/L_SakuraPath"
+# Primary capture targets — WP pillars (2026-07-08). Legacy: Sakura, ZenForestTest.
+WP_PILLAR_LEVELS = (
+    "/Game/EnvSandbox/Environments/WP/L_WP_SakuraDream",
+    "/Game/EnvSandbox/Environments/WP/L_WP_SpaceCathedral",
+    "/Game/EnvSandbox/Environments/WP/L_WP_BaroqueGrotto",
+    "/Game/EnvSandbox/Environments/WP/L_WP_CosmicOrrery",
+)
+LEVEL = WP_PILLAR_LEVELS[0]
+LEGACY_LEVEL_SAKURA = "/Game/EnvSandbox/Environments/Sakura/L_SakuraPath"
 UE_CMD = Path(r"C:\Program Files\Epic Games\UE_5.8\Engine\Binaries\Win64\UnrealEditor-Cmd.exe")
 UPROJECT = PROJECT_ROOT / "BS_GodFile.uproject"
 
@@ -48,7 +59,8 @@ def _load_portfolio_level() -> None:
     import unreal
 
     les = unreal.get_editor_subsystem(unreal.LevelEditorSubsystem)
-    asset_path = f"{LEVEL}.L_SakuraPath"
+    level_leaf = LEVEL.rsplit("/", 1)[-1]
+    asset_path = f"{LEVEL}.{level_leaf}"
     if les and unreal.EditorAssetLibrary.does_asset_exist(asset_path):
         _log(f"loading level {LEVEL}")
         les.load_level(LEVEL)
@@ -67,6 +79,7 @@ def run_portfolio_pipeline() -> dict:
     import scene_metadata_exporter as metadata
     import export_genome_axis as genome_axis
     import audit_pcg_heatmap as pcg_heatmap
+    import audit_landscape_layers as landscape_layers
     import package_to_website_handoff as website_handoff
 
     time.sleep(15)
@@ -99,6 +112,7 @@ def run_portfolio_pipeline() -> dict:
     step("scene_metadata_exporter", lambda: {"path": str(metadata.write_scene_metadata())})
     step("export_genome_axis", lambda: {"path": str(genome_axis.write_genome_axis())})
     step("audit_pcg_heatmap", lambda: {"path": str(pcg_heatmap.generate_heatmap()["heatmap"]["path"])})
+    step("audit_landscape_layers", lambda: {"path": str(landscape_layers.write_landscape_splat())})
     step("capture_material_previews", lambda: {"path": str(previews.write_previews_manifest())})
     step("capture_portfolio_renders", capture.run_all_captures)
     step("compile_render_plates", lambda: {"path": str(plates.write_renders_manifest(plates.compile_renders_manifest()))})
@@ -123,6 +137,19 @@ def run_portfolio_pipeline() -> dict:
         _log(f"FAIL portfolio_aggregator: {exc}")
 
     step("package_to_website_handoff", website_handoff.write_handoff)
+
+    def _run_figma_bridge() -> dict:
+        if not FIGMA_BRIDGE.is_file():
+            return {"skipped": True, "reason": "bridge script missing"}
+        cmd = [sys.executable, str(FIGMA_BRIDGE), "--dry-run"]
+        if os.environ.get("FIGMA_API_TOKEN") and os.environ.get("FIGMA_FILE_KEY"):
+            cmd = [sys.executable, str(FIGMA_BRIDGE), "--post"]
+        proc = subprocess.run(cmd, cwd=str(PROJECT_ROOT), capture_output=True, text=True)
+        if proc.returncode != 0:
+            raise RuntimeError(proc.stderr.strip() or proc.stdout.strip() or "figma bridge failed")
+        return {"path": str(PROJECT_ROOT / "pipeline" / "figma" / "figma_variables_update.json"), "posted": "--post" in cmd}
+
+    step("package_to_figma_tokens", _run_figma_bridge)
 
     all_ok = PACKAGE_PATH.is_file() and all(
         entry.get("ok") for entry in steps if entry.get("step") != "portfolio_aggregator"

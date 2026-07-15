@@ -26,7 +26,7 @@ REPORT = PROJECT_ROOT / "Saved" / "Audit" / "style_bundle_validation.json"
 # fabricate placeholders.
 STYLE_BUNDLES = {
     "Sakura": {
-        "pcg_graph": "/Game/EnvSandbox/PCG/Styles/Sakura/PCG_Sakura_Showcase",
+        "pcg_graph": "/Game/EnvSandbox/PCG/Universal/PCG_MeadowBloom",
         "material": "/Game/EnvSandbox/Materials/Instances/Sakura/MI_Sakura_Petals",
         "niagara_systems": [
             "/Game/EnvSandbox/VFX/Systems/Sakura/NS_WindRibbonGust",
@@ -105,6 +105,9 @@ def apply_style_bundle(style_name: str, target_actor=None) -> dict:
     bundle = STYLE_BUNDLES[style_name]
     applied = {"style": style_name, "actor": target_actor.get_name(), "steps": []}
 
+    import pcg_portfolio_standards as std
+    if bundle["pcg_graph"] in std.UNSAFE_GENERATE_GRAPHS:
+        raise RuntimeError(f"PCG graph is quarantined from generation: {bundle['pcg_graph']}")
     pcg_graph = unreal.EditorAssetLibrary.load_asset(bundle["pcg_graph"])
     pcg_comp = target_actor.get_component_by_class(unreal.PCGComponent)
     if pcg_comp is not None and pcg_graph is not None:

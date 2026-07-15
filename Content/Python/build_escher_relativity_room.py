@@ -23,6 +23,24 @@ DEST_FOLDER = "/Game/EnvSandbox/PCG/Styles/Escher"
 CUBE_MESH = "/Engine/BasicShapes/Cube.Cube"  # unit 100x100x100 cube; UE cm units
 
 
+def _persist_spawner_output(graph_path: str) -> int:
+    """UE 5.8 can drop output edges during the first graph save.
+
+    Reloading the asset and wiring the spawner to the default output node
+    makes the edge durable and prevents a false successful generation with
+    zero tagged output data.
+    """
+    import unreal
+
+    graph = unreal.load_asset(graph_path)
+    output = graph.get_output_node()
+    for node in graph.nodes:
+        if "StaticMeshSpawner" in node.get_settings().get_class().get_name():
+            node.add_edge_to("Out", output, "Out")
+    unreal.EditorAssetLibrary.save_asset(graph_path)
+    return len(graph.get_all_edges())
+
+
 def _make_point(unreal, loc_m, rot_rad, scale_m, density=1.0):
     """loc_m/scale_m in meters (matching the source algorithm's units) ->
     UE point in cm. scale_m is box dimensions in meters -> divided by 1.0m
@@ -117,8 +135,10 @@ def build_relativity_room(name="PCG_EscherRelativityRoom", S=10.0, t=0.3, n=8, f
     sel.set_editor_property("mesh_entries", [entry])
 
     graph.add_edge(create_node, "Out", spawn_node, "In")
+    spawn_node.add_edge_to("Out", graph.get_output_node(), "Out")
 
     unreal.EditorAssetLibrary.save_asset(f"{DEST_FOLDER}/{name}")
+    _persist_spawner_output(f"{DEST_FOLDER}/{name}")
     print(f"{name}: built {len(boxes)} boxes, saved")
     return f"{DEST_FOLDER}/{name}", len(boxes)
 
@@ -204,8 +224,10 @@ def build_penrose_loop(name="PCG_EscherPenroseLoop", side=8.0, force=True):
     sel.set_editor_property("mesh_entries", [entry])
 
     graph.add_edge(create_node, "Out", spawn_node, "In")
+    spawn_node.add_edge_to("Out", graph.get_output_node(), "Out")
 
     unreal.EditorAssetLibrary.save_asset(f"{DEST_FOLDER}/{name}")
+    _persist_spawner_output(f"{DEST_FOLDER}/{name}")
     print(f"{name}: built {len(boxes)} boxes, saved")
     return f"{DEST_FOLDER}/{name}", len(boxes)
 
@@ -292,8 +314,10 @@ def build_recursive_room(name="PCG_EscherRecursiveRoom", W0=12.0, depth=3, force
     sel.set_editor_property("mesh_entries", [entry])
 
     graph.add_edge(create_node, "Out", spawn_node, "In")
+    spawn_node.add_edge_to("Out", graph.get_output_node(), "Out")
 
     unreal.EditorAssetLibrary.save_asset(f"{DEST_FOLDER}/{name}")
+    _persist_spawner_output(f"{DEST_FOLDER}/{name}")
     print(f"{name}: built {len(boxes)} boxes ({depth} recursive levels), saved")
     return f"{DEST_FOLDER}/{name}", len(boxes)
 
@@ -359,8 +383,10 @@ def build_gravity_shift_corridor(name="PCG_EscherGravityShiftCorridor", L=12.0, 
     sel.set_editor_property("mesh_entries", [entry])
 
     graph.add_edge(create_node, "Out", spawn_node, "In")
+    spawn_node.add_edge_to("Out", graph.get_output_node(), "Out")
 
     unreal.EditorAssetLibrary.save_asset(f"{DEST_FOLDER}/{name}")
+    _persist_spawner_output(f"{DEST_FOLDER}/{name}")
     print(f"{name}: built {len(boxes)} boxes, saved")
     return f"{DEST_FOLDER}/{name}", len(boxes)
 
@@ -439,8 +465,10 @@ def build_belvedere(name="PCG_EscherBelvedere", force=True):
     sel.set_editor_property("mesh_entries", [entry])
 
     graph.add_edge(create_node, "Out", spawn_node, "In")
+    spawn_node.add_edge_to("Out", graph.get_output_node(), "Out")
 
     unreal.EditorAssetLibrary.save_asset(f"{DEST_FOLDER}/{name}")
+    _persist_spawner_output(f"{DEST_FOLDER}/{name}")
     print(f"{name}: built {len(boxes)} boxes, saved")
     return f"{DEST_FOLDER}/{name}", len(boxes)
 
@@ -509,8 +537,10 @@ def build_waterfall(name="PCG_EscherWaterfall", force=True):
     sel.set_editor_property("mesh_entries", [entry])
 
     graph.add_edge(create_node, "Out", spawn_node, "In")
+    spawn_node.add_edge_to("Out", graph.get_output_node(), "Out")
 
     unreal.EditorAssetLibrary.save_asset(f"{DEST_FOLDER}/{name}")
+    _persist_spawner_output(f"{DEST_FOLDER}/{name}")
     print(f"{name}: built {len(boxes)} boxes, saved")
     return f"{DEST_FOLDER}/{name}", len(boxes)
 

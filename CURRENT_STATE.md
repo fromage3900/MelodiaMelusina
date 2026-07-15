@@ -2,6 +2,68 @@
 
 Status labels: `Implemented`, `Partial`, `Broken`, `Planned`, `Research`, `Deprecated`.
 
+## 2026-07-13 - Gameplay, PCG, and collaboration consolidation
+
+**Overall status: Partial, with the core evidence lane materially stronger.**
+
+- `BP_Melusina` integration audit: **verified**. Blueprint loads and compiles,
+  generated class resolves, body/hair meshes load, and the dedicated water-hair
+  material owns four hair slots.
+- `ZenForestTest` verifier: **verified**. Game mode, `BP_Melusina`, player start,
+  encounter components, label/light, and cooldown properties all pass.
+- PCG: **verified by map context**. `ZenForestTest` is a gameplay smoke map with
+  zero generated ISMs; `L_WP_SakuraDream` produces **2,015 instances** across
+  four active PCG volumes. Final exclusion quality still needs viewport review.
+- Melody Token GMM contract: **verified**, 282 tests passing. Star, Swirl, and
+  Water now declare explicit Heart fallback metadata instead of false direct
+  material references; victory rewards are idempotent.
+- Asset organization: **catalogued, not moved**. The catalog found 6,249
+  content assets, 155 Greybox assets, 138 PCG-support assets, 10 untitled or
+  ambiguous candidates, and 294 legacy/reference candidates.
+- Collaboration/onboarding: **documented** in
+  `Docs/COLLABORATION_WORKFLOW.md` and `Docs/LEVEL_DESIGNER_ONBOARDING.md`.
+
+Reports: `Saved/Melodia/BP_Melusina_integration_audit.json`,
+`Saved/Melodia/ZenSmoke_verify.json`, `Saved/Audit/pcg_environment_audit.json`,
+and `Saved/Audit/project_asset_catalog.json`.
+
+## 2026-07-12 — Melodia Studio + GMM family review
+
+**Overall status: Partial / foundation not yet unified.** The Blender Melodia GN and Unreal GMM systems are both substantial, but they currently share project intent more than they share a formal contract.
+
+- **Blender Melodia GN:** package scaffold exists and `integration.py` already routes/registers it. Live Blender 5.1 verification remains outstanding. The modifier stack still needs actual modifier reordering and enabled-state wiring before exports can be treated as authoritative.
+- **Unreal GMM:** focused package suite passes **242 tests** when run with `PYTHONPATH=Content/Python`. GMM has game, PCG, NPC, MCP, and daemon lanes, but lacks a stable family-level manifest/role/style contract matching the Blender side.
+- **Cross-application handoff:** `.world.json` and Live Link paths exist, but the durable manifest contract, dry-run UE importer, and one verified vertical slice are not complete.
+- **Runtime hygiene:** the working tree contains extensive daemon staging output and PID files. Retention/ignore policy is unresolved.
+
+Canonical plan: [Docs/MELODIA_GMM_FAMILY_ARCHITECTURE_PLAN.md](Docs/MELODIA_GMM_FAMILY_ARCHITECTURE_PLAN.md).
+
+The next architectural move is **not** to port the whole Blender addon into UE. It is to establish a pure-Python contract/core scaffold, then implement matching capability adapters one vertical slice at a time.
+
+## 2026-07-09 (afternoon): WP pillar levels ACTUALLY production-ready — 4 root causes fixed, all live-verified (`Implemented`, commit `2f64a0f`)
+
+The 07-09 overnight audit (`wp_pillar_levels.json`) reported `passed: true` with `world_partition: false` and every volume at ISM 0 — **both numbers were wrong, in opposite directions**:
+
+- **WP detection was a guaranteed false negative**: `World.get_world_partition()` and `*enable_world_partition*` WorldSettings props don't exist in UE5.8 Python (both raised, exceptions swallowed). The levels were WP-native all along. Detection now uses on-disk `__ExternalActors__` + `WorldPartitionBlueprintLibrary.get_editor_world_bounds()`.
+- **ISM=0 was a measurement artifact + a real content bug.** (a) Async PCG can't be counted in the same game-thread Python call — `generate_and_wait`'s sleep blocks ticking and its "pump" was just `obj gc`. Split into kick (build) + count (`setup_wp_pillar_levels.py --verify`, separate call). (b) Vanilla `PCGSurfaceSamplerSettings` genuinely produces 0 points on StaticMeshActor terrain (landscape-oriented; projection onto DataFromActor primitives also 0). Fix: `pcg_graph_builder.wire_mesh_scatter_chain` using `PCGMeshSamplerSettings` sampling `SM_Terrain_<Pillar>` directly; per-pillar variant graphs generated into `PCG/Styles/WP/` (regenerable artifacts, don't hand-edit).
+- **All pillar terrain was flat (0.2–2cm relief)**: deprecated `apply_perlin_noise_to_mesh` squares its frequency (0.00008² ≈ 0). Fixed with `apply_perlin_noise_to_mesh2` + per-pillar seeds → 483/505/605/685cm relief, distinct per pillar.
+- **`clear_graph_nodes` was a silent no-op** — `PCGGraph` has no `get_nodes()`; the property is `.nodes`. Rebuilds stacked duplicate chains (PCG_MeadowBloom reached 108 nodes / 18× its chain). Fixed; universal graphs rebuilt clean (MeadowBloom now 6 nodes).
+- **Duplicate PCGVolumes**: WP streams actors out on level load, so builds ran with an empty `existing` label map and spawned duplicates (CosmicOrrery had 6 volumes → 59k instances). Build now calls `WorldPartitionBlueprintLibrary.load_actors` first; dups removed.
+- **MelodiaCore plugin (source-only, never compiled) killed every `-unattended` boot** (load-failure dialog auto-answers quit) and was the MODAL_OPEN hang on attended boots. Disabled in `BS_GodFile.uproject` until someone builds it.
+- `passed` criteria now require `world_partition==true` AND `total_ism>0`, not "steps ran".
+
+**Verified + saved totals**: SakuraDream 2015, SpaceCathedral 642, BaroqueGrotto 1085, CosmicOrrery 6171 ISM instances. One D3D12 device-removed GPU crash occurred mid-session (not content-related; levels were already saved).
+
+## 2026-07-09 (afternoon): `M_Master_Toon_Universal` deep review — NOT regressed, healthy (`Implemented`)
+
+The 916→1015 expression growth vs the 07-02 checkpoint is **32 deliberate gated feature commits** (07-03/04: Dream Flow/Pulse/Halo/Bloom/Rim, Kaleidoscope Sigil, Dawn Wash, thin-film iridescence, MPC integration, anisotropic spec, inline triplanar, Weather/Sparkle/FairyDust gates) — all default-off/default-0, so default appearance never changed. Specifics:
+
+- **Duplicate static switches (`bWeather_Active`×3, `bCelestialUsesDreamPalette`×3)**: side effect of the "uniform gate pattern" (one switch node per consumer, same param name). Same-named switches stay value-synchronized in UE — behavior correct, hygiene debt only. Cleanup = collapse each trio into one node feeding 3 consumers.
+- **"26 broken texture refs" from `validate_material` are ~23 false positives**: TextureSamples 92–114 are the inline-triplanar family fed via connected `TextureObjectParameter` pins (e.g. `HeightMap`, real Perlin default) — a valid pattern the validator doesn't recognize. Only `TextureSample_0/1/2` are genuinely empty (no texture, no TextureObject pin), consumed only inside the switch-gated-OFF triplanar branch — dormant, but would render black if `bTriplanar` were enabled. Fix validator + these 3 nodes (see ECOSYSTEM_UNIFICATION_PLAN Phase 1).
+- Compiles clean: 1088 PS / 153 VS instructions, 16 samplers.
+
+**New master drift to resolve**: `M_Master_Toon_Cosmic` + 12 `MI_Cosmic_*` created 2026-07-09 overnight — 4th surface master vs the one-master policy; Universal already has a Celestial family. Decision (fold vs bless) tracked in [Docs/ECOSYSTEM_UNIFICATION_PLAN.md](Docs/ECOSYSTEM_UNIFICATION_PLAN.md). Also: `Masters/` folder holds 28 assets of which only ~7 are masters; `M_SpaceParallax_Test` still on disk despite the 07-09 cleanup-commit claim.
+
 ## MeshBlend integration added to `M_Master_Toon_Universal` (`Implemented`, additive/safe)
 
 Wired `MF_MeshBlend_Activator_Index_1` (real, already-authored function — reads `PerInstanceCustomData` index 1 as a per-instance "AutoBlendID" driven by runtime code like `BP_MeshBlend_Activator`, or falls back to a static scalar via its own internal "Use Static Value" switch) into the existing `LayerManualMix → Lerp(Alpha)` connection, gated behind a **new** `bMeshBlendActivator_Active` static switch (default `False`). 916 → 918 expressions, 10 → 11 top-level switches (plus the function's own internal "Use Static Value" switch, exposed on instances).

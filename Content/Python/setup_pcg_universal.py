@@ -14,6 +14,7 @@ from pathlib import Path
 
 import pcg_graph_builder as gb
 import pcg_portfolio_standards as std
+import build_pcg_wall_detail as wall_detail
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 REPORT = PROJECT_ROOT / "Saved" / "Audit" / "pcg_universal_build.json"
@@ -149,21 +150,19 @@ def build_exclusion_subgraph(*, force: bool = False) -> tuple[str, dict]:
     }
 
 
-def build_wall_detail(*, force: bool = False) -> tuple[str, dict]:
-    """Phase 3 â€” spline wall scatter stub."""
+def build_wall_detail(*, force: bool = False) -> dict:
+    """Wall detail graphs — ivy, moss, lichen surface scatter (Phase 3 deployed)."""
     import unreal
 
-    graph, _ = gb.load_or_create_graph(std.GRAPH_WALL, std.DIR_UNIVERSAL, force=force)
-    inp = graph.get_input_node()
-    out = graph.get_output_node()
-    graph.add_edge(inp, "In", out, "Out")
-    graph.set_editor_property("is_standalone_graph", True)
-    unreal.EditorAssetLibrary.save_asset(std.GRAPH_WALL, only_if_is_dirty=False)
-    return std.GRAPH_WALL, {"phase": 3, "note": "spline scatter deferred"}
+    result = wall_detail.build_all()
+    for entry in result.values():
+        if entry.get("path"):
+            unreal.EditorAssetLibrary.save_asset(entry["path"], only_if_is_dirty=False)
+    return result
 
 
-MELODIA_GROUND_COVER = "/Game/_PROJECT/PCG/Collections/PCGCol_Environment_GroundCover"
-MELODIA_ROCKS = "/Game/_PROJECT/PCG/Collections/PCGCol_Environment_Rocks"
+MELODIA_GROUND_COVER = "/Game/Melodia/_PROJECT/PCG/Collections/PCGCol_Environment_GroundCover"
+MELODIA_ROCKS = "/Game/Melodia/_PROJECT/PCG/Collections/PCGCol_Environment_Rocks"
 
 
 def build_collections(*, force: bool = False) -> dict:
@@ -189,17 +188,18 @@ def build_all(*, force: bool = False) -> dict:
     foliage_path, foliage_meta = build_foliage(force=force)
     rock_path, rock_meta = build_rock(force=force)
     excl_path, excl_meta = build_exclusion_subgraph(force=force)
-    wall_path, wall_meta = build_wall_detail(force=force)
+    wall_result = build_wall_detail(force=force)
     style_graphs = build_style_graphs(force=force)
     collections = build_collections(force=force)
 
     import setup_pcg_greybox as grey
     greybox_presets = grey.build_preset_graphs(force=force)
 
+    wall_graphs = [entry["path"] for entry in wall_result.values() if entry.get("path")]
     graphs_ok = all(
         unreal.EditorAssetLibrary.does_asset_exist(p)
         for p in (
-            foliage_path, rock_path, excl_path, wall_path,
+            foliage_path, rock_path, excl_path, *wall_graphs,
             std.GRAPH_GREYBOX_MINIMAL, std.GRAPH_GREYBOX_STANDARD,
             *(entry["path"] for entry in style_graphs.values()),
         )
@@ -219,7 +219,7 @@ def build_all(*, force: bool = False) -> dict:
             "foliage": {"path": foliage_path, **foliage_meta},
             "rock": {"path": rock_path, **rock_meta},
             "exclusion": {"path": excl_path, **excl_meta},
-            "wall": {"path": wall_path, **wall_meta},
+            "wall": wall_result,
         },
         "style_graphs": style_graphs,
         "collections": collections,

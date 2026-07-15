@@ -23,6 +23,7 @@ HERO_DIR = RENDERS_DIR / "Hero"
 BREAKDOWN_DIR = RENDERS_DIR / "Breakdown"
 MATERIALS_DIR = RENDERS_DIR / "Materials"
 TRIMS_DIR = RENDERS_DIR / "Trims"
+MATERIAL_LOOPS_DIR = RENDERS_DIR / "MaterialLoops"
 SCENE_METADATA_PATH = METADATA_DIR / "scene_metadata.json"
 
 _LAYOUT_DIRS = (
@@ -33,6 +34,7 @@ _LAYOUT_DIRS = (
     BREAKDOWN_DIR,
     MATERIALS_DIR,
     TRIMS_DIR,
+    MATERIAL_LOOPS_DIR,
 )
 
 
@@ -50,6 +52,7 @@ def portfolio_paths(*, project_root: Path | None = None) -> dict[str, Path]:
         "breakdown_dir": renders_dir / "Breakdown",
         "materials_dir": renders_dir / "Materials",
         "trims_dir": renders_dir / "Trims",
+        "material_loops_dir": renders_dir / "MaterialLoops",
         "scene_metadata": metadata_dir / "scene_metadata.json",
     }
 
@@ -66,6 +69,7 @@ def ensure_portfolio_layout(*, project_root: Path | None = None) -> dict[str, Pa
         "breakdown_dir",
         "materials_dir",
         "trims_dir",
+        "material_loops_dir",
     ):
         directory = paths[key]
         if not directory.exists():

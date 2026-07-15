@@ -111,6 +111,7 @@ def main() -> int:
             "-stdout",
             "-unattended",
             "-nullrhi",
+            "-NoLoadStartupPackages",
             "-DisablePlugins=Monolith",
         ]
         return subprocess.run(cmd, cwd=str(PROJECT_ROOT)).returncode

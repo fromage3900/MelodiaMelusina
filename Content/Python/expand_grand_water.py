@@ -27,10 +27,14 @@ UE_CMD = Path(r"C:\Program Files\Epic Games\UE_5.8\Engine\Binaries\Win64\UnrealE
 UPROJECT = PROJECT_ROOT / "BS_GodFile.uproject"
 
 
-def _ensure_mfs() -> None:
+def _ensure_mfs(*, force: bool = False) -> None:
     import setup_material_functions as mf_mod
 
-    mf_mod.build_all(force=True)
+    # Rebuilding every function in a commandlet can leave transient material
+    # expressions rooted during shutdown. Existing functions are sufficient for
+    # the water pass; only rebuild them when explicitly requested.
+    if force:
+        mf_mod.build_all(force=True)
 
 
 def _mf_call(m, lib, path: str, x: int, y: int):
@@ -74,7 +78,7 @@ def expand(*, force: bool = False) -> dict:
     import unreal
     import material_lib as lib
 
-    _ensure_mfs()
+    _ensure_mfs(force=force)
 
     asset_path = f"{MASTER}.M_Water_Master_Grand_v6"
     if not unreal.EditorAssetLibrary.does_asset_exist(MASTER):
@@ -253,7 +257,9 @@ def expand(*, force: bool = False) -> dict:
         pass
 
     unreal.MaterialEditingLibrary.recompile_material(m)
-    lib.save_package(m)
+    # Save through the editor asset API so the loaded package owns the object
+    # before commandlet teardown. This avoids the UE 5.8 !IsRooted assertion.
+    unreal.EditorAssetLibrary.save_loaded_asset(m)
 
     result = {
         "timestamp": datetime.now(timezone.utc).isoformat(),

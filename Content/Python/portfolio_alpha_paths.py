@@ -11,31 +11,33 @@ from pathlib import Path
 
 import unreal
 
+from paths import ALPHAS_MELODIA, MELODIA_GAME_UI_TEXTURES as MELODIA_GAME_UI_TEX_PATH
+
 ASSET_LIBRARY = Path(r"G:\EnvironmentPortfolio\_AssetLibrary")
 PROJECT_CONTENT = Path(__file__).resolve().parents[1]
 
 # --- Vine / branch / ink (storybook PP VineBranchMask) ---
 VINE_BRANCH_MASK = [
-    "/Game/Stylization/T_Flow_Swirl.T_Flow_Swirl",
-    "/Game/Stylization/T_Hatch_Diagonal.T_Hatch_Diagonal",
+    "/Game/EnvSandbox/Stylization/T_Flow_Swirl.T_Flow_Swirl",
+    "/Game/EnvSandbox/Stylization/T_Hatch_Diagonal.T_Hatch_Diagonal",
     "/Game/EnvSandbox/Materials/SDF/Textures/Voronoi/Voronoi_11_-_512x512.Voronoi_11_-_512x512",
     "/Game/EnvSandbox/Materials/SDF/Textures/Voronoi/Voronoi_2_-_512x512.Voronoi_2_-_512x512",
 ]
 
 # --- Sparkles (SparkleMask on M_Master_Toon_Universal) ---
 SPARKLE_MASKS = {
-    "twinkle": "/Game/Alphas_Sparkles/T_Spark_Twinkle8.T_Spark_Twinkle8",
-    "sparkle4": "/Game/Alphas_Sparkles/T_Spark_Sparkle4.T_Spark_Sparkle4",
+    "twinkle": "/Game/EnvSandbox/Alphas_Sparkles/T_Spark_Twinkle8.T_Spark_Twinkle8",
+    "sparkle4": "/Game/EnvSandbox/Alphas_Sparkles/T_Spark_Sparkle4.T_Spark_Sparkle4",
     "glow": [
-        "/Game/Alphas_Sparkles/T_Spark_Glow.T_Spark_Glow",
-        "/Game/Alphas_Sparkles/T_Spark_Twinkle8.T_Spark_Twinkle8",
+        "/Game/EnvSandbox/Alphas_Sparkles/T_Spark_Glow.T_Spark_Glow",
+        "/Game/EnvSandbox/Alphas_Sparkles/T_Spark_Twinkle8.T_Spark_Twinkle8",
     ],
-    "dot": "/Game/Alphas_Sparkles/T_Spark_Dot.T_Spark_Dot",
-    "bokeh": "/Game/Alphas_Sparkles/T_Spark_Bokeh.T_Spark_Bokeh",
+    "dot": "/Game/EnvSandbox/Alphas_Sparkles/T_Spark_Dot.T_Spark_Dot",
+    "bokeh": "/Game/EnvSandbox/Alphas_Sparkles/T_Spark_Bokeh.T_Spark_Bokeh",
 }
 
 # --- Japanese ornament alphas (70_Japanese_Ornament_Alphas_vfxMed) ---
-JRO_JP = "/Game/Textures/70_Japanese_Ornament_Alphas_vfxMed/70_Japanese_Ornament_Alphas/JRO_JP"
+JRO_JP = "/Game/EnvSandbox/Textures_Shared/70_Japanese_Ornament_Alphas_vfxMed/70_Japanese_Ornament_Alphas/JRO_JP"
 
 
 def _jro_mask(stem: str) -> str:
@@ -66,23 +68,23 @@ JAPANESE_ORNAMENT_MASKS = {
 
 FAIRY_GLYPH_MASKS = {
     "heart": [
-        "/Game/Magical/T_Magic_Heart.T_Magic_Heart",
-        "/Game/_PROJECT/04_Materials/Textures/tileableheartsalpha.tileableheartsalpha",
+        "/Game/Melodia/Magical/T_Magic_Heart.T_Magic_Heart",
+        "/Game/Melodia/_PROJECT/04_Materials/Textures/tileableheartsalpha.tileableheartsalpha",
     ],
     "star": [
-        "/Game/Magical/T_Magic_Star.T_Magic_Star",
-        "/Game/Alphas_Sparkles/T_Spark_Sparkle4.T_Spark_Sparkle4",
+        "/Game/Melodia/Magical/T_Magic_Star.T_Magic_Star",
+        "/Game/EnvSandbox/Alphas_Sparkles/T_Spark_Sparkle4.T_Spark_Sparkle4",
     ],
     "flower": [
-        "/Game/Sakura/T_Sakura_Petal.T_Sakura_Petal",
-        "/Game/Sakura/T_Sakura_Blossom.T_Sakura_Blossom",
+        "/Game/EnvSandbox/Sakura/T_Sakura_Petal.T_Sakura_Petal",
+        "/Game/EnvSandbox/Sakura/T_Sakura_Blossom.T_Sakura_Blossom",
     ],
     "moon": [
-        "/Game/Alphas_Sparkles/T_Spark_Glow.T_Spark_Glow",
-        "/Game/Alphas_Sparkles/T_Spark_Twinkle8.T_Spark_Twinkle8",
+        "/Game/EnvSandbox/Alphas_Sparkles/T_Spark_Glow.T_Spark_Glow",
+        "/Game/EnvSandbox/Alphas_Sparkles/T_Spark_Twinkle8.T_Spark_Twinkle8",
     ],
     "bow": [
-        "/Game/Magical/T_Magic_Bow.T_Magic_Bow",
+        "/Game/Melodia/Magical/T_Magic_Bow.T_Magic_Bow",
     ],
     "jro_zen": JAPANESE_ORNAMENT_MASKS["zen01"],
     "jro_baroque": JAPANESE_ORNAMENT_MASKS["baroque04"],
@@ -98,11 +100,55 @@ MOTIF_MASKS = {
 
 # PNGs under _AssetLibrary to import into /Game when uasset is missing.
 IMPORT_FROM_LIBRARY: list[tuple[str, str]] = [
-    ("Magical/T_Magic_Heart.png", "/Game/Magical"),
-    ("Magical/T_Magic_Star.png", "/Game/Magical"),
-    ("Magical/T_Magic_Bow.png", "/Game/Magical"),
-    ("Sakura/T_Sakura_Petal.png", "/Game/Sakura"),
-    ("Sakura/T_Sakura_Blossom.png", "/Game/Sakura"),
+    ("Magical/T_Magic_Heart.png", "/Game/Melodia/Magical"),
+    ("Magical/T_Magic_Star.png", "/Game/Melodia/Magical"),
+    ("Magical/T_Magic_Bow.png", "/Game/Melodia/Magical"),
+    ("Sakura/T_Sakura_Petal.png", "/Game/EnvSandbox/Sakura"),
+    ("Sakura/T_Sakura_Blossom.png", "/Game/EnvSandbox/Sakura"),
+]
+
+# Melodia game UI (Figma page 12) — run export_melodia_game_ui_assets.py then import_melodia_game_ui_textures.py
+MELODIA_GAME_UI_ALPHAS = {
+    "filigree_corner": f"{ALPHAS_MELODIA}/T_Melodia_FiligreeCorner.T_Melodia_FiligreeCorner",
+    "filigree_divider": f"{ALPHAS_MELODIA}/T_Melodia_FiligreeDivider.T_Melodia_FiligreeDivider",
+    "note_head": f"{ALPHAS_MELODIA}/T_Melodia_NoteHead.T_Melodia_NoteHead",
+    "staff_tile": f"{ALPHAS_MELODIA}/T_Melodia_StaffTile.T_Melodia_StaffTile",
+    "hitline": f"{ALPHAS_MELODIA}/T_Melodia_Hitline.T_Melodia_Hitline",
+    "sheen": f"{ALPHAS_MELODIA}/T_Melodia_SheenSweep.T_Melodia_SheenSweep",
+    "grain": f"{ALPHAS_MELODIA}/T_Melodia_Grain.T_Melodia_Grain",
+    "grade_perfect": f"{ALPHAS_MELODIA}/T_Melodia_GradePerfect_A.T_Melodia_GradePerfect_A",
+    "grade_great": f"{ALPHAS_MELODIA}/T_Melodia_GradeGreat_A.T_Melodia_GradeGreat_A",
+    "grade_good": f"{ALPHAS_MELODIA}/T_Melodia_GradeGood_A.T_Melodia_GradeGood_A",
+    "grade_miss": f"{ALPHAS_MELODIA}/T_Melodia_GradeMiss_A.T_Melodia_GradeMiss_A",
+}
+
+MELODIA_GAME_UI_TEX_MAP = {
+    "iri_overlay": f"{MELODIA_GAME_UI_TEX_PATH}/T_Melodia_IriOverlay.T_Melodia_IriOverlay",
+    "highway_bg": f"{MELODIA_GAME_UI_TEX_PATH}/T_Melodia_HighwayBG.T_Melodia_HighwayBG",
+    "enemy_glow": f"{MELODIA_GAME_UI_TEX_PATH}/T_Melodia_EnemyGlow.T_Melodia_EnemyGlow",
+    "element_wheel": f"{MELODIA_GAME_UI_TEX_PATH}/T_Melodia_ElementWheel.T_Melodia_ElementWheel",
+}
+
+IMPORT_MELODIA_GAME_UI: list[tuple[str, str]] = [
+    ("MelodiaGameUI/T_Melodia_FiligreeCorner.png", ALPHAS_MELODIA),
+    ("MelodiaGameUI/T_Melodia_FiligreeDivider.png", ALPHAS_MELODIA),
+    ("MelodiaGameUI/T_Melodia_NoteHead.png", ALPHAS_MELODIA),
+    ("MelodiaGameUI/T_Melodia_StaffTile.png", ALPHAS_MELODIA),
+    ("MelodiaGameUI/T_Melodia_Hitline.png", ALPHAS_MELODIA),
+    ("MelodiaGameUI/T_Melodia_SheenSweep.png", ALPHAS_MELODIA),
+    ("MelodiaGameUI/T_Melodia_Grain.png", ALPHAS_MELODIA),
+    ("MelodiaGameUI/T_Melodia_GradePerfect_A.png", ALPHAS_MELODIA),
+    ("MelodiaGameUI/T_Melodia_GradeGreat_A.png", ALPHAS_MELODIA),
+    ("MelodiaGameUI/T_Melodia_GradeGood_A.png", ALPHAS_MELODIA),
+    ("MelodiaGameUI/T_Melodia_GradeMiss_A.png", ALPHAS_MELODIA),
+    ("MelodiaGameUI/T_Melodia_IriOverlay.png", MELODIA_GAME_UI_TEX_PATH),
+    ("MelodiaGameUI/T_Melodia_HighwayBG.png", MELODIA_GAME_UI_TEX_PATH),
+    ("MelodiaGameUI/T_Melodia_EnemyGlow.png", MELODIA_GAME_UI_TEX_PATH),
+    ("MelodiaGameUI/T_Melodia_ElementWheel.png", MELODIA_GAME_UI_TEX_PATH),
+    ("MelodiaGameUI/T_Melodia_GradePerfect.png", MELODIA_GAME_UI_TEX_PATH),
+    ("MelodiaGameUI/T_Melodia_GradeGreat.png", MELODIA_GAME_UI_TEX_PATH),
+    ("MelodiaGameUI/T_Melodia_GradeGood.png", MELODIA_GAME_UI_TEX_PATH),
+    ("MelodiaGameUI/T_Melodia_GradeMiss.png", MELODIA_GAME_UI_TEX_PATH),
 ]
 
 # Instance presets -> texture parameter wiring (setup_universal_instances.py, apply_starter_instances.py)
@@ -161,10 +207,10 @@ def resolve_texture_path(candidates: list[str] | str) -> str | None:
 
 
 def ensure_alpha_imports() -> list[str]:
-    """Import missing Magical/Sakura PNGs from _AssetLibrary into /Game."""
+    """Import missing Magical/Sakura/Melodia game UI PNGs from _AssetLibrary into /Game."""
     imported: list[str] = []
     tools = unreal.AssetToolsHelpers.get_asset_tools()
-    for rel, dest in IMPORT_FROM_LIBRARY:
+    for rel, dest in [*IMPORT_FROM_LIBRARY, *IMPORT_MELODIA_GAME_UI]:
         stem = Path(rel).stem
         game_path = f"{dest}/{stem}.{stem}"
         if unreal.EditorAssetLibrary.does_asset_exist(game_path):
@@ -197,4 +243,6 @@ def catalog_summary() -> dict:
         "fairy_star": resolve_texture_path(FAIRY_GLYPH_MASKS["star"]),
         "fairy_flower": resolve_texture_path(FAIRY_GLYPH_MASKS["flower"]),
         "motif_heart": resolve_texture_path(MOTIF_MASKS["heart"]),
+        "melodia_filigree": resolve_texture_path(MELODIA_GAME_UI_ALPHAS["filigree_corner"]),
+        "melodia_iri": resolve_texture_path(MELODIA_GAME_UI_TEX_MAP["iri_overlay"]),
     }

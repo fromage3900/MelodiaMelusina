@@ -28,13 +28,7 @@ def main() -> dict:
         "params": {},
         "all_ok": False,
     }
-    required = (
-        "AudioReactivity",
-        "BassWeight",
-        "BeatPhaseStrength",
-        "ShadowFlowerMask",
-        "LayerBlendMode",
-    )
+    required = ("GlowColor", "LayerBlendMode")
     if report["master_exists"]:
         m = unreal.load_asset(MASTER)
         names = set()
@@ -47,11 +41,19 @@ def main() -> dict:
                 except Exception:
                     continue
         report["params"] = {p: p in names for p in required}
+    if report["mpc_audio_exists"]:
+        mpc = unreal.load_asset(MPC_AUDIO)
+        mpc_names = {str(p.get_editor_property("parameter_name")) for p in (mpc.get_editor_property("scalar_parameters") or [])}
+        report["mpc_params"] = {p: p in mpc_names for p in (
+            "BeatPulse", "BeatPhase", "GlobalAudioReactivity", "BassIntensity",
+            "MidIntensity", "TrebleIntensity", "ComboNormalized", "CrescendoNormalized",
+            "CommandEnergy", "BreakPulse", "VictoryPulse", "EnemyTension")}
     report["all_ok"] = (
         report["mpc_audio_exists"]
         and report["mf_audio_blend_exists"]
         and report["master_exists"]
         and all(report.get("params", {}).values())
+        and all(report.get("mpc_params", {}).values())
     )
     REPORT.parent.mkdir(parents=True, exist_ok=True)
     REPORT.write_text(json.dumps(report, indent=2), encoding="utf-8")

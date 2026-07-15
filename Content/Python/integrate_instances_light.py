@@ -68,10 +68,7 @@ def main() -> int:
         return _run_in_ue()
     if not UE_CMD.exists():
         return 1
-    for script in (
-        "repair_crash_assets.py",
-        "patch_meshblend_uasset_paths.py",
-    ):
+    for script in ("repair_crash_assets.py",):
         subprocess.run([sys.executable, str(PROJECT_ROOT / "Content/Python" / script)], check=False)
     log = PROJECT_ROOT / "Saved" / "Logs" / "integrate_instances_light.log"
     cmd = [

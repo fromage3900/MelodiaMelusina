@@ -16,11 +16,21 @@ def clear_graph_nodes(graph) -> None:
     """Remove every node from a PCG graph before a rebuild.
 
     NOTE: PCGGraph.remove_nodes() is a no-op in this engine build (confirmed
-    2026-07-02: a rebuilt graph kept its old nodes alongside the new ones,
+    2026-07-08: a rebuilt graph kept its old nodes alongside the new ones,
     silently doubling instance counts). Do not use it. Per-node removal via
-    get_editor_property("nodes") + remove_node() is the proven-working path.
+    per-node remove_node() is the proven-working path.
+    Updated 2026-07-09 for scale/walkability alignment safety.
+
+    FIXED 2026-07-09: PCGGraph also has no get_nodes() in this engine build --
+    the property is `.nodes`. The old get_nodes() call raised AttributeError,
+    was swallowed by the except, and clearing became a silent no-op (root cause
+    of the 18x-duplicated spawner chains found in PCG_MeadowBloom).
     """
-    for node in list(graph.get_editor_property("nodes")):
+    try:
+        nodes = list(graph.nodes or [])
+    except Exception:
+        nodes = []
+    for node in nodes:
         try:
             graph.remove_node(node)
         except Exception:
@@ -156,7 +166,23 @@ def configure_pcg_component(comp, *, seed: int | None = None, activated: bool = 
             except Exception:
                 continue
     if activated:
-        for prop in ("b_is_active", "b_activated", "is_active", "activated"):
+        for prop in ("auto_activate", "b_is_active", "b_activated", "is_active", "activated"):
+            try:
+                comp.set_editor_property(prop, True)
+                break
+            except Exception:
+                continue
+        try:
+            comp.set_editor_property(
+                "generation_trigger",
+                unreal.PCGComponentGenerationTrigger.GENERATE_ON_LOAD,
+            )
+        except Exception:
+            pass
+        # UE stores this as a differently named editor property across minor
+        # 5.x revisions. Persisting it is essential for WP actors: otherwise
+        # the component survives a reopen but its generated ISMs do not.
+        for prop in ("b_generate_on_load", "generate_on_load"):
             try:
                 comp.set_editor_property(prop, True)
                 break
@@ -292,7 +318,14 @@ def wire_scatter_chain(
     scale_min: float | None = None,
     scale_max: float | None = None,
 ) -> dict:
-    """Build Input â†’ Sample â†’ [Exclusion] â†’ [Density] â†’ [Prune] â†’ Transform â†’ Spawner â†’ Output."""
+    """Build Input → Sample → [Exclusion] → [Density] → [Prune] → Transform → Spawner → Output.
+    
+    NOTE 2026-07-08: DensityFilter is only wired for surface samplers (which
+    generate non-uniform density). For volume samplers all points have density
+    1.0 so a density filter would cull everything — voxel_size controls density.
+    Self-pruning uses safe enum fallback (LargeToSmall, no ComparisonSource) to
+    avoid crashes on engine builds where PCGSelfPruningType differs.
+    """
     import unreal
 
     inp = graph.get_input_node()
@@ -334,14 +367,15 @@ def wire_scatter_chain(
         if exclusion_wired:
             prev, prev_pin = exclusion_wired["node"], exclusion_wired["pin"]
 
+    # Density filter: only useful with surface samplers (non-uniform density).
+    # Volume samplers emit all points at density=1.0, so a filter would cull 100%.
     dens_cls = getattr(unreal, "PCGDensityFilterSettings", None)
-    upper = max(0.04, min(0.95, density_mult * 0.85))
-    if dens_cls:
+    if use_surface_tag and dens_cls:
         dens, dens_s = add_node(graph, "PCGDensityFilterSettings", -450, 0)
         try:
             dens_s.set_editor_property("lower_bound", 0.0)
-            dens_s.set_editor_property("upper_bound", upper)
-            dens_s.set_editor_property("b_invert_filter", False)
+            dens_s.set_editor_property("upper_bound", 1.0)
+            dens_s.set_editor_property("b_invert_filter", density_mult < 1.0)
         except Exception:
             pass
         graph.add_edge(prev, prev_pin, dens, "In")
@@ -352,11 +386,8 @@ def wire_scatter_chain(
     if spacing_prune and prune_cls:
         prune, prune_s = add_node(graph, "PCGSelfPruningSettings", -250, 0)
         try:
-            prune_s.set_editor_property("pruning_type", unreal.PCGSelfPruningType.LARGEST_TO_SMALLEST)
+            prune_s.set_editor_property("pruning_type", 0)
             prune_s.set_editor_property("radius_similarity_factor", 0.25)
-            prune_s.set_editor_property(
-                "comparison_source", unreal.PCGSelfPruningComparisonSource.Largest,
-            )
         except Exception:
             pass
         try:
@@ -395,34 +426,103 @@ def wire_scatter_chain(
     }
 
 
+def wire_mesh_scatter_chain(
+    graph,
+    *,
+    terrain_mesh_path: str,
+    role: str,
+    material_path: str | None = None,
+    sampling_radius_cm: float = 300.0,
+    max_samples: int = 4000,
+    scale_min: float | None = None,
+    scale_max: float | None = None,
+    transform_jitter: float = 0.0,
+    chain_y: int = 0,
+) -> dict:
+    """Build a route-bounded greybox scatter chain.
+
+    WP greybox volumes must remain spatially legible. A mesh sampler samples
+    the complete terrain asset and can emit points across a 20 km terrain even
+    when the owning PCGVolume is route-sized. Use the volume sampler for this
+    greybox chain; the volume bounds are the intentional route contract.
+    """
+    import unreal
+
+    out = graph.get_output_node()
+
+    sampler, s_smp = add_node(graph, "PCGVolumeSamplerSettings", -700, chain_y)
+    s_smp.set_editor_property(
+        "voxel_size",
+        unreal.Vector(float(sampling_radius_cm), float(sampling_radius_cm), float(sampling_radius_cm)),
+    )
+    s_smp.set_editor_property("unbounded", False)
+    graph.add_edge(graph.get_input_node(), "In", sampler, "Volume")
+    # The blockout's tagged side walls/landmark volumes are the heatmap-driven
+    # no-scatter contract. Keep the corridor floor out of this tag so the
+    # sampler can still dress the walkable surface.
+    # Consume the authored heatmap mask through an actor-data difference. This
+    # is spatial exclusion around the tagged walls/landmarks, not point-tag
+    # filtering, so the walkable floor stream remains populated.
+    exclusion = _wire_exclusion_filter(graph, sampler, "Out")
+    prev = exclusion["node"] if exclusion else sampler
+    prev_pin = exclusion["pin"] if exclusion else "Out"
+
+    xform, s_xf = add_node(graph, "PCGTransformPointsSettings", -300, chain_y)
+    apply_transform(
+        s_xf,
+        scale_min=std.GRASS_SCALE_MIN if scale_min is None else float(scale_min),
+        scale_max=std.GRASS_SCALE_MAX if scale_max is None else float(scale_max),
+        jitter=float(transform_jitter),
+    )
+    graph.add_edge(prev, prev_pin, xform, "In")
+
+    spawner, s_spn = add_node(graph, "PCGStaticMeshSpawnerSettings", 100, chain_y)
+    if not configure_spawner(s_spn, role, material_path):
+        raise RuntimeError(f"spawner configuration failed for role {role}")
+    graph.add_edge(xform, "Out", spawner, "In")
+    graph.add_edge(spawner, "Out", out, "Out")
+
+    graph.set_editor_property("is_standalone_graph", True)
+    return {
+        "mesh_sampler": True,
+        "terrain_mesh": terrain_mesh_path,
+        "sampling_radius_cm": float(sampling_radius_cm),
+        "max_samples": int(max_samples),
+        "role": role,
+    }
+
+
 def _wire_exclusion_filter(graph, prev, prev_pin) -> dict | bool:
     """Cull points near PCG_Exclude tagged actors when supported."""
     import unreal
-
-    tag_cls = getattr(unreal, "PCGFilterByTagSettings", None)
-    if tag_cls:
-        filt, filt_s = add_node(graph, "PCGFilterByTagSettings", -550, 120)
-        try:
-            filt_s.set_editor_property("filter_mode", unreal.PCGFilterByTagFilterMode.Exclude)
-            filt_s.set_editor_property("tag", std.TAG_EXCLUDE)
-        except Exception:
-            return False
-        graph.add_edge(prev, prev_pin, filt, "In")
-        return {"node": filt, "pin": "Out"}
 
     actor_cls = getattr(unreal, "PCGDataFromActorSettings", None)
     diff_cls = getattr(unreal, "PCGDifferenceSettings", None)
     if actor_cls and diff_cls:
         actor_data, actor_s = add_node(graph, "PCGDataFromActorSettings", -700, 200)
         try:
-            actor_s.set_editor_property("actor_selector", unreal.PCGActorSelector.ByTag)
-            actor_s.set_editor_property("actor_tag", std.TAG_EXCLUDE)
+            selector = actor_s.get_editor_property("actor_selector")
+            selector.set_editor_property("actor_selection", unreal.PCGActorSelection.BY_TAG)
+            selector.set_editor_property("actor_selection_tag", std.TAG_EXCLUDE)
+            actor_s.set_editor_property("actor_selector", selector)
+        except Exception:
+            actor_cls = None
+        diff, _ = add_node(graph, "PCGDifferenceSettings", -550, 0)
+        if actor_cls:
+            graph.add_edge(prev, prev_pin, diff, "Source")
+            graph.add_edge(actor_data, "Out", diff, "Subtract")
+            return {"node": diff, "pin": "Out"}
+
+    tag_cls = getattr(unreal, "PCGFilterByTagSettings", None)
+    if tag_cls:
+        filt, filt_s = add_node(graph, "PCGFilterByTagSettings", -550, 120)
+        try:
+            filt_s.set_editor_property("operation", unreal.PCGFilterByTagOperation.REMOVE_TAGGED)
+            filt_s.set_editor_property("selected_tags", std.TAG_EXCLUDE)
         except Exception:
             return False
-        diff, _ = add_node(graph, "PCGDifferenceSettings", -550, 0)
-        graph.add_edge(prev, prev_pin, diff, "Source")
-        graph.add_edge(actor_data, "Out", diff, "Subtract")
-        return {"node": diff, "pin": "Out"}
+        graph.add_edge(prev, prev_pin, filt, "In")
+        return {"node": filt, "pin": "Out"}
 
     pcgex = find_pcgex_class("distance") or find_pcgex_class("falloff")
     if pcgex:

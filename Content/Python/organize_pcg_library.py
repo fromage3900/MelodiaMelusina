@@ -84,13 +84,17 @@ def organize(*, move_orphan: bool = True) -> dict:
             encoding="utf-8",
         )
 
+    non_compliant = [item for item in inventory if not item["compliant"]]
+    failed_actions = [action for action in moved if action.startswith("failed_")]
     report = {
         "timestamp": datetime.now(timezone.utc).isoformat(),
+        "ok": not non_compliant and not failed_actions,
         "directories": list(std.ALL_PORTFOLIO_DIRS),
         "moved": moved,
         "inventory": sorted(inventory, key=lambda x: x["path"]),
         "count": len(inventory),
-        "non_compliant_root": [i for i in inventory if not i["compliant"]],
+        "non_compliant_root": non_compliant,
+        "failed_actions": failed_actions,
     }
     REPORT.parent.mkdir(parents=True, exist_ok=True)
     REPORT.write_text(json.dumps(report, indent=2), encoding="utf-8")

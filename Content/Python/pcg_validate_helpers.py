@@ -10,12 +10,10 @@ except ImportError:
 
 
 def pump_editor(_delta: float = 0.016) -> None:
-    if unreal is None:
-        return
-    try:
-        unreal.SystemLibrary.execute_console_command(None, "obj gc", None)
-    except Exception:
-        pass
+    # Do not force `obj gc` while PCG is generating. In World Partition maps
+    # that command can starve the editor game thread and make a finite PCG
+    # generation appear hung. The editor continues ticking between sleeps.
+    return
 
 
 def is_generating(comp) -> bool:

@@ -61,11 +61,7 @@ def main() -> int:
         return 1
 
     LOG_DIR.mkdir(parents=True, exist_ok=True)
-    for script in (
-        "patch_portfolio_texture_paths.py",
-        "patch_meshblend_uasset_paths.py",
-    ):
-        subprocess.run([sys.executable, str(PYTHON_DIR / script)], cwd=str(PROJECT_ROOT), check=False)
+    # patch_meshblend_uasset_paths.py corrupts MF_MeshBlend_Activator_Index_* — fix in UE instead.
 
     log_path = LOG_DIR / "phase_a_fixup.log"
     cmd = [

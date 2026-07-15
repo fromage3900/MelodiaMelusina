@@ -74,11 +74,12 @@ def _get_level_slug() -> str:
     try:
         world = _get_editor_world()
         if world:
-            level = world.get_current_level()
-            if level:
-                outer = level.get_outer()
-                if outer:
-                    return outer.get_name()
+            # FIXED 2026-07-10: the old level.get_outer().get_name() chain
+            # returned the literal string "level" for WP maps, so every plate
+            # filename lost its pillar identity. The world name IS the map name.
+            name = str(world.get_name())
+            if name:
+                return name.lower()
     except Exception:
         pass
     return "level"
@@ -118,7 +119,13 @@ def _list_cine_cameras() -> list[dict]:
     cameras: list[dict] = []
     for actor in eas.get_all_level_actors() or []:
         try:
-            if not actor.is_a(unreal.CineCameraActor.static_class()):
+            cls = actor.get_class()
+            if not cls:
+                continue
+            # UE Python in this project environment does not expose actor.is_a()
+            # or class.is_child_of(). Fall back to strict class identity / name.
+            cine_cls = unreal.CineCameraActor.static_class()
+            if cls != cine_cls and getattr(cls, "get_name", lambda: "")() != "CineCameraActor":
                 continue
         except Exception:
             continue
@@ -185,6 +192,116 @@ def _eject_pilot() -> None:
         les.eject_pilot_level_actor()
         return
     unreal.EditorLevelLibrary.eject_pilot_level_actor()
+
+
+def _list_hero_cameras() -> list[dict]:
+    """Return CineCameras tagged Portfolio_Hero, sorted by label."""
+    cameras = [entry for entry in _list_cine_cameras() if TAG_HERO in entry["tags"]]
+    cameras.sort(key=lambda entry: entry.get("label") or "")
+    return cameras
+
+
+def capture_hero_from_camera(
+    camera,
+    *,
+    width: int = DEFAULT_WIDTH,
+    height: int = DEFAULT_HEIGHT,
+) -> dict:
+    """Pilot a CineCamera, capture a hero plate, then eject."""
+    import unreal
+
+    level_slug = _get_level_slug()
+    ts = _timestamp_slug()
+    label = camera.get_actor_label().replace(" ", "_")
+    filename = f"hero_{level_slug}_{label}_{ts}_{width}x{height}.png"
+    out_path = HERO_DIR / filename
+
+    piloted = False
+    try:
+        _pilot_camera(camera)
+        piloted = True
+        time.sleep(VIEWPORT_SETTLE_SEC)
+        _take_high_res_screenshot(out_path, width, height)
+    except Exception as exc:
+        unreal.log_warning(f"[RenderExporter] hero capture failed ({label}): {exc}")
+        return {
+            "ok": False,
+            "error": str(exc),
+            "kind": "hero",
+            "camera": camera.get_actor_label(),
+        }
+    finally:
+        if piloted:
+            try:
+                _eject_pilot()
+            except Exception as exc:
+                unreal.log_warning(f"[RenderExporter] pilot eject failed: {exc}")
+
+    unreal.log(f"[RenderExporter] hero ({label}) -> {out_path}")
+    return {
+        "ok": True,
+        "kind": "hero",
+        "path": str(out_path),
+        "filename": filename,
+        "width": width,
+        "height": height,
+        "level": level_slug,
+        "camera": camera.get_actor_label(),
+        "source": "cine_camera_pilot",
+    }
+
+
+def capture_all_hero_renders(*, width: int = DEFAULT_WIDTH, height: int = DEFAULT_HEIGHT) -> dict:
+    """Capture one hero plate per CineCamera tagged Portfolio_Hero."""
+    import unreal
+
+    portfolio_fs.ensure_portfolio_layout()
+    portfolio_fs.organize_portfolio_outputs()
+
+    cameras = _list_hero_cameras()
+    if not cameras:
+        unreal.log_warning("[RenderExporter] no Portfolio_Hero cameras found")
+        return {
+            "ok": False,
+            "error": "no_portfolio_hero_cameras",
+            "captures": [],
+        }
+
+    # FIXED 2026-07-10: take_high_res_screenshot is async (fulfilled on the
+    # next rendered frame). Requesting several in one game-thread call means
+    # only the LAST request ever writes to disk — the earlier ones are silently
+    # clobbered (found 2026-07-09: Establishing plates never landed). So this
+    # now requests exactly ONE capture per invocation and reports what's left;
+    # callers re-invoke until pending == 0. Idempotence: a camera is 'done' if
+    # a plate for (level, camera) from the last CAPTURE_FRESH_HOURS exists.
+    captures: list[dict] = []
+    pending: list[str] = []
+    fresh_cutoff = time.time() - 6 * 3600
+    requested = False
+    for entry in cameras:
+        label = entry["actor"].get_actor_label().replace(" ", "_")
+        slug = _get_level_slug()
+        existing = [
+            p for p in HERO_DIR.glob(f"hero_{slug}_{label}_*_{width}x{height}.png")
+            if p.stat().st_mtime > fresh_cutoff
+        ]
+        if existing:
+            captures.append({"ok": True, "kind": "hero", "camera": label, "path": str(existing[-1]), "cached": True})
+            continue
+        if requested:
+            pending.append(label)
+            continue
+        captures.append(capture_hero_from_camera(entry["actor"], width=width, height=height))
+        requested = True
+
+    ok = all(shot.get("ok") for shot in captures)
+    return {
+        "ok": ok,
+        "count": len(captures),
+        "pending": pending,
+        "note": "re-invoke until pending is empty (one async screenshot per call)",
+        "captures": captures,
+    }
 
 
 def capture_hero_render(*, width: int = DEFAULT_WIDTH, height: int = DEFAULT_HEIGHT) -> dict:
@@ -286,6 +403,14 @@ def export_renders(*, width: int = DEFAULT_WIDTH, height: int = DEFAULT_HEIGHT) 
 
 def main() -> int:
     width, height = _parse_resolution()
+    if "--all-heroes" in sys.argv:
+        result = capture_all_hero_renders(width=width, height=height)
+        if "json" in sys.argv:
+            print(json.dumps(result, indent=2))
+        else:
+            print(result)
+        return 0 if result.get("ok") else 1
+
     result = export_renders(width=width, height=height)
     if "json" in sys.argv:
         print(json.dumps(result, indent=2))

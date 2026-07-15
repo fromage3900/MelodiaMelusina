@@ -95,7 +95,7 @@ def main() -> int:
 
     LOG.parent.mkdir(parents=True, exist_ok=True)
 
-    for mod_name in ("patch_portfolio_texture_paths", "patch_meshblend_uasset_paths"):
+    for mod_name in ("patch_portfolio_texture_paths",):
         try:
             report = __import__(mod_name).main()
             print(f"[Wild] pre-UE {mod_name}: ok")

@@ -1,4 +1,4 @@
-"""Compositing texture catalog: /Game/Textures + SDF/Textures roles for masters/instances.
+"""Compositing texture catalog: /Game/EnvSandbox/Textures_Shared + SDF/Textures roles for masters/instances.
 
 Run audit (no editor):
   python Content/Python/portfolio_texture_catalog.py
@@ -8,15 +8,19 @@ Used by integrate_compositing_textures.py and setup_universal_instances.py.
 from __future__ import annotations
 
 import json
+import subprocess
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 CONTENT = PROJECT_ROOT / "Content"
 REPORT = PROJECT_ROOT / "Saved" / "Audit" / "compositing_texture_catalog.json"
+UE_CMD = Path(r"C:\Program Files\Epic Games\UE_5.8\Engine\Binaries\Win64\UnrealEditor-Cmd.exe")
+UPROJECT = PROJECT_ROOT / "BS_GodFile.uproject"
 
 SDF = "/Game/EnvSandbox/Materials/SDF/Textures"
-TEX = "/Game/Textures"
+TEX = "/Game/EnvSandbox/Textures_Shared"
 JRO = f"{TEX}/70_Japanese_Ornament_Alphas_vfxMed/70_Japanese_Ornament_Alphas/JRO_JP"
 
 
@@ -61,7 +65,7 @@ MASK = {
     "voronoi_crack": f"{SDF}/Voronoi/Voronoi_2_-_512x512.Voronoi_2_-_512x512",
     "voronoi_swirl": f"{SDF}/Voronoi/Voronoi_11_-_512x512.Voronoi_11_-_512x512",
 }
-# /Game/Textures compositing library (SBS packs)
+# /Game/EnvSandbox/Textures_Shared compositing library (SBS packs)
 COMPOSITING = {
     "crack_overlay": f"{TEX}/sbs_-_noise_texture_pack_-_512x512/512x512/Cracks/Cracks_3_-_512x512.Cracks_3_-_512x512",
     "crack_heavy": f"{TEX}/sbs_-_noise_texture_pack_-_512x512/512x512/Cracks/Cracks_10_-_512x512.Cracks_10_-_512x512",
@@ -75,7 +79,7 @@ COMPOSITING = {
 }
 
 # Author / Melodia custom textures (_PROJECT originals — permanent library)
-PROJ = "/Game/_PROJECT/04_Materials/Textures"
+PROJ = "/Game/Melodia/_PROJECT/04_Materials/Textures"
 CUSTOM = {
     "starry_albedo": f"{PROJ}/T_Starryfabric_albedo.T_Starryfabric_albedo",
     "starry_normal": f"{PROJ}/T_Starryfabric_normal.T_Starryfabric_normal",
@@ -149,31 +153,38 @@ TEXTURE_ROLE_HINTS: dict[str, str] = {
 }
 
 
+PROJECT_LOCAL_ALBEDO_FALLBACKS = {
+    "Rock": "/Game/EnvSandbox/Textures_Shared/sbs_-_seamless_abstract_pack_-_512x512/512x512/Texture_512x512_1.Texture_512x512_1",
+    "Grass": "/Game/EnvSandbox/Textures/Melusina/Grass/T_Grass_BaseColor.T_Grass_BaseColor",
+    "Mud": "/Game/EnvSandbox/Textures/Melusina/Soil/T_Soil_BaseColor.T_Soil_BaseColor",
+    "Path": "/Game/EnvSandbox/Materials/SDF/Textures/Marble/Marble_5_-_512x512.Marble_5_-_512x512",
+}
+
 LANDSCAPE_TEXTURE_DEFAULTS: dict[str, list[str]] = {
-    "Rock_Albedo": _chain(COMPOSITING["gradient_warm"], COMPOSITING["abstract_a"], MARBLE["warm_stone"]),
+    "Rock_Albedo": _chain(PROJECT_LOCAL_ALBEDO_FALLBACKS["Rock"], COMPOSITING["gradient_warm"], COMPOSITING["abstract_a"], MARBLE["warm_stone"]),
     "Rock_Normal": _normal_chain(),
     "Rock_Height": _chain(HEIGHT["perlin"], COMPOSITING["noise_fine"]),
-    "Grass_Albedo": _chain(CUSTOM["soil_albedo"], CUSTOM["landscape_gray_albedo"], COMPOSITING["abstract_a"]),
+    "Grass_Albedo": _chain(PROJECT_LOCAL_ALBEDO_FALLBACKS["Grass"], CUSTOM["soil_albedo"], CUSTOM["landscape_gray_albedo"], COMPOSITING["abstract_a"]),
     "Grass_Normal": _chain(CUSTOM["soil_normal"], CUSTOM["landscape_gray_normal"], *_normal_chain()),
     "Grass_Height": _chain(COMPOSITING["noise_fine"], HEIGHT["perlin"]),
-    "Mud_Albedo": _chain(COMPOSITING["crack_heavy"], COMPOSITING["abstract_a"]),
+    "Mud_Albedo": _chain(PROJECT_LOCAL_ALBEDO_FALLBACKS["Mud"], COMPOSITING["crack_heavy"], COMPOSITING["abstract_a"]),
     "Mud_Normal": _normal_chain(),
     "Mud_Height": _chain(
         PROCEDURAL["vein"]["height"] if isinstance(PROCEDURAL.get("vein"), dict) else COMPOSITING["crack_overlay"],
         COMPOSITING["crack_overlay"],
         HEIGHT["perlin"],
     ),
-    "Path_Albedo": _chain(MARBLE["worn"], COMPOSITING["gradient_warm"]),
+    "Path_Albedo": _chain(PROJECT_LOCAL_ALBEDO_FALLBACKS["Path"], MARBLE["worn"], COMPOSITING["gradient_warm"]),
     "Path_Normal": _normal_chain(),
     "Path_Height": _chain(HEIGHT["perlin"], COMPOSITING["noise_fine"]),
     "PathMask": _chain(MASK["voronoi_crack"], COMPOSITING["crack_overlay"]),
     "SparkleMask": _chain(
-        "/Game/Alphas_Sparkles/T_Spark_Twinkle8.T_Spark_Twinkle8",
-        "/Game/Alphas_Sparkles/T_Spark_Sparkle4.T_Spark_Sparkle4",
+        "/Game/EnvSandbox/Alphas_Sparkles/T_Spark_Twinkle8.T_Spark_Twinkle8",
+        "/Game/EnvSandbox/Alphas_Sparkles/T_Spark_Sparkle4.T_Spark_Sparkle4",
         COMPOSITING["noise_fine"],
     ),
     "ShadowFlowerMask": _chain(
-        "/Game/Sakura/T_Sakura_Petal.T_Sakura_Petal",
+        "/Game/EnvSandbox/Sakura/T_Sakura_Petal.T_Sakura_Petal",
         JAPANESE_ORNAMENT["zen_circle"],
     ),
 }
@@ -205,15 +216,15 @@ MASTER_TEXTURE_DEFAULTS: dict[str, list[str]] = {
     "LayerC_MetallicMap": _chain(COMPOSITING["gradient_warm"], COMPOSITING["abstract_a"], MARBLE["dark"]),
     "DetailNormal": _chain(MARBLE["light"], MARBLE["worn"], COMPOSITING["noise_fine"]),
     "SparkleMask": _chain(
-        "/Game/Alphas_Sparkles/T_Spark_Twinkle8.T_Spark_Twinkle8",
-        "/Game/Alphas_Sparkles/T_Spark_Sparkle4.T_Spark_Sparkle4",
+        "/Game/EnvSandbox/Alphas_Sparkles/T_Spark_Twinkle8.T_Spark_Twinkle8",
+        "/Game/EnvSandbox/Alphas_Sparkles/T_Spark_Sparkle4.T_Spark_Sparkle4",
         COMPOSITING["noise_fine"],
     ),
     "FairyGlyphMask": _chain(
         JAPANESE_ORNAMENT["zen_minimal"],
         JAPANESE_ORNAMENT["baroque_filigree"],
-        "/Game/Sakura/T_Sakura_Petal.T_Sakura_Petal",
-        "/Game/Magical/T_Magic_Heart.T_Magic_Heart",
+        "/Game/EnvSandbox/Sakura/T_Sakura_Petal.T_Sakura_Petal",
+        "/Game/Melodia/Magical/T_Magic_Heart.T_Magic_Heart",
         MASK["voronoi_swirl"],
         COMPOSITING["abstract_a"],
     ),
@@ -221,13 +232,13 @@ MASTER_TEXTURE_DEFAULTS: dict[str, list[str]] = {
         JAPANESE_ORNAMENT["baroque_rosette"],
         JAPANESE_ORNAMENT["baroque_cathedral"],
         JAPANESE_ORNAMENT["zen_wave"],
-        "/Game/Magical/T_Magic_Heart.T_Magic_Heart",
-        "/Game/Magical/T_Magic_Bow.T_Magic_Bow",
+        "/Game/Melodia/Magical/T_Magic_Heart.T_Magic_Heart",
+        "/Game/Melodia/Magical/T_Magic_Bow.T_Magic_Bow",
         COMPOSITING["abstract_a"],
     ),
     "StarMap": _chain(
-        "/Game/Alphas_Sparkles/T_Spark_Twinkle8.T_Spark_Twinkle8",
-        "/Game/Alphas_Sparkles/T_Spark_Sparkle4.T_Spark_Sparkle4",
+        "/Game/EnvSandbox/Alphas_Sparkles/T_Spark_Twinkle8.T_Spark_Twinkle8",
+        "/Game/EnvSandbox/Alphas_Sparkles/T_Spark_Sparkle4.T_Spark_Sparkle4",
         COMPOSITING["noise_fine"],
         COMPOSITING["space_nebula"],
     ),
@@ -273,7 +284,7 @@ INSTANCE_TEXTURE_DEFAULTS: dict[str, dict[str, list[str]]] = {
     },
     "MI_Universal_CelestialNebula": {
         "Albedo": _chain(COMPOSITING["space_nebula"]),
-        "SparkleMask": _chain(f"/Game/Alphas_Sparkles/T_Spark_Twinkle8.T_Spark_Twinkle8"),
+        "SparkleMask": _chain(f"/Game/EnvSandbox/Alphas_Sparkles/T_Spark_Twinkle8.T_Spark_Twinkle8"),
     },
     # Starter showcase set (Instances/Showcase) — see starter_instances.py
     "MI_Show_Default": {
@@ -289,12 +300,12 @@ INSTANCE_TEXTURE_DEFAULTS: dict[str, dict[str, list[str]]] = {
     "MI_Show_CherryBlossom": {
         "Albedo": _chain(MARBLE["light"], COMPOSITING["gradient_warm"]),
         "SparkleMask": _chain(
-            "/Game/Alphas_Sparkles/T_Spark_Twinkle8.T_Spark_Twinkle8",
-            "/Game/Alphas_Sparkles/T_Spark_Sparkle4.T_Spark_Sparkle4",
+            "/Game/EnvSandbox/Alphas_Sparkles/T_Spark_Twinkle8.T_Spark_Twinkle8",
+            "/Game/EnvSandbox/Alphas_Sparkles/T_Spark_Sparkle4.T_Spark_Sparkle4",
         ),
         "FairyGlyphMask": _chain(
-            "/Game/Sakura/T_Sakura_Petal.T_Sakura_Petal",
-            "/Game/Sakura/T_Sakura_Blossom.T_Sakura_Blossom",
+            "/Game/EnvSandbox/Sakura/T_Sakura_Petal.T_Sakura_Petal",
+            "/Game/EnvSandbox/Sakura/T_Sakura_Blossom.T_Sakura_Blossom",
         ),
         "HeightMap": _chain(COMPOSITING["noise_fine"], HEIGHT["perlin"]),
     },
@@ -303,12 +314,12 @@ INSTANCE_TEXTURE_DEFAULTS: dict[str, dict[str, list[str]]] = {
         "NormalMap": _chain(CUSTOM["starry_normal"], *_normal_chain()),
         "HeightMap": _chain(CUSTOM["starry_height"], HEIGHT["perlin"], COMPOSITING["noise_fine"]),
         "StarMap": _chain(
-            "/Game/Alphas_Sparkles/T_Spark_Twinkle8.T_Spark_Twinkle8",
-            "/Game/Alphas_Sparkles/T_Spark_Sparkle4.T_Spark_Sparkle4",
+            "/Game/EnvSandbox/Alphas_Sparkles/T_Spark_Twinkle8.T_Spark_Twinkle8",
+            "/Game/EnvSandbox/Alphas_Sparkles/T_Spark_Sparkle4.T_Spark_Sparkle4",
             COMPOSITING["noise_fine"],
         ),
         "SparkleMask": _chain(
-            "/Game/Alphas_Sparkles/T_Spark_Twinkle8.T_Spark_Twinkle8",
+            "/Game/EnvSandbox/Alphas_Sparkles/T_Spark_Twinkle8.T_Spark_Twinkle8",
             COMPOSITING["noise_fine"],
         ),
         "HeightMap": _chain(HEIGHT["perlin"], COMPOSITING["noise_fine"]),
@@ -316,16 +327,16 @@ INSTANCE_TEXTURE_DEFAULTS: dict[str, dict[str, list[str]]] = {
     "MI_Show_FairyHearts": {
         "Albedo": _chain(MARBLE["light"], COMPOSITING["abstract_a"]),
         "SparkleMask": _chain(
-            "/Game/Alphas_Sparkles/T_Spark_Sparkle4.T_Spark_Sparkle4",
-            "/Game/Alphas_Sparkles/T_Spark_Twinkle8.T_Spark_Twinkle8",
+            "/Game/EnvSandbox/Alphas_Sparkles/T_Spark_Sparkle4.T_Spark_Sparkle4",
+            "/Game/EnvSandbox/Alphas_Sparkles/T_Spark_Twinkle8.T_Spark_Twinkle8",
         ),
         "FairyGlyphMask": _chain(
             CUSTOM["hearts_alpha"],
-            "/Game/Magical/T_Magic_Heart.T_Magic_Heart",
-            "/Game/_PROJECT/04_Materials/Textures/tileableheartsalpha.tileableheartsalpha",
+            "/Game/Melodia/Magical/T_Magic_Heart.T_Magic_Heart",
+            "/Game/Melodia/_PROJECT/04_Materials/Textures/tileableheartsalpha.tileableheartsalpha",
         ),
         "MotifMask": _chain(
-            "/Game/Magical/T_Magic_Heart.T_Magic_Heart",
+            "/Game/Melodia/Magical/T_Magic_Heart.T_Magic_Heart",
             COMPOSITING["abstract_a"],
         ),
         "HeightMap": _chain(HEIGHT["perlin"], COMPOSITING["noise_fine"]),
@@ -350,7 +361,7 @@ INSTANCE_TEXTURE_DEFAULTS: dict[str, dict[str, list[str]]] = {
     "MI_Show_InkWash": {
         "Albedo": _chain(MARBLE["light"], COMPOSITING["abstract_a"]),
         "MotifMask": _chain(
-            "/Game/Magical/T_Magic_Bow.T_Magic_Bow",
+            "/Game/Melodia/Magical/T_Magic_Bow.T_Magic_Bow",
             COMPOSITING["abstract_a"],
         ),
         "HeightMap": _chain(HEIGHT["perlin"], COMPOSITING["noise_fine"]),
@@ -419,8 +430,8 @@ INSTANCE_TEXTURE_RULES: list[tuple[tuple[str, ...], dict[str, list[str]]]] = [
             "NormalMap": _chain(CUSTOM["starry_normal"], *_normal_chain()),
             "HeightMap": _chain(CUSTOM["starry_height"], HEIGHT["perlin"], COMPOSITING["noise_fine"]),
             "StarMap": _chain(
-                "/Game/Alphas_Sparkles/T_Spark_Twinkle8.T_Spark_Twinkle8",
-                "/Game/Alphas_Sparkles/T_Spark_Sparkle4.T_Spark_Sparkle4",
+                "/Game/EnvSandbox/Alphas_Sparkles/T_Spark_Twinkle8.T_Spark_Twinkle8",
+                "/Game/EnvSandbox/Alphas_Sparkles/T_Spark_Sparkle4.T_Spark_Sparkle4",
                 COMPOSITING["noise_fine"],
             ),
         },
@@ -542,12 +553,12 @@ INSTANCE_TEXTURE_RULES: list[tuple[tuple[str, ...], dict[str, list[str]]]] = [
         {
             "Albedo": _chain(MARBLE["light"], COMPOSITING["gradient_warm"]),
             "SparkleMask": _chain(
-                "/Game/Alphas_Sparkles/T_Spark_Twinkle8.T_Spark_Twinkle8",
-                "/Game/Alphas_Sparkles/T_Spark_Sparkle4.T_Spark_Sparkle4",
+                "/Game/EnvSandbox/Alphas_Sparkles/T_Spark_Twinkle8.T_Spark_Twinkle8",
+                "/Game/EnvSandbox/Alphas_Sparkles/T_Spark_Sparkle4.T_Spark_Sparkle4",
             ),
             "FairyGlyphMask": _chain(
-                "/Game/Sakura/T_Sakura_Petal.T_Sakura_Petal",
-                "/Game/Sakura/T_Sakura_Blossom.T_Sakura_Blossom",
+                "/Game/EnvSandbox/Sakura/T_Sakura_Petal.T_Sakura_Petal",
+                "/Game/EnvSandbox/Sakura/T_Sakura_Blossom.T_Sakura_Blossom",
             ),
             "HeightMap": _chain(COMPOSITING["noise_fine"], HEIGHT["perlin"]),
         },
@@ -557,15 +568,15 @@ INSTANCE_TEXTURE_RULES: list[tuple[tuple[str, ...], dict[str, list[str]]]] = [
         {
             "Albedo": _chain(COMPOSITING["abstract_a"], MARBLE["light"]),
             "SparkleMask": _chain(
-                "/Game/Alphas_Sparkles/T_Spark_Twinkle8.T_Spark_Twinkle8",
-                "/Game/Alphas_Sparkles/T_Spark_Sparkle4.T_Spark_Sparkle4",
+                "/Game/EnvSandbox/Alphas_Sparkles/T_Spark_Twinkle8.T_Spark_Twinkle8",
+                "/Game/EnvSandbox/Alphas_Sparkles/T_Spark_Sparkle4.T_Spark_Sparkle4",
             ),
             "FairyGlyphMask": _chain(
-                "/Game/Magical/T_Magic_Heart.T_Magic_Heart",
-                "/Game/Sakura/T_Sakura_Petal.T_Sakura_Petal",
+                "/Game/Melodia/Magical/T_Magic_Heart.T_Magic_Heart",
+                "/Game/EnvSandbox/Sakura/T_Sakura_Petal.T_Sakura_Petal",
             ),
             "MotifMask": _chain(
-                "/Game/Magical/T_Magic_Heart.T_Magic_Heart",
+                "/Game/Melodia/Magical/T_Magic_Heart.T_Magic_Heart",
                 COMPOSITING["abstract_a"],
             ),
             "HeightMap": _chain(HEIGHT["perlin"], COMPOSITING["noise_fine"]),
@@ -716,7 +727,7 @@ def scan_master_texture_violations(material) -> dict[str, list[str]]:
 def apply_master_defaults(
     material, material_path: str | None = None, *, force: bool = False
 ) -> dict[str, str]:
-    """Set default textures on master parameter nodes from /Game/Textures compositing catalog."""
+    """Set default textures on master parameter nodes from /Game/EnvSandbox/Textures_Shared compositing catalog."""
     import unreal
     import material_lib as lib
 
@@ -895,7 +906,43 @@ def refresh_all_instance_textures(
     return results
 
 
+def _run_refresh_instances_headless() -> int:
+    if not UE_CMD.exists():
+        print(f"ERROR: {UE_CMD}")
+        return 1
+    log = PROJECT_ROOT / "Saved" / "Logs" / "refresh_instance_textures.log"
+    script = (PROJECT_ROOT / "Content/Python/portfolio_texture_catalog.py").as_posix()
+    cmd = [
+        str(UE_CMD),
+        str(UPROJECT),
+        f"-ExecutePythonScript={script} --refresh-instances",
+        "-stdout",
+        "-unattended",
+        "-nosplash",
+        "-nullrhi",
+        "-DisablePlugins=Monolith",
+        f"-log={log}",
+    ]
+    print(f"Refresh instance textures -> {log}")
+    return subprocess.run(cmd, cwd=str(PROJECT_ROOT)).returncode
+
+
 def main() -> int:
+    if "--refresh-instances" in sys.argv:
+        try:
+            import unreal  # noqa: F401
+        except ImportError:
+            return _run_refresh_instances_headless()
+        results = refresh_all_instance_textures()
+        print(json.dumps({"refreshed": len(results)}, indent=2))
+        try:
+            import unreal
+
+            unreal.EditorLoadingAndSavingUtils.save_dirty_packages(True, True)
+        except Exception:
+            pass
+        return 0
+
     report = {
         "timestamp": datetime.now(timezone.utc).isoformat(),
         **scan_disk_catalog(),

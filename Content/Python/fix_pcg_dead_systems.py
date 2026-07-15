@@ -55,10 +55,18 @@ def fix(*, apply: bool = False) -> dict:
                 "preset": preset,
             })
 
+    skipped_missing = [action for action in actions if action.get("reason") == "missing"]
+    failed_actions = [
+        action for action in actions
+        if action.get("ok") is False or action.get("passed") is False
+    ]
     report = {
         "timestamp": datetime.now(timezone.utc).isoformat(),
+        "ok": not skipped_missing and not failed_actions,
         "apply": apply,
         "actions": actions,
+        "skipped_missing": skipped_missing,
+        "failed_actions": failed_actions,
     }
     REPORT.parent.mkdir(parents=True, exist_ok=True)
     REPORT.write_text(json.dumps(report, indent=2), encoding="utf-8")

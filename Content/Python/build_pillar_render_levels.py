@@ -19,8 +19,8 @@ Run inside the editor (Monolith run_python), one level per call:
 """
 from __future__ import annotations
 
-TERRAIN_DIR = "/Game/_PROJECT/Meshes/RenderTerrains"
-LEVEL_DIR = "/Game/_PROJECT/Levels/RenderTests"
+TERRAIN_DIR = "/Game/Melodia/_PROJECT/Meshes/RenderTerrains"
+LEVEL_DIR = "/Game/Melodia/_PROJECT/Levels/RenderTests"
 HERO_DIR = "/Game/EnvSandbox/Materials/Instances/NikkiHero"
 
 PILLARS = {

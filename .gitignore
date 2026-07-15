@@ -1,4 +1,4 @@
-﻿# UE generated / transient
+﻿# UE5 generated / transient
 Binaries/
 DerivedDataCache/
 Intermediate/
@@ -9,10 +9,109 @@ Build/
 *.slnx
 *.VC.db
 *.VC.opendb
+__ExternalActors__/
+__ExternalObjects__/
+
+# Blender crash recovery (massive files)
+*.blend1
+*.blend2
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# AI agent artifacts
+.codex/
+.cursor/
+.kiro/
+.junie/
+.agents/
+._ghpages_work/
+
+# Node / web
+node_modules/
+.staging/
+
+# OS / IDE
 Thumbs.db
 Desktop.ini
 .DS_Store
+.idea/
+*.swp
+*.swo
+*~
 
-# Python cache
-Content/Python/__pycache__/
-*.pyc
+# Unreal packaging
+*.target
+*_BuiltData.uasset
+
+# Local scripts (one-off probes, temp)
+Content/Python/_tmp_*
+Content/Python/probe_*
+Content/Python/query_*
+Content/Python/list_*
+Content/Python/inspect_*
+Content/Python/start_pie*
+Content/Python/end_pie*
+Content/Python/submit_*
+Content/Python/validate_*
+Content/Python/diff_*
+Content/Python/retake_*
+Content/Python/audit_wp_*
+Content/Python/audit_melodia_*
+Content/Python/audit_zen*
+Content/Python/audit_static*
+Content/Python/verify_*
+Content/Python/repair_*
+Content/Python/cleanup_*
+Content/Python/fix_obvious*
+Content/Python/fix_zen*
+Content/Python/fix_nikki*
+Content/Python/ensure_*
+Content/Python/compile_*
+Content/Python/catalog_*
+Content/Python/check_*
+Content/Python/move_*
+Content/Python/prep_*
+Content/Python/save_*
+Content/Python/record_*
+Content/Python/force_*
+Content/Python/trigger_*
+Content/Python/generate_wp*
+Content/Python/execute_*
+Content/Python/test_*
+Content/Python/migrate_*
+Content/Python/restore_*
+
+# Large binary staging
+_staging/
+Assets/
+Samples/
+*.zip
+*.7z
+
+# Local backups / bundles
+*.bundle
+Saved/Backups/
+
+# Local level overrides (editor-generated)
+Content/ZenForestTest.ini
+
+# World Partition conversion artifacts (tracked on wp-experiments branch)
+Content/ZenForestTest_WP*
+Content/ZenForestTest_HLODLayer_*
+Content/__ExternalActors__/ZenForestTest/
+Content/__ExternalActors__/ZenForestTest_WP/
+
+# Autonomous worker output and local process state
+Products/_Staging/
+deploy/*.pid
+
+# Blender Flip/cache output (source .blend and exported deliverables tracked explicitly)
+KitbashExport/flip_cache_*/
+
+# Null artifacts
+nul
+$null

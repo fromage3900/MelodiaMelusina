@@ -1,6 +1,6 @@
 """Wire compositing-library defaults on M_Master_Toon_Universal (no engine checkerboard/white).
 
-Replaces any DefaultTexture / WhiteSquare fallbacks with /Game/Textures catalog paths
+Replaces any DefaultTexture / WhiteSquare fallbacks with /Game/EnvSandbox/Textures_Shared catalog paths
 via portfolio_texture_catalog.apply_master_defaults(force=True).
 
 Does NOT delete instance folders — use archive_unused_instances.py for that.

@@ -339,7 +339,7 @@ def build(*, force: bool = False) -> str:
     )
     flower_pulse_str = lib.scalar_param(m, "ShadowFlowerPulseStrength", "FlowerShadow", 0.0, px, py + 6740)
     flower_mask = lib.texture_param(m, "ShadowFlowerMask", "FlowerShadow", px, py + 6860)
-    wire_tex(flower_mask, ["/Game/Sakura/T_Sakura_Petal.T_Sakura_Petal"])
+    wire_tex(flower_mask, ["/Game/EnvSandbox/Sakura/T_Sakura_Petal.T_Sakura_Petal"])
 
     layer_coords = lib.create_expression(m, unreal.MaterialExpressionLandscapeLayerCoords, -2000, -80)
     layer_uv = lib.create_expression(m, unreal.MaterialExpressionMultiply, -1800, -80)

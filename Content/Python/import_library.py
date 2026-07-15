@@ -1,10 +1,10 @@
-# Imports the CC0 _AssetLibrary into /Game/Library as .uasset.
+# Imports the CC0 _AssetLibrary into /Game/EnvSandbox/Library as .uasset.
 # Run in the editor Python console:  import import_library
 # (requires the "Python Editor Script Plugin")
 import unreal, os
 
 SRC  = r'G:\EnvironmentPortfolio\_AssetLibrary'
-DEST = '/Game/Library'
+DEST = '/Game/EnvSandbox/Library'
 EXTS = {'png', 'jpg', 'jpeg', 'tga', 'exr', 'hdr', 'obj', 'fbx'}
 
 tools = unreal.AssetToolsHelpers.get_asset_tools()

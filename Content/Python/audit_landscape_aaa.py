@@ -27,6 +27,10 @@ def _audit_in_ue() -> dict:
     import unreal
     import material_lib as lib
     import portfolio_landscape_textures as lt
+    # UE keeps editor Python modules cached between runs; reload so audits see
+    # the current fallback contract after a script edit.
+    import importlib
+    lt = importlib.reload(lt)
     from setup_landscape_height_blend import INSTANCES
 
     checks: list[dict] = []

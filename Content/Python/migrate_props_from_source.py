@@ -40,7 +40,7 @@ FLAT_SOURCES = [
      "Melodia/Geometry"),
 ]
 DEST_ROOT_DISK = r"G:\EnvironmentPortfolio\BS_GodFile\Content\Library\Migrated"
-DEST_ROOT_GAME = "/Game/Library/Migrated"
+DEST_ROOT_GAME = "/Game/EnvSandbox/Library/Migrated"
 
 
 def _copy_subfolder(src_dir: str, dest_dir: str) -> list[str]:

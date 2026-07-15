@@ -4,7 +4,7 @@ Stack after M_PP_ToonOutline on the portfolio PostProcessVolume:
   1. M_PP_ToonOutline — depth/normal edge ink
   2. M_PP_StorybookVines (or M_PP_StorybookVines_Inst) — organic growth from edges
 
-Default VineBranchMask: /Game/Stylization/T_Flow_Swirl (fallback Voronoi_11).
+Default VineBranchMask: /Game/EnvSandbox/Stylization/T_Flow_Swirl (fallback Voronoi_11).
 
 Run:
   py "G:/EnvironmentPortfolio/BS_GodFile/Content/Python/setup_storybook_outline.py"

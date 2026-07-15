@@ -35,11 +35,8 @@ def _run_toon_conversion_pending() -> dict:
 
 
 def _run_meshblend_fix() -> dict:
-    """Binary path patch only — avoids loading legacy SDF masters that may crash Cmd."""
-    from patch_meshblend_uasset_paths import main as patch_main
-
-    patch_main()
-    return {"ok": True, "mode": "binary_patch"}
+    """Skipped — binary patch corrupts MF_MeshBlend_Activator_Index_*; use fix_meshblend_activator_refs in UE."""
+    return {"ok": True, "mode": "skipped", "reason": "binary_patch_disabled"}
 
 
 def run_core_pipeline() -> dict:

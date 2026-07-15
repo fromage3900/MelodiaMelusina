@@ -101,11 +101,11 @@ def organize_function(fn_path):
 
 
 PATHS = [
-    '/Game/_PROJECT/04_Materials/Functions/MF_MeluPaintBase',
-    '/Game/_PROJECT/04_Materials/Functions/MF_MeluPaletteColors',
-    '/Game/_PROJECT/04_Materials/Functions/MF_MeluSparkle',
-    '/Game/_PROJECT/04_Materials/Functions/MF_MeluTemporalJitter',
-    '/Game/_PROJECT/04_Materials/Functions/MF_MeluTriplanar',
+    '/Game/Melodia/_PROJECT/04_Materials/Functions/MF_MeluPaintBase',
+    '/Game/Melodia/_PROJECT/04_Materials/Functions/MF_MeluPaletteColors',
+    '/Game/Melodia/_PROJECT/04_Materials/Functions/MF_MeluSparkle',
+    '/Game/Melodia/_PROJECT/04_Materials/Functions/MF_MeluTemporalJitter',
+    '/Game/Melodia/_PROJECT/04_Materials/Functions/MF_MeluTriplanar',
     '/Game/EnvSandbox/Materials/Functions/MF_AnimeSkinWrap',
     '/Game/EnvSandbox/Materials/Functions/MF_AudioReactiveBlend',
     '/Game/EnvSandbox/Materials/Functions/MF_CurvatureOrnament',

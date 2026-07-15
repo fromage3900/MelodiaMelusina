@@ -223,7 +223,7 @@ def build():
                 lib.set_instance_texture(
                     mi,
                     "ShadowFlowerMask",
-                    "/Game/Sakura/T_Sakura_Petal.T_Sakura_Petal",
+                    "/Game/EnvSandbox/Sakura/T_Sakura_Petal.T_Sakura_Petal",
                 )
             except Exception as e:
                 unreal.log_warning(f"[Sakura] {spec['name']} petal tex: {e}")

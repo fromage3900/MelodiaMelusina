@@ -26,7 +26,7 @@ MATERIAL_PREFIX = re.compile(r"^(M_|MI_|MF_|TP_)", re.I)
 TEXTURE_NAME = re.compile(
     r"^(T_|Marble_|Perlin_|Voronoi_|Noise_|SDF_)", re.I
 )
-MELODIA_PATH_MARKERS = ("/Game/_PROJECT/", "/Game/Melodia/")
+MELODIA_PATH_MARKERS = ("/Game/Melodia/_PROJECT/", "/Game/Melodia/")
 
 # Schema: textures belong under SDF/Textures/ (or documented exceptions)
 TEXTURE_SCHEMA_DIRS = (

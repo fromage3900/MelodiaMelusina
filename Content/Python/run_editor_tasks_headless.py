@@ -46,8 +46,6 @@ def main() -> int:
         "port_sdf_expansion.py",
         "restore_portfolio_textures.py",
         "portfolio_texture_catalog.py",
-        "patch_meshblend_uasset_paths.py",
-        "patch_portfolio_texture_paths.py",
     ]
     for s in disk:
         _py(s)

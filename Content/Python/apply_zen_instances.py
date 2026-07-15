@@ -50,7 +50,7 @@ def _run_in_ue() -> int:
         "violations_after": violations,
         "zen_count": len(zen_only),
         "instances": zen_only,
-        "texture_pack": "/Game/Textures/70_Japanese_Ornament_Alphas_vfxMed",
+        "texture_pack": "/Game/EnvSandbox/Textures_Shared/70_Japanese_Ornament_Alphas_vfxMed",
     }
     REPORT.parent.mkdir(parents=True, exist_ok=True)
     REPORT.write_text(json.dumps(report, indent=2), encoding="utf-8")

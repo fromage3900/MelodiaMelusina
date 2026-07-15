@@ -18,7 +18,7 @@ from __future__ import annotations
 BLENDABLES = [
     "/Game/EnvSandbox/Materials/PostProcess/M_PP_ToonOutline",
     "/Game/EnvSandbox/Materials/PostProcess/M_PP_StorybookVines_Inst",
-    "/Game/_PROJECT/04_Materials/PostProcess/M_PP_MeluColorGrade",
+    "/Game/Melodia/_PROJECT/04_Materials/PostProcess/M_PP_MeluColorGrade",
 ]
 
 

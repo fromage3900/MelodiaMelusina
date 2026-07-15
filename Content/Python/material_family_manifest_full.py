@@ -253,6 +253,19 @@ def build_manifest() -> dict[str, Any]:
 
 
 def build_previews_manifest(material_manifest: dict[str, Any]) -> dict[str, Any]:
+    existing: dict[str, Any] = {}
+    try:
+        if PREVIEWS_PATH.is_file():
+            loaded = json.loads(PREVIEWS_PATH.read_text(encoding="utf-8"))
+            if isinstance(loaded, dict):
+                existing = loaded
+    except Exception:
+        existing = {}
+
+    existing_materials = (
+        existing.get("materials", {}) if isinstance(existing.get("materials"), dict) else {}
+    )
+
     materials: dict[str, dict[str, Any]] = {}
     for item in material_manifest.get("materials", []):
         if not isinstance(item, dict):
@@ -260,10 +273,16 @@ def build_previews_manifest(material_manifest: dict[str, Any]) -> dict[str, Any]
         name = str(item.get("material_name") or "")
         if not name:
             continue
+        prior = (
+            existing_materials.get(name, {})
+            if isinstance(existing_materials.get(name), dict)
+            else {}
+        )
         materials[name] = {
             "path": item.get("asset_path"),
             "label": name,
-            "thumbnail": item.get("preview_path"),
+            # IMPORTANT: preserve any captured thumbnail instead of overwriting with null.
+            "thumbnail": prior.get("thumbnail") or item.get("preview_path"),
             "material_type": item.get("material_type"),
             "shader_family": item.get("shader_family"),
             "output_maps": item.get("output_maps") or [],

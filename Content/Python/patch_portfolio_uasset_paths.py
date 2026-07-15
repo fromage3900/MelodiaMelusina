@@ -17,59 +17,59 @@ REPORT = PROJECT_ROOT / "Saved" / "Audit" / "portfolio_path_patch.json"
 REPLACEMENTS: list[tuple[str, str]] = sorted(
     [
         (
-            "/Game/_PROJECT/04_Materials/Textures/Marble/Marble_1_-_512x512",
+            "/Game/Melodia/_PROJECT/04_Materials/Textures/Marble/Marble_1_-_512x512",
             "/Game/EnvSandbox/Materials/SDF/Textures/Marble/Marble_1_-_512x512",
         ),
         (
-            "/Game/_PROJECT/04_Materials/Textures/Marble/Marble_3_-_512x512",
+            "/Game/Melodia/_PROJECT/04_Materials/Textures/Marble/Marble_3_-_512x512",
             "/Game/EnvSandbox/Materials/SDF/Textures/Marble/Marble_3_-_512x512",
         ),
         (
-            "/Game/_PROJECT/04_Materials/Textures/Marble/Marble_5_-_512x512",
+            "/Game/Melodia/_PROJECT/04_Materials/Textures/Marble/Marble_5_-_512x512",
             "/Game/EnvSandbox/Materials/SDF/Textures/Marble/Marble_5_-_512x512",
         ),
         (
-            "/Game/_PROJECT/04_Materials/Textures/Marble/Marble_6_-_512x512",
+            "/Game/Melodia/_PROJECT/04_Materials/Textures/Marble/Marble_6_-_512x512",
             "/Game/EnvSandbox/Materials/SDF/Textures/Marble/Marble_6_-_512x512",
         ),
         (
-            "/Game/_PROJECT/04_Materials/Textures/Marble/Marble_7_-_512x512",
+            "/Game/Melodia/_PROJECT/04_Materials/Textures/Marble/Marble_7_-_512x512",
             "/Game/EnvSandbox/Materials/SDF/Textures/Marble/Marble_7_-_512x512",
         ),
         (
-            "/Game/_PROJECT/04_Materials/Textures/Marble/Marble_9_-_512x512",
+            "/Game/Melodia/_PROJECT/04_Materials/Textures/Marble/Marble_9_-_512x512",
             "/Game/EnvSandbox/Materials/SDF/Textures/Marble/Marble_9_-_512x512",
         ),
         (
-            "/Game/_PROJECT/04_Materials/Textures/Perlin/Perlin_1_-_512x512",
+            "/Game/Melodia/_PROJECT/04_Materials/Textures/Perlin/Perlin_1_-_512x512",
             "/Game/EnvSandbox/Materials/SDF/Textures/Perlin/Perlin_1_-_512x512",
         ),
         (
-            "/Game/_PROJECT/04_Materials/Textures/Voronoi/Voronoi_2_-_512x512",
+            "/Game/Melodia/_PROJECT/04_Materials/Textures/Voronoi/Voronoi_2_-_512x512",
             "/Game/EnvSandbox/Materials/SDF/Textures/Voronoi/Voronoi_2_-_512x512",
         ),
         (
-            "/Game/_PROJECT/04_Materials/Textures/Voronoi/Voronoi_11_-_512x512",
+            "/Game/Melodia/_PROJECT/04_Materials/Textures/Voronoi/Voronoi_11_-_512x512",
             "/Game/EnvSandbox/Materials/SDF/Textures/Voronoi/Voronoi_11_-_512x512",
         ),
         (
-            "/Game/_PROJECT/04_Materials/baroque/M_SDF_GildedFiligree",
+            "/Game/Melodia/_PROJECT/04_Materials/baroque/M_SDF_GildedFiligree",
             "/Game/EnvSandbox/Materials/Masters/M_SDF_GildedFiligree",
         ),
         (
-            "/Game/_PROJECT/04_Materials/baroque/M_SDF_RoseWindow",
+            "/Game/Melodia/_PROJECT/04_Materials/baroque/M_SDF_RoseWindow",
             "/Game/EnvSandbox/Materials/Masters/M_SDF_RoseWindow",
         ),
         (
-            "/Game/_PROJECT/04_Materials/SDF/M_SDF_TrueParallax_Inst",
+            "/Game/Melodia/_PROJECT/04_Materials/SDF/M_SDF_TrueParallax_Inst",
             "/Game/EnvSandbox/Materials/SDF/Instances/M_SDF_TrueParallax_Inst",
         ),
         (
-            "/Game/_PROJECT/04_Materials/SDF/M_SDF_TrueParallax",
+            "/Game/Melodia/_PROJECT/04_Materials/SDF/M_SDF_TrueParallax",
             "/Game/EnvSandbox/Materials/Masters/M_SDF_TrueParallax",
         ),
         (
-            "/Game/_PROJECT/04_Materials/SDF/M_SDF_RayMarch_Gothic",
+            "/Game/Melodia/_PROJECT/04_Materials/SDF/M_SDF_RayMarch_Gothic",
             "/Game/EnvSandbox/Materials/Masters/M_SDF_RayMarch_Gothic",
         ),
         (

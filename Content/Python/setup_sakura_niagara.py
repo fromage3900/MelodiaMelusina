@@ -70,8 +70,8 @@ SPRITE_INSTANCES = [
         "name": "MI_Niagara_Petal",
         # Literal petal shapes first; zen wave/circle reads as blossom accent in drift
         "texture": [
-            "/Game/Sakura/T_Sakura_Petal.T_Sakura_Petal",
-            "/Game/Sakura/T_Sakura_Blossom.T_Sakura_Blossom",
+            "/Game/EnvSandbox/Sakura/T_Sakura_Petal.T_Sakura_Petal",
+            "/Game/EnvSandbox/Sakura/T_Sakura_Blossom.T_Sakura_Blossom",
             "jro:zen07",
             "jro:zen03",
         ],
@@ -85,8 +85,8 @@ SPRITE_INSTANCES = [
         "texture": [
             "jro:zen07",
             "jro:zen01",
-            "/Game/Alphas_Sparkles/T_Spark_Twinkle8.T_Spark_Twinkle8",
-            "/Game/Alphas_Sparkles/T_Spark_Glow.T_Spark_Glow",
+            "/Game/EnvSandbox/Alphas_Sparkles/T_Spark_Twinkle8.T_Spark_Twinkle8",
+            "/Game/EnvSandbox/Alphas_Sparkles/T_Spark_Glow.T_Spark_Glow",
         ],
         "base_color": COLORS["dream_tint"],
         "emissive": 2.5,
@@ -98,8 +98,8 @@ SPRITE_INSTANCES = [
         "texture": [
             "jro:zen03",
             "jro:zen01",
-            "/Game/Alphas_Sparkles/T_Spark_Bokeh.T_Spark_Bokeh",
-            "/Game/Alphas_Sparkles/T_Spark_Dot.T_Spark_Dot",
+            "/Game/EnvSandbox/Alphas_Sparkles/T_Spark_Bokeh.T_Spark_Bokeh",
+            "/Game/EnvSandbox/Alphas_Sparkles/T_Spark_Dot.T_Spark_Dot",
         ],
         "base_color": COLORS["lantern_warm"],
         "emissive": 1.8,
@@ -112,7 +112,7 @@ SPRITE_INSTANCES = [
             "jro:zen35",
             "jro:zen30",
             "jro:zen07",
-            "/Game/Alphas_Sparkles/T_Spark_Glow.T_Spark_Glow",
+            "/Game/EnvSandbox/Alphas_Sparkles/T_Spark_Glow.T_Spark_Glow",
         ],
         "base_color": COLORS["water_iridescence"],
         "emissive": 1.4,
@@ -122,9 +122,9 @@ SPRITE_INSTANCES = [
         "name": "MI_Niagara_Gust",
         # Wind gust accent: bamboo + petal mix
         "texture": [
-            "/Game/Sakura/T_Sakura_Petal.T_Sakura_Petal",
+            "/Game/EnvSandbox/Sakura/T_Sakura_Petal.T_Sakura_Petal",
             "jro:zen23",
-            "/Game/Alphas_Sparkles/T_Spark_Sparkle4.T_Spark_Sparkle4",
+            "/Game/EnvSandbox/Alphas_Sparkles/T_Spark_Sparkle4.T_Spark_Sparkle4",
         ],
         "base_color": COLORS["petal_scatter"],
         "emissive": 1.5,

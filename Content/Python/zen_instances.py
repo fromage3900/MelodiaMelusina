@@ -1,6 +1,6 @@
 """Zen-themed MI_* for M_Master_Toon_Universal — moss, ink, bamboo, sakura path, torii, etc.
 
-Uses Japanese ornament alphas from /Game/Textures/70_Japanese_Ornament_Alphas_vfxMed
+Uses Japanese ornament alphas from /Game/EnvSandbox/Textures_Shared/70_Japanese_Ornament_Alphas_vfxMed
 and Sakura/Magical glyph fallbacks where noted.
 """
 from __future__ import annotations

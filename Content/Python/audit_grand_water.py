@@ -172,7 +172,7 @@ def main() -> int:
             str(UE_CMD),
             str(UPROJECT),
             f"-ExecutePythonScript={(PROJECT_ROOT / 'Content/Python/audit_grand_water.py').as_posix()}",
-            "-stdout", "-unattended", "-nullrhi", "-DisablePlugins=Monolith",
+            "-stdout", "-unattended", "-nullrhi", "-NoLoadStartupPackages", "-DisablePlugins=Monolith",
             f"-log={log}",
         ]
         return subprocess.run(cmd, cwd=str(PROJECT_ROOT)).returncode

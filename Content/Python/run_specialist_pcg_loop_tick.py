@@ -47,6 +47,20 @@ def _save_tick(tick: int, task: str, summary: dict) -> None:
     }, indent=2), encoding="utf-8")
 
 
+def _result_ok(result) -> bool:
+    if not isinstance(result, dict):
+        return False
+    for key in ("ok", "passed", "clean", "success"):
+        if key in result:
+            return bool(result[key])
+    summary = result.get("summary")
+    if isinstance(summary, dict):
+        for key in ("ok", "passed", "clean", "success"):
+            if key in summary:
+                return bool(summary[key])
+    return False
+
+
 def _run_in_ue() -> int:
     import unreal
 
@@ -55,33 +69,42 @@ def _run_in_ue() -> int:
     unreal.log(f"=== SPECIALIST PCG LOOP tick={tick} task={task} ===")
     payload: dict = {"timestamp": datetime.now(timezone.utc).isoformat(), "tick_index": tick, "task": task}
 
-    if task == "audit_portfolio":
-        import audit_pcg_portfolio as ap
-        payload["audit"] = ap._audit_in_ue()
-    elif task == "organize_library":
-        import organize_pcg_library as org
-        payload["organize"] = org.organize()
-    elif task == "universal_build":
-        import setup_pcg_universal as uni
-        payload["build"] = uni.build_all(force=False)
-    elif task == "greybox_validate_template":
-        import setup_pcg_template as tpl
-        payload["template"] = tpl.build(preset="minimal", generate=True)
-    elif task == "fix_dead_dryrun":
-        import fix_pcg_dead_systems as fix
-        payload["fix"] = fix.fix(apply=False)
-    elif task == "sakura_wrapper":
-        import setup_pcg_sakura as sak
-        payload["sakura"] = sak.build_all(rebuild=False, spawn=False)
-    else:
-        payload["note"] = "See Docs/PCG_PORTFOLIO_PLAN.md"
+    result_key = "result"
+    try:
+        if task == "audit_portfolio":
+            import audit_pcg_portfolio as ap
+            result_key, result = "audit", ap._audit_in_ue()
+        elif task == "organize_library":
+            import organize_pcg_library as org
+            result_key, result = "organize", org.organize()
+        elif task == "universal_build":
+            import setup_pcg_universal as uni
+            result_key, result = "build", uni.build_all(force=False)
+        elif task == "greybox_validate_template":
+            import setup_pcg_template as tpl
+            result_key, result = "template", tpl.build(preset="minimal", generate=True)
+        elif task == "fix_dead_dryrun":
+            import fix_pcg_dead_systems as fix
+            result_key, result = "fix", fix.fix(apply=False)
+        elif task == "sakura_wrapper":
+            import setup_pcg_sakura as sak
+            result_key, result = "sakura", sak.build_all(rebuild=False, spawn=False)
+        else:
+            result_key, result = "docs", {"ok": True, "note": "See Docs/PCG_PORTFOLIO_PLAN.md"}
+        payload[result_key] = result
+        task_ok = _result_ok(result)
+        error = None if task_ok else "task result did not report success"
+    except Exception as exc:
+        payload[result_key] = {"ok": False, "error": str(exc)}
+        task_ok = False
+        error = str(exc)
 
-    payload["summary"] = {"task": task, "ok": True}
+    payload["summary"] = {"task": task, "ok": task_ok, "error": error}
     REPORT.parent.mkdir(parents=True, exist_ok=True)
     REPORT.write_text(json.dumps(payload, indent=2), encoding="utf-8")
     _save_tick(tick + 1, task, payload["summary"])
-    unreal.log(f"[SpecialistPCGLoop] task={task} -> {REPORT}")
-    return 0
+    unreal.log(f"[SpecialistPCGLoop] task={task} ok={task_ok} -> {REPORT}")
+    return 0 if task_ok else 2
 
 
 def main() -> int:

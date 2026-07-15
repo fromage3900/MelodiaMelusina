@@ -7,7 +7,7 @@ Default input:
   Saved/Portfolio/portfolio_package.json
 
 Default output:
-  _github_deploy/generated/*_config.json
+  my-site-clean/generated/*_config.json
 
 The adapter is intentionally disk-only so it can run in CI, a normal shell, or
 inside Unreal after `portfolio_aggregator.py` writes the package.
@@ -22,7 +22,7 @@ from typing import Any
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 PACKAGE_PATH = PROJECT_ROOT / "Saved" / "Portfolio" / "portfolio_package.json"
-DEPLOY_GENERATED = PROJECT_ROOT / "_github_deploy" / "generated"
+DEPLOY_GENERATED = PROJECT_ROOT / "my-site-clean" / "generated"
 DEPLOY_CONFIG = DEPLOY_GENERATED / "deployment_config.json"
 DEPLOY_MANIFEST = DEPLOY_GENERATED / "deployment_manifest.json"
 
@@ -287,6 +287,30 @@ def update_deployment_manifest(
 
     manifest.setdefault("version", "2.0")
     manifest["generated_at"] = _now_iso()
+
+    # Preserve (or seed) embed component URLs used by Wix and tooling.
+    # This file is both a handoff contract and a convenient lookup for hosted HTML assets.
+    manifest.setdefault(
+        "components",
+        {
+            "melodiaBreakdownCard": f"{base_url}/wix/melodia-breakdown-card.html",
+            "melodiaGalleryGrid": f"{base_url}/wix/melodia-gallery-grid.html",
+            "melodiaHeroEmbed": f"{base_url}/wix/melodia-hero-embed.html",
+            "melodiaNavigation": f"{base_url}/wix/melodia-navigation-constellation.html",
+            "melodiaPassportEmbed": f"{base_url}/wix/melodia-passport-embed.html",
+            "melodiaProjectCard": f"{base_url}/wix/melodia-project-card.html",
+            "melodiaSectionHeader": f"{base_url}/wix/melodia-section-header.html",
+            "melodiaSmoothScroll": f"{base_url}/wix/melodia-smooth-scroll.html",
+        },
+    )
+    manifest.setdefault(
+        "fallback_urls",
+        {
+            "static_hero": f"{base_url}/generated/l-sakurapath-hero.html",
+            "static_passport": f"{base_url}/generated/l-sakurapath-passport.html",
+        },
+    )
+
     manifest["package_handoff"] = {
         "generated_at": _now_iso(),
         "source_package": str(PACKAGE_PATH),

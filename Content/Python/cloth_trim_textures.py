@@ -1,6 +1,6 @@
 """ClothTrim 4K trimsheet texture sets — Layer A/B maps for fabric trimsheet instances.
 
-Textures: /Game/Textures/ClothTrim_<Variant>_<Channel>
+Textures: /Game/EnvSandbox/Textures_Shared/ClothTrim_<Variant>_<Channel>
 Variants are auto-discovered from Content/Textures/ClothTrim_*_BaseColor.uasset.
 
 Headless catalog:
@@ -15,7 +15,7 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 REPORT = PROJECT_ROOT / "Saved" / "Audit" / "cloth_trim_textures.json"
-TEX = "/Game/Textures"
+TEX = "/Game/EnvSandbox/Textures_Shared"
 
 CHANNELS = (
     "Alpha",

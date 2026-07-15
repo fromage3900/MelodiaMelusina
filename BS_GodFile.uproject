@@ -10,7 +10,7 @@
 			"LoadingPhase": "Default"
 		}
 	],
-	"Plugins": [
+"Plugins": [
 		{
 			"Name": "ModelingToolsEditorMode",
 			"Enabled": true,
@@ -67,10 +67,6 @@
 			"Enabled": true
 		},
 		{
-			"Name": "PCGPythonInterop",
-			"Enabled": true
-		},
-		{
 			"Name": "PCGWaterInterop",
 			"Enabled": true
 		},
@@ -121,6 +117,20 @@
 				"Win64",
 				"Linux",
 				"Mac"
+			]
+		},
+		{
+			"Name": "MovieRenderPipeline",
+			"Enabled": true,
+			"TargetAllowList": [
+				"Editor"
+			]
+		},
+		{
+			"Name": "SequencerScripting",
+			"Enabled": true,
+			"TargetAllowList": [
+				"Editor"
 			]
 		},
 		{
@@ -193,11 +203,11 @@
 			"Enabled": true
 		},
 		{
-			"Name": "NiagaraUIRenderer",
+			"Name": "NiagaraFluids",
 			"Enabled": true
 		},
 		{
-			"Name": "NiagaraFluids",
+			"Name": "NiagaraUIRenderer",
 			"Enabled": true
 		},
 		{
@@ -294,12 +304,17 @@
 			"Enabled": true
 		},
 		{
+			"Name": "MelodiaCore",
+			"Enabled": true
+		},
+		{
 			"Name": "SpeedTreeImporter",
 			"Enabled": true
 		},
 		{
 			"Name": "KawaiiPhysics",
-			"Enabled": true
+			"Enabled": true,
+			"MarketplaceURL": "com.epicgames.launcher://ue/Fab/product/f870c07e-0a02-4a78-a888-e52a22794572"
 		},
 		{
 			"Name": "ProceduralModelingToolkit",
@@ -307,6 +322,26 @@
 			"TargetAllowList": [
 				"Editor"
 			]
+		},
+		{
+			"Name": "OnlineSubsystemEOS",
+			"Enabled": true
+		},
+		{
+			"Name": "LiveLink",
+			"Enabled": true
+		},
+		{
+			"Name": "LiveLinkHub",
+			"Enabled": true
+		},
+		{
+			"Name": "LiveLinkControlRig",
+			"Enabled": true
+		},
+		{
+			"Name": "OSC",
+			"Enabled": true
 		}
 	]
 }

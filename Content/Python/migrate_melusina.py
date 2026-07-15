@@ -22,14 +22,14 @@ import shutil
 import unreal
 
 SRC_ROOT = r"G:\MelodiaMelusina\MelodiaMelusina_PRODUCTION\MelodiaMelusina_PROD\Content\Characters\Melusina"
-# IMPORTANT: destination preserves the source project's /Game/Characters/Melusina
+# IMPORTANT: destination preserves the source project's /Game/Melodia/Characters/Melusina
 # package path. Raw copy does NOT rewrite baked-in references inside the .uassets
-# (SK->slot materials, BP->SK, ABP->skeleton all reference /Game/Characters/Melusina/...),
+# (SK->slot materials, BP->SK, ABP->skeleton all reference /Game/Melodia/Characters/Melusina/...),
 # so landing at the identical game path is what makes them resolve. Confirmed live
-# 2026-07-02: a first attempt at /Game/_PROJECT/Characters/Melusina left 0/35 material
+# 2026-07-02: a first attempt at /Game/Melodia/_PROJECT/Characters/Melusina left 0/35 material
 # slots resolved; same copy at the original path resolves them.
 DEST_ROOT_DISK = r"G:\EnvironmentPortfolio\BS_GodFile\Content\Characters\Melusina"
-DEST_ROOT_GAME = "/Game/Characters/Melusina"
+DEST_ROOT_GAME = "/Game/Melodia/Characters/Melusina"
 
 EXCLUDE_PREFIXES = ("SKM_character_rig", "SceneImport_SKM_character_rig")
 

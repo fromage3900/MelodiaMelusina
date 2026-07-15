@@ -1,4 +1,4 @@
-"""Integrate /Game/Textures compositing library + fix dead refs on portfolio masters.
+"""Integrate /Game/EnvSandbox/Textures_Shared compositing library + fix dead refs on portfolio masters.
 
 Editor (Output Log):
   py "G:/EnvironmentPortfolio/BS_GodFile/Content/Python/integrate_compositing_textures.py"
@@ -36,10 +36,10 @@ def _build_texture_rewire_map() -> dict[str, str]:
 
     mapping: dict[str, str] = {}
     project_root = f"{SDF_TEX_ROOT}"
-    if not unreal.EditorAssetLibrary.does_directory_exist("/Game/_PROJECT/04_Materials/Textures"):
+    if not unreal.EditorAssetLibrary.does_directory_exist("/Game/Melodia/_PROJECT/04_Materials/Textures"):
         return mapping
     for path in unreal.EditorAssetLibrary.list_assets(
-        "/Game/_PROJECT/04_Materials/Textures", recursive=True, include_folder=False
+        "/Game/Melodia/_PROJECT/04_Materials/Textures", recursive=True, include_folder=False
     ):
         old_base = path.split(".", 1)[0]
         stem = old_base.rsplit("/", 1)[-1]
@@ -145,8 +145,7 @@ def main() -> int:
         subprocess.run([sys.executable, str(PROJECT_ROOT / "Content/Python/port_sdf_expansion.py")], check=False)
         subprocess.run([sys.executable, str(PROJECT_ROOT / "Content/Python/restore_portfolio_textures.py")], check=False)
         subprocess.run([sys.executable, str(PROJECT_ROOT / "Content/Python/portfolio_texture_catalog.py")], check=False)
-        subprocess.run([sys.executable, str(PROJECT_ROOT / "Content/Python/patch_meshblend_uasset_paths.py")], check=False)
-        # Never binary-patch texture uassets (length changes corrupt packages → editor crash).
+        # Binary MeshBlend patch corrupts MF_MeshBlend_Activator_Index_*.uasset — use fix_meshblend_activator_refs in UE.
         subprocess.run([sys.executable, str(PROJECT_ROOT / "Content/Python/restore_portfolio_textures.py")], check=False)
         subprocess.run([sys.executable, str(PROJECT_ROOT / "Content/Python/restore_portfolio_masters.py")], check=False)
         log = PROJECT_ROOT / "Saved" / "Logs" / "compositing_integration.log"
