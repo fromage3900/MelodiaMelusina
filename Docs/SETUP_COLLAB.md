@@ -1,10 +1,10 @@
-﻿# Live Collaborative Level Designer ΓÇö 5-Minute Setup
+﻿# Live Collaborative Level Designer -- 5-Minute Setup
 
-> **No 300 GB download. No Unreal content.** Set up Blender Γåö UE5 live bridge for collaborative level design using sparse checkout. Only downloads the scripts, addons, and tools you need ΓÇö ~50 MB total.
+> **No 300 GB download. No Unreal content.** Set up Blender <-> UE5 live bridge for collaborative level design using sparse checkout. Only downloads the scripts, addons, and tools you need -- ~50 MB total.
 
 ---
 
-## Option A: Sparse Checkout (Recommended ΓÇö 50 MB)
+## Option A: Sparse Checkout (Recommended -- 50 MB)
 
 ```powershell
 git clone --filter=blob:none --no-checkout https://github.com/fromage3900/environment-portfolio.git MelodiaCollab
@@ -32,10 +32,10 @@ git checkout
 ```
 
 **What you get (~50 MB):**
-- Γ£à SurrealArch Blender addon (procedural generation, live bridge, material bridge)
-- Γ£à GMM game systems (Python combat/rhythm/roguelike rules)
-- Γ£à All pipeline tools and scripts
-- Γ£à Full documentation
+- (check) SurrealArch Blender addon (procedural generation, live bridge, material bridge)
+- (check) GMM game systems (Python combat/rhythm/roguelike rules)
+- (check) All pipeline tools and scripts
+- (check) Full documentation
 - Γ¥î No .uasset files, .blend files, textures, or UE content
 
 ---
@@ -49,9 +49,9 @@ C:\Users\<you>\AppData\Roaming\Blender Foundation\Blender\5.1\scripts\addons\sur
 
 Then copy the companion folders:
 ```
-deploy/surreal_world/  ΓåÆ Blender addons/surreal_world/
-deploy/surreal_os/     ΓåÆ Blender addons/surreal_os/
-deploy/surreal_greybox/ΓåÆ Blender addons/surreal_greybox/
+deploy/surreal_world/  -> Blender addons/surreal_world/
+deploy/surreal_os/     -> Blender addons/surreal_os/
+deploy/surreal_greybox/-> Blender addons/surreal_greybox/
 ```
 
 ---
@@ -75,24 +75,24 @@ G:\EnvironmentPortfolio\BS_GodFile\BS_GodFile.uproject
 ```
 Wait for shader compilation. The Monolith MCP starts automatically on port `:9316`.
 
-### 2. Open Blender ΓÇö Verify the Addon
+### 2. Open Blender -- Verify the Addon
 ```
-Open any .blend ΓåÆ N-panel ΓåÆ "Melodia Studio" tab should appear.
+Open any .blend -> N-panel -> "Melodia Studio" tab should appear.
 ```
-If it doesn't: Edit ΓåÆ Preferences ΓåÆ Add-ons ΓåÆ search "surreal_arch" ΓåÆ enable.
+If it doesn't: Edit -> Preferences -> Add-ons -> search "surreal_arch" -> enable.
 
 ### 3. Start the Bridge
 ```
-N-panel ΓåÆ Melodia Studio ΓåÆ Live Bridge ΓåÆ Refresh Status ΓåÆ Start Server
+N-panel -> Melodia Studio -> Live Bridge -> Refresh Status -> Start Server
 ```
 You should see: `Γ£ô LiveLink  Γ£ô BL MCP  Γ£ô UE MCP`
 
 ### 4. Generate & Send
 ```
-1. Genome Carousel ΓåÆ pick style ΓåÆ Apply
-2. Material Bridge ΓåÆ Scan Slots ΓåÆ Auto-Match
-3. Live Bridge ΓåÆ Send + Materials
-4. In Unreal: /Game/LiveLink/ ΓÇö geometry with correct materials
+1. Genome Carousel -> pick style -> Apply
+2. Material Bridge -> Scan Slots -> Auto-Match
+3. Live Bridge -> Send + Materials
+4. In Unreal: /Game/LiveLink/ -- geometry with correct materials
 ```
 
 ---
@@ -110,10 +110,10 @@ You should see: `Γ£ô LiveLink  Γ£ô BL MCP  Γ£ô UE MCP`
 
 | Port | Service | Direction |
 |------|---------|-----------|
-| `9876` | LiveLink ΓÇö FBX streaming | Blender ΓåÆ UE |
-| `9316` | UE MCP ΓÇö Python execution | Any ΓåÆ UE |
-| `9317` | Blender MCP ΓÇö genome control | Any ΓåÆ Blender |
-| `50021` | VOICEVOX ΓÇö NPC voices | Any ΓåÆ VOICEVOX |
+| `9876` | LiveLink -- FBX streaming | Blender -> UE |
+| `9316` | UE MCP -- Python execution | Any -> UE |
+| `9317` | Blender MCP -- genome control | Any -> Blender |
+| `50021` | VOICEVOX -- NPC voices | Any -> VOICEVOX |
 
 ---
 
@@ -131,3 +131,5 @@ You should see: `Γ£ô LiveLink  Γ£ô BL MCP  Γ£ô UE MCP`
 Full guide: [Docs/ONBOARDING_LIVE_COLLAB.md](Docs/ONBOARDING_LIVE_COLLAB.md)
 Character integration: [Docs/ZUNZUN_FAMILY_INTEGRATION.md](Docs/ZUNZUN_FAMILY_INTEGRATION.md)
 NPC Blueprint spec: [Docs/ZUNDAMON_NPC_SPEC.md](Docs/ZUNDAMON_NPC_SPEC.md)
+
+

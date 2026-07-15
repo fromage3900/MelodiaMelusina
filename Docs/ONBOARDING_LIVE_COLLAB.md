@@ -1,6 +1,6 @@
-﻿# Live Collaborative Level Designer ΓÇö Step-by-Step Onboarding
+﻿# Live Collaborative Level Designer -- Step-by-Step Onboarding
 
-> **Goal:** Get two designers building levels together ΓÇö one in Blender, one in Unreal ΓÇö with live streaming, automatic materials, voiced NPCs, and rhythm combat. **Time to first live sync: ~10 minutes.**
+> **Goal:** Get two designers building levels together -- one in Blender, one in Unreal -- with live streaming, automatic materials, voiced NPCs, and rhythm combat. **Time to first live sync: ~10 minutes.**
 
 ---
 
@@ -14,15 +14,15 @@
 | Material Maker | 1.7 | `G:\programs\MaterialMaker\` |
 
 **Required Blender addons** (pre-installed):
-- SurrealArch (Melodia Studio) ΓÇö procedural generation, live bridge, material bridge
-- VRM Importer v4.4 ΓÇö character model import
-- LiveLink v3.3 ΓÇö FBX streaming to Unreal
+- SurrealArch (Melodia Studio) -- procedural generation, live bridge, material bridge
+- VRM Importer v4.4 -- character model import
+- LiveLink v3.3 -- FBX streaming to Unreal
 
 **Unreal project:** `G:\EnvironmentPortfolio\BS_GodFile\BS_GodFile.uproject`
 
 ---
 
-## Step 1 ΓÇö Launch (3 min)
+## Step 1 -- Launch (3 min)
 
 ### 1a. Open Unreal
 ```
@@ -33,7 +33,7 @@ Wait for shader compilation and Monolith MCP startup.
 Verify the UE MCP is running:
 ```powershell
 curl http://127.0.0.1:9316/health
-# ΓåÆ {"status":"ok","port":9316,"tools_registered":1325}
+# -> {"status":"ok","port":9316,"tools_registered":1325}
 ```
 
 ### 1b. Open Blender
@@ -45,27 +45,27 @@ In the 3D Viewport, press `N` to open the **N-panel**. Switch to the **Melodia S
 
 ### 1c. Close Extra Blender Instances
 ```powershell
-# Check: Task Manager ΓåÆ sort by Name ΓåÆ find blender.exe
+# Check: Task Manager -> sort by Name -> find blender.exe
 # Only ONE Blender should be open. Multiple instances will conflict on port 9876.
 ```
 
 ---
 
-## Step 2 ΓÇö Start the Bridge (2 min)
+## Step 2 -- Start the Bridge (2 min)
 
 ### 2a. Open the Live Bridge Panel
-N-panel ΓåÆ **Melodia Studio** ΓåÆ **Live Bridge** (nested under the genome carousel, `bl_order=15`).
+N-panel -> **Melodia Studio** -> **Live Bridge** (nested under the genome carousel, `bl_order=15`).
 
-Click **Refresh Status** ΓÇö you should see:
+Click **Refresh Status** -- you should see:
 
 ```
-[Γ£ô] LiveLink   [ ] BL MCP   [Γ£ô] UE MCP
+[(check)] LiveLink   [ ] BL MCP   [(check)] UE MCP
 ```
 
-If `BL MCP` shows offline, don't worry ΓÇö it's optional for this workflow. The important ones are LiveLink and UE MCP.
+If `BL MCP` shows offline, don't worry -- it's optional for this workflow. The important ones are LiveLink and UE MCP.
 
 ### 2b. Start the LiveLink Server
-Expand **LiveLink :9876** ΓåÆ Click **Start Server**.
+Expand **LiveLink :9876** -> Click **Start Server**.
 
 Status changes to `CONNECTED`. The LiveLink server is now listening for UE to connect.
 
@@ -76,38 +76,38 @@ Status changes to `CONNECTED`. The LiveLink server is now listening for UE to co
 The engine starts on port `:50021`. Verify:
 ```powershell
 curl http://127.0.0.1:50021/version
-# ΓåÆ "0.25.2"
+# -> "0.25.2"
 ```
 
 ---
 
-## Step 3 ΓÇö First Live Export (3 min)
+## Step 3 -- First Live Export (3 min)
 
 ### 3a. Generate Geometry (Blender)
-N-panel ΓåÆ **Melodia Studio** ΓåÆ **Genome Carousel**
+N-panel -> **Melodia Studio** -> **Genome Carousel**
 
 Pick a style (e.g. `ZEN_SHRINE`, `CASTLE_TOWER`, `GOTHIC_CATHEDRAL`) and click **Apply**.
 
 ### 3b. Set Up Materials
-N-panel ΓåÆ **Material Bridge**:
+N-panel -> **Material Bridge**:
 1. Select your generated object
-2. Click **Scan Slots** ΓÇö lists all material slots
-3. Click **Auto-Match** ΓÇö fuzzy-matches to UE material catalog
+2. Click **Scan Slots** -- lists all material slots
+3. Click **Auto-Match** -- fuzzy-matches to UE material catalog
 4. Review and click **Save Map** (persists as `.material_map.json`)
 
 ### 3c. Send to Unreal
-N-panel ΓåÆ **Live Bridge** ΓåÆ **Quick Actions**:
-- Click **Send + Materials** ΓÇö auto-crosswalks materials then streams FBX + textures to UE
-- **Or** toggle **Live Sync ON** ΓÇö every change in Blender automatically streams to UE
+N-panel -> **Live Bridge** -> **Quick Actions**:
+- Click **Send + Materials** -- auto-crosswalks materials then streams FBX + textures to UE
+- **Or** toggle **Live Sync ON** -- every change in Blender automatically streams to UE
 
 In Unreal, imported assets appear under `/Game/LiveLink/`.
 
 ### 3d. Verify in UE
-Open `/Game/LiveLink/` in the Content Browser ΓÇö your geometry with correct materials should be there. Drag it into the viewport to see it in-level.
+Open `/Game/LiveLink/` in the Content Browser -- your geometry with correct materials should be there. Drag it into the viewport to see it in-level.
 
 ---
 
-## Step 4 ΓÇö Collaborative Workflow (ongoing)
+## Step 4 -- Collaborative Workflow (ongoing)
 
 ### Roles
 
@@ -117,11 +117,11 @@ Open `/Game/LiveLink/` in the Content Browser ΓÇö your geometry with correct 
 | **Level Scripter** | Unreal | Blueprint placement, encounter triggers, lighting, PCG scatter, NPCs |
 
 ### Live Handoff Loop
-1. Geometry Designer builds in Blender ΓåÆ hits **Live Sync ON**
+1. Geometry Designer builds in Blender -> hits **Live Sync ON**
 2. Level Scripter sees new geometry in `/Game/LiveLink/`
 3. Scripter places encounters, NPCs, PCG around it
-4. Designer tweaks geometry ΓåÆ changes stream live ΓåÆ Scripter sees updates in seconds
-5. Material paths auto-apply via the crosswalk ΓÇö no manual reassignment
+4. Designer tweaks geometry -> changes stream live -> Scripter sees updates in seconds
+5. Material paths auto-apply via the crosswalk -- no manual reassignment
 
 ### UE Remote Control (MCP)
 From Blender or any HTTP client, execute Python in UE:
@@ -140,21 +140,21 @@ POST http://127.0.0.1:9316/mcp
 
 ---
 
-## Step 5 ΓÇö NPCs & Voice (2 min after models imported)
+## Step 5 -- NPCs & Voice (2 min after models imported)
 
 ### 5a. Generate Voice Lines
 ```powershell
 cd G:\EnvironmentPortfolio\BS_GodFile\Tools
 $env:PYTHONIOENCODING = "utf-8"
 python generate_all_voices.py
-# ΓåÆ 102 WAVs across 7 characters
+# -> 102 WAVs across 7 characters
 ```
 
 ### 5b. Create NPC Blueprints (in UE Python console)
 ```python
 import create_zunzun_bps
 create_zunzun_bps.run()
-# ΓåÆ Creates 7 BP_*_NPC + quest tables + shop data + party stats
+# -> Creates 7 BP_*_NPC + quest tables + shop data + party stats
 ```
 
 ### 5c. Voice Speaker Reference
@@ -171,18 +171,18 @@ create_zunzun_bps.run()
 
 ---
 
-## Step 6 ΓÇö Playtesting (2 min)
+## Step 6 -- Playtesting (2 min)
 
 ### 6a. Open the Vertical Slice Map
 In Unreal Content Browser, open `/Game/Melodia/Levels/L_ZenForestTest`.
 
 Hit **Play** (Alt+P). What you should see:
-1. Player spawns ΓåÆ Sir Melodious flies off
-2. Walk forward ΓåÆ encounter trigger ΓåÆ rhythm battle begins
+1. Player spawns -> Sir Melodious flies off
+2. Walk forward -> encounter trigger -> rhythm battle begins
 3. Press keys in time to the beat
-4. Victory ΓåÆ choose reward (Heart Token / Swirl Token / Song Power)
-5. Room exit unlocks ΓåÆ walk through ΓåÆ next stage generates
-6. 3 stages ΓåÆ Sir Melodious reunion ΓåÆ run complete
+4. Victory -> choose reward (Heart Token / Swirl Token / Song Power)
+5. Room exit unlocks -> walk through -> next stage generates
+6. 3 stages -> Sir Melodious reunion -> run complete
 
 ### 6b. Combat Quick Reference
 | Key | Action |
@@ -206,11 +206,11 @@ python -m gmm.gameplay_smoke
 
 | Port | Protocol | Service | Direction |
 |------|----------|---------|-----------|
-| `9876` | TCP + JSON | LiveLink ΓÇö FBX/texture/animation streaming | Blender ΓåÆ UE |
-| `9317` | HTTP REST | Blender MCP ΓÇö genome/agent control | External ΓåÆ Blender |
-| `9316` | HTTP JSON-RPC | UE Monolith MCP ΓÇö Python execution, 1,325 tools | Any ΓåÆ UE |
-| `50021` | HTTP REST | VOICEVOX ΓÇö text-to-speech (7 ZunZun voices) | Any ΓåÆ VOICEVOX |
-| `50022` | HTTP REST | Melusina Voice ΓÇö custom SBV2 TTS | Any ΓåÆ Melusina |
+| `9876` | TCP + JSON | LiveLink -- FBX/texture/animation streaming | Blender -> UE |
+| `9317` | HTTP REST | Blender MCP -- genome/agent control | External -> Blender |
+| `9316` | HTTP JSON-RPC | UE Monolith MCP -- Python execution, 1,325 tools | Any -> UE |
+| `50021` | HTTP REST | VOICEVOX -- text-to-speech (7 ZunZun voices) | Any -> VOICEVOX |
+| `50022` | HTTP REST | Melusina Voice -- custom SBV2 TTS | Any -> Melusina |
 
 ---
 
@@ -219,11 +219,11 @@ python -m gmm.gameplay_smoke
 | Problem | Solution |
 |---------|----------|
 | **Port 9876 "in use"** | Multiple Blender instances. Close extras via Task Manager. |
-| **BL MCP :9317 not responding** | Reload SurrealArch addon: Scripting ΓåÆ `import surreal_architecture_gen; surreal_architecture_gen.reload_addon()` |
+| **BL MCP :9317 not responding** | Reload SurrealArch addon: Scripting -> `import surreal_architecture_gen; surreal_architecture_gen.reload_addon()` |
 | **Materials gray after import** | Run UE Python: `import resolve_material_crosswalk; resolve_material_crosswalk.resolve_all()` |
-| **VOICEVOX "speaker X not found"** | Open VOICEVOX ΓåÆ Settings ΓåÆ Manage Voice Libraries ΓåÆ download missing voices |
+| **VOICEVOX "speaker X not found"** | Open VOICEVOX -> Settings -> Manage Voice Libraries -> download missing voices |
 | **LiveLink "Send + Materials" fails** | Ensure Material Bridge panel has a saved crosswalk for the active object |
-| **PIE crash on encounter** | Rebuild MelodiaCore: UE ΓåÆ Tools ΓåÆ Refresh Visual Studio Project ΓåÆ Build |
+| **PIE crash on encounter** | Rebuild MelodiaCore: UE -> Tools -> Refresh Visual Studio Project -> Build |
 
 ---
 
@@ -239,3 +239,4 @@ python -m gmm.gameplay_smoke
 | `Content/Python/setup_material_functions.py` | Rebuild 17 UE material functions | UE Python |
 | `deploy/deploy_all.ps1` | Launch all 11 autonomous agent loops | Terminal |
 | `deploy/loop_status.ps1` | Live dashboard of agent loop status | Terminal |
+
