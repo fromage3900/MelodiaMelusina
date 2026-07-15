@@ -197,26 +197,33 @@ m = _load_livelink_module()
 
 def _register_osc_bridge() -> None:
     """Start the TD-UE OSC bridge on editor startup."""
+    print("[TD-Bridge] Attempting OSC bridge start...", flush=True)
     try:
         from osc_server import start_bridge
         if start_bridge(port=8000):
+            print("[TD-Bridge] OSC bridge STARTED on port 8000 (raw socket)", flush=True)
             unreal.log("[TD-Bridge] OSC bridge started on port 8000 (raw socket)")
     except Exception as e:
-        unreal.log(f"[TD-Bridge] OSC bridge failed: {e}")
+        print(f"[TD-Bridge] OSC bridge FAILED: {e}", flush=True)
+        unreal.log_error(f"[TD-Bridge] OSC bridge failed: {e}")
 
 
 def _register_gmm() -> None:
     """Register GMM menus on editor startup."""
+    print("[GMM] Attempting GMM menu registration...", flush=True)
     try:
         from gmm.ui.register import register_gmm_menus
         register_gmm_menus()
+        print("[GMM] Menus REGISTERED", flush=True)
         unreal.log("[GMM] Grandmaster Melodia Melusina menus registered")
     except Exception as e:
-        unreal.log(f"[GMM] Registration skipped: {e}")
+        print(f"[GMM] Registration FAILED: {e}", flush=True)
+        unreal.log_error(f"[GMM] Registration failed: {e}")
 
 
 def startup():
     if m is None:
+        print("[init_unreal] LiveLink module not found, skipping startup", flush=True)
         return
     if hasattr(m, "startup"):
         m.startup()
