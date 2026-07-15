@@ -1,0 +1,94 @@
+# ── Unreal Engine ──
+BS_GodFile/Binaries/
+BS_GodFile/DerivedDataCache/
+BS_GodFile/Intermediate/
+BS_GodFile/Saved/Crashes/
+BS_GodFile/Saved/Logs/
+BS_GodFile/Saved/Autosaves/
+BS_GodFile/Saved/Backup/
+BS_GodFile/Saved/Config/WindowsEditor/
+BS_GodFile/Saved/Collections/
+BS_GodFile/Saved/Cooked/
+BS_GodFile/Saved/ShaderDebugInfo/
+BS_GodFile/Saved/StagedBuilds/
+BS_GodFile/Saved/Telemetry/
+BS_GodFile/Saved/Temp/
+
+# ── Blender ──
+*.blend1
+*.blend2
+*.blend@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.orig
+
+# ── Python ──
+*.egg-info/
+*.egg
+.eggs/
+dist/
+build/
+.pytest_cache/
+*.spec
+venv/
+.venv/
+env/
+*.whl
+
+# ── IDE & Editor ──
+.idea/
+.vscode/
+*.sublime-workspace
+*.sublime-project
+*.swp
+*.swo
+*~
+
+# ── OS ──
+.DS_Store
+Thumbs.db
+desktop.ini
+$RECYCLE.BIN/
+
+# ── Node.js / Web ──
+node_modules/
+.cache/
+.turbo/
+
+# ── Secrets & Config ──
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+credentials.json
+tokens.json
+
+# ── Large Archives ──
+*.zip
+*.7z
+*.rar
+
+# ── Temp / Staging (keep structure, ignore contents) ──
+_staging/learner_generated/
+
+# ── Nested repos ──
+BS_GodFile/melodia-design-system/
+BS_GodFile/my-site-clean/
+
+# ── AI Agent Workspaces ──
+.agents/
+.junie/
+.claude/
+
+# ── User-specific ──
+BS_GodFile/Saved/Audit/
+BS_GodFile/Saved/Analysis/
+BS_GodFile/Saved/Memory/
+
+# ── Other ──
+temp/
+tmp/
+*.log
