@@ -1,21 +1,16 @@
 """UE editor startup: load Blender Live Link client and register menus."""
-from __future__ import annotations
-
 import importlib.util
 import os
 import sys
 
-import pathlib
+import unreal
 
-from envui.menu import register_envui_menus
-
-
-_SCRIPT_DIR = pathlib.Path(__file__).parent.absolute()
+_SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 _OWNER = "BSGodFile_LiveLink"
 
 
 def _py_path_prefix():
-    project_python = str(_SCRIPT_DIR)
+    project_python = _SCRIPT_DIR.replace("\\", "/")
     return (
         f"import sys; import unreal; p=r'{project_python}'; "
         f"sys.path.insert(0,p) if p not in sys.path else None; "
@@ -34,19 +29,152 @@ def _menu_command(py_body: str) -> str:
 
 
 def register_livelink_menus():
-    """Register LiveLink menus."""
-    from envui.menu import register_envui_menus
+    menus = unreal.ToolMenus.get()
+    main = menus.find_menu("LevelEditor.MainMenu")
+    if not main:
+        unreal.log_warning("[LiveLink] LevelEditor.MainMenu not found")
+        return
 
-    register_envui_menus(owner=_OWNER)
+    for stale in (
+        "LevelEditor.MainMenu.LiveLink.BlenderLiveLink",
+        "LevelEditor.MainMenu.LiveLink",
+    ):
+        if menus.find_menu(stale):
+            menus.remove_menu(stale)
+
+    main.add_sub_menu(_OWNER, "LiveLink", "LiveLink", "LiveLink", "Live Link")
+    live = menus.extend_menu("LevelEditor.MainMenu.LiveLink")
+    live.add_section("Connection", "Connection", 0)
+    live.add_section("Portfolio", "Portfolio", 1)
+    live.add_section("Help", "Help", 2)
+
+    def add_entry(menu, section, name, label, py_body):
+        entry = unreal.ToolMenuEntry(name=name, type=unreal.MultiBlockType.MENU_ENTRY)
+        entry.set_label(label)
+        entry.set_string_command(
+            type=unreal.ToolMenuStringCommandType.PYTHON,
+            custom_type_name="",
+            string=_menu_command(py_body),
+        )
+        menu.add_menu_entry(section, entry)
+
+    # Primary actions on LiveLink (one click fewer than nested submenu)
+    add_entry(
+        live,
+        "Connection",
+        "StartLL",
+        "Start Live Link (connect to Blender)",
+        "livelink_unreal.start_connection(); "
+        "unreal.log('[LiveLink] Start requested — check Output Log for Connected/Error')",
+    )
+    add_entry(live, "Connection", "StopLL", "Stop Live Link", "livelink_unreal.stop_connection()")
+    add_entry(
+        live,
+        "Connection",
+        "StatusLL",
+        "Show Status",
+        "unreal.log('[LiveLink] ' + livelink_unreal.get_status())",
+    )
+    add_entry(
+        live,
+        "Portfolio",
+        "RunSakuraPCG",
+        "Run Sakura PCG (showcase wrapper)",
+        "import setup_pcg_sakura; "
+        "report = setup_pcg_sakura.build_all(rebuild=True, spawn=True); "
+        "unreal.log('[Portfolio] Sakura PCG passed=' + str(report.get('passed')))",
+    )
+    add_entry(
+        live,
+        "Portfolio",
+        "RunUniversalPCG",
+        "Run Universal PCG Build",
+        "import setup_pcg_universal; "
+        "report = setup_pcg_universal.build_all(force=True); "
+        "unreal.log('[Portfolio] Universal PCG passed=' + str(report.get('passed')))",
+    )
+    add_entry(
+        live,
+        "Portfolio",
+        "RunGreyboxPCG",
+        "Apply Greybox PCG (Template minimal)",
+        "import setup_pcg_greybox; "
+        "import pcg_portfolio_standards as s; "
+        "r = setup_pcg_greybox.apply_greybox_pcg(s.LEVEL_TEMPLATE, preset='minimal'); "
+        "unreal.log('[Portfolio] Greybox PCG passed=' + str(r.get('passed')))",
+    )
+    add_entry(
+        live,
+        "Portfolio",
+        "AuditPCGPortfolio",
+        "Audit PCG Portfolio",
+        "import audit_pcg_portfolio; "
+        "r = audit_pcg_portfolio._audit_in_ue(); "
+        "unreal.log('[Portfolio] PCG audit clean=' + str(r.get('clean')))",
+    )
+    add_entry(
+        live,
+        "Portfolio",
+        "RunSakuraNiagara",
+        "Run Sakura Dream Niagara (full plan)",
+        "import run_sakura_niagara_plan; "
+        "report = run_sakura_niagara_plan.run_plan(rebuild=False); "
+        "unreal.log('[Portfolio] Sakura Niagara all_ok=' + str(report.get('all_ok')))",
+    )
+    add_entry(
+        live,
+        "Portfolio",
+        "RunOrchestratorTick",
+        "Portfolio Orchestrator Tick (10m loop step)",
+        "import run_portfolio_orchestrator_loop_tick; "
+        "code = run_portfolio_orchestrator_loop_tick.main(); "
+        "unreal.log('[Portfolio] Orchestrator exit=' + str(code))",
+    )
+    add_entry(
+        live,
+        "Portfolio",
+        "CapturePortfolioOutputs",
+        "Capture Portfolio Outputs (screenshots + previews + metadata)",
+        "import export_screenshot, capture_material_previews, capture_scene_metadata; "
+        "ss = export_screenshot.capture_screenshot(); "
+        "mp = capture_material_previews.capture_material_previews(); "
+        "md = capture_scene_metadata.capture_scene_metadata(); "
+        "unreal.log('[Portfolio] Capture complete: ' + str({'screenshot': ss.get('ok'), 'materials': mp.get('count'), 'metadata': md.get('ok')}))",
+    )
+    add_entry(
+        live,
+        "Portfolio",
+        "RunSakuraNiagaraRebuild",
+        "Run Sakura Dream Niagara (--rebuild)",
+        "import run_sakura_niagara_plan; "
+        "report = run_sakura_niagara_plan.run_plan(rebuild=True); "
+        "unreal.log('[Portfolio] Sakura Niagara all_ok=' + str(report.get('all_ok')))",
+    )
+    add_entry(
+        live,
+        "Help",
+        "HelpLL",
+        "How to use (no UE panel)",
+        "unreal.log_warning("
+        "'[LiveLink] No UE window opens. Order: Blender N-panel > Start Live Link, "
+        "then UE LiveLink > Start Live Link, then Blender > Send Full Scene. "
+        "Imports: /Game/LiveLink/')",
+    )
+
+    menus.refresh_all_widgets()
+    unreal.log(
+        "[LiveLink] Menu ready — LiveLink > Start Live Link "
+        "(dropdown only; no floating panel)"
+    )
 
 
-if str(_SCRIPT_DIR) not in sys.path:
-    sys.path.insert(0, str(_SCRIPT_DIR))
+if _SCRIPT_DIR not in sys.path:
+    sys.path.insert(0, _SCRIPT_DIR)
 
 
 def _load_livelink_module():
     for name in ("livelink_unreal.py", "livelink_unreal.pyc"):
-        path = os.path.join(str(_SCRIPT_DIR), name)
+        path = os.path.join(_SCRIPT_DIR, name)
         if not os.path.isfile(path):
             continue
         spec = importlib.util.spec_from_file_location("livelink_unreal", path)
@@ -64,15 +192,7 @@ def _load_livelink_module():
     return None
 
 
-def _register_gmm() -> None:
-    try:
-        from gmm.ui.register import register_gmm_menus
-        register_gmm_menus()
-        unreal.log("[GMM] Grandmaster Melodia Melusina commands registered")
-    except ImportError:
-        unreal.log_warning("[GMM] gmm package not available — skipping registration")
-    except Exception as e:
-        unreal.log_warning(f"[GMM] Registration error (non-fatal): {e}")
+m = _load_livelink_module()
 
 
 def _register_osc_bridge() -> None:
@@ -80,24 +200,26 @@ def _register_osc_bridge() -> None:
     try:
         from osc_server import start_bridge
         if start_bridge(port=8000):
-            unreal.log("[TD-Bridge] TouchDesigner OSC bridge started on port 8000")
-        else:
-            unreal.log_warning("[TD-Bridge] OSC bridge failed to start — OSC plugin may be disabled")
-    except ImportError:
-        unreal.log_warning("[TD-Bridge] osc_server.py not found — skipping OSC bridge")
+            unreal.log("[TD-Bridge] OSC bridge started on port 8000 (raw socket)")
     except Exception as e:
-        unreal.log_warning(f"[TD-Bridge] OSC bridge error: {e}")
+        unreal.log(f"[TD-Bridge] OSC bridge failed: {e}")
 
 
-def startup() -> dict:
-    """Initialize LiveLink module and register menus."""
-    m = _load_livelink_module()
-    if not m:
-        return {"success": False}
+def _register_gmm() -> None:
+    """Register GMM menus on editor startup."""
+    try:
+        from gmm.ui.register import register_gmm_menus
+        register_gmm_menus()
+        unreal.log("[GMM] Grandmaster Melodia Melusina menus registered")
+    except Exception as e:
+        unreal.log(f"[GMM] Registration skipped: {e}")
+
+
+def startup():
+    if m is None:
+        return
     if hasattr(m, "startup"):
-        unreal.log("Initializing LiveLink module...")
         m.startup()
-    # Always re-register with sections + flattened entries (pyc menu can render empty)
     register_livelink_menus()
     _register_gmm()
     _register_osc_bridge()
@@ -105,25 +227,8 @@ def startup() -> dict:
         "[LiveLink] v3.1 loaded — LiveLink menu has Start/Stop/Status "
         "(no floating panel; start Blender server first)"
     )
-    return {"success": True}
 
 
-def shutdown() -> dict:
-    """Shutdown LiveLink module."""
-    m = _load_livelink_module()
-    if m and hasattr(m, "shutdown"):
-        unreal.log("Shutting down LiveLink module...")
+def shutdown():
+    if m is not None and hasattr(m, "shutdown"):
         m.shutdown()
-    return {"success": True}
-
-if __name__ == '__main__':
-    # Headless startup — run init, then return normally.
-    # Do NOT call sys.exit() or raise SystemExit here.
-    # When init_unreal.py runs as a UE startup script ANY exit kills the
-    # Python executor, which prevents -ExecutePythonScript from running.
-    try:
-        result = startup()
-        if not result.get("success", False):
-            unreal.log_warning("[init_unreal] LiveLink startup skipped (no .pyc found)")
-    except Exception as e:
-        unreal.log_warning(f"[init_unreal] Startup error (non-fatal): {e}")
