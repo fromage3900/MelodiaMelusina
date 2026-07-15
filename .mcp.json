@@ -1,0 +1,27 @@
+{
+  "mcpServers": {
+    "envoy": {
+      "type": "http",
+      "url": "http://localhost:9870/mcp",
+      "description": "TouchDesigner — Embody/Envoy MCP server. 53 tools for live TD network creation, parameter control, Python execution, TDN export/import."
+    },
+    "monolith": {
+      "type": "http",
+      "url": "http://localhost:9316/mcp",
+      "description": "Unreal Engine 5.8 — Monolith MCP server. 28 tools for editor control, scene capture, material inspection, CSV profiling."
+    },
+    "blender": {
+      "type": "http",
+      "url": "http://localhost:9877/mcp",
+      "description": "Blender 5.1 MCP server. Python execution in Blender context for procedural geometry generation."
+    }
+  },
+  "project": {
+    "name": "Environment Portfolio Platform",
+    "branch": "feature/touchdesigner-mcp-integration",
+    "touchdesigner_license": "commercial",
+    "target_ue_version": "5.8",
+    "target_blender_version": "5.1",
+    "target_td_version": "2025.32820"
+  }
+}

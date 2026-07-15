@@ -1,0 +1,131 @@
+{
+  "version": "1.0",
+  "generated": "2026-07-15",
+  "branch": "feature/touchdesigner-mcp-integration",
+  "description": "OSC routing schema for TouchDesigner ↔ Blender ↔ Unreal Engine bridge. All agents reference this schema for parameter paths and data types.",
+  "routes": {
+    "audio": {
+      "melusina_pitch": {
+        "path": "/melusina/pitch",
+        "type": "float",
+        "range": [60, 2000],
+        "unit": "Hz",
+        "description": "VoiceSynth fundamental frequency → UE shader warp amount"
+      },
+      "melusina_amplitude": {
+        "path": "/melusina/amp",
+        "type": "float",
+        "range": [0, 1],
+        "unit": "linear",
+        "description": "VoiceSynth RMS amplitude → UE particle spawn rate"
+      },
+      "melusina_formants": {
+        "path": "/melusina/formants",
+        "type": "float_array",
+        "size": 5,
+        "description": "VoiceSynth formant analysis → TD particle color palette"
+      },
+      "melusina_spectral_centroid": {
+        "path": "/melusina/centroid",
+        "type": "float",
+        "range": [0, 20000],
+        "unit": "Hz",
+        "description": "Spectral centroid → TD particle brightness"
+      }
+    },
+    "material": {
+      "toon_params": {
+        "path": "/material/toon",
+        "type": "float_array",
+        "size": 12,
+        "description": "TD → UE Substrate Toon parameter group: [bloom_intensity, bloom_threshold, bloom_r, bloom_g, bloom_b, shadow_r, shadow_g, shadow_b, saturation, contrast, diffuse_wrap, reserved]"
+      },
+      "style_preset": {
+        "path": "/material/preset",
+        "type": "int",
+        "range": [0, 4],
+        "description": "Style preset selector: 0=Nikki, 1=Madoka, 2=Celestial, 3=Itto, 4=Sakura"
+      },
+      "fabric_specular": {
+        "path": "/material/fabric",
+        "type": "float_array",
+        "size": 4,
+        "description": "Fabric material params: [roughness, anisotropy, clearcoat, sheen_weight] for satin/velvet rendering"
+      }
+    },
+    "time": {
+      "day_night_cycle": {
+        "path": "/time/cycle",
+        "type": "float",
+        "range": [0, 1],
+        "description": "Day/night cycle position: 0=dawn, 0.25=noon, 0.5=dusk, 0.75=midnight"
+      },
+      "beat_sync": {
+        "path": "/time/beat",
+        "type": "float",
+        "range": [0, 1],
+        "description": "Music beat synchronization phase (normalized to beat duration)"
+      },
+      "time_of_day_seconds": {
+        "path": "/time/tod",
+        "type": "float",
+        "description": "Absolute time of day in seconds (0-86400)"
+      }
+    },
+    "camera": {
+      "ue_camera_transform": {
+        "path": "/ue/camera",
+        "type": "float_array",
+        "size": 16,
+        "description": "UE camera world matrix (4x4, column-major)"
+      },
+      "td_camera_transform": {
+        "path": "/td/camera",
+        "type": "float_array",
+        "size": 16,
+        "description": "TD camera world matrix (4x4, column-major)"
+      },
+      "blender_camera_transform": {
+        "path": "/blender/camera",
+        "type": "float_array",
+        "size": 16,
+        "description": "Blender camera Z-up world matrix (4x4, column-major)"
+      }
+    },
+    "geometry": {
+      "mesh_count": {
+        "path": "/blender/mesh/count",
+        "type": "int",
+        "description": "Number of generated meshes in current export batch"
+      },
+      "vertex_count": {
+        "path": "/blender/mesh/vertices",
+        "type": "int",
+        "description": "Total vertex count for generated geometry"
+      }
+    }
+  },
+  "spout_streams": {
+    "TD_NikkiPreview": {
+      "direction": "TD_to_UE",
+      "resolution": "1920x1080",
+      "format": "RGBA8",
+      "fps": 60,
+      "description": "TD composited Nikki-style preview with bloom, color grade, and particles"
+    },
+    "UE_RenderTarget": {
+      "direction": "UE_to_TD",
+      "resolution": "variable",
+      "format": "RGBA16F",
+      "fps": 60,
+      "description": "UE render target for real-time feedback to TD"
+    },
+    "Blender_Viewport": {
+      "direction": "Blender_to_TD",
+      "resolution": "variable",
+      "format": "RGBA8",
+      "fps": 30,
+      "description": "Blender viewport capture for live geometry preview in TD"
+    }
+  }
+}
