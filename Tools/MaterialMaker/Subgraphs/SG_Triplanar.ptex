@@ -1,0 +1,115 @@
+﻿{
+  "connections": [
+    {
+      "from": "input_uv",
+      "from_port": 0,
+      "to": "blend_node",
+      "to_port": 0
+    },
+    {
+      "from": "input_normal",
+      "from_port": 0,
+      "to": "blend_node",
+      "to_port": 1
+    },
+    {
+      "from": "input_blend",
+      "from_port": 0,
+      "to": "blend_node",
+      "to_port": 2
+    },
+    {
+      "from": "blend_node",
+      "from_port": 0,
+      "to": "output_uv",
+      "to_port": 0
+    },
+    {
+      "from": "blend_node",
+      "from_port": 1,
+      "to": "output_mask",
+      "to_port": 0
+    }
+  ],
+  "nodes": [
+    {
+      "name": "comment_lane_input",
+      "type": "comment_lane",
+      "params": {
+        "label": "Input"
+      }
+    },
+    {
+      "name": "comment_lane_proj",
+      "type": "comment_lane",
+      "params": {
+        "label": "Triplanar Projection"
+      }
+    },
+    {
+      "name": "comment_lane_output",
+      "type": "comment_lane",
+      "params": {
+        "label": "Output"
+      }
+    },
+    {
+      "name": "input_uv",
+      "type": "remote",
+      "params": {
+        "name": "UV",
+        "type": "vec2",
+        "default": [
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "name": "input_normal",
+      "type": "remote",
+      "params": {
+        "name": "WorldNormal",
+        "type": "vec3",
+        "default": [
+          0,
+          0,
+          1
+        ]
+      }
+    },
+    {
+      "name": "input_blend",
+      "type": "remote",
+      "params": {
+        "name": "BlendSharpness",
+        "type": "float",
+        "default": 4.0,
+        "min": 0.1,
+        "max": 16.0
+      }
+    },
+    {
+      "name": "blend_node",
+      "type": "blend",
+      "params": {}
+    },
+    {
+      "name": "output_uv",
+      "type": "output",
+      "params": {
+        "name": "TriplanarUV",
+        "type": "vec2"
+      }
+    },
+    {
+      "name": "output_mask",
+      "type": "output",
+      "params": {
+        "name": "TriplanarMask",
+        "type": "float"
+      }
+    }
+  ],
+  "parameters": []
+}

@@ -1,0 +1,109 @@
+﻿{
+  "connections": [
+    {
+      "from": "input_pos",
+      "from_port": 0,
+      "to": "sphere_proj",
+      "to_port": 0
+    },
+    {
+      "from": "input_center",
+      "from_port": 0,
+      "to": "sphere_proj",
+      "to_port": 1
+    },
+    {
+      "from": "input_radius",
+      "from_port": 0,
+      "to": "sphere_proj",
+      "to_port": 2
+    },
+    {
+      "from": "sphere_proj",
+      "from_port": 0,
+      "to": "output_uv",
+      "to_port": 0
+    },
+    {
+      "from": "sphere_proj",
+      "from_port": 1,
+      "to": "output_mask",
+      "to_port": 0
+    }
+  ],
+  "nodes": [
+    {
+      "name": "comment_lane_input",
+      "type": "comment_lane",
+      "params": {
+        "label": "Input"
+      }
+    },
+    {
+      "name": "comment_lane_sphere",
+      "type": "comment_lane",
+      "params": {
+        "label": "Spherical Projection"
+      }
+    },
+    {
+      "name": "input_pos",
+      "type": "remote",
+      "params": {
+        "name": "WorldPos",
+        "type": "vec3",
+        "default": [
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "name": "input_center",
+      "type": "remote",
+      "params": {
+        "name": "SphereCenter",
+        "type": "vec3",
+        "default": [
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "name": "input_radius",
+      "type": "remote",
+      "params": {
+        "name": "SphereRadius",
+        "type": "float",
+        "default": 100.0,
+        "min": 1.0,
+        "max": 10000.0
+      }
+    },
+    {
+      "name": "sphere_proj",
+      "type": "spherical",
+      "params": {}
+    },
+    {
+      "name": "output_uv",
+      "type": "output",
+      "params": {
+        "name": "SphericalUV",
+        "type": "vec2"
+      }
+    },
+    {
+      "name": "output_mask",
+      "type": "output",
+      "params": {
+        "name": "SphericalMask",
+        "type": "float"
+      }
+    }
+  ],
+  "parameters": []
+}

@@ -1,0 +1,124 @@
+﻿{
+  "connections": [
+    {
+      "from": "input_uv",
+      "from_port": 0,
+      "to": "flow_gen",
+      "to_port": 0
+    },
+    {
+      "from": "input_dir",
+      "from_port": 0,
+      "to": "flow_gen",
+      "to_port": 1
+    },
+    {
+      "from": "input_speed",
+      "from_port": 0,
+      "to": "flow_gen",
+      "to_port": 2
+    },
+    {
+      "from": "input_intensity",
+      "from_port": 0,
+      "to": "flow_gen",
+      "to_port": 3
+    },
+    {
+      "from": "flow_gen",
+      "from_port": 0,
+      "to": "output_uv",
+      "to_port": 0
+    },
+    {
+      "from": "flow_gen",
+      "from_port": 1,
+      "to": "output_mask",
+      "to_port": 0
+    }
+  ],
+  "nodes": [
+    {
+      "name": "comment_lane_input",
+      "type": "comment_lane",
+      "params": {
+        "label": "Input"
+      }
+    },
+    {
+      "name": "comment_lane_flow",
+      "type": "comment_lane",
+      "params": {
+        "label": "Flow Generation"
+      }
+    },
+    {
+      "name": "input_uv",
+      "type": "remote",
+      "params": {
+        "name": "UV",
+        "type": "vec2",
+        "default": [
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "name": "input_dir",
+      "type": "remote",
+      "params": {
+        "name": "FlowDirection",
+        "type": "vec2",
+        "default": [
+          1,
+          0
+        ]
+      }
+    },
+    {
+      "name": "input_speed",
+      "type": "remote",
+      "params": {
+        "name": "FlowSpeed",
+        "type": "float",
+        "default": 1.0,
+        "min": 0.0,
+        "max": 10.0
+      }
+    },
+    {
+      "name": "input_intensity",
+      "type": "remote",
+      "params": {
+        "name": "FlowIntensity",
+        "type": "float",
+        "default": 0.5,
+        "min": 0.0,
+        "max": 1.0
+      }
+    },
+    {
+      "name": "flow_gen",
+      "type": "flow",
+      "params": {}
+    },
+    {
+      "name": "output_uv",
+      "type": "output",
+      "params": {
+        "name": "FlowUV",
+        "type": "vec2"
+      }
+    },
+    {
+      "name": "output_mask",
+      "type": "output",
+      "params": {
+        "name": "FlowMask",
+        "type": "float"
+      }
+    }
+  ],
+  "parameters": []
+}
